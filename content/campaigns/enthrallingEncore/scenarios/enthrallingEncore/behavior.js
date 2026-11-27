@@ -14,6 +14,7 @@
 //     按 2+2+2 近似（前厅揭示放前厅组 2 张、后台揭示放后台组 2 张）。
 //   · 小节用 state.scenarioZones.measures 纯数值记账（布局/观测经 scenarioSummary 暴露）。
 //   · 签名卡交换（Resolution 1/2）没有通用战役卡组改写原语，记为记录 + 说明，不实际改牌。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
   ACT_CODE, AGENDA_CODE, CHAPTER_ID, KEY_INVESTIGATOR, LOCATIONS, PRIVATE_LOCATIONS,
@@ -256,7 +257,7 @@ function soloistParley(state, inv, api) {
   }
   for (const code of byClass.values()) {
     const index = inv.hand.indexOf(code)
-    if (index >= 0) inv.hand.splice(index, 1)
+    if (index >= 0) spliceHand(inv, index, 1)
     inv.discard.push(code)
   }
   soloist.exhausted = true

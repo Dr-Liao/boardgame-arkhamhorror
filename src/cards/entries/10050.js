@@ -30,8 +30,10 @@ export default {
   code: CODE,
   // 事件结算后留在敌人身上（读点 actions.js 的事件收尾段）。
   keepOnPlay: true,
-  simplified: true,
-  note: 'approximation: 只实现「智力替代的躲避 + 成功后附属到非精英敌人」；所附属敌人的「庞大/不能移动」与「躲避本敌人后发现 1 线索（每轮一次）」缺引擎读点（primitive-requests/10050.json）。',
+  assetRule: {
+    sharedEnemyAttachment: true,
+    enemyAttachmentRule: { massive: true, cannotMove: true },
+  },
   playCondition: [
     {
       when: ({ state, inv }) => evadableEnemies(state, inv).length > 0,
@@ -71,29 +73,29 @@ export default {
             { id: 'agility', label: '[敏捷]' },
           ],
         }) !== 'agility'
-        const result = api.evade(inv.seat, {
+        let attachment = null
+        api.evade(inv.seat, {
           enemyId: enemy.id,
           skill: useIntellect ? 'intellect' : 'agility',
           sourceCode: CODE,
+          beforeEvadeSuccess: ({ enemy: target }) => {
+            if (!target.elite && state.enemies.includes(target)) {
+              attachment = api.attachPlayerCardToAsset(CODE, target, { ownerSeat: inv.seat })
+            }
+          },
         })
-        if (!result?.success) {
-          toDiscard()
-          return
-        }
-        const survivor = state.enemies.find(item => item.id === enemy.id)
-        if (!survivor) {
-          toDiscard()
-          return
-        }
-        if (survivor.elite) {
-          api.info(`「原型惊变」：「${survivor.name}」是[[精英]]敌人，不能附属。`)
-          toDiscard()
-          return
-        }
-        const attachment = api.attachPlayerCardToAsset(CODE, survivor, { ownerSeat: inv.seat })
-        if (attachment) api.info(`🧬 「原型惊变」附属到「${survivor.name}」。`)
-        else toDiscard()
+        if (!attachment) toDiscard()
       },
+    },
+    {
+      kind: 'reaction',
+      trigger: 'evadeSuccess',
+      label: '你躲避所附属的敌人后：在其地点发现 1 个线索',
+      limit: { scope: 'perRound', owner: 'investigator' },
+      criteria: [({ inv, source, context, helpers }) => context?.seat === inv.seat
+        && context.enemy?.attachments?.includes(source)
+        && helpers.canDiscoverClueAt(inv.seat, context.enemy.location)],
+      resolve: ({ inv, context, api }) => api.discoverClue(inv.seat, 1, context.enemy.location),
     },
   ],
   modifiers: [],

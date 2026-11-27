@@ -1,5 +1,17 @@
+import { registeredEntry } from './ability.js'
+
+export function locationGroupClueCost(state, location) {
+  const cost = registeredEntry(location?.originalCode || location?.code)?.locationRule?.entryCost
+  if (cost?.kind !== 'groupClues' || (cost.onlyUnrevealed && location.revealed)) return null
+  return {
+    count: cost.perInvestigator * state.numInvestigators,
+    scope: cost.scope === 'connected' ? location.connections || [] : 'here',
+  }
+}
+
 export function groupCluePayers(state, inv, canSpend = () => true, scope = 'here') {
-  return state.investigators.filter(other => !other.defeated && !other.resigned && (scope === 'anywhere' || other.location === inv.location) && canSpend(other))
+  return state.investigators.filter(other => !other.defeated && !other.resigned && (scope === 'anywhere'
+    || (Array.isArray(scope) ? scope.includes(other.location) : other.location === inv.location)) && canSpend(other))
 }
 export function groupClueTotal(state, inv, canSpend, scope) {
   return groupCluePayers(state, inv, canSpend, scope).reduce((sum, other) => sum + (other.clues || 0), 0)

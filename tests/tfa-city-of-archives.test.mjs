@@ -10,7 +10,7 @@ import {
 } from '../content/campaigns/theForgottenAge/scenarios/theCityOfArchives/behavior.js'
 import { scenarioZoneReport } from '../content/scenario-manifest.js'
 import {
-  applyMove, createGameState, finishScenario, investigatorEntryError, legalMoves, placeLocation, relocateEnemy, relocateInvestigator, spawnEnemy, startScenario,
+  applyMove, createGameState, finishScenario, investigatorEntryError, legalMoves, placeLocation, relocateEnemy, relocateInvestigator, scenarioRuntime, spawnEnemy, startScenario,
 } from '../src/engine/engine.js'
 import { viewState } from '../src/integration/observation.js'
 import { contentRegistry } from '../content/registered.js'
@@ -109,6 +109,7 @@ function makeApi(state, options = {}) {
   return {
     log,
     random,
+    setScenarioFlag: scenarioRuntime(state, []).setScenarioFlag,
     info: text => record('info', text),
     privateInfo: (seat, text) => record('privateInfo', seat, text),
     choose: request => (options.choose ? options.choose(request) : request?.options?.[0]?.id),
@@ -973,13 +974,22 @@ test('04256 看管人：调查阶段开始抽 1 张（每轮一次，不再借�
   inv.assets.push({ id: 'custodian', code: '04256', originalCode: '04256', exhausted: false })
   state.round = 3
   const draws = []
-  const api = { drawCards: (seat, n) => draws.push([seat, n]) }
+  const api = { ...scenarioRuntime(state, []), choose: () => 'draw', drawCards: (seat, n) => draws.push([seat, n]) }
+  behavior.phaseBegan(state, 'investigation', { ...api, choose: request => {
+    assert.equal(request.seat, inv.seat)
+    assert.equal(request.canSkip, true)
+    return 'skip'
+  } })
+  assert.deepEqual(draws, [], '放弃反应后无人抽牌')
+  behavior.phaseBegan(state, 'investigation', api)
+  assert.deepEqual(draws, [], '同一阶段只询问一次')
+  state.round += 1
   behavior.phaseBegan(state, 'investigation', api)
   assert.ok(draws.length >= 1, '调查阶段开始抽牌')
   const firstRound = draws.length
   behavior.phaseBegan(state, 'investigation', api)
   assert.equal(draws.length, firstRound, '同一轮只抽一次')
-  state.round = 4
+  state.round += 1
   behavior.phaseBegan(state, 'investigation', api)
   assert.ok(draws.length > firstRound, '下一轮重新生效')
   behavior.phaseBegan(state, 'mythos', api)

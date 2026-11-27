@@ -13,11 +13,7 @@
 //   · 洗回牌库 = api.scheduleWeaknessShuffle；伤害 = api.harm。
 //   · -1 生命值 = 条目级 threatEffect.healthModifier（stats.js#getMaxHealth 的唯一读点）。
 //   · [action][action] 弃掉 = kind:'action' + cost:{action:2} + api.removeThreat。
-//
-// approximation（缺读点见 artifacts/migration/fhv/primitive-requests/10135.json，
-// 与 10135 同一模板；四条基础弱点共用同一句卡文，待主进程把「威胁区不能离场」抽成原语）：
-//   ① 「除上述能力外不能离场」没有威胁区读点（只有 threatCannotLeaveWhileCounters 按计数拦截）。
-//   ② 1 点伤害走普通伤害分配（可被支援承接），不是直接伤害。
+
 const CODE = '10136'
 const CARD_NAME = '背伤'
 
@@ -25,8 +21,7 @@ export default {
   code: CODE,
   name: 'Back Injury',
   threatEffect: { healthModifier: -1 },
-  simplified: true,
-  note: 'approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截）；②1 点伤害按普通伤害分配（可被支援承接），与 10135 同一模板，见 primitive-requests/10135.json。',
+  cannotLeavePlay: true,
   abilities: [
     {
       kind: 'weakness',
@@ -57,7 +52,7 @@ export default {
       cost: { action: 2 },
       resolve: ({ inv, source, api }) => {
         if (!source) return
-        api.removeThreat(source)
+        if (!api.removeThreat(source, { force: true })) return
         api.info(`🩹 ${inv.name} 花费 2 行动弃掉「${CARD_NAME}」。`)
       },
     },

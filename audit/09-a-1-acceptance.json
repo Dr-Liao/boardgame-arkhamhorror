@@ -3,7 +3,7 @@
   "unit": "09-a-1",
   "profile": {
     "id": "tsk-player-a-2026-11",
-    "scope": "绯红密钥 09 段 tskp 调查员与玩家卡（09001–09043）43 条目录记录。42 条通过五维验收；1 条近似/缺口暂不切换。",
+    "scope": "绯红密钥 09 段 tskp 调查员与玩家卡（09001–09043）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,31 +17,19 @@
   },
   "summary": {
     "total": 43,
-    "verified": 42,
-    "unverified": 1,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 238
+    "testsPassed": 134
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
-      "sha256": "e44e27991772f68d4dab893f71bf14568a432d3efebf456d2ba2937646563117"
+      "sha256": "590f7aa2b2ae65ed1d1156e6b0db09db5aa9d0227d5a23c33c6aea50bad7fc0f"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
       "sha256": "94357ea35e9eab4dcf56759fa062ce1d6fae8f25cbf4b593f488b82a0e695992"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
-      "sha256": "a19a9030777563e27281aaff3fdd686813ca930c822b76cfe9b2071bc8cac269"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
-      "sha256": "b7f26a9b61ab4b2f3c34207cf0ebcb792b9b841014f4e066401cc041be7de6c2"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-      "sha256": "4c3561482920f880890afe80e56b24b125a7c262b97b6ff3324b392309c7c87a"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
@@ -72,16 +60,12 @@
       "sha256": "76f966450300765d643bd72eac107a289a36ecb86f6b869a37fc9b2667518b45"
     },
     {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
-    },
-    {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
       "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
@@ -97,7 +81,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
-      "sha256": "a50c5b376fcaaa058a34e445264d9fb5788980d653787815d586aa2ec720ef34"
+      "sha256": "703d2b3e6689259fc2ea72b752451fe48ee7ddccfc1f9e54208699526254c68f"
     }
   ],
   "entries": [
@@ -129,9 +113,13 @@
       "code": "09002",
       "name": "“如您所愿”",
       "type": "skill",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「只能投入到其他调查员执行的检定」的 commit 描述子只写了空 `skill: {}`，缺少 `otherTestOnly`（对照 06157 的 `skill: { anySkill: true, otherTestOnly: true, ... }`）。引擎 `commitProfile = descriptor.skill`（`lifecycle.js`），`commit-rules.js:canCommitToTest` 依赖 `profile.otherTestOnly` 排除本人检定。真实引擎探针（`tests/acceptance-09-a-shard1.test.mjs`）：本人检定（performer=seat0）的 commit 窗口错误列出「投入：“如您所愿”」（违反卡面）；他人检定（performer=seat1）走 seat0 协助窗口可正确投入 09002（正确路径可达、09003 记账可触发）。即：卡面限制「只能投他人检定」未接线，出现非法自投入口。修法：commit 描述子改为 `skill: { otherTestOnly: true }`（wild 图标已有，anySkill 可省）后重跑本分片与 `tests/tsk-investigator-09001.test.mjs`。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard1.test.mjs",
+          "test": "TSK 09002 如你所愿：投入他人检定，成功其抽 1、失败你抽 1"
+        }
+      ]
     },
     {
       "code": "09003",

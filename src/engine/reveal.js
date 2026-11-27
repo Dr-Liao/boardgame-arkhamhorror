@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 import { payAdditionalPlayHorror } from './play-attempt.js'
 import { recordPlayedCard } from './action-history.js'
 import { capabilityBlocked } from './modifiers.js'
@@ -20,6 +21,8 @@ import { limitUsed, limitWaiverAsset } from './limits.js'
 
 import { ignoreLocationTrigger } from './location-effect-scope.js'
 import { cardEffectSource, withEffectSource } from './effect-provenance.js'
+import { cardOutcomeAudioScoped, withCardOutcomeAudio } from './card-outcome-audio.js'
+import { isHiddenPlayerWeakness } from './hidden-rules.js'
 
 export function createReveal(deps) {
   const {
@@ -222,7 +225,11 @@ function flushDeferredBeneath(state, events = []) {
 function executeDescriptor(state, params) {
   descriptorDepth += 1
   try {
-    const result = runExecuteDescriptor(state, params)
+    const definition = cardDef(params.descriptor.code)
+    const cardOutcome = definition?.type === 'treachery' || ['weakness', 'basicweakness'].includes(definition?.subtype)
+    const run = () => runExecuteDescriptor(state, params, cardOutcome ? definition : null)
+    const result = cardOutcomeAudioScoped(state) && !cardOutcome
+      ? withCardOutcomeAudio(state, params.events, false, run) : run()
     if (descriptorDepth === 1) abilityApi(state, params?.events).resolveEmptyUses()
     return result
   } finally {
@@ -231,7 +238,7 @@ function executeDescriptor(state, params) {
   }
 }
 
-function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, ignoreActionCost = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false, suppressAssetActivationWindow = false }) {
+function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, events, windowId = null, fromHandIndex = null, effect = null, legacyAbilityLog = false, alreadyPaid = false, ignoreCosts = false, ignoreActionCost = false, silent = false, channelDiscount = 0, fromChannel = null, repeatedEffect = false, limitAlreadyMarked = false, suppressAssetActivationWindow = false }, outcomeCard) {
   if (state.locations.includes(source) && ['forced', 'reaction'].includes(descriptor.kind)
     && ignoreLocationTrigger(state, source.id, requestChoice, descriptor.label)) return false
   const cost = descriptorCost(descriptor, ignoreActionCost)
@@ -256,7 +263,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     const { remaining, payments } = choosePlayUses(state, inv, def, price, deps)
     if (availableResources(inv) < remaining) return false
     if (!payTokenCost(state, inv, registeredEntry(handCode)?.additionalTokenCost)) return false
-    inv.hand.splice(index, 1)
+    spliceHand(inv, index, 1)
     resourceBank.spendFromPool(inv, remaining, state)
     spendPlayUses(state, payments, events, deps)
     consumeNextPlayDiscount(state, inv.seat)
@@ -274,7 +281,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   // 只有 kind 'action' 的描述子消耗行动点：free / reaction / forced 都是 0 费，
   // 不能因为 cost 里没写 action:false 就在窗口结算里扣行动（Phase 1 修正）。
   if (!alreadyPaid && !ignoreCosts && descriptor.kind === 'action' && cost.action !== false) spendAction(state, inv)
-  if (!repeatedEffect) {
+  if (!repeatedEffect && !limitAlreadyMarked) {
     const waiver = limitWaiverAsset(inv, descriptor)
     const waive = waiver && (limitUsed(state, inv, descriptor, context, windowId, source, false)
       || requestChoice(state, { kind: 'reaction', source: waiver.id, seat: inv.seat, canSkip: true,
@@ -343,7 +350,8 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
     // 目标枚举（B1）：描述子声明 target 时，legalMoves 已经让玩家/AI 选好 targetId，
     // 这里还原成实体（enemy / investigator / location / asset / cardInHand）。
     targetId: context?.targetId ?? null,
-    target: resolveTarget(state, inv, descriptor.target, context?.targetId, { source, windowId, context }),
+    target: resolveTarget(state, inv, descriptor.target, context?.targetId,
+      { source, windowId, context, actionKind: descriptor.effect?.type || descriptor.countsAs }),
     api: healingApi,
   }
   // 第 5 步 P6：结算期间记录「正在结算的是哪张卡」——取消/忽略效果的记账（cardCancelled）
@@ -363,7 +371,7 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
   // 嵌套调用自然压栈；来源分类不出来时为 null（沉睡敌人的读点会 fail-closed）。
   const effectOrigin = cardEffectSource(state, source, descriptor, inv, { cardDef })
   try {
-    withEffectSource(state, effectOrigin, () => {
+    const resolve = () => withEffectSource(state, effectOrigin, () => {
       descriptor.resolve?.(ctx)
       // 描述子也可以只声明旧式 effect（例如「花 1 子弹攻击」），由效果解释器结算。
       // Phase 5：legalMoves 已经让玩家/AI 选好 targetId，effect 数据体必须像旧式能力那样
@@ -375,6 +383,11 @@ function runExecuteDescriptor(state, { inv, source, descriptor, context = {}, ev
         resolveEffect(state, inv.seat, effectData, makeRuntime(state, events))
       }
     })
+    if (outcomeCard) {
+      const hidden = outcomeCard.hidden || source?.hidden || isHiddenPlayerWeakness(outcomeCard.code)
+        || registeredEntry(outcomeCard.code)?.hiddenEnemyInHand
+      withCardOutcomeAudio(state, events, !hidden, resolve)
+    } else resolve()
     cancelledByDescriptor = !cancelledBefore && context?.cancelled === true && !cancelNoteFrameNoted()
   } finally {
     // 2026-10-25 第五轮修复 05004：旧路径直接写 context.cancelled 时补记「卡牌取消效果」事实。

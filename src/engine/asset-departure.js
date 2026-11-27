@@ -26,6 +26,6 @@ export function discardControlledAsset(state, inv, asset, events, leaveAsset, in
     return false
   }
   if (leaveAsset(state, inv, asset, events) === false || inv.assets.includes(asset)) return false
-  if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code)
+  if (!asset.removedFromGame && !asset.returnedToHand) (state.investigators[asset.ownerSeat] || inv).discard.push(asset.code)
   return true
 }

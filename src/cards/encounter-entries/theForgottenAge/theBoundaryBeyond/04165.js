@@ -11,14 +11,13 @@ export default {
   code: '04165', scope: 'act',
   actRule: {
     onReveal(state, act, api) {
-      const flags = (state.scenarioFlags ||= {})
       const active = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
-      const seat = flags.ancientPlacerSeat ?? active[0]?.seat
+      const seat = state.scenarioFlags?.ancientPlacerSeat ?? active[0]?.seat
       if (seat == null) return
       api.test(seat, 'willpower', 4, result => {
         if (result.success) return
         api.info?.('🌫️ 穿过界限的冲击让你心神不宁：从收藏中找出一张基础疯狂/损伤弱点洗入牌库。')
-        api.addBasicWeakness?.(seat, ['madness', 'injury'])
+        api.addBasicWeakness(seat, ['madness', 'injury'])
       })
     },
   },

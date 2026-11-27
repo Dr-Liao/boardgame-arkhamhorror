@@ -10,6 +10,7 @@
 //   · 两个变体子剧本按剧本日志选：幕牌库、变体地点、遭遇牌库分支都在 setup 决定。
 //   · 逐卡规则写在单卡条目的 actRule / enemySpawnRule 等字段里；本文件只读
 //     actRuleFor / enemySpawnRuleFor 数据分派，不写按卡号字面量的分支（架构守卫口径）。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { actRuleFor, enemySpawnRuleFor, entryFlags, locationRuleFor, treacheryRuleFor, traitLabel } from '../../../../../src/cards/card-rules.js'
 import { addBreach, removeBreach, breachOf as breachCount } from '../../../../../src/engine/location-state.js'
@@ -208,7 +209,7 @@ function discardOneFromHand(state, inv, api, source) {
     index = Number(answer)
     if (!Number.isInteger(index) || index < 0 || index >= inv.hand.length) index = 0
   }
-  const [code] = inv.hand.splice(index, 1)
+  const [code] = spliceHand(inv, index, 1)
   ;(inv.discard ||= []).push(code)
   return code
 }
@@ -489,6 +490,14 @@ function locationTextBlankedByEnforcer(state, location) {
   if (!location) return false
   return (state.enemies || []).some(enemy =>
     String(original(enemy)) === '05309' && enemy.location === location.id)
+}
+
+function printedLocationMoves(state, inv) {
+  const location = locationById(state, inv.location)
+  if (!location?.revealed || gatewayAttachment(location) || locationTextBlankedByEnforcer(state, location)) return []
+  const moves = []
+  locationRuleFor(String(original(location)))?.actions?.({ moves, state, inv, location })
+  return moves.map(move => ({ action: 'scenarioAction', locationId: location.id, ...move }))
 }
 
 // 05307 附属实例读取：runtime 写 location.attachments（src/engine/scenario-runtime.js:326-344），
@@ -823,23 +832,20 @@ export const behavior = {
   // ---- 玩家行动 ----
   actions(state, inv) {
     const moves = [...(encounterRules.actions?.(state, inv) || [])]
-    // 幕上的 [fast]：移除本幕 3 个裂口 → 随机地点放 1 线索。
+    const location = locationById(state, inv.location)
+    if (location) moves.push(...gatewayActions(state, inv, location))
+    return [...moves, ...printedLocationMoves(state, inv)].filter(move => move.fast !== true)
+  },
+
+  fastActions(state, inv) {
+    const moves = [...(encounterRules.actions?.(state, inv) || []), ...printedLocationMoves(state, inv)]
+      .filter(move => !move.reason && move.actions === 0 && move.fast === true)
     if (actBreachesOf(state) >= 3 && ACT_CODES.includes(String(original(state.acts?.[state.actIndex])))) {
       moves.push({
         action: 'scenarioAction', rule: 'removeActBreaches',
-        label: '🧵 [快速] 移除本幕 3 个裂口：在一个随机地点放置 1 个线索', actions: 0,
+        label: '🧵 [快速] 移除本幕 3 个裂口：在一个随机地点放置 1 个线索',
+        actions: 0, fast: true,
       })
-    }
-    const here = locationById(state, inv.location)
-    if (here) {
-      moves.push(...gatewayActions(state, inv, here))
-      // 地点印刷文本在单卡条目的 locationRule.actions 里；这里只做通用分派与“文本被屏蔽”过滤。
-      const rule = locationRuleFor(String(original(here)))
-      if (rule?.actions && !gatewayAttachment(here) && !locationTextBlankedByEnforcer(state, here)) {
-        const localMoves = []
-        rule.actions({ moves: localMoves, state, inv, location: here })
-        for (const action of localMoves) moves.push({ action: 'scenarioAction', locationId: here.id, ...action })
-      }
     }
     return moves
   },
@@ -853,7 +859,7 @@ export const behavior = {
       const ids = randomLocationIds(state, 1, api)
       const location = locationById(state, ids[0])
       if (location) {
-        location.clues = (location.clues || 0) + 1
+        api.addCluesToLocation(location.id, 1)
         api.info?.(`🔍 在随机地点「${location.name}」放置 1 个线索。`)
       }
       return

@@ -655,6 +655,10 @@ test('P7 theWesternWall 其余专属卡：淹没棚屋动态连接、破碎遗�
   behavior.syncShantyConnections(state, api)
   assert.equal(shanty.connections.includes(floodedLocation.id), false, '常态下淹没棚屋不并入完全淹没地点')
   const deepOneMover = { id: 'deep-mover', code: '11746', originalCode: '11746', traits: ['Humanoid', 'Monster', 'Deep One'], location: 'drownedShanty' }
+  shanty.revealed = false
+  assert.deepEqual(behavior.enemyConnections(state, deepOneMover, shanty), [], '未揭示的棚屋不提供连接')
+  assert.deepEqual(behavior.enemyConnections(state, deepOneMover, floodedLocation), [], '未揭示的棚屋不接受额外连接')
+  shanty.revealed = true
   assert.ok(behavior.enemyConnections(state, deepOneMover, shanty).includes(floodedLocation.id),
     '深潜者移动时：淹没棚屋 → 任意完全淹没地点')
   assert.ok(behavior.enemyConnections(state, deepOneMover, floodedLocation).includes('drownedShanty'),

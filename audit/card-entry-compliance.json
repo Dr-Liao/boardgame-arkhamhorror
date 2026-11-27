@@ -41,18 +41,18 @@
   }
  ],
  "scope": {
-  "entries": 4556,
+  "entries": 4554,
   "player": 1778,
-  "encounter": 2778,
-  "cycles01to05": 1341
+  "encounter": 2776,
+  "cycles01to05": 1339
  },
  "counts": {
-  "directStateWrite": 111,
-  "singleCardField": 21,
+  "directStateWrite": 79,
+  "singleCardField": 16,
   "reprintDuplicate": 0,
   "playConditionGap": 0,
   "testWrapper": 25,
-  "revelationTestCards": 146,
+  "revelationTestCards": 145,
   "selfCodeInstanceLookup": 22
  },
  "baseline": {
@@ -135,38 +135,6 @@
    "03262",
    "03338",
    "04005",
-   "04044",
-   "04045",
-   "04046",
-   "04047",
-   "04050",
-   "04055",
-   "04057",
-   "04070",
-   "04071",
-   "04092",
-   "04093",
-   "04096",
-   "04122b",
-   "04130b",
-   "04137b",
-   "04165",
-   "04175",
-   "04178",
-   "04222",
-   "04225",
-   "04279",
-   "04281",
-   "04282",
-   "04283",
-   "04293",
-   "04302",
-   "04303",
-   "04316",
-   "04318",
-   "04319",
-   "04345",
-   "04346",
    "08008"
   ],
   "reprintDuplicate": [],
@@ -203,26 +171,6 @@
     "code": "02256"
    },
    {
-    "field": "entry.removedCards",
-    "code": "04045"
-   },
-   {
-    "field": "flags.collectedAStrangeLiquid",
-    "code": "04279"
-   },
-   {
-    "field": "flags.furyDoomPlaced",
-    "code": "04282"
-   },
-   {
-    "field": "flags.furyDoomThird",
-    "code": "04282"
-   },
-   {
-    "field": "flags.ichtacasPrey",
-    "code": "04137b"
-   },
-   {
     "field": "guest.clues",
     "code": "03082"
    },
@@ -239,24 +187,24 @@
     "code": "02142"
    },
    {
-    "field": "inv.engaged",
-    "code": "04302"
-   },
-   {
-    "field": "picked.doom",
-    "code": "04092"
+    "field": "inv.deck",
+    "code": "03211"
    },
    {
     "field": "picked.exhausted",
     "code": "03097"
    },
    {
-    "field": "whip.exhausted",
-    "code": "08008"
+    "field": "state.enemies",
+    "code": "03244"
    },
    {
-    "field": "zones.pursuit",
-    "code": "04281"
+    "field": "target.doom",
+    "code": "01171"
+   },
+   {
+    "field": "whip.exhausted",
+    "code": "08008"
    }
   ],
   "testWrapperCodes": [
@@ -375,7 +323,6 @@
    "05145",
    "05147",
    "05225",
-   "05268",
    "05271",
    "05306",
    "05342",
@@ -831,9 +778,7 @@
   ],
   "enemy.damageTaken": [
    "02280",
-   "03140",
-   "04055",
-   "04302"
+   "03140"
   ],
   "enemy.doom": [
    "02082",
@@ -844,8 +789,7 @@
   "enemy.engagedSeat": [
    "01173",
    "03201",
-   "03202",
-   "04302"
+   "03202"
   ],
   "enemy.exhausted": [
    "02058",
@@ -857,21 +801,6 @@
    "02238",
    "02259",
    "02314"
-  ],
-  "entry.removedCards": [
-   "04045"
-  ],
-  "flags.collectedAStrangeLiquid": [
-   "04279"
-  ],
-  "flags.furyDoomPlaced": [
-   "04282"
-  ],
-  "flags.furyDoomThird": [
-   "04282"
-  ],
-  "flags.ichtacasPrey": [
-   "04137b"
   ],
   "guest.clues": [
    "03082"
@@ -887,8 +816,7 @@
   ],
   "inv.actionsLeft": [
    "02135",
-   "03085",
-   "04222"
+   "03085"
   ],
   "inv.clues": [
    "01135",
@@ -897,26 +825,19 @@
    "02161",
    "02162",
    "02163",
-   "02199",
-   "04046"
+   "02199"
   ],
   "inv.damage": [
    "03174",
    "04005"
   ],
   "inv.deck": [
-   "03211",
-   "04175"
+   "03211"
   ],
   "inv.discard": [
    "03055",
    "03102",
-   "03338",
-   "04175",
-   "04178"
-  ],
-  "inv.engaged": [
-   "04302"
+   "03338"
   ],
   "inv.hand": [
    "03102",
@@ -924,8 +845,7 @@
    "03186",
    "03187",
    "03211",
-   "03338",
-   "04178"
+   "03338"
   ],
   "inv.hiddenCards": [
    "03186",
@@ -956,33 +876,21 @@
   ],
   "location.doom": [
    "03075",
-   "03091",
-   "04093",
-   "04225",
-   "04293"
-  ],
-  "picked.doom": [
-   "04092"
+   "03091"
   ],
   "picked.exhausted": [
    "03097"
   ],
   "state.acts": [
    "02067",
-   "03244",
-   "04047"
+   "03244"
   ],
   "state.clues": [
    "02160",
    "02161",
    "02162",
    "02163",
-   "02199",
-   "04046"
-  ],
-  "state.doom": [
-   "04092",
-   "04093"
+   "02199"
   ],
   "state.encounterDeck": [
    "01171",
@@ -996,10 +904,7 @@
    "03161",
    "03164",
    "03166",
-   "03224",
-   "04044",
-   "04046",
-   "04316"
+   "03224"
   ],
   "state.encounterDiscard": [
    "01171",
@@ -1008,68 +913,29 @@
    "02325",
    "02326",
    "02331",
-   "03224",
-   "04319"
+   "03224"
   ],
   "state.enemies": [
-   "03244",
-   "04047"
-  ],
-  "state.explorationDeck": [
-   "04047",
-   "04050",
-   "04057",
-   "04071",
-   "04318",
-   "04319",
-   "04345"
-  ],
-  "state.relicOfAges": [
-   "04122b",
-   "04319",
-   "04346"
+   "03244"
   ],
   "state.scenarioFlags": [
    "03101",
    "03215",
-   "03218",
-   "04070",
-   "04130b",
-   "04137b",
-   "04165",
-   "04279",
-   "04282",
-   "04283",
-   "04303",
-   "04345"
-  ],
-  "state.scenarioZones": [
-   "04281",
-   "04282",
-   "04283",
-   "04302"
+   "03218"
   ],
   "state.victoryDisplay": [
    "03044",
-   "03140",
-   "04047",
-   "04057",
-   "04093",
-   "04316"
+   "03140"
   ],
   "target.actionsLeft": [
    "02081",
    "02181"
   ],
   "target.doom": [
-   "01171",
-   "04096"
+   "01171"
   ],
   "whip.exhausted": [
    "08008"
-  ],
-  "zones.pursuit": [
-   "04281"
   ],
   "zones.sacrificed": [
    "02196",
@@ -1077,8 +943,7 @@
   ],
   "zones.setAside": [
    "02237",
-   "02238",
-   "04282"
+   "02238"
   ]
  }
 }

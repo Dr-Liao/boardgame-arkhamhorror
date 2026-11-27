@@ -46,8 +46,7 @@ export default {
           api.info('只能把非弱点的法术事件附属到黛雅娜·艾丝帕伦斯上。')
           return
         }
-        source.attachments ||= []
-        if (source.attachments.length >= 1) { api.info('黛雅娜·艾丝帕伦斯上已经附属了一张事件。'); return }
+        if ((source.attachments || []).length >= 1) { api.info('黛雅娜·艾丝帕伦斯上已经附属了一张事件。'); return }
         api.moveCard({ code: target.id, from: 'hand', to: 'attached', attachTo: source.id })
         api.info(`${inv.name} 把「${api.cardName(target.id)}」附属到黛雅娜·艾丝帕伦斯上。`)
       },

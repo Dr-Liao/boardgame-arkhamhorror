@@ -23,7 +23,7 @@ export default {
     }
     // 本轮内后入场的异教徒也要吃到 +1 攻击：记号是轮次，不是「进场时的快照」。
     api.setScenarioFlag('kingsEdictRound', state.round)
-    if (!moved) api.drawEncounter(inv.seat)
+    if (!moved) api.drawEncounter(inv.seat, { surgeDraw: true })
     return false
   },
 }

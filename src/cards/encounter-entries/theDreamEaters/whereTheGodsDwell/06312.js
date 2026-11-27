@@ -3,10 +3,11 @@
 //
 // 生成地点在两张地点里二选一（06296 冰封荒土 / 06299 大礼堂），
 // 由章节 behavior.spawnLocation 读 `enemySpawnRule.spawnAtAnyOfCodes` 分派（不写死卡号）。
-// 猎物由卡文解析进 definition（card-data 的 printedPrey），猎手关键词同样由卡文解析。
+// 用引擎猎物排序键表达「敏捷最低」；猎手关键词由印刷资料解析。
 export default {
   code: '06312',
   scope: 'enemy',
   implemented: true,
+  enemyRule: { prey: 'lowestAgility' },
   enemySpawnRule: { spawnAtAnyOfCodes: ['06296', '06299'] },
 }

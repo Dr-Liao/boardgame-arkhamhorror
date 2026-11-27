@@ -1,21 +1,22 @@
 // 08571 肯斯勒博士的办公室
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { partnerShroud } from './_shared.js'
 
 export default {
-  code: '08571',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "drKenslersOffice",
-    "tier": 2,
-    "investigatorShroudBonus": {
-      "partner": "艾米·肯斯勒博士",
-      "amount": -2
+  code: '08571', scope: 'location', implemented: true,
+  flags: { mirageId: 'drKenslersOffice', tier: 2 },
+  locationRule: { shroudModifier: partnerShroud('08593', '08720') },
+  abilities: [{
+    kind: 'forced', trigger: 'investigateSuccess', label: '受到 1 恐惧或从资产上移除 1 秘密',
+    criteria: ({ inv, source, context }) => context.seat === inv.seat && context.location === source.id,
+    resolve: ({ inv, source, api }) => {
+      const assets = api.countControlled(inv.seat, { usesType: 'secret' }).filter(asset => asset.uses > 0)
+      const options = [{ id: 'horror', label: '受到 1 点恐惧' },
+        ...assets.map(asset => ({ id: asset.id, label: '移除「' + api.cardName(asset.code) + '」上的 1 秘密', cardCode: asset.code }))]
+      const selected = options.length === 1 ? 'horror' : api.choice({ kind: 'effect', source: source.id, seat: inv.seat,
+        prompt: '肯斯勒博士的办公室：选择一项。', options })
+      const asset = assets.find(item => item.id === selected)
+      if (asset) api.spendUses(asset, 1)
+      else api.horror(inv.seat, 1)
     },
-    "forcedAfterInvestigate": "horrorOrRemoveSecret"
-  },
+  }],
 }

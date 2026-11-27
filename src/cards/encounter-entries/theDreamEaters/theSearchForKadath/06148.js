@@ -7,5 +7,5 @@
 // （先由行为结算「攻击本地每位调查员」，再用 api.skipEnemyAttackThisRound 跳过引擎的正常攻击）。
 export default {
   code: '06148', scope: 'enemy', implemented: true,
-  enemyRule: { attacksEachInvestigatorAtLocation: true },
+  enemyRule: { preyOnlyAtLocationTrait: 'ruins', attacksEachInvestigatorAtLocation: true },
 }

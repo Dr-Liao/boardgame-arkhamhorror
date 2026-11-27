@@ -5,7 +5,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 // 地点规则已迁回单卡条目：先加载引擎装配点，locationRuleFor(code) 才能读到条目。
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import * as clutches from '../content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/index.js'
 import { scenario as definition } from '../content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/definition.js'
 import { addBreach, removeBreach, breachOf } from '../src/engine/location-state.js'
@@ -119,6 +119,7 @@ function apiFor(state, options = {}) {
   const choices = [...(options.choices || [])]
   const testResult = options.testResult || { success: true, value: 3, difficulty: 3 }
   const api = {
+    addCluesToLocation: scenarioRuntime(state, []).addCluesToLocation,
     calls,
     info: text => calls.info.push(String(text)),
     random: options.random || (() => 0.37),
@@ -262,7 +263,7 @@ test('05286a 黑暗知识(一)：全队 3×人数线索必须立即花费推进�
   // [free]：移除本幕 3 个裂口 → 在一个随机地点放置 1 个线索。
   setActBreaches(state, 3)
   const actApi = apiFor(state)
-  const freeMove = clutches.behavior.actions(state, inv).find(move => move.rule === 'removeActBreaches')
+  const freeMove = clutches.behavior.fastActions(state, inv).find(move => move.rule === 'removeActBreaches')
   assert.ok(freeMove, '幕上裂口 ≥3 时应出现 [free] 行动')
   assert.equal(freeMove.actions, 0)
   const cluesBefore = state.locations.reduce((sum, location) => sum + (location.clues || 0), 0)
@@ -400,7 +401,7 @@ test('05295 南区（弃手牌版）：每弃 1 张手牌把 1 个裂口移到�
   inv.location = location.id
   inv.hand = ['01025', '01026', '01027']
   addBreach(state, location.id, 3)
-  const move = clutches.behavior.actions(state, inv).find(m => m.rule === 'locSouthsideHandBreaches')
+  const move = clutches.behavior.fastActions(state, inv).find(m => m.rule === 'locSouthsideHandBreaches')
   assert.ok(move)
   assert.equal(move.actions, 0)
   const api = apiFor(state, { choices: ['2'] })
@@ -480,7 +481,7 @@ test('05301 商人区（付资源版）：支付 2 资源把 1 个裂口移到�
   inv.location = location.id
   inv.resources = 5
   addBreach(state, location.id, 2)
-  const move = clutches.behavior.actions(state, inv).find(m => m.rule === 'locMerchantPay')
+  const move = clutches.behavior.fastActions(state, inv).find(m => m.rule === 'locMerchantPay')
   assert.ok(move)
   assert.equal(move.actions, 0)
   clutches.behavior.performAction(state, inv, move, apiFor(state))
@@ -517,7 +518,7 @@ test('05303 银暮秘社（受诅咒的歌）：受到 1 点恐惧把 1 个裂�
   const inv = state.investigators[0]
   inv.location = location.id
   addBreach(state, location.id, 1)
-  const move = clutches.behavior.actions(state, inv).find(m => m.rule === 'locLodgeHorror')
+  const move = clutches.behavior.fastActions(state, inv).find(m => m.rule === 'locLodgeHorror')
   assert.ok(move)
   assert.equal(move.actions, 0)
   clutches.behavior.performAction(state, inv, move, apiFor(state))
@@ -533,7 +534,7 @@ test('05304 绞刑者山丘（宇宙之秘）：受到 1 点伤害把 1 个裂�
   const inv = state.investigators[0]
   inv.location = location.id
   addBreach(state, location.id, 1)
-  const move = clutches.behavior.actions(state, inv).find(m => m.rule === 'locHangmansDamage')
+  const move = clutches.behavior.fastActions(state, inv).find(m => m.rule === 'locHangmansDamage')
   assert.ok(move)
   clutches.behavior.performAction(state, inv, move, apiFor(state))
   assert.equal(inv.damage, 1)

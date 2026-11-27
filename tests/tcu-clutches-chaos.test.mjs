@@ -3,7 +3,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 // 地点规则已迁回单卡条目：加载引擎装配点，让 locationRuleFor(code) 能读到已注册条目。
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import * as clutches from '../content/campaigns/theCircleUndone/scenarios/inTheClutchesOfChaos/index.js'
 import {
   scenario as definition, VARIANT, VARIANT_ACTS, LOCATIONS, LOCATION_PAIRS, deckCodesForVariant,
@@ -111,6 +111,7 @@ function apiFor(state, options = {}) {
   const log = []
   const testResult = options.testResult || { success: true, value: 3, difficulty: 3 }
   const api = {
+    addCluesToLocation: scenarioRuntime(state, []).addCluesToLocation,
     log,
     info: text => log.push(String(text)),
     random: options.random || (() => 0.37),
@@ -580,7 +581,7 @@ test('幕 [fast]：移除本幕 3 个裂口 → 随机地点放 1 线索', () =>
   setup(state)
   const inv = state.investigators[0]
   setActBreaches(state, 4)
-  const moves = clutches.behavior.actions(state, inv)
+  const moves = clutches.behavior.fastActions(state, inv)
   const move = moves.find(candidate => candidate.rule === 'removeActBreaches')
   assert.ok(move, '幕上有 ≥3 裂口时应出现 [fast] 行动')
   assert.equal(move.actions, 0)
@@ -588,7 +589,7 @@ test('幕 [fast]：移除本幕 3 个裂口 → 随机地点放 1 线索', () =>
   clutches.behavior.performAction(state, inv, move, apiFor(state))
   assert.equal(actBreaches(state), 1)
   assert.equal(state.locations.reduce((sum, location) => sum + (location.clues || 0), 0), beforeClues + 1)
-  assert.equal(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'removeActBreaches'), false)
+  assert.equal(clutches.behavior.fastActions(state, inv).some(candidate => candidate.rule === 'removeActBreaches'), false)
 })
 
 test('首领生命修正：每有 1 个被调查员控制的线索，生命 -2', () => {
@@ -686,7 +687,7 @@ test('商人区(3/0)：支付 2 资源把 1 个裂口移到当前幕', () => {
   const inv = state.investigators[0]
   inv.location = market.id
   fillBreaches(state, market, 2)
-  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locMerchantPay')
+  const move = clutches.behavior.fastActions(state, inv).find(candidate => candidate.rule === 'locMerchantPay')
   assert.ok(move)
   clutches.behavior.performAction(state, inv, move, apiFor(state))
   assert.equal(inv.resources, 3)
@@ -1061,17 +1062,20 @@ test('05294 南区（弃牌版）：就地结算力量诡计的显现；无牌�
   setActBreaches(state, 0)
   const replayed = []
   const api = apiFor(state, {
-    api: { replayEncounterRevelation: (seat, code) => replayed.push(code) },
+    api: { replayEncounterRevelation: (seat, code) => {
+      assert.equal(actBreaches(state), 1, '先移动裂口，再结算诡计显现')
+      replayed.push(code)
+    } },
   })
-  const move = clutches.behavior.actions(state, inv).find(candidate => candidate.rule === 'locSouthsideDiscard')
+  const move = clutches.behavior.fastActions(state, inv).find(candidate => candidate.rule === 'locSouthsideDiscard')
   assert.ok(move)
   clutches.behavior.performAction(state, inv, move, api)
   assert.deepEqual(replayed, ['05306'], '选中的力量诡计就地结算显现（不经过抽牌窗口）')
   assert.equal(actBreaches(state), 1, '南区 1 个裂口移到当前幕')
-  // 遭遇牌库空时不可用（即使弃牌堆有牌，也不再洗回牌库）。
+  // 既没有牌可弃也没有裂口可移时不可用。
   state.encounterDeck = []
   state.encounterDiscard = ['05306']
-  assert.equal(clutches.behavior.actions(state, inv).some(candidate => candidate.rule === 'locSouthsideDiscard'),
+  assert.equal(clutches.behavior.fastActions(state, inv).some(candidate => candidate.rule === 'locSouthsideDiscard'),
     false)
 })
 

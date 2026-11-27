@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import { actRuleFor, agendaRuleFor, assetRuleFor, encounterResolveCampaignsFor, encounterResolveFor, enemyRuleFor, enemyScriptFor, foundCardRuleFor, locationRuleFor, threatEffectFor, traitLabels, treacheryRuleFor } from '../../../src/cards/card-rules.js'
 // 第 81 轮：跨卡限制统一读条目标志，不再按卡号查资产/威胁。
@@ -252,7 +253,7 @@ export function laterBehavior(id) {
     },
     statModifier(state, inv, skill) {
       const alliesBlank = hasThreatFlag(inv, 'blanksAllies')
-      let bonus = encounterRules.statModifier(state, inv, skill)
+      let bonus = 0
       if (id === 'theMiskatonicMuseum') {
         const loc = state.locations.find(item => item.id === inv.location)
         if (skill === 'agility' && original(loc) === '02132') bonus += 2
@@ -419,14 +420,14 @@ export function laterBehavior(id) {
       let code
       while (state.encounterDeck.length) {
         code = state.encounterDeck.pop()
-        if (ALL_CARDS[code]?.type === 'location') return this.drawLocation(state, seat, code, api)
+        if (ALL_CARDS[code]?.type === 'location') return this.drawLocation(state, seat, code, api, { drawnBy: seat })
         state.encounterDiscard.push(code)
       }
       return null
     },
     drawLocation(state, seat, code, api, meta = {}) {
       if (id !== 'lostInTimeAndSpace') throw new Error('当前剧本不使用遭遇地点')
-      const loc = api.placeEncounterLocation(code)
+      const loc = api.placeEncounterLocation(code, { drawnBy: meta.drawnBy })
       // 第 69 轮：02324–02328 的「放置后立刻结算」在地点条目的 onDraw。
       locationRuleFor(code)?.onDraw?.(state, loc, api, seat, meta)
       return loc
@@ -784,7 +785,7 @@ export function laterBehavior(id) {
         const choice = api.choose({ kind: 'card', source: '02209', seat: inv.seat,
           prompt: '选择一张手牌弃掉，以获得 2 资源。',
           options: inv.hand.map((code, index) => ({ id: String(index), label: ALL_CARDS[code]?.nameZh || code })) })
-        inv.discard.push(inv.hand.splice(Number(choice), 1)[0]); inv.resources += 2
+        inv.discard.push(spliceHand(inv, Number(choice), 1)[0]); inv.resources += 2
       } else if (move.rule === 'clearDestroyedPathDoom' && id === 'whereDoomAwaits') {
         const loc = state.locations.find(item => item.id === inv.location)
         if (original(loc) !== '02287' || !loc.doom) throw new Error('此地点没有毁灭可移除')

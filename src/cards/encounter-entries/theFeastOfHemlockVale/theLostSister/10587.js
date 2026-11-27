@@ -19,5 +19,8 @@ export default {
     discardTest: { skill: 'agility', difficulty: 3 },
     traits: ['Hazard', 'Flora'],
   },
-  note: '近似：显现的附属目标选择与 [action] 弃卡留给 P8 的地点条目通道；本章 behavior 只读其持续效果（去黑暗/加值）。',
+  encounterResolve(state, inv, card, api) {
+    api.resolveScenarioEvent('lostSisterLuminousGrowth', { seat: inv.seat })
+    return true
+  }
 }

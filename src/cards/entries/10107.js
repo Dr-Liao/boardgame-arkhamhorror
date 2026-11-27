@@ -19,12 +19,7 @@
 //     达到生命上限会走 checkAssetDefeated 离场）。
 //   · 「对你所在地点或一个连接地点的一个敌人造成 2 点伤害」= api.damageEnemy(enemy, 2, seat)
 //     （敌人伤害的唯一入口，含击败结算）。
-//   · 「放在一边，位于场外」= 条目级 zoneReplacement.discard='bonded'（player-zones.js 的区域替换）
-//     + leavesPlay 钩子把这张副本推进弃置通道，从而直接收回场外绑定集合。
-//
-// 近似披露（simplified）：支援被击败/被弃置时引擎在 leavesPlay 钩子之后还会直接 push 一次弃牌堆，
-// 因此弃牌堆里会多留一张同号副本（绑定集合里的副本才是可再检索的那一张）；见
-// primitive-requests/10107.json。
+// 离场时通过绑定区的回收入口放在一边。
 const CODE = '10107'
 const CURSE = 'curse'
 
@@ -51,10 +46,6 @@ export default {
   code: CODE,
   name: '黄铜仆从',
   zoneReplacement: { discard: 'bonded' },
-  simplified: true,
-  note: 'approximation: 「放在一边，位于场外」经 zoneReplacement.discard=bonded + leavesPlay 收回绑定集合；'
-    + '引擎在支援被击败/弃置时还会另外 push 一次弃牌堆，弃牌堆里会多留一张同号副本（不影响再检索）。'
-    + '见 primitive-requests/10107.json。',
   abilities: [
     {
       kind: 'reaction',
@@ -88,8 +79,8 @@ export default {
     {
       kind: 'leavesPlay',
       label: '离场：放在一边，位于场外（收回场外绑定集合）',
-      resolve: ({ inv, api }) => {
-        api.putIntoDiscard(inv.seat, CODE)
+      resolve: ({ inv, source, api }) => {
+        if (!api.bonded.returnAsset(inv.seat, source)) return
         api.info('🔥 「黄铜仆从」：放在一边，位于场外。')
       },
     },

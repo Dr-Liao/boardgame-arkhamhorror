@@ -76,13 +76,12 @@ test('P6 10039 转瞬为神：花费 1 祝愿并横置结算旧印数值，祝�
   assert.ok(me(s).hand.includes('10039'), '绑定检索：转瞬为神进入手牌')
   me(s).hand = []
   const card = asset(s, '10039', { uses: 1 })
-  locationOf(s).clues = 2 // 01001 旧印：每个线索 +1
-  const context = {
-    when: 'testWouldFail', seat: 0, location: me(s).location,
-    skill: 'intellect', difficulty: 5, testValue: 3,
-  }
-  fire(s, '10039', descriptors('10039', 'reaction')[0], { source: card, context })
-  assert.equal(context.testBonus, 2, '按旧印数据（地点 2 个线索）并入本次检定')
+  locationOf(s).clues = 2
+  locationOf(s).shroud = getStat(s, me(s), 'intellect') + 1
+  move(s, { action: 'investigate' })
+  settle(s, pending => optionIdByLabel(pending, /结算该调查员的旧印效果/))
+  assert.equal(s.lastTestResult.success, true)
+  assert.equal(s.lastTestResult.value, getStat(s, me(s), 'intellect') + 2, '旧印按地点上的两个线索加值')
   assert.equal(me(s).assets.some(item => item.code === '10039'), false, '没有祝愿：离开场上')
   assert.deepEqual(s.bondedSets['10038'].cards, ['10039'], '放在一旁（场外绑定集合）')
 

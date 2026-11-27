@@ -9,9 +9,7 @@
 //     「查找绑定卡牌」把副本从场外集合取出后生成。
 //   · 猎手 / 猎物仅对承受者 = 条目级 enemyWeakness（card-lookup.js#enemyDef 合并 hunter / prey；
 //     `prey: true` 即 prey = bearer，bearerSeat 由 spawnEnemy 写成承受者座位）。
-//   · 「强制 - 离场时洗入你的牌库」= enemyWeakness.shuffleIntoDeckOnDefeat（enemies.js#defeatEnemy
-//     的唯一读点：被击败时改为洗回承受者牌库）。其余离场路径（api.removeEnemy、被放逐等）没有
-//     「敌人离场」窗口可挂，属缺读点，见 primitive-requests/10063.json。
+//   · 离场替代送回承受者的牌库；本卡的还款谈判明确豁免此替代。
 //   · 「[action] 如果欠款则花费 X：谈判。加入胜利区」= scope 'enemy' 的 action + actionKind 'parley'
 //     （parley.js#parleyMovesFor 枚举同地点敌人的谈判行动；不引发借机攻击）。
 //     欠款 X 读战役记录 youOweBianca:<seat>（10062 失败时写入）；花费用声明式动态费用
@@ -27,9 +25,7 @@ export default {
   code: CODE,
   name: 'Bianca "Die Katz"',
   scope: 'enemy',
-  simplified: true,
-  note: 'approximation: 「强制 - 离场时洗入你的牌库」只覆盖被击败路径（enemyWeakness.shuffleIntoDeckOnDefeat）；removeEnemy/放逐等其它离场路径没有敌人离场窗口，见 primitive-requests/10063.json。',
-  enemyWeakness: { hunter: true, prey: true, shuffleIntoDeckOnDefeat: true },
+  enemyWeakness: { hunter: true, prey: true, shuffleIntoBearerDeckOnLeave: true },
   abilities: [
     {
       kind: 'action',
@@ -41,7 +37,7 @@ export default {
       resolve: ({ state, inv, source, api }) => {
         const amount = owedBy(state, inv.seat)
         api.scenario.setCampaignRecord(`${DEBT_PREFIX}${inv.seat}`, null)
-        api.scenario.addEnemyToVictory(source)
+        api.scenario.addEnemyToVictory(source, { skipLeaveReplacement: true })
         api.info(`🎶 ${inv.name} 还清欠“咪咪”比安卡的 ${amount} 资源：她加入胜利区。`)
       },
     },

@@ -11,13 +11,7 @@ export default {
     onReveal(state, act, api, hooks) {
       // 背面：把放在一边的时间石室洗入探索牌库；本场景进胜利区并获得复仇 2。
       hooks.removeSetAsideLocation('chamberOfTime')
-      if (api.addToExplorationDeck) api.addToExplorationDeck(['chamberOfTime'])
-      else {
-        state.explorationDeck = [...(state.explorationDeck || []), 'chamberOfTime']
-        hooks.shuffleDeck()
-      }
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.chamberOfTimeInDeck = true
+      api.addToExplorationDeck(['chamberOfTime'])
       hooks.addActToVictory(act)
       api.info?.('🧭 时间石室被洗入探索牌库。')
     },

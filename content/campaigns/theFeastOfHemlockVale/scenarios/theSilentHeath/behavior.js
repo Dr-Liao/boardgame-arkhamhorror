@@ -21,6 +21,7 @@
 //
 // 本章状态只写 state.scenarioFlags / state.scenarioZones / state.campaign.records（纯 JSON），
 // 网格坐标走 mechanicState.grid（与《消失的姐妹》同一套 P2 原语），变化只经 api.* 生效。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { adjacentGridSpaces, connectGrid, gridPosition } from '../../../../../src/engine/grid-map.js'
@@ -1076,10 +1077,25 @@ export function performAction(state, inv, move, api = {}) {
   return false
 }
 
-function drawBeneathAction(state, inv, api) {
+export function turnEnded(state, inv, api = {}) {
+  const location = locationOf(state, inv?.location)
+  const rule = location?.revealed && entryOf(codeOf(location))?.flags?.crystalNurseryTurnEnd
+  if (!rule || !stackAt(state, location.id).length || flagsFor(state).nurseryReactionRound === state.round) return false
+  const selected = api.choose?.({
+    kind: 'reaction', seat: inv.seat, source: codeOf(location), canSkip: true,
+    prompt: '水晶温床：你要受到 1 点直接恐惧以抽取暗牌吗？',
+    options: [{ id: 'skip', label: '跳过' }, { id: 'accept', label: '受到恐惧并抽取暗牌' }],
+  })
+  if (selected !== 'accept') return false
+  flagsFor(state).nurseryReactionRound = state.round
+  api.directHorror?.(inv.seat, rule.directHorror)
+  return drawBeneathAction(state, inv, api, { ignoreClues: true })
+}
+
+function drawBeneathAction(state, inv, api, { ignoreClues = false } = {}) {
   const location = locationOf(state, inv.location)
   if (!location) return false
-  if ((Number(location.clues) || 0) > 0) return false
+  if (!ignoreClues && (Number(location.clues) || 0) > 0) return false
   const card = takeTopBeneath(state, location.id)
   if (!card) return false
   info(api, `${inv.name} 抽取「${location.name}」底下的一张暗牌。`)
@@ -1531,6 +1547,8 @@ export function doomPlaced(state, context = {}, api = {}) {
 // 混乱标记
 // ---------------------------------------------------------------------------
 export function resolveChaosToken(state, inv, token) {
+  const symbols = entryOf(scenario.referenceCode)?.flags?.chaosSymbols
+  if (symbols && !symbols.includes(String(token))) return null
   return silentHeathChaosToken(state, inv, token)
 }
 
@@ -1541,8 +1559,8 @@ export function chaosTokenValue(state, tokenFace) {
 /** 困难/专家 [elder_thing]：在[[巢穴]]地点自动失败。 */
 export function testAutoFail(state, inv, context = {}) {
   if (!isHardSide(state)) return false
-  const drawn = context?.drawn || []
-  if (!drawn.includes('elderthing')) return false
+  const symbol = entryOf(scenario.referenceCode)?.flags?.hardAutoFail ?? 'elderthing'
+  if (!context?.drawn?.includes(symbol)) return false
   return atLairLocation(state, inv)
 }
 
@@ -1700,7 +1718,7 @@ function randomDiscard(state, inv, count, api) {
   for (let index = 0; index < count; index++) {
     if (!(inv.hand || []).length) break
     const pick = Math.floor(randomOf(api)() * inv.hand.length)
-    const [code] = inv.hand.splice(pick, 1)
+    const [code] = spliceHand(inv, pick, 1)
     inv.discard ||= []
     inv.discard.push(code)
     discarded += 1
@@ -1937,7 +1955,14 @@ export function implementedEntryFlags(code) {
   return entryOf(code)?.flags || {}
 }
 
+export function patrolTarget(state, enemy, printed) {
+  if (agendaFlags(state).insectsLosePatrol && hasTrait(enemy, 'Insect')) return null
+  return printed
+}
+
 export const behavior = {
+  patrolTarget,
+  turnEnded,
   id: CHAPTER_ID,
   startLocation: () => START_LOCATION,
   // 起始三地点由 locationPlaced 显式翻面；新地点（幕 1 背面/洞穴）保持未揭示。

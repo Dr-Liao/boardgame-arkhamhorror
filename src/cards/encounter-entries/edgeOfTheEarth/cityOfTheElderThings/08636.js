@@ -14,8 +14,8 @@ export default {
       {
         rule: "rampartStudy",
         values: [
-          "-1",
-          "-1"
+          -1,
+          -1
         ],
         remember: "theTeamStudiedTheHistoryOfTheElderThings",
         label: "花费 2 个「-1」钥匙：移除密谋 1 毁灭，或弃掉一个非精英敌人/诡计（记录）"

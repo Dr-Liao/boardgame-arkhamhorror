@@ -197,6 +197,7 @@ export const behavior = {
     if (rule.onReveal === 'addFrostToken') return behavior.addFrostToken(state, api)
     if (rule.onReveal?.effect === 'placeCluesPerInvestigator') {
       const target = (state.locations || []).find(item => item.id === id)
+      if (!target || (rule.onReveal.height != null && locationLevel(target) !== rule.onReveal.height)) return null
       const amount = (Number(state.numInvestigators) || (state.investigators || []).length || 1) * (rule.onReveal.amount || 1)
       if (target) target.clues = (target.clues || 0) + amount
       api?.info?.(`❄️ 迎风通路揭示：放置 ${amount} 个线索。`)
@@ -522,7 +523,7 @@ function applyEnterFromBelow(state, inv, id, spec, api) {
     return { effect: kind, horror: 1 }
   }
   if (kind === 'tekeliShuffleIntoDeck') {
-    const result = tekeliShuffleIn(state, inv.seat, 1)
+    const result = api.mechanics?.tekeli?.shuffleIn(inv.seat, 1) ?? tekeliShuffleIn(state, inv.seat, 1)
     api?.info?.('❄️ 从下方进入：忒咳哩-哩牌库顶 1 张混洗入你的牌库。')
     return { effect: kind, shuffled: result !== false }
   }

@@ -3,7 +3,7 @@
 // 卡面：你按下秘库门上的三个隐藏节点……（叙事）你发现这个符文[tdc_rune_z]：
 //       在剧本日志的符文记录中，于 [tdc_rune_z] 下记录“城市”。该符文已被翻译。
 //       将本卡牌翻回地点面。其不能再次被翻面。
-// 读点：behavior.vaultFlipAction 读 flags.glyph（Z/城市）并写 discoveredGlyphs。
+// 读点：behavior.vaultFlipAction 验证 storyOf，记录 glyph，并应用 cannotFlipAgain。
 export default {
   code: '11532b',
   scope: 'storyAsset',

@@ -26,7 +26,7 @@ export default {
       && Number(source.doom) > 0,
     resolve: ({ source, context, api }) => {
       api.removeDoomFromCard(source, 1)
-      api.gainClues(context.seat, 1)
+      api.takeControlOfClues(context.seat, 1, source.location)
       api.info('🔍 「狂乱的探险家」：1 个毁灭标记翻为线索。')
       if (!(Number(source.doom) > 0)) api.discardEnemy?.(source)
     },

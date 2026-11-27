@@ -12,7 +12,7 @@
 //   · canOpportunityAttack → 不能趁乱攻击；
 //   · enemyConnections → 移动时与每个[[沉没]]地点相连；
 //   · enemyDefeated → 结局 4（议程 2 目标）。
-// 尚未接线：攻击后治愈 2 点（引擎没有「敌人攻击后」的地点限定读点，见 note）。
+//   · enemyAttackResolved → 在[[沼地]]地点攻击后治愈 2 点。
 export default {
   code: '10600',
   scope: 'enemy',
@@ -24,6 +24,5 @@ export default {
     healthBonusPerInvestigator: 5, cannotMakeAttacksOfOpportunity: true,
     movingConnectsToSunkenLocations: true, healAfterAttackingAtBog: 2,
     defeatResolution: 'resolution4',
-  },
-  note: '近似：攻击后治愈 2 点未接线（引擎无「敌人攻击后且其地点为沼地」的强制窗口）；其余读点均在 behavior。',
+  }
 }

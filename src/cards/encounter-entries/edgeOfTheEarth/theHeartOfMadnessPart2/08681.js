@@ -1,15 +1,25 @@
-﻿// 08681 最终幻景（The Final Mirage）· 幕 4 / 议程 6 双面
-// 卡面：无名的疯狂获得 hunter。强制 - 当 1+ 毁灭将被放置时，改为在左侧调查员所在地点生成 1 份。
-// 目标 - 逃跑（Run）。背面：检查战役日志：五座高塔全坍塌且肯斯勒有计划 → R1；
-// 五座高塔全坍塌但真相未明 → R2；否则 → R3。
+// 08681 最终幻景 · 幕与议程。无名疯狂获得猎手。
+const NAMELESS = '08679'
+const RAMP_ORDER = ['theGateOfYquaa', 'titanicRamp1', 'titanicRamp2', 'titanicRamp3', 'titanicRamp4', 'hiddenTunnel']
+
 export default {
-  code: '08681',
-  scope: 'act',
-  implemented: true,
+  code: '08681', scope: 'act', implemented: true,
   actRule: {
     objective: { type: 'runToHiddenTunnel' },
     backEffect: 'finalMirageOutcome',
-    namelessGainsHunter: true,
+    enemiesGainHunterCodes: [NAMELESS],
+    doomPlacementReplacement(state, amount, api) {
+      const printedCopy = state.scenarioZones?.setAside?.includes(NAMELESS)
+      const physicalCopy = api.enemyZones.list('namelessMadness').find(enemy => (enemy.originalCode || enemy.code) === NAMELESS)
+      if (!printedCopy && !physicalCopy) return false
+      const destination = RAMP_ORDER.find(id => state.investigators.some(inv =>
+        !inv.defeated && !inv.resigned && inv.location === id))
+      if (destination && api.canEnemyEnterLocation(NAMELESS, destination)) {
+        if (printedCopy) api.spawnSetAsideEnemy(NAMELESS, destination)
+        else if (physicalCopy) api.enemyZones.restore('namelessMadness', physicalCopy.id, { location: destination })
+      }
+      return true
+    },
   },
   flags: { finalMirage: true, resolutionByRecords: true },
 }

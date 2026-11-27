@@ -1,11 +1,26 @@
 // 09603 哈瓦那大剧院 · 地点（dancingMad）
-// 印刷数据由章节 definition 的 location() 从卡表读取；地点能力由章节 behavior 承接。
-// approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）
+const modifierKey = id => `09603:shroudTurn:${id}`
+
 export default {
   code: '09603',
   scope: 'location',
   implemented: true,
-  flags: { victory: 1, printedShroud: 4, printedClues: 1, },
-  note: 'approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）',
-  abilities: [],
+  flags: { victory: 1, printedShroud: 4, printedClues: 1 },
+  modifiers: [{
+    target: 'locationShroud',
+    amount: ({ state, entity }) => {
+      const turn = state.scenarioFlags?.[modifierKey(entity.id)]
+      return turn != null && turn === state.turnSerial && state.phase === 'investigation'
+        && !state.investigators[state.currentSeat]?.turnEnded ? -2 : 0
+    },
+  }],
+  abilities: [{
+    kind: 'free', actionKind: 'activate', range: 'here',
+    label: '花费 2 个资源：哈瓦那大剧院的隐藏值降低 2，直到你的回合结束',
+    cost: { resources: 2 },
+    limit: { scope: 'perTurn' },
+    criteria: ({ state, inv, source }) => source.revealed && inv.location === source.id
+      && state.phase === 'investigation' && state.currentSeat === inv.seat && !inv.turnEnded,
+    resolve: ({ state, source, api }) => api.setScenarioFlag(modifierKey(source.id), state.turnSerial),
+  }],
 }

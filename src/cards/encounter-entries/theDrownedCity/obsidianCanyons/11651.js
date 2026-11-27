@@ -8,6 +8,6 @@ export default {
   implemented: true,
   locationRule: { cannotLeavePlay: true, cannotBeMoved: true },
   flags: { central: true, immovable: true, resign: true, revealErodedFrieze: true },
-  
+
   note: "西墙。不能移动/离场（locationRule 声明，引擎读点）；揭示后抽取放一边的剥蚀壁画（behavior.locationRevealed → drawErodedFrieze，附属到本地点）；[action] 撤退。",
 }

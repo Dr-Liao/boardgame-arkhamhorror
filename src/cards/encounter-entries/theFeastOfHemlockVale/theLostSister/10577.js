@@ -18,6 +18,5 @@ export default {
     cluesPerInvestigator: 1,
     shroud: 3,
     traits: ['Coastal'],
-  },
-  note: '近似：「攻击失败后 1 点伤害」的失败窗口不在本章 behavior 读点里，本批只落旗标供 P8 接 skillTestResult。',
+  }
 }

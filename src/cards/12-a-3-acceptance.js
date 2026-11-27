@@ -2,7 +2,7 @@
 // Detailed evidence: audit/12-a-3-acceptance.json. Not a promise of all-combination equivalence.
 export const CORE2026_SHARD3_ACCEPTANCE_PROFILE = {
   "id": "core2026-player-c-2026-11",
-  "scope": "2026 核心盒 12 段（12081–12120）40 条目录记录。23 条通过五维验收；12086 披露近似、12105–12120 战役侧未迁移暂不切换。",
+  "scope": "2026 核心盒 12 段（12081–12120）40 条目录记录。24 张玩家卡通过，16 张 Brethren of Ash 战役卡缺少本地关卡实现。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const CORE2026_SHARD3_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const CORE2026_SHARD3_ACCEPTANCE_SHA256 = '61b7e89db5bf155cd1f5416545f0f3b81ab4d489c4555f6452f33dc844c278a4'
-const verified = new Set(["12081","12082","12083","12084","12085","12087","12088","12089","12090","12091","12092","12093","12094","12095","12096","12097","12098","12099","12100","12101","12102","12103","12104"])
+export const CORE2026_SHARD3_ACCEPTANCE_SHA256 = 'd878c730180ca7cce75ae7082ca643e090a6bab9a93b1064dd1e8b80b0d4509f'
+const verified = new Set(["12081","12082","12083","12084","12085","12086","12087","12088","12089","12090","12091","12092","12093","12094","12095","12096","12097","12098","12099","12100","12101","12102","12103","12104"])
 export const core2026Shard3CardVerified = code => verified.has(code)

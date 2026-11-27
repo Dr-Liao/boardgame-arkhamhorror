@@ -297,6 +297,10 @@
 .ah-direct-fx.is-direct-curse{--strike:#bc8fe5}
 .ah-direct-fx.is-direct-bite,.ah-direct-fx.is-direct-ambush{--strike:#ffac8e}
 .ah-direct-fx.is-direct-flash{--strike:#fff2bd}
+.ah-direct-fx.is-direct-claw{--strike:#f3987a}
+.ah-direct-fx.is-direct-drain{--strike:#bfe98e}
+.ah-direct-fx.is-direct-splash{--strike:#a7cad4}
+.ah-direct-fx.is-direct-backlash{--strike:#f78b9a}
 .ah-direct-fx .ah-combat-caption,.ah-blast-fx .ah-combat-caption{width:max-content;box-sizing:border-box}
 .ah-themed-fx .ah-combat-caption{width:max-content;box-sizing:border-box}
 .ah-p1-part{position:absolute;pointer-events:none;color:var(--p1);opacity:0;filter:drop-shadow(0 0 7px var(--p1))}
@@ -354,6 +358,10 @@
 .ah-direct-mark.is-glass{border-radius:0;clip-path:polygon(50% 0,60% 35%,100% 20%,70% 55%,95% 90%,55% 75%,20% 100%,35% 60%,0 30%,40% 35%);background:#ffdb8a}
 .ah-direct-mark.is-redirect{border-style:dashed;border-radius:50% 0 50% 50%}
 .ah-direct-mark.is-flash{background:radial-gradient(circle,#fff7ddaa,transparent 70%)}
+.ah-direct-mark.is-claw{border:0;background:var(--strike);clip-path:polygon(0 44%,75% 0,15% 57%,90% 16%,27% 74%,100% 32%,36% 89%,24% 87%,84% 45%,17% 79%,70% 31%,7% 64%)}
+.ah-direct-mark.is-drain{border:4px double var(--strike);border-radius:50% 24% 50% 22%;background:radial-gradient(circle,transparent 23%,#bfe98e63 28%,transparent 58%)}
+.ah-direct-mark.is-splash{border:2px dashed var(--strike);background:radial-gradient(ellipse,#bddeecb3 0,transparent 62%);width:86px;margin-left:-43px}
+.ah-direct-mark.is-backlash{border:2px solid var(--strike);border-radius:4px;transform:rotate(45deg);width:48px;height:48px;margin:-24px 0 0 -24px;background:radial-gradient(circle,#f06378a8,transparent 70%)}
 @media(max-width:600px){.ah-direct-fx .ah-combat-caption,.ah-blast-fx .ah-combat-caption{font-size:14px;padding:9px 12px;overflow-wrap:anywhere}.ah-direct-number{font-size:25px}}
 @media(prefers-reduced-motion:reduce){.ah-direct-mark,.ah-direct-source,.ah-direct-number{display:none}}
 @media(prefers-reduced-motion:reduce){.ah-combat-slash,.ah-combat-burst,.ah-combat-muzzle,.ah-combat-tracer,.ah-combat-hole,.ah-combat-cut,.ah-combat-bolts,.ah-combat-charge,.ah-combat-sigil,.ah-combat-orb,.ah-combat-ward,.ah-storm-sigil,.ah-storm-vortex,.ah-storm-core,.ah-storm-wave,.ah-storm-echo,.ah-blast-stick,.ah-blast-flash,.ah-blast-fireball,.ah-blast-ring,.ah-blast-smoke,.ah-blast-debris{display:none}}

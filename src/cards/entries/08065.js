@@ -4,12 +4,7 @@
 //       以及等于你 [willpower] 的 [intellect] 图标。
 //
 // 一卡一文件：这张卡的行为只在这里维护。
-// 读点：commit 档案的 iconBonus（动态图标）。ctx 没有 getStat/api，因此读 cards-data 的印刷
-// 属性（近似；已写 primitive request，待主进程把修正值读点接进 iconBonus 后改一行即可）。
-import { ALL_CARDS } from '../../cards/cards-data.js'
-
-const printed = (inv, name) => Number(ALL_CARDS[inv?.code]?.[name] ?? 0)
-
+// 动态承诺图标按调查员当前有效技能值计算。
 export default {
   code: '08065',
   abilities: [
@@ -17,11 +12,11 @@ export default {
       kind: 'commit',
       label: '密教理论：获得等于你[智慧]的[意志]图标与等于你[意志]的[智慧]图标',
       skill: {
-        iconBonus: ({ inv, skill }) => {
+        iconBonus: ({ getStat, skill }) => {
           const tested = new Set((Array.isArray(skill) ? skill : [skill]).filter(Boolean))
           let icons = 0
-          if (tested.has('willpower')) icons += printed(inv, 'intellect')
-          if (tested.has('intellect')) icons += printed(inv, 'willpower')
+          if (tested.has('willpower')) icons += getStat('intellect')
+          if (tested.has('intellect')) icons += getStat('willpower')
           return icons
         },
       },

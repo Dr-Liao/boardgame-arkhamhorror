@@ -4,7 +4,7 @@
   "profile": {
     "id": "tdc-campaign-c-2026-11",
     "scope": "沉没之城 11 段 tdcc 战役卡（11578–11618）43 条目录记录。43 条全部通过五维验收。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -20,7 +20,7 @@
     "verified": 43,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 262
+    "testsPassed": 263
   },
   "testFiles": [
     {
@@ -37,7 +37,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
-      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+      "sha256": "96393288155306c3ab1fe357ca841ae49f8fe72c58993dd14c8738aaa70f6ca1"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
-      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+      "sha256": "02f8b0fa009ed20e6c9927b708aed09bc68c2676b5831b100953825a2af88236"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",

@@ -9,7 +9,6 @@
 export default {
   code: '06153', scope: 'treachery', implemented: true,
   treacheryRule: {
-    attachedToLocation: true,
     // 离开附属地点后的强制；behavior.locationLeft 读取。
     afterLeave: { horror: 1, doom: 1, discard: true },
     // 附属地点的 [action]：检定意志(4)或战斗(4)，成功弃掉；behavior.actions/performAction 读取。

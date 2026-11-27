@@ -194,6 +194,27 @@ test('TCU 05188 秘密卷轴 查看牌库底 3 张：可弃 1、可拿 1、其�
 // 05189 秘密卷轴（神秘学家）
 // ---------------------------------------------------------------------------
 
+test('TCU 05188/05189 秘密卷轴：遭遇牌从指定一端移动，保留同号副本且不提供拿到手牌', () => {
+  for (const code of ['05188', '05189']) {
+    const state = fixture('01001')
+    playCard(state, code)
+    me(state).deck = ['01088']
+    state.encounterDeck = ['01159', '01165', '01166', '01159']
+    state.encounterDiscard = []
+    useAbility(state, code, 0, null, pending => {
+      if (pending.kind === 'deck') return 'encounter'
+      assert.ok(!pending.options.some(option => option.id === 'hand'))
+      if (pending.kind === 'card') return '0'
+      if (pending.options.some(option => option.id === 'discard')) return 'discard'
+      return 'bottom'
+    })
+    assert.equal(state.encounterDeck.length, 3)
+    assert.deepEqual(state.encounterDiscard, ['01159'])
+    assert.equal(state.encounterDeck.filter(candidate => candidate === '01159').length, 1)
+    assert.deepEqual(me(state).deck, ['01088'])
+  }
+})
+
 test('TCU 05189 秘密卷轴 查看任意牌库顶或底 1 张，然后弃/拿/放顶/放底', () => {
   const state = fixture('01001')
   playCard(state, '05189')
@@ -915,6 +936,22 @@ test('TCU 05237 幸运或是注定 毁灭放到卡上时反应取消 1 点并放
 // ---------------------------------------------------------------------------
 // 05273 MK1手榴弹
 // ---------------------------------------------------------------------------
+
+test('TCU 05237 幸运或是注定：玩家支援获得毁灭时不提供反应，遭遇敌人可以触发', () => {
+  const state = fixture('01001')
+  me(state).hand = ['05237']
+  asset(state, '05235', { doom: 0 })
+  run(state, current => placeDoomOnCard(current, cardOf(current, '05235'), 1, []), pending => {
+    assert.ok(!pending.options.some(option => option.cardCode === '05237'))
+  })
+  assert.deepEqual(me(state).hand, ['05237'])
+  assert.equal(cardOf(state, '05235').doom, 1)
+  const target = enemy(state, { code: '01159', doom: 0 })
+  run(state, current => placeDoomOnCard(current, enemyById(current, target.id), 1, []),
+    pending => pending.options.find(option => option.cardCode === '05237')?.id)
+  assert.equal(enemyById(state, target.id).doom, 0)
+  assert.deepEqual(state.exiled, ['05237'])
+})
 
 test('TCU 05237 幸运或是注定 密谋毁灭也能取消（addDoom 的 doomPlaced 窗口）', () => {
   const state = fixture('01001')

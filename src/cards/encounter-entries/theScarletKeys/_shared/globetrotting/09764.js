@@ -6,12 +6,11 @@
 // 读点：modifiers（+1 意志）；free 实体行动（actionKind，玩家窗口内横置）走 ctx.api；
 //   空洞回收 api.tsk.hollow.recall → putInHand → moveCard(deckTop) → shuffleDeck（空洞卡不在常规区域，
 //   只能先入其所有者手牌再洗进牌库）。
-// 近似：① 「揭示一张手牌」是公开揭示，没有展示读点（只用它作筛选条件）；② 回收用「先入手牌再洗入
-//   牌库」三段代替一次性洗入（primitive-requests/09764.json）。
 const CODE = '09764'
 
 const hollowRecords = api => api.tsk.hollow.cards()
 const ownerSeatOf = (record, fallback) => Number.isSafeInteger(record?.seat) ? record.seat : fallback
+const titleOf = (api, code) => api.cardName(code)
 
 function shuffleHollowIntoDeck(record, fallbackSeat, api) {
   const recalled = api.tsk.hollow.recall(record.code, { to: 'deck' })
@@ -39,10 +38,12 @@ export default {
     actionKind: 'activate',
     label: '[fast] 横置：把同名空洞或任意一个空洞洗回其所有者牌库，每张获得 1 资源',
     cost: { exhaust: true },
-    resolve: ({ state, inv, api }) => {
+    resolve: ({ inv, api }) => {
       const records = hollowRecords(api)
+      const matchingHand = [...new Set(inv.hand || [])]
+        .filter(code => records.some(record => titleOf(api, record.code) === titleOf(api, code)))
       const options = []
-      if ((inv.hand || []).length && records.length) options.push({ id: 'byHand', label: '揭示一张手牌：把同名空洞洗回牌库' })
+      if (matchingHand.length) options.push({ id: 'byHand', label: '揭示一张手牌：把同名空洞洗回牌库' })
       if ((inv.hand || []).length && records.length) options.push({ id: 'byCard', label: '弃一张手牌：把任意一个空洞洗回牌库' })
       if (!options.length) {
         api.info?.('「戴维·伊拉万博士」：没有可回收的空洞，或手牌为空。')
@@ -57,13 +58,12 @@ export default {
         const picked = String(api.choice({
           kind: 'card', source: CODE, seat: inv.seat,
           prompt: '揭示一张手牌，把以它为名的空洞洗回牌库。',
-          options: [...new Set(inv.hand)].map(code => ({ id: code, label: api.cardName?.(code) || code, cardCode: code })),
+          options: matchingHand.map(code => ({ id: code, label: titleOf(api, code), cardCode: code })),
         }))
-        const matches = records.filter(record => record.code === picked)
-        if (!matches.length) {
-          api.info?.('「戴维·伊拉万博士」：没有与该手牌同名的空洞。')
-          return false
-        }
+        if (!matchingHand.includes(picked)) return false
+        const title = titleOf(api, picked)
+        const matches = records.filter(record => titleOf(api, record.code) === title)
+        api.publicInfo(`🔎 ${inv.name} 揭示手牌中的「${title}」。`)
         for (const record of matches) shuffled += shuffleHollowIntoDeck(record, inv.seat, api)
       } else {
         const pickedId = String(api.choice({
@@ -86,6 +86,4 @@ export default {
       return shuffled > 0
     },
   }],
-  note: 'approximation: 空洞回收走 recall →（setAside 直接洗回，否则 putInHand 中转）→ moveCard(deckTop) → shuffleDeck；'
-    + '「揭示手牌」只作为筛选条件，没有公开揭示的展示读点（primitive-requests/09764.json）。',
 }

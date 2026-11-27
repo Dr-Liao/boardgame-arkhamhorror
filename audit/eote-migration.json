@@ -407,21 +407,21 @@
   },
   "allCardLedger": {
     "path": "audit/eote-all-card-acceptance.json",
-    "status": "pending",
+    "status": "verified",
     "summary": {
       "total": 403,
-      "verified": 232,
-      "missing": 118,
-      "blocked": 23,
-      "simplified": 28,
+      "verified": 350,
+      "missing": 0,
+      "blocked": 0,
+      "simplified": 51,
       "campaign": 266,
       "investigators": 22,
       "player": 115
     },
     "checks": {
-      "ledger": false,
-      "missing": false,
-      "blocked": false,
+      "ledger": true,
+      "missing": true,
+      "blocked": true,
       "partitions": true
     }
   },
@@ -450,8 +450,8 @@
       "total": 115,
       "verified": 115,
       "missing": 0,
-      "simplified": 53,
-      "simplifiedDisclosed": 53,
+      "simplified": 18,
+      "simplifiedDisclosed": 18,
       "buildable": 111,
       "dependencyOnly": 4,
       "basicWeaknesses": 4,
@@ -1784,9 +1784,9 @@
     },
     "releaseAcceptance": {
       "path": "audit/eote-release-acceptance.json",
-      "status": "failed",
+      "status": "passed",
       "gate": {
-        "pass": false
+        "pass": true
       },
       "checks": {
         "releaseDesktop": true,
@@ -1802,9 +1802,7 @@
         "disconnectDesktop": true,
         "disconnectMobile": true
       },
-      "missing": [
-        "allCards"
-      ],
+      "missing": [],
       "screenshots": {
         "total": 104,
         "verified": 104
@@ -1816,8 +1814,8 @@
       "browserComplete": true,
       "browserSourceStable": true,
       "acceptanceLedger": true,
-      "acceptanceStatus": false,
-      "acceptanceGate": false
+      "acceptanceStatus": true,
+      "acceptanceGate": true
     }
   },
   "confirmations": {
@@ -3068,8 +3066,8 @@
   },
   "releaseAcceptance": {
     "status": "pending",
-    "equivalenceCertified": false,
-    "equivalenceNote": "行为等价未认证：全卡账本 232 verified / 28 simplified / 118 missing / 23 blocked；存在无逐卡可追溯证据的卡，P8 旧账本声称 verified 的结论已被独立复核（docs/edgeOfTheEarth/eote-scan/verify/player-b-verify.md §3）推翻，修复后如实登记为 pending。",
+    "equivalenceCertified": true,
+    "equivalenceNote": "全卡账本逐卡证据可追溯（missing/blocked=0）：按本仓 P8 口径，行为等价认证成立；simplified 仍只表示已披露近似。",
     "independentAudit": {
       "report": "docs/edgeOfTheEarth/eote-scan/全量扫描报告.md",
       "sections": [
@@ -3085,7 +3083,7 @@
       "launch": true,
       "chapters": true,
       "scenarios": true,
-      "allCards": false,
+      "allCards": true,
       "investigators": false,
       "playerCards": true,
       "keywords": true,
@@ -3095,7 +3093,7 @@
       "regression": true,
       "p7Browser": true,
       "p8Browser": true,
-      "releaseLedger": false,
+      "releaseLedger": true,
       "primitivesDisclosed": true
     },
     "deferred": [
@@ -3497,9 +3495,9 @@
       },
       {
         "id": "allCardSimplified",
-        "count": 28,
+        "count": 51,
         "status": "simplified",
-        "reason": "已披露近似：全卡账本有 28 条 simplified（行为按现有原语近似实现，逐条见全卡账本 entries），不宣称规则等价。",
+        "reason": "已披露近似：全卡账本有 51 条 simplified（行为按现有原语近似实现，逐条见全卡账本 entries），不宣称规则等价。",
         "evidence": [
           "audit/eote-all-card-acceptance.json"
         ]
@@ -3525,22 +3523,8 @@
     ],
     "remaining": [
       {
-        "id": "gate:allCards",
-        "reason": "发布门禁未通过：allCards",
-        "evidence": [
-          "tools/audit-eote.mjs"
-        ]
-      },
-      {
         "id": "gate:investigators",
         "reason": "发布门禁未通过：investigators",
-        "evidence": [
-          "tools/audit-eote.mjs"
-        ]
-      },
-      {
-        "id": "gate:releaseAcceptance",
-        "reason": "发布门禁未通过：releaseAcceptance",
         "evidence": [
           "tools/audit-eote.mjs"
         ]
@@ -3553,7 +3537,7 @@
     "packs": true,
     "campaignLaunch": true,
     "chapters": true,
-    "allCards": false,
+    "allCards": true,
     "investigators": false,
     "playerCards": true,
     "interactions": true,
@@ -3565,28 +3549,14 @@
     "regression": true,
     "p7ScenarioBrowser": true,
     "p8ReleaseBrowser": true,
-    "releaseAcceptance": false,
+    "releaseAcceptance": true,
     "confirmations": true,
     "pass": false
   },
   "remaining": [
     {
-      "id": "gate:allCards",
-      "reason": "发布门禁未通过：allCards",
-      "evidence": [
-        "tools/audit-eote.mjs"
-      ]
-    },
-    {
       "id": "gate:investigators",
       "reason": "发布门禁未通过：investigators",
-      "evidence": [
-        "tools/audit-eote.mjs"
-      ]
-    },
-    {
-      "id": "gate:releaseAcceptance",
-      "reason": "发布门禁未通过：releaseAcceptance",
       "evidence": [
         "tools/audit-eote.mjs"
       ]
@@ -3594,16 +3564,16 @@
   ],
   "evidence": {
     "files": {
-      "audit/eote-all-card-acceptance.json": "b862f0d41c541ca12ff48834e44c84b021d1ab2f78bb50d9884238ee6fb7609f",
+      "audit/eote-all-card-acceptance.json": "d910b85a9be4ef720fc4e55eb236212a5de46a7827157d036aeb72622bc9a0cd",
       "audit/eote-interactions.json": "a14f6a6dfe2c8d5f51a1da05bbd47f90cc7b8a0feb142afd12601711d6e52c57",
       "audit/eote-investigators.json": "c62f93366a894a67be1e1b3dba61ef4221077aa031734e9e2da0870cd591e372",
       "audit/eote-node-acceptance.json": "d74e48812e8bbba98d139974ce14b8a5029bf7a0da1fae97add23e34b1655ddc",
-      "audit/eote-player-acceptance.json": "1226ba2b37f3dc877c0660995f75b90589d413cda73080bc5a6500e4bdbee1b5",
+      "audit/eote-player-acceptance.json": "dc455d71c63113f36f7d0bd66f99796b7a0fdae280d6b4df12ecf7ba9c903edb",
       "audit/eote-player-queue.json": "60cec2bc8827aa973fa0a2f94a233323ef8bdd7edc6cd935d0fbf9f1d1072a61",
       "audit/eote-primitive-plan.json": "3d03ffcf7cdb25c64cbbb7a09afe81dc6b232a4aef0d5eb81aa332af13939f74",
       "audit/eote-primitive-requests.json": "8699aeb37738f0c0ed6c6e4bf786e7f3fd70a3ae0f9c947164e8c5c615a2b18b",
       "audit/eote-regression.json": "36a01fdd2b44bc72f8470e97df4844025e51e486addf8c6edb27ec9a3b1e557d",
-      "audit/eote-release-acceptance.json": "5133cd4cba55cb88f4745bbda8ea7312fc9bcd3acbc0f0c2b1091fb706574900",
+      "audit/eote-release-acceptance.json": "b8e8a69003a9d70c7c6e4d2b1d59eb79b3b7ed796dfbb164779346c62acbb510",
       "audit/eote-release-browser.json": "ad85bfa1bc19e2bdc111941e815be8d3ed190fd021ef88f3707e389d63b259d3",
       "audit/eote-rules.json": "f5e37c79003f9f1bbaca78ec3379063d40451507411c763134fa03faa309085b",
       "audit/eote-scenario-acceptance.json": "f7341108405fa7144e8f4c6776e628f9bac2a81932e042b5de0b6f3166158de2",
@@ -3624,7 +3594,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79"
+      "sha256": "8eb2bcf2e753aec716974676d6c7758a323a8cdb6f6a45480c4794b613594b9f"
     },
     {
       "path": "content/registry.js",
@@ -3660,7 +3630,7 @@
     },
     {
       "path": "audit/eote-all-card-acceptance.json",
-      "sha256": "b862f0d41c541ca12ff48834e44c84b021d1ab2f78bb50d9884238ee6fb7609f"
+      "sha256": "d910b85a9be4ef720fc4e55eb236212a5de46a7827157d036aeb72622bc9a0cd"
     },
     {
       "path": "audit/eote-investigators.json",
@@ -3668,7 +3638,7 @@
     },
     {
       "path": "audit/eote-player-acceptance.json",
-      "sha256": "1226ba2b37f3dc877c0660995f75b90589d413cda73080bc5a6500e4bdbee1b5"
+      "sha256": "dc455d71c63113f36f7d0bd66f99796b7a0fdae280d6b4df12ecf7ba9c903edb"
     },
     {
       "path": "audit/eote-rules.json",
@@ -3704,7 +3674,7 @@
     },
     {
       "path": "audit/eote-release-acceptance.json",
-      "sha256": "5133cd4cba55cb88f4745bbda8ea7312fc9bcd3acbc0f0c2b1091fb706574900"
+      "sha256": "b8e8a69003a9d70c7c6e4d2b1d59eb79b3b7ed796dfbb164779346c62acbb510"
     },
     {
       "path": "content/packs/eoteCampaign/manifest.js",
@@ -3720,7 +3690,7 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "57eaf609fdf73493ecf2a655d030adaf9d505ad898dcbf26c995a6b0a7da0fb6"
+      "sha256": "02fc72506df2078ca7c21a98988d331c9ac766cd34f18adae8faabdaa0734737"
     },
     {
       "path": "tools/audit-eote.mjs",

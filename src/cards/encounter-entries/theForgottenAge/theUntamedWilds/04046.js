@@ -16,10 +16,10 @@ export default {
       const lead = state.investigators[state.campaign.leadSeat] || state.investigators.find(inv => !inv.defeated && !inv.resigned)
       const spawnAt = lead?.location || 'expeditionCamp'
       if (!state.scenarioFlags?.ichtacaSpawned) {
-        state.scenarioFlags.ichtacaSpawned = true
+        api.setScenarioFlag('ichtacaSpawned')
+        api.takeFromSetAside('04052')
         api.spawn('04052', spawnAt)
       }
-      state.encounterDeck = [...state.encounterDeck]
       api.shuffleDiscard()
     },
     roundEndCheck(state, act, api) {
@@ -39,11 +39,9 @@ export default {
         if (!remaining) break
         const pay = Math.min(remaining, inv.clues || 0)
         if (!pay) continue
-        inv.clues -= pay
+        api.spendClues(inv.seat, pay)
         remaining -= pay
       }
-      state.clues = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
-        .reduce((sum, inv) => sum + (inv.clues || 0), 0)
       api.advanceAct()
     },
   },

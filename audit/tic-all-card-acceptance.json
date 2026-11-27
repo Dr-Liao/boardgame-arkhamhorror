@@ -4,7 +4,7 @@
   "profile": {
     "id": "tic-all-cards-2026-11",
     "scope": "TIC 全部非玩家印刷记录 252 张（audit/tic-scope.json 的 ticCampaign 分区；全循环共 361 条记录 = campaign 252 + investigators + player，玩家/调查员另有 audit/tic-player-acceptance.json / audit/tic-investigators.json）。",
-    "basis": "实跑 84 个 tests/tic-*.test.mjs（1593 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
+    "basis": "实跑 85 个 tests/tic-*.test.mjs（1602 通过 / 0 失败用例，0 个无事件损坏文件 + 1 个 re-export 入口）。证据两级：①通过用例标题命中卡号（strongEvidence）；②含该卡号的测试文件实跑有通过用例（fileLevelEvidence，按文件内容 token 匹配，含 canonical/别名）。已实现判定 = 条目文件存在 + 未显式 implemented:false + 有实际行为（运行时注册条目的 abilities/modifiers/各类 *Rule；兼容 _shared 工厂）；显式 implemented:true 只是最强声明，不再作为必要条件（项目惯例：未实现才写 implemented:false）。",
     "evidencePolicy": "卡号出现在 definition/behavior/测试源码里不构成证据（§5.2 事故备忘）：文件级证据只在该测试文件**实跑有通过用例**时成立，且与标题命中分开记账（strongEvidence / fileLevelEvidence）。整体仍要求「实跑通过 + 卡号命中」，失败用例只记 failedEvidence。",
     "statusPolicy": "优先级 no-behavior > blocked > 缺失（missing）> simplified > verified。simplified 只在「已实现且有测试证据，但存在 pending 行为类原语请求」或条目显式 simplified:true 时成立，不会计入 verified；gate 口径（w3）允许 verified+simplified 通过、no-behavior 单列、missing 必须为 0。",
     "blockedPolicy": "blocked = 出现在 pending 的行为类原语请求（kind!==shared-factory）或 audit/tic-primitive-plan.json 中状态非 done 的原语卡片清单，且条目未实现或无通过测试。shared-factory（去重/共享工厂）请求只记 refactorRequests，不改变单卡状态。",
@@ -46,10 +46,10 @@
     "chapters": 8,
     "unassignedChapterCards": 0,
     "chapterCoverageConserved": true,
-    "testFiles": 84,
+    "testFiles": 85,
     "testFilesWithoutEvents": 0,
     "wrapperTestFiles": 1,
-    "testsPassed": 1593,
+    "testsPassed": 1602,
     "testsFailed": 0,
     "pendingPrimitiveRequests": 0,
     "behaviorPrimitiveRequests": 0,
@@ -350,8 +350,8 @@
     "primitivePlanSha256": "40d63022ab66c6d41549480420cdf23ae5ca77e898a11bd2b7f65a15b0695e84",
     "testRun": {
       "exit": 0,
-      "files": 84,
-      "passed": 1593,
+      "files": 85,
+      "passed": 1602,
       "failed": 0,
       "filesWithoutEvents": [],
       "wrapperFiles": [
@@ -365,7 +365,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-        "sha256": "f373f0691f9589e52cc583fc930a226fec404b3dca569e56eba7b7518ff8f403"
+        "sha256": "6c4090eba71d1475dda146c2f8b5d5a61580859bbc104abcfb54741d7dde363e"
       },
       {
         "file": "games/arkhamhorror/tests/tic-aside-hazards.test.mjs",
@@ -429,7 +429,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-        "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+        "sha256": "77085f74c7104b64befad15759c8cb5bd07adcf52e1734ae304d11f0aac4c52f"
       },
       {
         "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
@@ -469,11 +469,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-investigators.test.mjs",
-        "sha256": "3b92867ae29461a9825a95e3825b7a71420dafba43405f57ad94edfc731f47b7"
+        "sha256": "2e9b2e0d36067debf3f12bc2288c5758475f24d8ebb1cba46a883880580ce8a5"
       },
       {
         "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-        "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+        "sha256": "8e1a6aa3b2eafa4e15101268f7ca36d234c8aacb710ba2309d846f9b92f2c090"
       },
       {
         "file": "games/arkhamhorror/tests/tic-light-in-the-fog-agendas.test.mjs",
@@ -481,7 +481,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-        "sha256": "f1062c5014ca367f9a5f6ce69c8da542b0fade75d5991e807b69f1b052b42ace"
+        "sha256": "478a28b5839a7c9a0e582f1328639631212dc540457ba54691edb49b06787ff3"
       },
       {
         "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
@@ -493,11 +493,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-media.test.mjs",
-        "sha256": "210098983a400c927e65648b25b7c918e940cefe2da5563df2a44bdd799804fd"
+        "sha256": "b0d97d6c43c847d77dc6211cdc0a7acf2e9d840957c8fbc3acba21fbb93ffa71"
       },
       {
         "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-        "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
+        "sha256": "dd1374f20f16558dec9eaedbe6ce082992d8c4bdb81b252089cda0a988506957"
       },
       {
         "file": "games/arkhamhorror/tests/tic-migration.test.mjs",
@@ -505,11 +505,11 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-        "sha256": "afd0260c9d1689705305ca7e6f302084b755d6528641178cea95de7e964e0ee1"
+        "sha256": "c4ccafbd3f58c2a411a8711f6bfdd838ff91083ab35bfdab60311c9ebee426d9"
       },
       {
         "file": "games/arkhamhorror/tests/tic-p8-multiplayer.test.mjs",
-        "sha256": "73416376002f6b931cabd716faca4265292a530a4702ba2020f6ab82a2103a9d"
+        "sha256": "7204fbf0bbc6e433e9c127b53c6ae53dd7b68d42848b6f7a2ca6cb17f99ac716"
       },
       {
         "file": "games/arkhamhorror/tests/tic-p8-registration.test.mjs",
@@ -525,7 +525,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-        "sha256": "27432ccdbaacf35ddc06413ad14fde9ec5a5929170521d1593bc84f21fe22def"
+        "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
       },
       {
         "file": "games/arkhamhorror/tests/tic-player-primitives.test.mjs",
@@ -589,7 +589,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-        "sha256": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
+        "sha256": "efc03e107b1ff876a47c86bbaaa4be42c42eac4b5a24541cc5898c9b8780b769"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenario-key-cost.test.mjs",
@@ -653,7 +653,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
-        "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+        "sha256": "dad8a46848dd19c8f5d092d5e0dbb1efedd6470f7477bd1f15e4bd89e9f342d8"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-late-registered.test.mjs",
@@ -665,7 +665,7 @@
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-        "sha256": "b8afb1a10f98d90b15742fa03def68a23e4c4ca0d5b04c9ff8ecbe7cad0cd2b8"
+        "sha256": "64129ed0aeeb189bbaafc86b8f2b6355ced74158c63b1fdddaf0b9cf9cd748d6"
       },
       {
         "file": "games/arkhamhorror/tests/tic-scenarios-middle-setup.test.mjs",
@@ -678,6 +678,10 @@
       {
         "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
         "sha256": "79d5d9a653bd58558944f301335671daf48de4967683119c926469a5eae0ea32"
+      },
+      {
+        "file": "games/arkhamhorror/tests/tic-story-format.test.mjs",
+        "sha256": "61a0dc52cae8bf485a8792218806b28ffcaadd708798314435e9b86cf3501b6e"
       },
       {
         "file": "games/arkhamhorror/tests/tic-vehicle-restrictions.test.mjs",
@@ -698,16 +702,30 @@
     ],
     "primitivePlan": {
       "newTotal": 13,
-      "newDone": 13,
+      "newDone": 0,
       "reuseTotal": 7,
-      "reuseDone": 7,
-      "pendingNew": [],
+      "reuseDone": 0,
+      "pendingNew": [
+        "chaos.pool",
+        "chaos.seal",
+        "chaos.resolution",
+        "location.flood",
+        "investigator.air",
+        "scenario.keys",
+        "scenario.vehicle",
+        "location.graph",
+        "campaign.recordSet",
+        "test.commitOrigin",
+        "deck.traitLimit",
+        "turn.promise",
+        "uses.transfer"
+      ],
       "gates": {
         "scanPassed": true,
         "exportsPresent": true,
-        "nodeAcceptance": true,
-        "regressionAcceptance": true,
-        "allNewDone": true,
+        "nodeAcceptance": false,
+        "regressionAcceptance": false,
+        "allNewDone": false,
         "primitiveMechanismsPlanned": true,
         "noEscape": true
       },
@@ -2403,7 +2421,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-          "line": 160,
+          "line": 154,
           "test": "07054 failed actual agility draw restores existing depths enemy then performs one real effect attack",
           "titleMatched": true
         },
@@ -2441,7 +2459,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-          "line": 160,
+          "line": 154,
           "test": "07054 failed actual agility draw restores existing depths enemy then performs one real effect attack",
           "titleMatched": true
         },
@@ -2482,7 +2500,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-          "line": 149,
+          "line": 143,
           "test": "07055 semantics use actual encounter draw: active->depths preserves keys and truly surges; next draw restores same id without surge",
           "titleMatched": true
         },
@@ -2520,7 +2538,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-          "line": 149,
+          "line": 143,
           "test": "07055 semantics use actual encounter draw: active->depths preserves keys and truly surges; next draw restores same id without surge",
           "titleMatched": true
         },
@@ -4382,7 +4400,7 @@
       "entryScope": "location",
       "canonicalCode": "07074",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07074.js",
-      "entrySha256": "bab84844505ed9760b18d0dccf8afcd2f7da4610c10a89aed19fa26425f37e04",
+      "entrySha256": "e4e46ceb89765432a608457f1ed956c1bd8d34dc688548dede97ee2b7f18684c",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -4396,10 +4414,28 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "line": 205,
+          "test": "07074 Jail preserves printed Victory 0 and positive Victory, and requires the revealed location and its investigator",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "line": 194,
+          "test": "07074 Jail redirects an ordinary remote defeat by an investigator here to Leads and keeps defeat afters",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "line": 190,
           "test": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）",
           "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "titleMatched": false,
+          "passingTests": 17,
+          "sampleTest": "07054 failed actual agility draw restores existing depths enemy then performs one real effect attack"
         },
         {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
@@ -4422,6 +4458,18 @@
       ],
       "strongEvidence": [
         {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "line": 205,
+          "test": "07074 Jail preserves printed Victory 0 and positive Victory, and requires the revealed location and its investigator",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "line": 194,
+          "test": "07074 Jail redirects an ordinary remote defeat by an investigator here to Leads and keeps defeat afters",
+          "titleMatched": true
+        },
+        {
           "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
           "line": 190,
           "test": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）",
@@ -4438,7 +4486,7 @@
       "entryScope": "location",
       "canonicalCode": "07075",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07075.js",
-      "entrySha256": "b104248397a4f3a4b357a3823ac29e5eda628ce284a05ad338f960e2f693f333",
+      "entrySha256": "170595d64dc0248f7b47ef6fe7a22338e911e4cfbd9ae5ce819ed8153997bcd0",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -4454,7 +4502,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "line": 228,
-          "test": "P7 07075 actual peek discards non-Victory top to true encounter discard and retains printed Victory0",
+          "test": "P7 07075 actual peek discards a non-Victory card and retains both Victory 0 and Victory 1",
           "titleMatched": true
         },
         {
@@ -4474,7 +4522,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
           "line": 228,
-          "test": "P7 07075 actual peek discards non-Victory top to true encounter discard and retains printed Victory0",
+          "test": "P7 07075 actual peek discards a non-Victory card and retains both Victory 0 and Victory 1",
           "titleMatched": true
         }
       ]
@@ -4540,7 +4588,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4676,7 +4724,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4727,7 +4775,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -4811,7 +4859,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -5067,7 +5115,7 @@
       "entryScope": null,
       "canonicalCode": "07083",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theVanishingOfElinaHarper/07083.js",
-      "entrySha256": "878522a3646fe4e289f375235f8f80425667bb6b4f9dcba766fc1843191abd51",
+      "entrySha256": "84929056efea00ce8730193edda4e8e0e8314a562da2ca50ff390d56fee652b6",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -6232,7 +6280,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6247,7 +6295,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6291,7 +6339,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6312,7 +6360,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6364,7 +6412,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6427,7 +6475,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6503,7 +6551,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6524,7 +6572,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6569,7 +6617,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -6596,7 +6644,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -8084,7 +8132,7 @@
       "entryScope": "location",
       "canonicalCode": "07129",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07129.js",
-      "entrySha256": "9c30f4a3df6ca3abfb02164fccbda9f8fec4a8d7586297f701b04bfbf78726bc",
+      "entrySha256": "09ff26f88c54d843cd3b2e2f5113abbe06ec8f624053ddc55fdaa3f5fdc7a4ff",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8128,7 +8176,7 @@
       "entryScope": "location",
       "canonicalCode": "07130",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07130.js",
-      "entrySha256": "dd512c077031321b2568d16207ef214075d6e9e96723a147ca3d7688ee5605a9",
+      "entrySha256": "f22d5023f6fb0ef30caa145a1547c1aab7f6cb2a4bb0ff5f749cc74710afd8db",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8189,7 +8237,7 @@
       "entryScope": "location",
       "canonicalCode": "07131",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07131.js",
-      "entrySha256": "2df1ef955583b3a14048026706f3d8044cc516b2e58def86997ac2cc90b7e087",
+      "entrySha256": "db83015192f99793862577f7eb468aa1128584dc3876ab19f2e5e824d9489e36",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8233,7 +8281,7 @@
       "entryScope": "location",
       "canonicalCode": "07132",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07132.js",
-      "entrySha256": "5cfb57a96d43f99acaf4af3db20293a00adc67fe25377a2a34003d1c10a65870",
+      "entrySha256": "f9063c2e0db1dec6fc25402d42e11939486242c9c0022ed913e4ecccf871f77e",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8283,7 +8331,7 @@
       "entryScope": "location",
       "canonicalCode": "07133",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07133.js",
-      "entrySha256": "c3e9eb28d91b708a59e2f494ff7d9258cecf24b3cd5395e54d911ad550cc3a4a",
+      "entrySha256": "318bcc0ef4ba239527881fbe9d84089c643a9ff252f0abe87bcaadee8e2a6302",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8338,7 +8386,7 @@
       "entryScope": "location",
       "canonicalCode": "07134",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07134.js",
-      "entrySha256": "b17cb40f8b0a94b8ac41b7b9abd26477222fbf4bf361159e848a289dfd5bd1ff",
+      "entrySha256": "8a09c10293c5f391e6b0ca4f453ca9226dfecbec7766454763c62f109465f15b",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8382,7 +8430,7 @@
       "entryScope": "location",
       "canonicalCode": "07135",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07135.js",
-      "entrySha256": "7615590785e0717eb9ec2e6a822922b585a2efbb7a17a1846ecc984ab7aaeeb3",
+      "entrySha256": "1f29e1736d72252c3b83a517a2057af9a3db8919fb43539bdba08495d0aa8e57",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8455,7 +8503,7 @@
       "entryScope": "location",
       "canonicalCode": "07136",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07136.js",
-      "entrySha256": "4db14a7bd995bfd0a178ebef705816a3d23a1a9b72e70c07b439ed280fa8b9e3",
+      "entrySha256": "64d5e935bef5d79aeb499e3e96130ee8dc5ff106da55cd6c8104ae9fbe8bda0c",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8499,7 +8547,7 @@
       "entryScope": "location",
       "canonicalCode": "07137",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07137.js",
-      "entrySha256": "c07106d30562be047d70de2a9db91516fb36525d111669a03778bd903974799c",
+      "entrySha256": "ba87e683a71d904d320d5d567d7e1096e449e892ebd8e00e1803ed1e96d0632a",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8542,7 +8590,7 @@
       "entryScope": "location",
       "canonicalCode": "07138",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07138.js",
-      "entrySha256": "2737cf0c7486692c50439089f6e3e4b43abe0b823b28048e16a0a770cca258d3",
+      "entrySha256": "4712cc93f7f4cd5323849c0b8576124bba1a77c6cc62b1511666d17fbfafd518",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8683,7 +8731,7 @@
       "entryScope": "location",
       "canonicalCode": "07140",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07140.js",
-      "entrySha256": "457e14a0f40d33fbcde9da9e609eebdc238cbf861ef36a66dc1b0a5690ece9ad",
+      "entrySha256": "ce3f34e3f936a5784310551cdab477e1f1ef495513a2775dc14fef02679df80d",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -8733,7 +8781,7 @@
       "entryScope": "location",
       "canonicalCode": "07141",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/inTooDeep/07141.js",
-      "entrySha256": "9732595f5b89f24f29e7ba67ef0b5de8106fede7f394878e41567447eb376fb6",
+      "entrySha256": "6edbfbf547dea5f3ed5a2d537db1643e80837eed32ad85850458c5b4add595de",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -10279,13 +10327,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 188,
+          "line": 187,
           "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错",
           "titleMatched": true
         },
@@ -10323,13 +10371,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 188,
+          "line": 187,
           "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错",
           "titleMatched": true
         },
@@ -10365,32 +10413,32 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 113,
+          "line": 112,
           "test": "07164b：按「渔船所在地点」生成，生命值 = 印刷 6 + 3 × 人数",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 137,
+          "line": 136,
           "test": "07164b：被击败后正常进胜利区（印刷 Victory 1）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 125,
+          "line": 124,
           "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
           "line": 98,
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点",
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值",
           "titleMatched": true
         },
         {
@@ -10415,32 +10463,32 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07164 大海的秘密（版本I）：背面把 07164b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 113,
+          "line": 112,
           "test": "07164b：按「渔船所在地点」生成，生命值 = 印刷 6 + 3 × 人数",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 137,
+          "line": 136,
           "test": "07164b：被击败后正常进胜利区（印刷 Victory 1）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 125,
+          "line": 124,
           "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
           "line": 98,
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点",
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值",
           "titleMatched": true
         }
       ]
@@ -10468,13 +10516,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 188,
+          "line": 187,
           "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点",
           "titleMatched": true
         },
@@ -10518,13 +10566,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 188,
+          "line": 187,
           "test": "07164/07165：渔船不在场时背面回退 api.spawn(线索) 不抛错",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点",
           "titleMatched": true
         },
@@ -10551,12 +10599,11 @@
       "entryScope": "enemy",
       "canonicalCode": "07165b",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/devilReef/07165b.js",
-      "entrySha256": "0ef549f967f31588e6b008da1f5b3b8a4df9062ba2e1d5c911b1a8b0da586222",
+      "entrySha256": "53e6f4d0133e5ccf4593527ab27c50cd2d0c53fb04aad85142165fed344465dc",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
         "abilities",
-        "modifiers",
         "enemyRule"
       ],
       "printedBehavior": true,
@@ -10567,26 +10614,26 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 125,
+          "line": 124,
           "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
           "line": 98,
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点",
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 150,
-          "test": "07165b：将要被击败时改为移除所有伤害、横置并本轮不能重整",
+          "line": 149,
+          "test": "07165b：双人局仍为 6 生命，受到致命伤害时清空伤害并横置且本轮不能重整",
           "titleMatched": true
         },
         {
@@ -10611,26 +10658,26 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 125,
+          "line": 124,
           "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
           "line": 98,
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点",
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 173,
+          "line": 172,
           "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 150,
-          "test": "07165b：将要被击败时改为移除所有伤害、横置并本轮不能重整",
+          "line": 149,
+          "test": "07165b：双人局仍为 6 生命，受到致命伤害时清空伤害并横置且本轮不能重整",
           "titleMatched": true
         }
       ]
@@ -10658,7 +10705,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 197,
+          "line": 196,
           "test": "07166 深海的魔鬼：背面记录「浪潮愈烈」并进入结局 1",
           "titleMatched": true
         },
@@ -10702,7 +10749,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 197,
+          "line": 196,
           "test": "07166 深海的魔鬼：背面记录「浪潮愈烈」并进入结局 1",
           "titleMatched": true
         },
@@ -12511,19 +12558,19 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 243,
-          "test": "07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）",
+          "line": 242,
+          "test": "07185：攻击淹没地点的敌人额外揭示一次，躲避、渔船乘客和干燥地点除外",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 230,
+          "line": 229,
           "test": "07185：每轮结束时只从场上弃掉 1 张同名副本，下一轮再弃下一张",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 220,
+          "line": 219,
           "test": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线",
           "titleMatched": true
         },
@@ -12537,19 +12584,19 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 243,
-          "test": "07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）",
+          "line": 242,
+          "test": "07185：攻击淹没地点的敌人额外揭示一次，躲避、渔船乘客和干燥地点除外",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 230,
+          "line": 229,
           "test": "07185：每轮结束时只从场上弃掉 1 张同名副本，下一轮再弃下一张",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 220,
+          "line": 219,
           "test": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线",
           "titleMatched": true
         }
@@ -13341,19 +13388,19 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 369,
+          "line": 356,
           "test": "07199 轮末道路清理：后方空地点移出游戏；停机列保留；被敌人占用的地点保留",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 298,
+          "line": 285,
           "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
@@ -13391,19 +13438,19 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 369,
+          "line": 356,
           "test": "07199 轮末道路清理：后方空地点移出游戏；停机列保留；被敌人占用的地点保留",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 298,
+          "line": 285,
           "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
@@ -13444,7 +13491,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 298,
+          "line": 285,
           "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战",
           "titleMatched": true
         },
@@ -13482,7 +13529,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 298,
+          "line": 285,
           "test": "07199：背面在最后方地点生成「魔鬼礁石的骇物」07199b，且不与调查员交战",
           "titleMatched": true
         },
@@ -13517,25 +13564,25 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 358,
+          "line": 345,
           "test": "07200：2 人局不执行「弃到载具敌人/机械故障」分支",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 346,
+          "line": 333,
           "test": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 325,
+          "line": 312,
           "test": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库",
           "titleMatched": true
         },
@@ -13555,25 +13602,25 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 358,
+          "line": 345,
           "test": "07200：2 人局不执行「弃到载具敌人/机械故障」分支",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 346,
+          "line": 333,
           "test": "07200：3 人局弃遭遇牌库顶直到[[载具]]敌人或机械故障诡计，队长抽取该卡",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 325,
+          "line": 312,
           "test": "07200：背面翻转载具为停止面，并把遭遇弃牌堆混洗回遭遇牌库",
           "titleMatched": true
         }
@@ -13602,13 +13649,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 312,
+          "line": 299,
           "test": "07201：背面「燃料耗尽」击败所有调查员并各承受 1 点肉体创伤",
           "titleMatched": true
         },
@@ -13634,13 +13681,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 286,
+          "line": 273,
           "test": "07199/07200/07201：三张同文议程共用工厂（步行 +2 行动、轮末清理、背面 onReveal）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 312,
+          "line": 299,
           "test": "07201：背面「燃料耗尽」击败所有调查员并各承受 1 点肉体创伤",
           "titleMatched": true
         }
@@ -13670,31 +13717,31 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 415,
+          "line": 402,
           "test": "07202：「尽快开到猎鹰岬」是剧情指示型目标——objective 恒 false，不自动推进幕",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 459,
+          "line": 446,
           "test": "07202：调查阶段结束时每辆运行中的载具由司机选择移动到连接的[[道路]]地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 435,
+          "line": 422,
           "test": "07202：全局猎手读点让未印猎手的敌人在敌人阶段获得猎手行为",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 404,
+          "line": 391,
           "test": "07202：声明「每个敌人获得猎手」「调查阶段末载具移动」「剧情指示型目标」与背面结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 484,
+          "line": 471,
           "test": "07202：停止的载具在调查阶段结束时不会移动",
           "titleMatched": true
         },
@@ -13738,31 +13785,31 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 415,
+          "line": 402,
           "test": "07202：「尽快开到猎鹰岬」是剧情指示型目标——objective 恒 false，不自动推进幕",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 459,
+          "line": 446,
           "test": "07202：调查阶段结束时每辆运行中的载具由司机选择移动到连接的[[道路]]地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 435,
+          "line": 422,
           "test": "07202：全局猎手读点让未印猎手的敌人在敌人阶段获得猎手行为",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 404,
+          "line": 391,
           "test": "07202：声明「每个敌人获得猎手」「调查阶段末载具移动」「剧情指示型目标」与背面结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "line": 484,
+          "line": 471,
           "test": "07202：停止的载具在调查阶段结束时不会移动",
           "titleMatched": true
         },
@@ -16369,7 +16416,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16472,7 +16519,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16550,7 +16597,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 130,
+          "line": 131,
           "test": "07234 浪潮汹涌：场外找马什、搬走猎鹰岬占位者并移除地点、提升最底下4处淹没",
           "titleMatched": true
         },
@@ -16594,7 +16641,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 130,
+          "line": 131,
           "test": "07234 浪潮汹涌：场外找马什、搬走猎鹰岬占位者并移除地点、提升最底下4处淹没",
           "titleMatched": true
         }
@@ -16679,7 +16726,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16788,7 +16835,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 158,
+          "line": 159,
           "test": "07236 灯塔：线索目标推进后生成横置马什/蓝钥匙、洗入尽腥尽力、地下室放到梯井正下方",
           "titleMatched": true
         },
@@ -16826,7 +16873,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 158,
+          "line": 159,
           "test": "07236 灯塔：线索目标推进后生成横置马什/蓝钥匙、洗入尽腥尽力、地下室放到梯井正下方",
           "titleMatched": true
         }
@@ -16867,7 +16914,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 185,
+          "line": 186,
           "test": "07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区",
           "titleMatched": true
         },
@@ -16886,7 +16933,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -16923,7 +16970,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 185,
+          "line": 186,
           "test": "07237 寻找前路：进入灯塔地下室即推进；2b 放深层/底层与9张潮水通道、马什进胜利区",
           "titleMatched": true
         }
@@ -16971,7 +17018,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 213,
+          "line": 214,
           "test": "07238 深海信徒：调查阶段结束时全淹没者受伤/下移；全员撤退推进并按月之室记录选 R1/R2",
           "titleMatched": true
         },
@@ -17027,7 +17074,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 213,
+          "line": 214,
           "test": "07238 深海信徒：调查阶段结束时全淹没者受伤/下移；全员撤退推进并按月之室记录选 R1/R2",
           "titleMatched": true
         }
@@ -17088,7 +17135,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -17463,7 +17510,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -17812,7 +17859,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-          "line": 234,
+          "line": 235,
           "test": "07249 月之室：揭示提升淹没；未淹没才出现撤退入口；撤退记录 resignedInMoonRoom",
           "titleMatched": true
         },
@@ -17824,7 +17871,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 95,
+          "line": 96,
           "test": "07249 月之室：揭示提升淹没等级；未淹没时撤退并记录来自月之室",
           "titleMatched": true
         },
@@ -17850,7 +17897,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-          "line": 234,
+          "line": 235,
           "test": "07249 月之室：揭示提升淹没；未淹没才出现撤退入口；撤退记录 resignedInMoonRoom",
           "titleMatched": true
         },
@@ -17862,7 +17909,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 95,
+          "line": 96,
           "test": "07249 月之室：揭示提升淹没等级；未淹没时撤退并记录来自月之室",
           "titleMatched": true
         }
@@ -17891,7 +17938,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-          "line": 255,
+          "line": 256,
           "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索，未淹没可以",
           "titleMatched": true
         },
@@ -17909,7 +17956,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 115,
+          "line": 116,
           "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索",
           "titleMatched": true
         },
@@ -17941,7 +17988,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-          "line": 255,
+          "line": 256,
           "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索，未淹没可以",
           "titleMatched": true
         },
@@ -17959,7 +18006,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-          "line": 115,
+          "line": 116,
           "test": "07250 沉没档案库：揭示即完全淹没并放黑钥匙；淹没时不能发现线索",
           "titleMatched": true
         }
@@ -18226,7 +18273,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -18611,7 +18658,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19697,7 +19744,7 @@
       "entryScope": "act",
       "canonicalCode": "07280",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js",
-      "entrySha256": "4640a61e1e41a534eb05d4364ace846265d786db2c7360016c622f45b46059a8",
+      "entrySha256": "38f6153e25faeb5d25720a435d76f544583de444b255a828150b55dea13e74a1",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -19713,13 +19760,13 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 212,
-          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
+          "line": 213,
+          "test": "07280 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 235,
+          "line": 249,
           "test": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库",
           "titleMatched": true
         },
@@ -19743,7 +19790,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 271,
+          "line": 285,
           "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
@@ -19768,7 +19815,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19781,13 +19828,13 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 212,
-          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
+          "line": 213,
+          "test": "07280 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 235,
+          "line": 249,
           "test": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库",
           "titleMatched": true
         },
@@ -19811,7 +19858,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 271,
+          "line": 285,
           "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
@@ -19838,7 +19885,7 @@
       "entryScope": "act",
       "canonicalCode": "07281",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js",
-      "entrySha256": "f99ee2cce64723126bf8cfe18b117b54047d5b87df377c37743513c2561ccb5c",
+      "entrySha256": "44f05adbf8a8ff815041d30be8a6242ef8561062c4df70e0feb5a3d2042bd927",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -19854,31 +19901,37 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 271,
+          "line": 285,
           "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 325,
+          "line": 213,
+          "test": "07281 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 339,
           "test": "07281 背面：达贡巢穴完全淹没入场、沉睡达贡入场、密谋1a 加 10 诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 344,
+          "line": 358,
           "test": "07281 背面：密谋2a 加 5 诅咒、密谋3a 不加诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 316,
+          "line": 330,
           "test": "07281 目标：有调查员“解锁了最终深渊”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 306,
+          "line": 320,
           "test": "07281 注册为 act：三行实体规则 + 免费弃屏障能力 + 解锁最终深渊目标",
           "titleMatched": true
         },
@@ -19891,7 +19944,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -19904,31 +19957,37 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 271,
+          "line": 285,
           "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 325,
+          "line": 213,
+          "test": "07281 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 339,
           "test": "07281 背面：达贡巢穴完全淹没入场、沉睡达贡入场、密谋1a 加 10 诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 344,
+          "line": 358,
           "test": "07281 背面：密谋2a 加 5 诅咒、密谋3a 不加诅咒",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 316,
+          "line": 330,
           "test": "07281 目标：有调查员“解锁了最终深渊”才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 306,
+          "line": 320,
           "test": "07281 注册为 act：三行实体规则 + 免费弃屏障能力 + 解锁最终深渊目标",
           "titleMatched": true
         },
@@ -19949,7 +20008,7 @@
       "entryScope": "act",
       "canonicalCode": "07282",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js",
-      "entrySha256": "a2810a41e72e760abd775845b0cd6a0e1fa6e7652ab53082d86d59cc4fccde87",
+      "entrySha256": "bf1ceeca753fd49df29c8281269a8486bca550d3325fb2280b4e9538b140fa1a",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -19965,25 +20024,31 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 381,
+          "line": 213,
+          "test": "07282 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 395,
           "test": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 392,
+          "line": 406,
           "test": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 369,
+          "line": 383,
           "test": "07282 目标：本幕上的线索达到 3[每调查员] 才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 359,
+          "line": 373,
           "test": "07282 注册为 act：三行实体规则 + 本幕线索目标",
           "titleMatched": true
         },
@@ -19996,7 +20061,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20009,25 +20074,31 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 381,
+          "line": 213,
+          "test": "07282 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡",
+          "titleMatched": true
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "line": 395,
           "test": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 392,
+          "line": 406,
           "test": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 369,
+          "line": 383,
           "test": "07282 目标：本幕上的线索达到 3[每调查员] 才推进",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 359,
+          "line": 373,
           "test": "07282 注册为 act：三行实体规则 + 本幕线索目标",
           "titleMatched": true
         },
@@ -20082,7 +20153,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20543,7 +20614,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20634,7 +20705,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20744,7 +20815,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -20854,7 +20925,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -21420,31 +21491,25 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 212,
-          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
-          "titleMatched": true
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 496,
+          "line": 510,
           "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 510,
+          "line": 524,
           "test": "07299 显现：附属地点已淹没时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 523,
+          "line": 537,
           "test": "07299 行动：检定敏捷(1)/战力(2)/智力(3)，失败不横置、成功横置；重整时不能离开，补给阶段重整",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 485,
+          "line": 499,
           "test": "07299 注册为 treachery：地点附属行动 + 重整时封锁移动声明",
           "titleMatched": true
         },
@@ -21463,7 +21528,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -21482,31 +21547,25 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 212,
-          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）",
-          "titleMatched": true
-        },
-        {
-          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 496,
+          "line": 510,
           "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 510,
+          "line": 524,
           "test": "07299 显现：附属地点已淹没时获得涌动",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 523,
+          "line": 537,
           "test": "07299 行动：检定敏捷(1)/战力(2)/智力(3)，失败不横置、成功横置；重整时不能离开，补给阶段重整",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 485,
+          "line": 499,
           "test": "07299 注册为 treachery：地点附属行动 + 重整时封锁移动声明",
           "titleMatched": true
         },
@@ -21736,7 +21795,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 250,
+          "line": 256,
           "test": "intoTheMaelstrom 混乱标记：07311 skull 随未淹没伊哈·恩斯雷地点数、cultist/tablet/elderthing 分支",
           "titleMatched": true
         },
@@ -21978,7 +22037,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 250,
+          "line": 256,
           "test": "intoTheMaelstrom 混乱标记：07311 skull 随未淹没伊哈·恩斯雷地点数、cultist/tablet/elderthing 分支",
           "titleMatched": true
         },
@@ -22296,7 +22355,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 169,
+          "line": 175,
           "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8",
           "titleMatched": true
         },
@@ -22334,7 +22393,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 169,
+          "line": 175,
           "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8",
           "titleMatched": true
         }
@@ -22381,7 +22440,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 169,
+          "line": 175,
           "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8",
           "titleMatched": true
         },
@@ -22419,7 +22478,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 169,
+          "line": 175,
           "test": "intoTheMaelstrom 议程：07313 把沉睡古神翻至苏醒面、07314 每个阶段开始翻面并在背面进入结局8",
           "titleMatched": true
         }
@@ -22434,7 +22493,7 @@
       "entryScope": "act",
       "canonicalCode": "07315",
       "entryFile": "games/arkhamhorror/src/cards/encounter-entries/theInnsmouthConspiracy/intoTheMaelstrom/07315.js",
-      "entrySha256": "3a6d3c3a4019b1d1f56a77f27ad726dddf3d30cfa70da1a806b261e537edda04",
+      "entrySha256": "ebb59c3bee1133e4d8b5c34c074be729cab506319dde92aaf9992f7df2fcdfed",
       "implemented": true,
       "implementedFlag": "explicit-true",
       "behaviorKeys": [
@@ -22448,31 +22507,31 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 103,
+          "line": 98,
           "test": "07315 背面：4 人图示用 7 个普通地点与 (-3,-1)/(3,-1) 圣堂坐标",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 57,
+          "line": 52,
           "test": "07315 背面：移除旧地点、按 1 人图示布置 Act 2 地图并生成达贡/海德拉",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 93,
+          "line": 88,
           "test": "07315 背面：DagonHasAwakened 记录让达贡以苏醒狂怒面入场",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 46,
+          "line": 41,
           "test": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 113,
+          "line": 119,
           "test": "intoTheMaelstrom 幕/议程：07315 目标（全员门扉+四色钥匙）与背面按 2 人图示布置 Act 2 地图并生成两古神",
           "titleMatched": true
         },
@@ -22504,31 +22563,31 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 103,
+          "line": 98,
           "test": "07315 背面：4 人图示用 7 个普通地点与 (-3,-1)/(3,-1) 圣堂坐标",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 57,
+          "line": 52,
           "test": "07315 背面：移除旧地点、按 1 人图示布置 Act 2 地图并生成达贡/海德拉",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 93,
+          "line": 88,
           "test": "07315 背面：DagonHasAwakened 记录让达贡以苏醒狂怒面入场",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-          "line": 46,
+          "line": 41,
           "test": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 113,
+          "line": 119,
           "test": "intoTheMaelstrom 幕/议程：07315 目标（全员门扉+四色钥匙）与背面按 2 人图示布置 Act 2 地图并生成两古神",
           "titleMatched": true
         }
@@ -22618,7 +22677,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         },
@@ -22716,7 +22775,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         }
@@ -22757,13 +22816,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 416,
+          "line": 423,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 467,
+          "line": 474,
           "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
           "titleMatched": true
         },
@@ -22787,7 +22846,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         },
@@ -22831,13 +22890,13 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 416,
+          "line": 423,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 467,
+          "line": 474,
           "test": "TIC P8 漩涡深处记忆闪回 XIV 帮助分支：并行幕 07317 入场且仅一次",
           "titleMatched": true
         },
@@ -22861,7 +22920,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         }
@@ -22902,7 +22961,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 416,
+          "line": 423,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
@@ -22920,7 +22979,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         },
@@ -22964,7 +23023,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-p8-campaign.test.mjs",
-          "line": 416,
+          "line": 423,
           "test": "TIC P8 漩涡深处并行幕：闪回 XIV 帮助/违抗分支入场 07317/07318，完成 07318 走 R2+R5 结局",
           "titleMatched": true
         },
@@ -22982,7 +23041,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 139,
+          "line": 145,
           "test": "intoTheMaelstrom 并行幕：07317/07318 目标与 07316 完成时的「继续游戏」选择",
           "titleMatched": true
         }
@@ -23012,7 +23071,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 196,
+          "line": 202,
           "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害",
           "titleMatched": true
         },
@@ -23044,7 +23103,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 196,
+          "line": 202,
           "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害",
           "titleMatched": true
         },
@@ -23166,7 +23225,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 196,
+          "line": 202,
           "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害",
           "titleMatched": true
         },
@@ -23210,7 +23269,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 196,
+          "line": 202,
           "test": "intoTheMaelstrom 地点与连接：门扉正交四连接、生态通道网格、07319 深渊揭示暗置钥匙、07321 沉没厅堂黑钥匙行动与敌人进入 2 伤害",
           "titleMatched": true
         },
@@ -23419,7 +23478,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -24431,7 +24490,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 233,
+          "line": 239,
           "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点",
           "titleMatched": true
         },
@@ -24475,7 +24534,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 233,
+          "line": 239,
           "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点",
           "titleMatched": true
         },
@@ -24756,19 +24815,19 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 422,
+          "line": 436,
           "test": "07337 注册为 treachery 且实现现通道",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 439,
+          "line": 453,
           "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧，两者互不影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 430,
+          "line": 444,
           "test": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧",
           "titleMatched": true
         },
@@ -24793,7 +24852,7 @@
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "titleMatched": false,
-          "passingTests": 27,
+          "passingTests": 29,
           "sampleTest": "07232 注册为 agenda：声明 doomToNextAgenda 与背面 onReveal"
         },
         {
@@ -24806,19 +24865,19 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 422,
+          "line": 436,
           "test": "07337 注册为 treachery 且实现现通道",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 439,
+          "line": 453,
           "test": "07337：部分淹没 1 恐惧、完全淹没 1 直接恐惧，两者互不影响",
           "titleMatched": true
         },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "line": 430,
+          "line": 444,
           "test": "07337：没有调查员在淹没地点 → 获得涌动且不造成恐惧",
           "titleMatched": true
         },
@@ -24865,7 +24924,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 233,
+          "line": 239,
           "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点",
           "titleMatched": true
         },
@@ -24903,7 +24962,7 @@
       "strongEvidence": [
         {
           "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-          "line": 233,
+          "line": 239,
           "test": "intoTheMaelstrom 敌人：沉睡/苏醒古神换面、07332 水生异怪与 07338 潜水服读点",
           "titleMatched": true
         },

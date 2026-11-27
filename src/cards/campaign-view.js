@@ -12,6 +12,7 @@
 // 读点：`src/integration/observation.js` 里的 `Object.assign(view, campaignProjection(state))`；
 // 以及 `src/ai/ai-context.js` 的 campaignHints（战役作者给出的决策提示，只写公开信息）。
 import { ALL_CARDS } from './cards-data.js'
+import { treacheryRuleFor } from './card-rules.js'
 import { contentRegistry } from '../../content/registered.js'
 import { extraEncounterDeckInfo } from '../engine/alt-decks.js'
 import { tarotInfo } from '../engine/tarot.js'
@@ -113,10 +114,13 @@ export function campaignProjection(state) {
     const flags = state.scenarioFlags || {}
     const zones = state.scenarioZones || {}
     const agenda = state.agendas?.[state.agendaIndex]
+    const childrenOfValusia = (state.agendaAside || [])
+      .map(card => card.originalCode || card.code)
+      .filter(code => treacheryRuleFor(code)?.agendaAsideEnemyStat?.trait === 'Serpent')
     out.depths = {
       depthLevel: Number(flags.depthLevel || 1),
       pursuit: [...(zones.pursuit || [])],
-      childrenOfValusia: [...(zones.childrenOfValusia || [])],
+      childrenOfValusia: childrenOfValusia.length ? childrenOfValusia : [...(zones.childrenOfValusia || [])],
       agendaAttachments: (agenda?.attachments || []).map(entry => entry.code || entry.originalCode),
     }
   }

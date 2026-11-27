@@ -18,6 +18,7 @@
 //
 // 状态写入只经 api.* 或本层 helper（scenarioFlags / scenarioZones / campaign.records /
 // mechanicState.grid / 引擎 water 原语），卡条目只读状态。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, gridPosition } from '../../../../../src/engine/grid-map.js'
@@ -805,7 +806,7 @@ function ruinsLowerFloodAction(state, inv, api) {
     if (groupHandAt(state, here.id) < required) return false
     for (const member of groupAt(state, here.id)) {
       if ((member.hand || []).length && typeof api.discardChosen === 'function') api.discardChosen(member.seat, 1, code)
-      else if ((member.hand || []).length) member.hand.pop()
+      else if ((member.hand || []).length) spliceHand(member, -1, 1)[0]
     }
   }
   setFlag(state, roundKey, true)
@@ -841,7 +842,7 @@ function takeObsidianRelicAction(state, inv, api) {
   const zones = zonesFor(state)
   if (!Array.isArray(zones.setAside) || !zones.setAside.includes(OBSIDIAN_RELIC_CODE)) return false
   if (typeof api.discardChosen === 'function') api.discardChosen(inv.seat, 2, ANCIENT_GALLERY_CODE)
-  else inv.hand.splice(Math.max(0, inv.hand.length - 2), 2)
+  else spliceHand(inv, Math.max(0, inv.hand.length - 2), 2)
   setFlag(state, 'drownedQuarterGalleryRelicTaken', true)
   takeFromSetAside(state, OBSIDIAN_RELIC_CODE, api)
   let asset = typeof api.giveAsset === 'function' ? api.giveAsset(inv.seat, OBSIDIAN_RELIC_CODE) : null
@@ -1031,29 +1032,28 @@ export function enemyWouldBeSetAside(state, enemy, api = {}) {
   return state.scenarioFlags?.[`drownedQuarterEnemyLeftPlay:${enemy.id}`] === 'setAside'
 }
 
-/** 黑曜石遗物（11550）→ 故事面（11550b）：检定成功翻面，记录符文 Y 并加入胜利区。 */
-export function flipObsidianRelic(state, inv, asset, api = {}) {
-  if (!asset || !inv) return false
-  const spec = flagsOf(OBSIDIAN_RELIC_CODE).test || { skill: 'intellect', difficulty: 8 }
-  const run = finish => {
-    translateGlyph(state, 'rune_y', '知识', api)
-    const code = OBSIDIAN_RELIC_STORY_CODE
-    state.victoryDisplay ||= []
-    if (!state.victoryDisplay.some(entry => codeOf(entry) === code)) {
-      state.victoryDisplay.push({
-        id: asset.id, code, originalCode: code,
-        name: ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code, victory: 1,
-      })
-    }
-    const assets = inv.assets || []
-    const index = assets.indexOf(asset)
-    if (index >= 0) assets.splice(index, 1)
-    info(api, '黑曜石遗物打开：发现符文 [Y]，卡牌加入胜利区。')
-    finish?.()
+function resolveRelicStory(state, inv, asset, api) {
+  if (!inv?.assets.includes(asset)) return false
+  const spec = flagsOf(codeOf(asset))
+  if (!spec.glyph || !spec.storyCode) return false
+  if (api.flipAssetToStoryVictory) {
+    if (!api.flipAssetToStoryVictory(asset, spec.storyCode)) return false
+  } else {
+    inv.assets.splice(inv.assets.indexOf(asset), 1)
+    ;(state.victoryDisplay ||= []).push({ id: asset.id, code: spec.storyCode, originalCode: spec.storyCode, victory: 1 })
   }
-  if (typeof api.test !== 'function') { run(); return true }
-  api.test(inv.seat, spec.skill, spec.difficulty, result => { if (result?.success === true) run() },
-    0, { label: '黑曜石遗物：智力(8)' })
+  translateGlyph(state, spec.glyph.letter, spec.glyph.meaning, api)
+  info(api, '黑曜石遗物打开：发现符文 [Y]，卡牌加入胜利区。')
+  return true
+}
+
+export function flipObsidianRelic(state, inv, asset, api = {}) {
+  const spec = flagsOf(codeOf(asset)).test
+  if (!spec || !inv) return false
+  if (!api.test) return resolveRelicStory(state, inv, asset, api)
+  api.test(inv.seat, spec.skill, spec.difficulty, result => {
+    if (result.success) resolveRelicStory(state, inv, asset, api)
+  })
   return true
 }
 
@@ -1061,18 +1061,6 @@ export function flipObsidianRelic(state, inv, asset, api = {}) {
 export function barrierNodeInPlay(state) {
   return (state.investigators || []).flatMap(inv => inv.assets || [])
     .find(asset => codeOf(asset) === BARRIER_NODE_CODE) || null
-}
-
-export function turnBegins(state, inv, api = {}) {
-  if (!inv) return false
-  let handled = false
-  const node = (inv.assets || []).find(asset => codeOf(asset) === BARRIER_NODE_CODE)
-  if (node && (Number(node.damage) || 0) > 0) {
-    if (typeof api.healAsset === 'function') api.healAsset(node, 1)
-    else node.damage = Math.max(0, (Number(node.damage) || 0) - 1)
-    handled = true
-  }
-  return handled
 }
 
 // ---------------------------------------------------------------------------
@@ -1188,65 +1176,13 @@ export function commitIconMultiplier(state, owner, commitLocation) {
   return code === OBSIDIAN_RELIC_CODE ? 2 : 0
 }
 
-/**
- * 11550 黑曜石遗物的离场/翻面结算（引擎既有 `scenarioBehavior.assetLeftPlay` 钩子，
- * 读点 src/engine/assets.js#leaveAsset）：
- *   · 正面（11550）离场：印刷「将其从游戏中移除」；
- *   · 故事面（11550b，[action] 检定成功后翻面）离场：印刷「将本卡牌加入胜利区」+ 记录符文 [Y]。
- * 引擎在钩子返回后才把卡号压入弃牌堆，因此这里用 `asset.removedFromGame` 抑制默认弃牌去向。
- */
-export function assetLeftPlay(state, inv, asset, api = {}) {
-  if (!asset) return false
+export function assetLeftPlay(state, _inv, asset, api = {}, { reason } = {}) {
   const code = codeOf(asset)
-  if (code === OBSIDIAN_RELIC_CODE) {
-    // 引擎在检定结算回调内仍保留 state.skillTest；[action] 成功后的离场就是从该回调发起的，
-    // 因此「同一次 11550 检定还没清掉」= 故事面成功结算，而非普通离场。
-    const resolvedByTest = String(state?.skillTest?.source?.originalCode || state?.skillTest?.source?.code || '') === OBSIDIAN_RELIC_CODE
-    asset.removedFromGame = true
-    state.removedFromGame ||= []
-    if (!state.removedFromGame.includes(OBSIDIAN_RELIC_CODE)) state.removedFromGame.push(OBSIDIAN_RELIC_CODE)
-    if (!resolvedByTest) {
-      info(api, '黑曜石遗物离场：从游戏中移除。')
-      return true
-    }
-    translateGlyph(state, 'rune_y', '知识', api)
-    state.victoryDisplay ||= []
-    if (!state.victoryDisplay.some(entry => codeOf(entry) === OBSIDIAN_RELIC_STORY_CODE)) {
-      const card = ALL_CARDS[OBSIDIAN_RELIC_STORY_CODE] || {}
-      state.victoryDisplay.push({
-        id: asset.id || OBSIDIAN_RELIC_STORY_CODE, code: OBSIDIAN_RELIC_STORY_CODE,
-        originalCode: OBSIDIAN_RELIC_STORY_CODE,
-        name: card.nameZh || card.name || OBSIDIAN_RELIC_STORY_CODE, victory: 1,
-      })
-    }
-    if (Array.isArray(inv?.discard)) {
-      for (let index = inv.discard.length - 1; index >= 0; index--) {
-        if (inv.discard[index] === OBSIDIAN_RELIC_CODE) inv.discard.splice(index, 1)
-      }
-    }
-    info(api, '黑曜石遗物翻面结算：发现符文 [Y]「知识」，故事卡加入胜利区。')
-    return true
-  }
-  if (code !== OBSIDIAN_RELIC_STORY_CODE) return false
+  if (code !== OBSIDIAN_RELIC_CODE || reason === 'storyFlip') return false
   asset.removedFromGame = true
-  state.removedFromGame ||= []
-  if (!state.removedFromGame.includes(OBSIDIAN_RELIC_STORY_CODE)) state.removedFromGame.push(OBSIDIAN_RELIC_STORY_CODE)
-  translateGlyph(state, 'rune_y', '知识', api)
-  state.victoryDisplay ||= []
-  if (!state.victoryDisplay.some(entry => codeOf(entry) === OBSIDIAN_RELIC_STORY_CODE)) {
-    const card = ALL_CARDS[OBSIDIAN_RELIC_STORY_CODE] || {}
-    state.victoryDisplay.push({
-      id: asset.id || OBSIDIAN_RELIC_STORY_CODE, code: OBSIDIAN_RELIC_STORY_CODE,
-      originalCode: OBSIDIAN_RELIC_STORY_CODE,
-      name: card.nameZh || card.name || OBSIDIAN_RELIC_STORY_CODE, victory: 1,
-    })
-  }
-  if (Array.isArray(inv?.discard)) {
-    for (let index = inv.discard.length - 1; index >= 0; index--) {
-      if (inv.discard[index] === OBSIDIAN_RELIC_STORY_CODE) inv.discard.splice(index, 1)
-    }
-  }
-  info(api, '黑曜石遗物翻面结算：发现符文 [Y]「知识」，故事卡加入胜利区。')
+  const removed = state.removedFromGame ||= []
+  if (!removed.includes(code)) removed.push(code)
+  info(api, '黑曜石遗物离场：从游戏中移除。')
   return true
 }
 
@@ -1408,6 +1344,11 @@ export function resolution(state, key, events = null, api = {}) {
 // 事件（单卡条目 / 指南用）
 // ---------------------------------------------------------------------------
 export const events = {
+  drownedQuarterFlipRelic(state, payload = {}, api = {}) {
+    const inv = state.investigators[payload.seat]
+    const asset = inv?.assets.find(item => item.id === payload.assetId && codeOf(item) === OBSIDIAN_RELIC_CODE)
+    return !!asset && resolveRelicStory(state, inv, asset, api)
+  },
   drownedQuarterTranslateGlyph(state, payload = {}, api = {}) {
     return translateGlyph(state, payload.rune, payload.meaning, api)
   },
@@ -1516,7 +1457,6 @@ export const behavior = {  id: CHAPTER_ID,
   afterDeckSetup,
   actions,
   performAction,
-  turnBegins,
   turnEnded,
   phaseBegan,
   roundEnded,

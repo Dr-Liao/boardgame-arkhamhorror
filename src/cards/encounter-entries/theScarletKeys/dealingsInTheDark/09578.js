@@ -1,11 +1,9 @@
 // 09578 大巴扎 · 地点（dealingsInTheDark）
-// 印刷数据由章节 definition 的 location() 从卡表读取；地点能力由章节 behavior 承接。
-// approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）
+// 公共浴室：在此地的调查员控制的[[武器]]支援文本框视为空白。
 export default {
   code: '09578',
   scope: 'location',
   implemented: true,
-  flags: { printedShroud: 2, printedClues: 1, },
-  note: 'approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）',
-  abilities: [],
+  flags: { printedShroud: 2, printedClues: 1 },
+  locationRule: { blankAssetsWithTrait: 'Weapon' },
 }

@@ -1322,31 +1322,27 @@ function findCultistAndSpawn(state, location, api) {
 
 // ---- 05223 发号施令 ---------------------------------------------------------
 function callToOrder(state, inv, api) {
-  const discard = state.encounterDiscard || []
-  const picked = []
-  for (let index = discard.length - 1; index >= 0 && picked.length < 2; index--) {
-    const code = discard[index]
-    const card = ALL_CARDS[code]
-    if (card?.type === 'enemy' && hasTrait(card, 'Cultist')) {
-      picked.push(code)
-      discard.splice(index, 1)
+  const empty = state.locations.filter(location =>
+    !activeInvestigators(state).some(entry => entry.location === location.id)
+    && !state.enemies.some(enemy => enemy.location === location.id))
+  const mostClues = Math.max(...empty.map(location => location.clues || 0))
+  const candidates = empty.filter(location => (location.clues || 0) === mostClues)
+  let spawned = 0
+  const picked = [...state.encounterDiscard].reverse().filter(code =>
+    ALL_CARDS[code]?.type === 'enemy' && hasTrait(ALL_CARDS[code], 'Cultist')).slice(0, 2)
+  if (candidates.length && picked.length) {
+    const targetId = (candidates.length > 1 && api.choose?.({
+      kind: 'location', source: '05223', seat: inv.seat,
+      prompt: '发号施令：选择一个线索最多的无人地点。',
+      options: candidates.map(location => ({ id: location.id, label: location.name })),
+    })) || candidates[0].id
+    for (const code of picked) {
+      if (!api.takeEncounterCard(code, { pile: 'encounterDiscard' })) continue
+      if (api.spawn(code, targetId)) spawned++
     }
   }
-  if (!picked.length) {
-    api?.info?.('发号施令：没有被弃的异教徒敌人，获得涌动。')
-    if (typeof api?.drawEncounter === 'function') api.drawEncounter(inv.seat)
-    return false
-  }
-  // 卡面「没有调查员或敌人的地点」（EmptyLocation 口径）。
-  const empty = (state.locations || []).filter(location =>
-    !activeInvestigators(state).some(entry => entry.location === location.id)
-    && !(state.enemies || []).some(enemy => enemy.location === location.id))
-  const pool = empty.length ? empty : state.locations
-  const target = [...pool].sort((left, right) => (right.clues || 0) - (left.clues || 0))[0]
-  if (!target) return false
-  for (const code of picked) api?.spawn?.(code, target.id)
-  api?.info?.(`发号施令：${picked.length} 个异教徒敌人生成在「${target.name}」。`)
-  return false
+  if (spawned) api.info?.(`发号施令：${spawned} 个异教徒敌人生成。`)
+  return { placed: false, gainSurge: spawned === 0 }
 }
 
 // ---- 05224 除籍 -------------------------------------------------------------

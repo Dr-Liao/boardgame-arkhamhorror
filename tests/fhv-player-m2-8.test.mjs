@@ -11,7 +11,7 @@ import assert from 'node:assert/strict'
 import { fixture, move, asset, enemy, decisionSeat } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry, playedActionCost } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { executeDescriptor, getStat, performTest, reactionWindow } from '../src/engine/engine.js'
+import { executeDescriptor, getStat, performTest, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
 import entry10089 from '../src/cards/entries/10089.js'
@@ -153,7 +153,7 @@ test('P6 10089 猩红腐烂：被法杖附属后，每轮结束对所附属敌�
   resolveChoices(state, pickCardCode('10089'))
   const attached = state.enemies.find(item => item.id === foe.id).attachments || []
   assert.deepEqual(attached.map(item => item.code), ['10089'], '猩红腐烂附属到该敌人')
-  assert.deepEqual(registeredEntry('10089').treacheryRule.rotRule, { roundEndDamage: 1 })
+  assert.equal(scenarioRuntime(state, []).discardAsset(0, rod.id), '10098', '腐烂附属以后弃掉原法杖')
 
   const before = state.enemies.find(item => item.id === foe.id).damageTaken || 0
   runTest(state, draft => { reactionWindow(draft, 'roundEnds', { when: 'roundEnds', round: draft.round }, []) })
@@ -177,16 +177,11 @@ test('P6 10090 霉绿腐烂：被法杖附属到敌人；被击败时放到一�
   assert.deepEqual(after.attachments.map(item => item.code), ['10090'], '霉绿腐烂附属到该敌人')
   assert.equal(hasRotTrait('10090'), true)
   assert.equal(registeredEntry('10090').zoneReplacement.discard, 'bonded', '离场走「放到一边」的区域替换')
-  const entry = registeredEntry('10090')
-  assert.equal(entry.simplified, true, '条目自述为近似')
-  assert.match(entry.note, /不能移动/, 'note 逐条披露缺读点')
-
-  // 缺口证据：敌人附属目前不是实体规则来源，所以「所附属敌人不能移动」还拦不住移动。
   const here = state.investigators[0].location
   state.locations.push({ id: 'm2-8-elsewhere', name: '别处', revealed: true, connections: [here], clues: 0 })
   state.locations.find(item => item.id === here).connections = ['m2-8-elsewhere']
-  assert.equal(viaAbilityApi(state, api => api.moveEnemy(after, 'm2-8-elsewhere')?.moved === true), true,
-    '缺口：附魔后敌人仍能移动（敌人附属不是 entityModifierRows / enemy.immobile 的读点）')
+  assert.equal(viaAbilityApi(state, api => api.moveEnemy(after, 'm2-8-elsewhere')?.moved === true), false,
+    '附属的腐烂禁止敌人移动')
 
   // 「在所附属敌人离场时：放到一边，位于场外」：被击败 → 腐烂回到场外绑定集合，不进弃牌堆。
   runTest(state, draft => {
@@ -397,7 +392,7 @@ test('P6 10095 身受诅咒：投入时可加入至多 3 个诅咒标记', () =>
 // 10096 催眠作用
 // ---------------------------------------------------------------------------
 
-test('P6 10096 催眠作用：投入技能检定提供意志+万能图标；「忽略效果」缺读点已披露', () => {
+test('P6 10096 催眠作用：投入技能检定提供意志和万能图标', () => {
   const state = fixture('01001')
   state.investigators[0].hand = ['10096']
   state.chaosBag = ['0']
@@ -410,8 +405,6 @@ test('P6 10096 催眠作用：投入技能检定提供意志+万能图标；「�
   assert.equal(result.value, base + 2, '投入后意志 +1、万能 +1')
   assert.equal(result.success, true)
   const entry = registeredEntry('10096')
-  assert.equal(entry.simplified, true, '条目自述为近似')
-  assert.match(entry.note, /忽略/, 'note 披露「忽略关键词/地点效果」缺读点')
   assert.ok(entry.abilities.some(item => item.kind === 'commit'), 'commit 描述子可投入')
 })
 
@@ -449,11 +442,6 @@ test('P6 M2-8 分片：10 张条目全部注册且 code 与文件名一致', () 
     assert.ok(entry, `${code} 未注册`)
     assert.equal(entry.code, code)
     assert.ok(ALL_CARDS[code], `${code} 缺少卡面数据`)
-  }
-  // 缺读点的卡必须逐张披露（simplified + note）。
-  for (const code of ['10089', '10090', '10092', '10093', '10094', '10096', '10098']) {
-    assert.equal(registeredEntry(code).simplified, true, `${code} 应声明 simplified`)
-    assert.ok(registeredEntry(code).note, `${code} 应带 note`)
   }
   // 「谈判」指示的两张事件必须在描述子上声明（借机攻击豁免门禁）。
   for (const code of ['10094']) {

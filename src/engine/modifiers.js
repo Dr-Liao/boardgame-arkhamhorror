@@ -34,6 +34,7 @@
 // 读点 collectGrants()，引擎侧的 effectiveTraits()/enemyKeyword()/slotUsage() 都走它。
 
 import { registeredEntry } from './ability.js'
+import { liveLocationAttachmentRules } from './attachment-rules.js'
 import { EFFECTS } from '../cards/card-effects.js'
 import { hasTrait } from './matcher.js'
 import { blanksTraits } from '../cards/card-rules.js'
@@ -86,7 +87,7 @@ export const MODIFIER_TARGETS = Object.freeze([
   'skill:willpower', 'skill:intellect', 'skill:combat', 'skill:agility', 'skill:wild', 'skill:*',
   'testValue', 'testDifficulty',
   'maxHealth', 'maxSanity', 'handSize', 'actions',
-  'slot:hand', 'slot:arcane', 'slot:accessory', 'slot:ally', 'slot:body',
+  'slot:hand', 'slot:arcane', 'slot:accessory', 'slot:ally', 'slot:body', 'slot:head',
   'playCost', 'enemyHealth',
 ])
 
@@ -108,6 +109,7 @@ export const ENTITY_RULE_TARGETS = Object.freeze([
   'cannot:beDamaged',       // 不能受到伤害
   'cannot:opportunityAttack', // 不发动借机攻击
   'cannot:parley',          // 不能与之谈判（07124–07127「每个[[嫌犯]]敌人…不能与之谈判」/07061）
+  'gains:retaliate',        // 反击（附属卡授予）
   'loses:aloof',            // 失去冷漠（07124–07127「每个[[嫌犯]]敌人失去冷漠」）
   'ignore:revealText',      // 地点/卡的「揭示时」文本视为空白
 ])
@@ -213,7 +215,7 @@ const CONDITION_KEYS = new Set([
   'sourceDamageAtLeast', 'sourceHorrorAtLeast', 'sourceDoomAtLeast', 'sourceUsesAtLeast',
   'controllerHasThreat', 'controllerHasNoThreat', 'sealedWithSource', 'treacheryResolving',
   'sourceInHand', 'blankedThisRound', 'sourceTraitNotBlanked',
-  'occupiedAssetSlotsAtLeast',
+  'occupiedAssetSlotsAtLeast', 'testEnemyId', 'testActionKinds',
 ])
 
 export function validateCondition(condition, origin = 'condition') {
@@ -221,6 +223,13 @@ export function validateCondition(condition, origin = 'condition') {
   if (typeof condition !== 'object') throw new Error(`${origin}: 条件必须是对象`)
   for (const key of Object.keys(condition)) {
     if (!CONDITION_KEYS.has(key)) throw new Error(`${origin}: 未知条件字段 ${key}`)
+  }
+  if (condition.testEnemyId != null && (typeof condition.testEnemyId !== 'string' || !condition.testEnemyId)) {
+    throw new Error(`${origin}: 检定目标必须是敌人实例编号`)
+  }
+  if (condition.testActionKinds != null && (!Array.isArray(condition.testActionKinds)
+    || condition.testActionKinds.some(kind => !['fight', 'evade', 'parley', 'investigate'].includes(kind)))) {
+    throw new Error(`${origin}: 未知检定行动类型`)
   }
   const occupancy = condition.occupiedAssetSlotsAtLeast
   if (occupancy != null && (typeof occupancy.slot !== 'string' || !occupancy.slot
@@ -239,6 +248,9 @@ function threatCodes(investigator) {
 export function evaluateCondition(condition, ctx) {
   if (condition == null) return true
   const { state, inv, controller, source } = ctx
+  const test = state?.skillTest
+  if (condition.testEnemyId != null && (test?.target?.kind !== 'enemy' || test.target.id !== condition.testEnemyId)) return false
+  if (condition.testActionKinds != null && !condition.testActionKinds.includes(test?.actionKind)) return false
   const occupancy = condition.occupiedAssetSlotsAtLeast
   if (occupancy && hooks.occupiedAssetSlots(controller, occupancy) < occupancy.count) return false
   if (typeof condition.when === 'function') {
@@ -512,7 +524,7 @@ export function slotBonus(inv, slot) {
       const matches = modifier.target === `slot:${slot}`
         || (modifier.target === 'add:slot' && modifier.value === slot)
       if (!matches) continue
-      const ctx = { state: null, inv, controller: inv, source: asset }
+      const ctx = { state: null, inv, controller: inv, source: asset, helpers: { emptyAssetSlots: hooks.emptyAssetSlots } }
       if (!evaluateCondition(modifier.condition, ctx)) continue
       total += amountOf(modifier, ctx)
     }
@@ -547,11 +559,21 @@ function entityModifierRows(state, entity) {
     const own = modifiersOf(code).filter(modifier=>modifier.audience!=='enemies')
     if (own.length) rows.push({ source: entity, host: 'self', list: own })
   }
+  for (const source of entity.attachments || []) {
+    if (hooks.entityBlanked(state, source)) continue
+    const list = modifiersOf(source.originalCode || source.code).filter(modifier => modifier.audience !== 'enemies')
+    if (list.length) rows.push({ source, host: 'attachment', list })
+  }
   if (entity.location) {
     const location = (state?.locations || []).find(entry => entry.id === entity.location)
     const locationCode = location?.originalCode || location?.code
     const inherited = locationCode ? modifiersOf(locationCode).filter(m=>m.audience!=='enemies') : []
     if (inherited.length) rows.push({ source: location, host: 'location', list: inherited })
+    for (const source of (state.playerLocationAttachments || []).filter(card => card.location === entity.location)) {
+      if (source.nonEliteOnly && entity.elite) continue
+      const list = modifiersOf(source.code).filter(modifier => modifier.audience !== 'enemies')
+      if (list.length) rows.push({ source, host: 'attachment', list })
+    }
   }
   for (const list of [...actsInPlay(state), state?.agendas?.[state?.agendaIndex]]) {
     const code = list?.originalCode || list?.code
@@ -706,6 +728,8 @@ export function capabilityBlocked(state, inv, capability) {
   if (!BLOCKABLE_CAPABILITIES.includes(capability)) {
     throw new Error(`未知能力 ${JSON.stringify(capability)}（可选：${BLOCKABLE_CAPABILITIES.join(' / ')}）`)
   }
+  if ((capability === 'play' || capability === 'drawCards')
+      && liveLocationAttachmentRules(state, inv?.location).some(rule => rule.investigatorCapabilitiesBlocked?.includes(capability))) return true
   return booleanModifierActive(state, inv, capabilityTarget(capability))
 }
 

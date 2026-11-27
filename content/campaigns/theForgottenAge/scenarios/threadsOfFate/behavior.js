@@ -1,6 +1,7 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
+import { rememberIchtacasPrey } from '../../../../../src/cards/encounter-entries/_shared.js'
 import { agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules, tfaDistance as distance } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
@@ -318,19 +319,6 @@ function ensureTownHall(state, api) {
   return placed
 }
 
-function rememberPrey(state, enemy) {
-  if (!enemy) return
-  const flags = flagsFor(state)
-  flags.ichtacasPrey ||= []
-  if (!flags.ichtacasPrey.includes(enemy.id)) flags.ichtacasPrey.push(enemy.id)
-  // 04140 背面要「离玛利亚最近」：猎物推进时必然已离场，只能靠记录下来的
-  // 敌人卡号与最后所在地点选人，所以生成/移动时都要维护这两个映射。
-  flags.ichtacasPreyCodes ||= {}
-  flags.ichtacasPreyCodes[enemy.id] = original(enemy)
-  flags.ichtacasPreyLocations ||= {}
-  flags.ichtacasPreyLocations[enemy.id] = enemy.location
-}
-
 function rememberDestination(state, locationId) {
   const flags = flagsFor(state)
   flags.ichtacasDestinations ||= []
@@ -430,7 +418,7 @@ function runActReveal(state, act, api = {}) {
       const locationId = asset?.location || 'easttown'
       const enemy = api.spawn?.('04122b', locationId)
       const target = enemy || state.enemies.find(entry => original(entry) === '04122b')
-      if (target) placeRelic(state, api, { location: target.location, enemyId: target.id })
+      if (target && relic(state)?.enemyId !== target.id) placeRelic(state, api, { location: target.location, enemyId: target.id })
       break
     }
     case '04123': {
@@ -490,7 +478,7 @@ function runActReveal(state, act, api = {}) {
       const locationId = asset?.location || 'velmasDiner'
       const enemy = api.spawn?.('04130b', locationId)
       const target = enemy || state.enemies.find(entry => original(entry) === '04130b')
-      if (target) placeAlejandro(state, api, { location: target.location, enemyId: target.id })
+      if (target && alejandro(state)?.enemyId !== target.id) placeAlejandro(state, api, { location: target.location, enemyId: target.id })
       break
     }
     case '04131': {
@@ -522,7 +510,7 @@ function runActReveal(state, act, api = {}) {
         const code = discardUntilTrait(state, 'cultist')
         if (!code) break
         const enemy = api.spawn?.(code, 'blackCave')
-        rememberPrey(state, enemy || state.enemies.find(entry => original(entry) === code))
+        rememberIchtacasPrey(state, enemy || state.enemies.find(entry => original(entry) === code), api)
       }
       break
     }
@@ -542,7 +530,7 @@ function runActReveal(state, act, api = {}) {
       const locationId = asset?.location || 'curiositieShoppe'
       const enemy = api.spawn?.('04137b', locationId)
       const target = enemy || state.enemies.find(entry => original(entry) === '04137b')
-      rememberPrey(state, target)
+      rememberIchtacasPrey(state, target, api)
       break
     }
     case '04138': {

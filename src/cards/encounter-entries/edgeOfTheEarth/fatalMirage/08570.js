@@ -1,21 +1,23 @@
 // 08570 医务室
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { partnerShroud } from './_shared.js'
 
 export default {
-  code: '08570',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "infirmaryFatalMirage",
-    "tier": 2,
-    "investigatorShroudBonus": {
-      "partner": "玛拉·辛哈医生",
-      "amount": -2
+  code: '08570', scope: 'location', implemented: true,
+  flags: { mirageId: 'infirmaryFatalMirage', tier: 2 },
+  locationRule: { shroudModifier: partnerShroud('08590', '08717') },
+  abilities: [{
+    kind: 'forced', trigger: 'move', label: '首次进入：生命余量超过 6 时降至 6，否则受到 1 伤害',
+    limit: { scope: 'perGame', owner: 'investigator' },
+    criteria: ({ inv, source, context }) => context.seat === inv.seat && context.location === source.id,
+    resolve: ({ inv, api }) => {
+      const remaining = () => api.maxHealth(inv.seat) - (inv.damage || 0)
+      if (remaining() <= 6) return api.damage(inv.seat, 1)
+      const placed = () => [inv.damage || 0, ...inv.assets.map(card => card.id + ':' + (card.damage || 0))].join('|')
+      while (!inv.defeated && remaining() > 6) {
+        const before = placed()
+        api.damage(inv.seat, 1)
+        if (placed() === before) break
+      }
     },
-    "forcedFirstEntry": "damageTo6RemainingHealth"
-  },
+  }],
 }

@@ -15,6 +15,7 @@ import { carcosaInvestigatorCardVerified, CARCOSA_INVESTIGATOR_ACCEPTANCE_PROFIL
 import { tfaInvestigatorCardVerified, TFA_INVESTIGATOR_ACCEPTANCE_PROFILE } from '../content/packs/tfaInvestigators/manifest.js'
 import { tfaPlayerCardVerified, TFA_PLAYER_ACCEPTANCE_PROFILE } from '../content/packs/tfaPlayer/manifest.js'
 import { CARD_ACCEPTANCE_REGISTRY } from '../src/cards/acceptance-registry.js'
+import { ENCOUNTER_REPRINT_ALIASES } from '../src/cards/entries/_reprint-aliases.js'
 import { applyEoteTextFixes } from '../content/campaigns/edgeOfTheEarth/card-text-fixes.js'
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
@@ -30,6 +31,7 @@ export const CARD_TYPES = Object.freeze(['investigator', 'asset', 'event', 'skil
 const PLAYER_TYPES = new Set(['asset', 'event', 'skill'])
 const DISPLAY_FIELDS = ['name', 'subname', 'text', 'traits', 'flavor', 'back_name', 'back_text', 'back_flavor', 'customization_text', 'customization_change']
 const OUTPUT_FIELDS = { name: 'nameZh', subname: 'subnameZh', text: 'textZh', traits: 'traitsZh', flavor: 'flavorZh', back_name: 'backNameZh', back_text: 'backTextZh', back_flavor: 'backFlavorZh', customization_text: 'customizationTextZh', customization_change: 'customizationChangeZh' }
+const nonPlayerReprints = new Set(Object.values(ENCOUNTER_REPRINT_ALIASES).flat())
 const clone = value => structuredClone(value)
 const ordered = values => [...values].sort()
 const tally = (rows, key) => rows.reduce((out, row) => { const k = row[key] ?? '(missing)'; out[k] = (out[k] || 0) + 1; return out }, {})
@@ -170,13 +172,18 @@ export function mergeCatalog(sources) {
     const effect = Object.hasOwn(EFFECTS, code) ? EFFECTS[code] : null
     // 能力层描述子（一卡一文件 / 非玩家卡）同样是「有实现」；只看 EFFECTS 会把
     // 04147/04148/04191/04264 这类已迁移卡误标成 unimplemented。
-    const descriptor = CARD_ABILITY_CODES.has(code) || NON_PLAYER_ABILITY_CODES.has(code)
+    const descriptor = CARD_ABILITY_CODES.has(code) || NON_PLAYER_ABILITY_CODES.has(code) || nonPlayerReprints.has(code)
     // Encoding/allowlisting is not behavioral acceptance. P6 keeps proof scopes
     // in the per-code ledger; no card is promoted by the existence of a key.
     const effectStatus = effect?.simplified ? 'simplified' : effect || descriptor || Object.hasOwn(INVESTIGATOR_ABILITIES, code) || available ? 'unverified' : 'unimplemented'
     const normalized = applyPrintedTextFixes(applyEoteTextFixes(normalizeCard(row, locale)))
     cards[code] = { ...normalized, dataStatus: reasons.length ? 'quarantined' : source === 'legacy' ? 'compatibility' : 'validated', availability: accepted ? 'strict' : available ? 'simplified' : 'catalog-only', effectStatus, provenanceId: code }
     provenance[code] = { canonicalSource: source, rawSources: Object.keys(indexes).filter(id => indexes[id].has(code)), fields: fieldSources(row, source), locale, isolationReasons: reasons }
+  }
+  for (const [canonical, aliases] of Object.entries(ENCOUNTER_REPRINT_ALIASES)) {
+    const card = cards[canonical]
+    card.duplicatedBy = [...new Set([...(card.duplicatedBy || []), ...aliases])]
+    for (const code of aliases) cards[code].duplicateOfCode = canonical
   }
   return { cards, provenance, quarantined }
 }

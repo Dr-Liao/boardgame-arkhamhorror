@@ -3,7 +3,7 @@
   "unit": "08-a-3",
   "profile": {
     "id": "eote-player-c-2026-11",
-    "scope": "地球边缘 08 段 eoep 玩家卡（08089–08133）45 条目录记录。29 条通过五维验收；16 条已披露近似（槽位/替换/窗口近似）暂不切换。",
+    "scope": "地球边缘 08 段 eoep 玩家卡（08089–08133）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 45,
-    "verified": 29,
-    "unverified": 16,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 103
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
-      "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
+      "sha256": "67dd8b34c1721212c6d4e888cf1697ffea41fa4f1daa63608930087ef089cff0"
     },
     {
       "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
-      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+      "sha256": "28765338ebe37b4b6688ddc0e6f61298ad94a0a58681d5d6359fc673ea404daf"
     },
     {
       "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
@@ -53,9 +53,13 @@
       "code": "08089",
       "name": "快拔枪套",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「只占1手部槽位的[[枪械]]」按 firearm 特性过滤，未再校验槽位数量；第二能力固定取附属支援第一条含「攻击/开火/射击」的能力（条目注释已披露 3 条近似）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08089 快拔枪套：只能附属单手枪械，附属枪械攻击仍消耗弹药"
+        }
+      ]
     },
     {
       "code": "08090",
@@ -145,9 +149,17 @@
       "code": "08097",
       "name": "袖珍望远镜",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「查看未揭示地点的揭示面」以日志展示信息实现，不改变地点揭示状态（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08097 袖珍望远镜：横置私下查看相连未揭示地点的揭示面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08097 袖珍望远镜：调查相连的已揭示地点"
+        }
+      ]
     },
     {
       "code": "08098",
@@ -233,9 +245,13 @@
       "code": "08104",
       "name": "威廉·韦伯教授",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「不发现所在地点 1 个线索，改为连接地点线索」是追加而非替换（investigateSuccess 上下文无可写入口，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08104/08106 威廉·韦伯教授：取回道具，按等级替代本地调查线索"
+        }
+      ]
     },
     {
       "code": "08105",
@@ -253,9 +269,13 @@
       "code": "08106",
       "name": "威廉·韦伯教授",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08104：替换语义未实现，改为追加（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
+          "test": "P6 08104/08106 威廉·韦伯教授：取回道具，按等级替代本地调查线索"
+        }
+      ]
     },
     {
       "code": "08107",
@@ -337,17 +357,25 @@
       "code": "08112",
       "name": "\"再来一张！\"",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「额外揭示 1 枚标记并把负值取正计入本次检定」用替代标记通道近似（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08112 再来一张！保留原标记，额外负值取正，额外骷髅自动失败"
+        }
+      ]
     },
     {
       "code": "08113",
       "name": "大肆借贷",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「游戏结束/退场时」强制窗口不存在，近似为每轮结束检查资源 < 10 即流放；且流放进 removedFromGame 而非战役 exiled（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08113 大肆借贷：打出后获得 10 资源，剧本结束时不足 10 则从战役牌组流放"
+        }
+      ]
     },
     {
       "code": "08114",
@@ -441,49 +469,73 @@
       "code": "08120",
       "name": "先知先觉",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「支援资源可支付指定特性卡」无费用来源读点，用 beforePlayCost 减费近似（费用枚举仍要求资源池可支付，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08120 先知先觉：补满和提升法术检定，并用卡上资源支付法术费用"
+        }
+      ]
     },
     {
       "code": "08121",
       "name": "一探究竟",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08121 一探究竟 轮初补满 + Tome 检定 +1"
+        }
+      ]
     },
     {
       "code": "08122",
       "name": "好勇斗狠",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08122 好勇斗狠 轮初补满 + Melee 检定 +1"
+        }
+      ]
     },
     {
       "code": "08123",
       "name": "技艺精湛",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08123 技艺精湛 轮初补满 + Tool 检定 +1"
+        }
+      ]
     },
     {
       "code": "08124",
       "name": "古物藏家",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08120（beforePlayCost 减费近似，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08124 古物藏家 轮初补满 + Favor 检定 +1"
+        }
+      ]
     },
     {
       "code": "08125",
       "name": "危险处境",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「购买时受 2 点创伤并获 3 经验」不能在建卡/购买层结算，改为每场冒险 setup 一次性结算并用战役记录防重复（P7 未做，已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08125 危险处境：起始构筑时选择 2 点创伤并取得 3 经验，只结算一次"
+        }
+      ]
     },
     {
       "code": "08126",
@@ -549,33 +601,49 @@
       "code": "08130",
       "name": "臂伤",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「进行战斗或激活行动后锁定」窗口不带行动类型，近似为任意行动后锁住印刷行动类型至回合结束（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08130 臂伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能攻击/启动"
+        }
+      ]
     },
     {
       "code": "08131",
       "name": "腿伤",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「进行移动/撤退/躲避行动后锁定」窗口不带行动类型，近似为任意行动后锁定（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08131 腿伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能移动/撤退/躲避"
+        }
+      ]
     },
     {
       "code": "08132",
       "name": "惊慌",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「资源行动」用 capability:gainResources 近似（同时禁止卡牌效果获得资源，略偏严）；动作后锁近似为任意行动后锁（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）"
+        }
+      ]
     },
     {
       "code": "08133",
       "name": "麻木",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "动作后锁近似为任意行动后锁住印刷三类行动至回合结束（已披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
+          "test": "P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行动后不能谈判/抽取/调查"
+        }
+      ]
     }
   ]
 }

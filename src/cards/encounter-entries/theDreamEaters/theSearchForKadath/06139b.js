@@ -6,7 +6,6 @@
 export default {
   code: '06139b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api) {
       api.setScenarioFlag?.('beseechedTheKing', true)
       api.info?.('👑 记住：你「向王祈求帮助」了。')

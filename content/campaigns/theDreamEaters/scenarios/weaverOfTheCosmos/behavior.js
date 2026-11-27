@@ -423,47 +423,30 @@ export const behavior = {
   },
 
   actLeftPlay(state, act, api) {
-    const code = codeOf(act)
-    if (code === ACT_CODES[0]) {
+    const advance = actRuleFor(codeOf(act))?.advance
+    if (advance?.expandWeb) {
       applySpiderQueen(state, api)
       expandWeb(state, api)
-      return
-    }
-    if (code === ACT_CODES[1]) {
+    } else if (advance?.flipAtlachNacha) {
       flipAtlachNacha(state, api)
-      return
-    }
-    if (code === ACT_CODES[2]) finishFinale(state, api)
+    } else if (advance?.finishFinale) finishFinale(state, api)
   },
 
   checkObjectives(state, api) {
     const act = state.acts?.[state.actIndex]
     if (!act) return
-    const code = codeOf(act)
+    const objective = actRuleFor(codeOf(act))?.objective
     const flags = flagsOf(state)
     if (flags.advancing) return
-    if (code === ACT_CODES[0]) {
-      const bottom = locById(state, WEB[3])
-      if (!bottom) return
-      const active = activeInvestigators(state)
-      const allAtBottom = active.length > 0 && active.every(inv => inv.location === bottom.id)
-      const required = 3 * (state.numInvestigators || 1)
-      const clues = active.reduce((sum, inv) => sum + (inv.clues || 0), 0)
-      if (!allAtBottom || clues < required) return
+    if (objective?.kind === 'legsInVictory') {
+      if (legsInVictory(state) < objective.count) return
       flags.advancing = true
       api.advanceAct?.()
       flags.advancing = false
       return
     }
-    if (code === ACT_CODES[1]) {
-      if (legsInVictory(state) < 4) return
-      flags.advancing = true
-      api.advanceAct?.()
-      flags.advancing = false
-      return
-    }
-    if (code === ACT_CODES[2]) {
-      const defeated = flags.atlachNachaDefeated === true || flag(state, 'atlachNachaDefeated') === true
+    if (objective?.kind === 'enemyDefeatedFlag') {
+      const defeated = flags[objective.flag] === true || flag(state, objective.flag) === true
       if (!defeated) return
       flags.advancing = true
       api.advanceAct?.()

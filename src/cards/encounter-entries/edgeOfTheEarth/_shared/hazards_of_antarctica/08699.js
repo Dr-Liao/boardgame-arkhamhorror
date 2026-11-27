@@ -2,8 +2,7 @@
 // 卡面：显现 - 附属到最近且没有附属穿越冰雪的地点。作为进入或离开附属地点（除因冒险卡牌效果外）
 //   的额外费用，检定[agility](2)。如果你检定失败，取消本次移动的效果，受到 1 点伤害和 1 点恐惧，
 //   并弃掉穿越冰雪。
-// 读点：显现附走 api.attachToLocation；移动进出检定需要「地点附属移动检定」引擎读点，
-//   见 artifacts/migration/eote/primitive-requests/p7-08699.json（不改引擎）。
+// 显现通过 api.attachToLocation 附属，进出时由移动结算读取 moveEntryTest。
 import { entryDistance } from '../../../_shared.js'
 
 const CODE = '08699'
@@ -26,6 +25,5 @@ export default {
     api.info('❄️ 「穿越冰雪」附属到「' + (chosen.name || chosen.id) + '」。')
     return { placed: true }
   },
-  note: '「进入/离开附属地点的额外敏捷(2)检定」需要引擎的地点附属移动检定读点；条目只落数据与附属，读点请求见 primitive-requests/p7-08699.json。',
 }
 

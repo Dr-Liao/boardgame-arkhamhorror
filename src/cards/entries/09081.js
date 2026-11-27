@@ -4,14 +4,9 @@
 //       - “去。”该敌人朝你选择的方向移动一次。- “蹲下。”该敌人横置。
 //       定制命令：Betray / Mercy / Confess / Distract（见 customizationOptions）。
 //
-// 读点：快速 = played.fast；命令结算在 played resolve 中完成（api.moveEnemy / api.exhaust /
-//       api.damageEnemy / api.healDamage / api.discoverClue / api.autoEvadeEnemy）。
-//
-// approximation（已写 primitive-request/09081.json）：
-//   · 玩家事件附属到敌人后没有「持续 [action] 谈判」的能力枚举读点（ability-rules 只为
-//     非玩家 scope 的敌人附属挂窗口）；本实现不附属，打出时对所选非精英敌人一次性下命令。
-//   · Greater Control / Bonded / Thrice Spoken 需要持续能力、"相隔一地点"范围与跨副本共享命令，
-//     逐项 note。Tonguetwister（连续口令）已实现为一次结算两个不同命令。
+import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+import { ownTurn } from '../../engine/matcher.js'
+
 const CUSTOM_CHECKS = Object.freeze([
   { name: 'Betray', checks: 1, text: "Add the command: \"- 'Betray.' Deal 1 damage to any enemy at this enemy's location with an equal or lower fight value than this enemy.\"" },
   { name: 'Mercy', checks: 1, text: "Add the command: \"- 'Mercy.' An investigator at this enemy's location heals damage or horror equal to this enemy's respective damage/horror value.\"" },
@@ -23,115 +18,141 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Thrice Spoken', checks: 3, text: 'You may include three copies of Power Word in your deck. When you give a command using one copy, also give that command to each other enemy with one of your copies of Power Word attached.' },
 ])
 
-// 2026-11-16 P2-3：Tonguetwister 是 3 格选项，勾满才允许一次下两个命令。
-import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+const code = '09081'
+const labels = { go: '去', cower: '蹲下', betray: '叛变', mercy: '开恩', confess: '坦白', distract: '引开' }
+const unlock = (state, inv, index) => customizationOptionFullyChecked(state, inv.seat, code, index)
+const hostOf = (state, source) => state.enemies.find(enemy => enemy.id === source.hostEnemyId
+  || enemy.attachments?.includes(source))
+const memoryKey = (source, command) => `powerWord:${source.id}:${command}`
+const inRange = (state, inv, enemy) => enemy.location === inv.location || (unlock(state, inv, 5)
+  && state.locations.find(location => location.id === inv.location)?.connections?.includes(enemy.location))
 
-const checked = (state, inv, index) =>
-  customizationOptionFullyChecked(state, inv?.seat, '09081', index)
+function candidateCommands(state, inv, enemy, api = null) {
+  const loc = state.locations.find(item => item.id === enemy.location)
+  const residents = state.investigators.filter(owner => !owner.defeated && !owner.resigned && owner.location === enemy.location)
+  const local = state.enemies.filter(item => !item.defeated && item.location === enemy.location)
+  const fight = item => api ? api.enemyFight(item, inv.seat) : item.fight
+  const evade = item => api ? api.enemyEvade(item, inv.seat) : item.evade
+  const shroud = api ? api.locationShroud(enemy.location, inv.seat) : loc?.shroud
+  const health = api ? api.enemyHealth(enemy) : enemy.health
+  const out = new Map()
+  const add = (command, targets) => { if (targets.length) out.set(command, targets) }
+  add('go', (loc?.connections || []).filter(id => api ? api.canMoveEnemyTo(enemy, id)
+    : !enemy.immobile && state.locations.some(destination => destination.id === id && !destination.barricade)))
+  if (!enemy.exhausted) add('cower', [enemy])
+  if (unlock(state, inv, 0)) add('betray',
+    local.filter(item => Number.isFinite(fight(item)) && fight(item) <= fight(enemy)
+      && (!api || api.canDamageEnemy(item, inv.seat, { code }))))
+  if (unlock(state, inv, 1)) add('mercy', residents.flatMap(owner => [
+    ...(enemy.damage > 0 && owner.damage > 0 ? [{ owner, kind: 'damage', amount: enemy.damage }] : []),
+    ...(enemy.horror > 0 && owner.horror > 0 ? [{ owner, kind: 'horror', amount: enemy.horror }] : []),
+  ]))
+  if (unlock(state, inv, 2) && Number.isFinite(health) && health >= shroud && loc?.clues > 0
+    && (!api || api.canDiscoverClueAt(inv.seat, enemy.location))) add('confess', [loc])
+  if (unlock(state, inv, 3)) add('distract',
+    local.filter(item => Number.isFinite(evade(item)) && evade(item) <= evade(enemy)
+      && (!api || api.canAutoEvade(item, inv.seat))))
+  return out
+}
+
+function commandsFor(state, inv, source, api) {
+  const words = [{ source, enemy: hostOf(state, source) }]
+  if (unlock(state, inv, 7)) {
+    for (const host of state.enemies) {
+      for (const word of host.attachments || []) {
+        if (word.id !== source.id && word.code === code && word.ownerSeat === inv.seat) words.push({ source: word, enemy: host })
+      }
+    }
+  }
+  const result = new Map()
+  for (const word of words.filter(item => item.enemy)) {
+    for (const [command, targets] of candidateCommands(state, inv, word.enemy, api)) {
+      if (state.scenarioFlags?.[memoryKey(word.source, command)] === state.round) continue
+      if (word.source.id === source.id) result.set(command, [])
+      if (result.has(command)) result.get(command).push({ ...word, targets })
+    }
+  }
+  return result
+}
+
+const pick = (inv, api, prompt, options) => options.length === 1 ? options[0].id
+  : api.choice({ kind: 'target', source: code, seat: inv.seat, prompt, options })
+
+function resolveCommand(inv, api, enemy, command, targets) {
+  if (command === 'go') {
+    const id = pick(inv, api, '选择敌人移动到哪个地点。',
+      targets.map(id => ({ id, label: api.locationName(id) })))
+    api.moveEnemy(enemy, id, { cause: 'effect' })
+  } else if (command === 'cower') api.exhaustEnemy(enemy)
+  else if (command === 'confess') api.discoverClue(inv.seat, 1, enemy.location)
+  else if (command === 'mercy') {
+    const id = pick(inv, api, '选择接受治疗的调查员及类型。', targets.map(({ owner, kind, amount }, index) => ({
+      id: String(index), label: `${owner.name} 治疗 ${amount} 点${kind === 'damage' ? '伤害' : '恐惧'}`,
+    })))
+    const target = targets[Number(id)]
+    if (target?.kind === 'damage') api.healDamage(target.owner.seat, target.amount)
+    else if (target?.kind === 'horror') api.healHorror(target.owner.seat, target.amount)
+  } else {
+    const id = pick(inv, api, '选择命令影响的敌人。', targets.map(target => ({ id: target.id, label: target.name })))
+    const target = targets.find(item => item.id === id)
+    if (command === 'betray') api.damageEnemy(target, 1, inv.seat, { code })
+    else api.autoEvadeEnemy(target)
+  }
+}
+
+function parley({ state, inv, source, api }) {
+  const issued = new Set()
+  const maximum = unlock(state, inv, 6) ? 2 : 1
+  for (let count = 0; count < maximum; count++) {
+    const commands = commandsFor(state, inv, source, api)
+    const options = [...commands.keys()].filter(command => !issued.has(command))
+      .map(command => ({ id: command, label: labels[command] }))
+    if (!options.length) break
+    if (count > 0) options.unshift({ id: 'done', label: '不下达第二条命令' })
+    const command = pick(inv, api, '选择一条命令。', options)
+    if (!commands.has(command)) break
+    issued.add(command)
+    const words = commands.get(command).slice()
+    while (words.length) {
+      const id = pick(inv, api, '选择先接受命令的敌人。', words.map(word => ({ id: word.source.id, label: word.enemy.name })))
+      const index = words.findIndex(word => word.source.id === id)
+      if (index < 0) break
+      const [word] = words.splice(index, 1)
+      const targets = candidateCommands(state, inv, word.enemy, api).get(command)
+      if (!targets?.length) continue
+      api.setScenarioFlag(memoryKey(word.source, command), state.round)
+      resolveCommand(inv, api, word.enemy, command, targets)
+    }
+  }
+}
 
 export default {
-  code: '09081',
-  simplified: true,
-  note: 'approximation: 见 primitive-request/09081.json（不真正附属到敌人：打出时对所选非精英敌人一次性下命令；持续谈判与 Greater Control/Bonded/Thrice Spoken 未实现）',
+  code,
+  fast: true,
+  attachTo: { kind: 'enemy', nonElite: true, atOwnLocation: true },
+  assetRule: { enemyAttachmentActions: true },
   customizationOptions: CUSTOM_CHECKS,
-  playCondition: [
-    { when: ({ state, inv }) => state.currentSeat === inv.seat, message: '「号令真言」只能在你回合期间打出' },
-    { when: ({ state, inv }) => state.enemies.some(enemy => enemy.location === inv.location && !enemy.elite), message: '你所在地点没有非精英敌人' },
-  ],
+  playCondition: [ownTurn()],
+  customizationEffects: {
+    deckLimit: checks => checks.filter(index => index === 7).length >= CUSTOM_CHECKS[7].checks ? 3 : undefined,
+  },
   abilities: [
     {
-      kind: 'played',
-      fast: true,
-      label: '选择同地点非精英敌人，并对它下命令（去 / 蹲下 / 定制命令）',
-      resolve: ({ state, inv, api }) => {
-        const candidates = state.enemies.filter(enemy => enemy.location === inv.location && !enemy.elite)
-        if (!candidates.length) {
-          api.info('「号令真言」：你所在地点没有非精英敌人。')
-          return
-        }
-        const chosenId = candidates.length === 1 ? candidates[0].id : api.choice({
-          kind: 'target', source: '09081', seat: inv.seat, prompt: '选择要下命令的非精英敌人。',
-          options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name || enemy.code })),
-        })
-        const enemy = candidates.find(item => item.id === chosenId) || candidates[0]
-        const loc = state.locations.find(location => location.id === enemy.location)
-        const commands = [
-          { id: 'go', label: '“去。”该敌人朝你选择的方向移动一次。' },
-          { id: 'cower', label: '“蹲下。”该敌人横置。' },
-        ]
-        if (checked(state, inv, 0)) commands.push({ id: 'betray', label: '“叛变。”对同地点攻击值不高于该敌人的另一个敌人造成 1 点伤害。' })
-        if (checked(state, inv, 1)) commands.push({ id: 'mercy', label: '“开恩。”同地点一位调查员按该敌人的伤害/恐惧值治疗。' })
-        if (checked(state, inv, 2)) commands.push({ id: 'confess', label: '“坦白。”该敌人生命值不小于地点隐藏值时发现 1 个线索。' })
-        if (checked(state, inv, 3)) commands.push({ id: 'distract', label: '“引开。”自动躲避同地点躲避值不高于该敌人的另一个敌人。' })
-        const limit = checked(state, inv, 6) ? 2 : 1
-        const used = new Set()
-        for (let index = 0; index < limit; index++) {
-          const remaining = commands.filter(command => !used.has(command.id))
-          if (!remaining.length) break
-          const picked = remaining.length === 1 ? remaining[0].id : api.choice({
-            kind: 'effect', source: '09081', seat: inv.seat,
-            prompt: `对「${enemy.name || enemy.code}」下命令${limit > 1 ? `（第 ${index + 1} 个，需不同）` : ''}。`,
-            options: remaining,
-          })
-          if (!picked) break
-          used.add(picked)
-          if (picked === 'go') {
-            const destinations = (loc?.connections || []).map(id => ({ id, label: api.locName(id) }))
-            if (!destinations.length) {
-              api.info('「号令真言」：该敌人没有可移动的连接地点。')
-              continue
-            }
-            const destination = destinations.length === 1 ? destinations[0].id : api.choice({
-              kind: 'move', source: '09081', seat: inv.seat, prompt: '选择该敌人移动的方向。', options: destinations,
-            })
-            api.moveEnemy(enemy, destination)
-            api.info(`🗣️ “去。”「${enemy.name || enemy.code}」移动到「${api.locName(destination)}」。`)
-          } else if (picked === 'cower') {
-            api.exhaust(enemy)
-            api.info(`🗣️ “蹲下。”「${enemy.name || enemy.code}」横置。`)
-          } else if (picked === 'betray') {
-            const targets = state.enemies.filter(other => other.id !== enemy.id && other.location === enemy.location
-              && (api.enemyFight(other, inv.seat) <= api.enemyFight(enemy, inv.seat)))
-            if (!targets.length) { api.info('「号令真言」：没有符合叛变条件的敌人。'); continue }
-            const target = targets.length === 1 ? targets[0] : targets.find(other => other.id === api.choice({
-              kind: 'target', source: '09081', seat: inv.seat, prompt: '选择叛变伤害的目标。',
-              options: targets.map(other => ({ id: other.id, label: other.name || other.code })),
-            })) || targets[0]
-            api.damageEnemy(target, 1, inv.seat, { code: '09081' })
-            api.info(`🗣️ “叛变。”对「${target.name || target.code}」造成 1 点伤害。`)
-          } else if (picked === 'mercy') {
-            const investigators = api.investigatorsAt(enemy.location)
-            if (!investigators.length) { api.info('「号令真言」：该敌人所在地点没有调查员。'); continue }
-            const target = investigators.length === 1 ? investigators[0] : investigators.find(other => other.seat === Number(api.choice({
-              kind: 'investigator', source: '09081', seat: inv.seat, prompt: '选择接受开恩治疗的调查员。',
-              options: investigators.map(other => ({ id: String(other.seat), label: other.name })),
-            }))) || investigators[0]
-            const amount = Number(enemy.damage || 0) + Number(enemy.horror || 0)
-            if (!amount) { api.info('「号令真言」：该敌人没有伤害/恐惧值。'); continue }
-            api.healDamage(target.seat, Number(enemy.damage || 0))
-            api.healHorror(target.seat, Number(enemy.horror || 0))
-            api.info(`🗣️ “开恩。”${target.name} 治疗了 ${amount} 点伤害/恐惧。`)
-          } else if (picked === 'confess') {
-            const location = state.locations.find(item => item.id === enemy.location)
-            const health = Number(enemy.health ?? 0)
-            const shroud = Number(location?.shroud ?? 0)
-            if (health < shroud) { api.info('「号令真言」：该敌人生命值低于地点隐藏值，无法坦白。'); continue }
-            if ((location?.clues || 0) <= 0) { api.info('「号令真言」：该敌人所在地点没有线索。'); continue }
-            api.discoverClue(inv.seat, 1, enemy.location)
-            api.info(`🗣️ “坦白。”在「${location.name || enemy.location}」发现 1 个线索。`)
-          } else if (picked === 'distract') {
-            const targets = state.enemies.filter(other => other.id !== enemy.id && other.location === enemy.location
-              && (api.enemyEvade(other, inv.seat) <= api.enemyEvade(enemy, inv.seat)))
-            if (!targets.length) { api.info('「号令真言」：没有符合引开条件的敌人。'); continue }
-            const target = targets.length === 1 ? targets[0] : targets.find(other => other.id === api.choice({
-              kind: 'target', source: '09081', seat: inv.seat, prompt: '选择要自动躲避的敌人。',
-              options: targets.map(other => ({ id: other.id, label: other.name || other.code })),
-            })) || targets[0]
-            api.autoEvadeEnemy(target)
-            api.info(`🗣️ “引开。”自动躲避了「${target.name || target.code}」。`)
-          }
-        }
-      },
+      kind: 'action', actionKind: 'parley', range: 'anywhere',
+      label: '谈判：命令所附属的敌人，每种命令每轮一次',
+      cost: { action: true },
+      criteria: [({ state, inv, source }) => {
+        const host = source.ownerSeat === inv.seat ? hostOf(state, source) : null
+        return Boolean(host && inRange(state, inv, host)
+          && commandsFor(state, inv, source).size > 0)
+      }],
+      resolve: parley,
+    },
+    {
+      kind: 'free', actionKind: 'activate', range: 'anywhere',
+      label: '深层控制：把号令真言返回手牌',
+      criteria: [({ state, inv, source }) => source.ownerSeat === inv.seat && unlock(state, inv, 4)],
+      resolve: ({ source, api }) => api.movePlayerAttachment(source, 'hand'),
     },
   ],
   modifiers: [],

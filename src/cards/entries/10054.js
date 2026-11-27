@@ -33,7 +33,6 @@ const candidatesOf = inv => (inv?.assets || [])
 export default {
   code: CODE,
   keepOnPlay: true,
-  note: 'approximation: 线索窗口齐备，但引擎只在旧式 cost.exhaust / api.exhaust 派发 assetExhausted；描述子 cost.exhaust（多数支援 [action] 的横置费用）尚不派发，已列 primitive-requests/10054.json。',
   playCondition: [
     {
       when: ({ inv }) => candidatesOf(inv).length > 0,

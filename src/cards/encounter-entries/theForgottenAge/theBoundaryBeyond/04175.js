@@ -8,12 +8,7 @@
 //
 // 第 92 轮：边界之外四张古代地点的「团队每轮一次」发现线索行动。
 
-import { ALL_CARDS, isWeaknessCode, teamOnce, discoverAt, shuffleDeckWith } from '../../_shared.js'
-
-// 「团队每轮一次」是否已用完：与 _shared.teamOnce 的 tag 口径一致（scope 'round'）。
-// legalMoves 的 available 必须读同一个标记，否则按钮会在用完时仍然可点，
-// 执行时 perform 返回 false 而行为层抛错（runtime-1 的 ancientClue 中断）。
-const roundUsed = (state, key) => Boolean(state.scenarioFlags?.teamOnce?.[`${key}:${state.round}:r`])
+import { ALL_CARDS, isWeaknessCode, teamOnce, teamOnceUsed } from '../../_shared.js'
 
 export default {
   code: '04175', scope: 'location',
@@ -21,23 +16,21 @@ export default {
     ancientAction: {
       label: '♻️ 把弃牌堆的一张弱点洗回牌库：发现本地点的 2 个线索（团队每轮一次）',
       available(state, inv) {
-        if (roundUsed(state, '04175clue')) return false
+        if (teamOnceUsed(state, '04175clue', 'round')) return false
         return (inv.discard || []).some(isWeaknessCode)
       },
       perform(state, inv, api, location) {
-        if (!teamOnce(state, '04175clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
+        if (teamOnceUsed(state, '04175clue', 'round')) return false
         const candidates = [...new Set((inv.discard || []).filter(isWeaknessCode))]
         const chosen = candidates.length === 1 ? candidates[0] : api.choose({
           kind: 'card', source: '04175', seat: inv.seat,
           prompt: '选择一张要洗回牌库的弱点卡牌。',
           options: candidates.map(code => ({ id: code, label: ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code })),
         })
-        const index = (inv.discard || []).indexOf(chosen)
-        if (index < 0) return false
-        inv.discard.splice(index, 1)
-        inv.deck.push(chosen)
-        shuffleDeckWith(state, inv, api)
-        discoverAt(state, api, inv, location, 2)
+        if (!chosen || !api.moveCard({ code: chosen, from: 'discard', to: 'deckTop', ownerSeat: inv.seat })) return false
+        api.shuffleDeck(inv.seat)
+        teamOnce(state, api, '04175clue', 'round')
+        api.discoverClue(inv.seat, 2, location.id)
         return true
       },
     },

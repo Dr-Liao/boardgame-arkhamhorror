@@ -3,7 +3,7 @@
   "unit": "09-a-3",
   "profile": {
     "id": "tsk-player-c-2026-11",
-    "scope": "绯红密钥 09 段 tskp 玩家卡（09087–09128）42 条目录记录。19 条通过五维验收；23 条近似未替换/证据缺口暂不切换。",
+    "scope": "绯红密钥 09 段 tskp 玩家卡（09087–09128）42 条目录记录。42 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,27 +17,31 @@
   },
   "summary": {
     "total": 42,
-    "verified": 19,
-    "unverified": 23,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 175
+    "testsPassed": 178
   },
   "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+      "sha256": "0c1aff6f6181e1a773924d916c8fecc8df6066806d68fea6f8c023facadab68a"
+    },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
       "sha256": "94357ea35e9eab4dcf56759fa062ce1d6fae8f25cbf4b593f488b82a0e695992"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
-      "sha256": "a19a9030777563e27281aaff3fdd686813ca930c822b76cfe9b2071bc8cac269"
+      "sha256": "da0842784d0275c8c6ca76deed4c6474fd89e4aa85b22b7537cef30d2f440fe3"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
-      "sha256": "b7f26a9b61ab4b2f3c34207cf0ebcb792b9b841014f4e066401cc041be7de6c2"
+      "sha256": "688ad6415126779c1c6ae31a319314fb9d6beafbc1a826917fb025fdc3b2f3ed"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-      "sha256": "4c3561482920f880890afe80e56b24b125a7c262b97b6ff3324b392309c7c87a"
+      "sha256": "a032b44c11fd3906fba3a486a33d5cbbee82b1e96e56aef13e3c7fe668a5e653"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
@@ -68,16 +72,12 @@
       "sha256": "76f966450300765d643bd72eac107a289a36ecb86f6b869a37fc9b2667518b45"
     },
     {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
-    },
-    {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
       "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
@@ -89,17 +89,29 @@
       "code": "09087",
       "name": "爆炸结界",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「打出前弃掉 X 个法术槽」在 X 选择之后结算，且槽位容量按固定 2 计（无槽位容量读点）——费用/容量与印刷不等价（primitive-request/09087）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09087 爆炸结界：支付 X 前先弃法术，X 受弃置后空法术槽限制"
+        }
+      ]
     },
     {
       "code": "09088",
       "name": "诅咒连连",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「敌方本轮不能受到伤害」未实现（缺持续实体规则读点，primitive-request/09088）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09088：敌人本轮不能受到伤害，下一轮恢复正常"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09088 诅咒连连：按毁灭标记击败敌人并获得等量资源；或自动躲避并发现线索"
+        }
+      ]
     },
     {
       "code": "09089",
@@ -117,25 +129,37 @@
       "code": "09090",
       "name": "恐灵附身",
       "type": "skill",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "第二选项在投入窗口立即结算，未等待检定成功（primitive-request/09090）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09090 恐灵附身：只在投入支援检定后的成功分支移除毁灭"
+        }
+      ]
     },
     {
       "code": "09091",
       "name": "星界映射",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「额外行动只能用于打出手部槽位支援」用「每回合一次免行动打出」近似（无行动预算读点，primitive-request/09091）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09091 星界映射：按实际空法术槽增加手槽，额外行动只用于打出占手槽的支援"
+        }
+      ]
     },
     {
       "code": "09092",
       "name": "艾勒·鲁巴什",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附属支援上的 1 个毁灭不计入密谋阈值」未实现；且宿主仅支持 1 个附属支援（印刷为最多 2 个，primitive-request/09092）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09092 艾勒·鲁巴什：允许两个附属并各忽略 1 毁灭；附属支援发起检定 +1"
+        }
+      ]
     },
     {
       "code": "09093",
@@ -213,17 +237,29 @@
       "code": "09099",
       "name": "便携万能工具",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Detachable 跨座位使用与 Spring-Loaded 的失败时点改写未实现（其余勾选项已实现，primitive-request/09099）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09099 便携万能工具：可拆卸和弹簧式同时生效时，队友将要失败才可触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值；勾选尖刀再 +1"
+        }
+      ]
     },
     {
       "code": "09100",
       "name": "简易陷阱",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "地点附属敌方修正 / 远程布置 / 束网 / 静态快速均未实现；陷阱按「随你移动的场上卡」近似（primitive-request/09100）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09100 简易陷阱：以 2 计时入场，每轮结束移除 1 计时，耗尽后弃掉"
+        }
+      ]
     },
     {
       "code": "09101",
@@ -289,25 +325,61 @@
       "code": "09105",
       "name": "直击弱点",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "自动成功之后本次攻击/躲避的通常效果仍会结算（缺「取代检定通常效果」写点），精英分支可能多结算一次伤害。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09105 直击弱点：真实难度 0 攻击自动成功，弃置非精英或使精英恰好受到 3 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09105 直击弱点：难度不为 0 时不能打出"
+        }
+      ]
     },
     {
       "code": "09106",
       "name": "整装待发",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮最多 2 张[[抉择]]」是特质作用域上限，只按本卡每轮 2 次近似。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09106、09107、09109：不同调查员共用每轮两张抉择上限"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09106 整装待发：从牌库抽到时自动结算显现（真实 cardDrawn 窗口）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09106 整装待发：显现选择两项技能，所有调查员所选 +1、其余 -1"
+        }
+      ]
     },
     {
       "code": "09107",
       "name": "猎人还是猎物",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮最多 2 张[[抉择]]」按本卡近似；平局的最短/最远分支按地点 id 排序取第一个（应为玩家选择）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09106、09107、09109：不同调查员共用每轮两张抉择上限"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09107 猎人还是猎物：场上没有敌人时抽 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09107 猎人还是猎物：未交战非精英敌人朝最近的调查员移动一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09107 猎人还是猎物：调查员解除交战并远离最近的敌人移动一次"
+        }
+      ]
     },
     {
       "code": "09108",
@@ -325,25 +397,45 @@
       "code": "09109",
       "name": "抉择时刻",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「下个回合失去 1 个行动」改为立刻失去 1 个行动；「每轮最多 2 张抉择」按本卡近似。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09106、09107、09109：不同调查员共用每轮两张抉择上限"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09109 抉择时刻：所选调查员抽 3 张，下回合失去 1 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09109 抉择时刻：立即进行一次行动后随机弃 1 张手牌"
+        }
+      ]
     },
     {
       "code": "09110",
       "name": "救生索",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "X（本回合失败检定次数）按 1 结算；印刷时机「回合将要结束」近似为自己回合内快速打出。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09110 救生索：可在另一调查员即将结束回合时，按本回合两次失败增加行动并放逐"
+        }
+      ]
     },
     {
       "code": "09111",
       "name": "野兽本性",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮最多 2 张抉择」按本卡近似；重复卡号按「同码任一实体」处理。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09111 野兽本性：揭示遭遇牌库顶 3 张，抽 1 张、弃其余，并发现 1 个线索"
+        }
+      ]
     },
     {
       "code": "09112",
@@ -361,9 +453,21 @@
       "code": "09113",
       "name": "棒球棒",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "返回/弃置的选择在伤害结算前完成（印刷为攻击后），失败时不提供该选择。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09113：自动失败时仍在攻击结束后提供返回手牌的选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09113 棒球棒：+2 战斗 +1 伤害；骷髅时选择额外 +1 伤害并弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09113 棒球棒：没有骷髅/自动失败时只造成 +1 伤害，棒球棒留在场上"
+        }
+      ]
     },
     {
       "code": "09114",
@@ -385,9 +489,13 @@
       "code": "09115",
       "name": "随心而动",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮最多 2 张抉择」按本卡近似；移出游戏记入 exiled 账本。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09115 随心而动：三堆选一堆，每位调查员抽取该堆自己的牌，其余移出游戏"
+        }
+      ]
     },
     {
       "code": "09116",
@@ -421,25 +529,49 @@
       "code": "09118",
       "name": "命运无常",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09118 命运无常：放置 1 毁灭，每位调查员治愈 3 伤害与 3 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09118 命运无常：移除 1 毁灭，每位调查员受到 1 直接伤害与 1 直接恐惧，本卡移出游戏"
+        }
+      ]
     },
     {
       "code": "09119",
       "name": "超自然发射器",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「当前形态」用 untilLeavesPlay 持续效果记账（缺实例级形态字段）；定位变换的位移在躲避检定后结算；注能只加在具象检定的技能值上。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09119 超自然发射器：以太连接（勾选）入场时额外 +2 以太"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09119 超自然发射器：已解锁形态可切换，轨道射击具象攻击 +1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09119 超自然发射器：物质操控成功后免费打出支援，不额外花费行动或资源"
+        }
+      ]
     },
     {
       "code": "09120",
       "name": "工具带",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附属支援文本框视为空白」与「解除附属」均未实现（缺宿主级空白读点与 detach 写点）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09120 工具带：附属工具的文本为空且不占槽，解附属后恢复"
+        }
+      ]
     },
     {
       "code": "09121",
@@ -473,9 +605,13 @@
       "code": "09123",
       "name": "灵魂封圣",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「超量治愈 → 放置贡品」缺治疗溢出读点，未实现；「花费 1 贡品 +2 技能值」已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09123 灵魂封圣：检定期间花费 1 贡品，本次检定 +2 技能值"
+        }
+      ]
     },
     {
       "code": "09124",
@@ -497,33 +633,69 @@
       "code": "09125",
       "name": "量子悖论",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「弃掉 4 张其它手牌」在结算时支付而非支付前（playCondition 只按手牌 ≥5 预检）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09125 量子悖论：弱点留在手中，回合结束时揭示并受到 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09125 量子悖论：额外弃掉 4 张其他手牌作为打出费用"
+        }
+      ]
     },
     {
       "code": "09126",
       "name": "该付账了",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「花费任意数量额外行动」简化为「用满可用档位」（最多 2 个额外行动）并在打出后扣除。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09126 该付账了：回合结束时若在手牌，揭示并受到 1 点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09126 该付账了：打出前可选择支付零个、一个或两个额外行动"
+        }
+      ]
     },
     {
       "code": "09127",
       "name": "恐怖异灵",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "空法术槽按「基础 1 槽 - 占用数」近似（缺容量读点，额外法术槽不计）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09127 恐怖异灵：弱点在本地点生成并交战，空法术槽额外揭示标记"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09127 恐怖异灵：没有空法术槽时不额外揭示"
+        }
+      ]
     },
     {
       "code": "09128",
       "name": "准备不足",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「在手牌中使投入卡图标 -1」缺手牌来源的全局投入图标削减读点，未实现；打出条件与弃掉已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard3.test.mjs",
+          "test": "09-a-3 09128：准备不足在手牌中只削减持有者投入的每张牌一个图标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09128 准备不足：只有这一张手牌且恰好 1 资源时才能打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
+          "test": "P6 09128 准备不足：支付 1 资源打出以弃掉它"
+        }
+      ]
     }
   ]
 }

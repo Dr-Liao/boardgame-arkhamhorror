@@ -1,5 +1,10 @@
+import { spliceHand } from './hand-icons.js'
+import { revealTopForSharedPlay } from './shared-play.js'
+import { nameDrawPrediction } from './draw-predictions.js'
+import { attachmentPreventsReady } from './attachment-rules.js'
 import { putInHand } from './hand-entry.js'
 import { exilePlayedEvent } from './event-play-disposal.js'
+import { currentEffectSource } from './effect-provenance.js'
 import { consumeEffect } from './effect-state.js'
 import { canChangeChaosToken } from './chaos-reveal.js'
 import { sealChaosToken as payEntrySeal } from './chaos-bag.js'
@@ -10,6 +15,7 @@ import { notifyPlacedAsset } from './investigator-mechanics.js'
 import { setLocationFlag } from './location-state.js'
 import { availableResources } from './resource-bank.js'
 import { canLeaveControlledAsset } from './asset-departure.js'
+import { inPlayAttachments } from './in-play-attachments.js'
 // 能力 API · 通用动作与展示（Phase 6 · 6d-11，abilityApi 收尾）。
 //
 // abilityApi 的最后一批：通用动作（伤害/恐惧/资源/抽牌/线索/移动/混沌标记/检定入口）、
@@ -24,14 +30,17 @@ import { removeDoomFromCard, setCardDoom } from './act-agenda.js'
 import { setLocationShroudMod } from './location-attachments.js'
 import { loseResources as applyResourceLoss } from './resource-loss.js'
 import { applyPhysicalFace } from './physical-faces.js'
-import { afterHandDiscard } from './hand-discard-window.js'
+import { afterHandDiscard, afterHandDiscardBatch, afterHandEmptied } from './hand-discard-window.js'
+import { discardPlayerCardWithWindow } from './player-discard.js'
 import { discardOneHandCardAsCost } from './discard-costs.js'
 // P6（食梦者）：伤害/恐惧移动（托米·马尔登的旧印）与卡牌具名计数器（托尼·摩根根的赏金）。
 import { harmRoom, moveHarm as moveHarmBetween } from './harm-transfer.js'
 import { addCardCounter, cardCounterOf, cardCountersOf, moveCardCounters } from './card-counters.js'
 import { flipOrPlaceDreamGate, placeDreamGate } from './dream-gate.js'
 import { attackedThisRound, blockedByDeckTopLock, commitDeckTop, grantFreeActions, markFlipAfterNextTest, roundEventsOf } from './eote-investigator-support.js'
+import { consumeHarmBonus } from './effect-state.js'
 import { enemyPlayerEffectBlocked } from './effect-provenance.js'
+import { canRelocateEnemy } from './movement.js'
 import { ignoreLimitForRound } from './limits.js'
 import { capabilityBlocked, entityRuleActive } from './modifiers.js'
 import { parleyForbidden } from './parley.js'
@@ -52,6 +61,7 @@ export function createMiscApi(state, events, deps) {
     addDoom,
     discardLocked,
     addTrauma,
+    defeatInvestigatorWithTrauma,
     aliveInvestigators,
     applyDamage,
     applyHorror,
@@ -122,6 +132,9 @@ export function createMiscApi(state, events, deps) {
     performImmediateAction,
     playCardFromDiscardForced,
     playCardFromOtherHandForced,
+    resolveTekeliWeakness,
+    resolveTekeliTop,
+    returnTekeliFromDeck,
     // 第 5 步 P6：治疗恐惧的统一入口 / 资源寄存 / 取消记账（都要能开窗口）。
     healHorrorFrom,
     // P6 原语：治疗伤害的统一入口（与 healHorrorFrom 对称；威胁区 threatDamageSink 从那里承接）。
@@ -187,10 +200,12 @@ export function createMiscApi(state, events, deps) {
     movePlayerAttachment: (source, destination, { draw = false, seat = source?.ownerSeat } = {}) => {
       const owner = state.investigators[seat]
       if (!owner || !source || !['hand', 'discard'].includes(destination) || source.assetReference || source.encounterAttached) return false
-      const zones = [state.playerLocationAttachments, ...state.enemies.map(enemy => enemy.attachments),
+      const zones = [state.playerLocationAttachments, ...state.locations.map(location => location.attachments),
+        ...state.enemies.map(enemy => enemy.attachments),
         ...state.investigators.flatMap(inv => [inv.attachments, ...inv.assets.map(asset => asset.attachments)])]
-      const zone = zones.find(cards => cards?.some(card => card === source || card.id === source.id))
-      const index = zone?.findIndex(card => card === source || card.id === source.id) ?? -1
+      const matches = card => card === source || (source.id != null && card.id === source.id)
+      const zone = zones.find(cards => cards?.some(matches))
+      const index = zone?.findIndex(matches) ?? -1
       if (index < 0) return false
       zone.splice(index, 1)
       if (destination === 'discard') discardPlayerCards(state, owner, source.originalCode || source.code)
@@ -199,6 +214,20 @@ export function createMiscApi(state, events, deps) {
         for (const message of drawCards(state, owner, 1, events)) info(state, events, message)
       } else putInHand(state, owner, source.originalCode || source.code)
       return true
+    },
+    spendPlayerLocationAttachmentUses: (attachment, amount = 1) => {
+      if (!state.playerLocationAttachments?.includes(attachment) || !Number.isSafeInteger(amount)
+        || amount <= 0 || attachment.uses < amount) return false
+      attachment.uses -= amount
+      return true
+    },
+    placePlayerLocationAttachment: (seat, code, locationId, fields = {}) => {
+      const location = state.locations.find(card => card.id === locationId)
+      if (!location || !state.investigators[seat]) return null
+      const attachment = attachCardTo(state, seat, code, location, { location: locationId, ...fields })
+      location.attachments = location.attachments.filter(card => card !== attachment)
+      ;(state.playerLocationAttachments ||= []).push(attachment)
+      return attachment
     },
     discardPlayerAttachment: source => abilityApi(state, events).movePlayerAttachment(source, 'discard'),
     cancelAssignedHarm: (context, kind, amount, seat = state._resolvingSeat ?? context?.seat) => {
@@ -256,10 +285,34 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     info: text => info(state, events, text),
+    publicInfo: text => info(state, events, text, null, { public: true }),
     // 「撤退」类事件/能力的统一入口（02151 “我要走了！”）。
     resign: seat => doResign(state, seat, events),
     random: () => randomValue(state),
     scenario: scenarioRuntime(state, events),
+    resolveEnemyPhaseOf: (enemy, options) => scenarioRuntime(state, events).resolveEnemyPhaseOf(enemy, options),
+    spawnRandomEnemyBeneath: enemy => scenarioRuntime(state, events).spawnRandomEnemyBeneath(enemy),
+    resolveTekeliWeakness: (seat, code, options) => resolveTekeliWeakness(state, seat, code, events, options),
+    resolveTekeliTop: (seat, options) => resolveTekeliTop(state, seat, events, options),
+    returnTekeliFromDeck: (seat, count, options) => returnTekeliFromDeck(state, seat, count, options),
+    treatTokensDuringNextAssetAttack: (seat, rule) => {
+      const inv = state.investigators[seat]
+      if (!inv || !rule?.traits?.length || !rule.tokens?.length) return false
+      inv.nextAssetAttackTokenTreatment = { turn: state.turnSerial, traits: [...rule.traits], tokens: [...rule.tokens], as: rule.as }
+      return true
+    },
+    revealTopForSharedPlay: seat => revealTopForSharedPlay(state, seat),
+    nameDrawPrediction: (seat, context, options) => nameDrawPrediction(state, state.investigators[seat], context, options),
+    addTestClueBonus: (amount = 1) => {
+      if (!state.skillTest || !Number.isSafeInteger(amount) || amount < 1) return false
+      state.skillTest.additionalClues = (state.skillTest.additionalClues || 0) + amount
+      return true
+    },
+    addTekeliResolution: (context = state._reaction) => {
+      if (context?.when !== 'tekeliWouldResolve') return false
+      context.extraResolutions = (context.extraResolutions || 0) + 1
+      return true
+    },
     // 剧本标记（state.scenarioFlags）的读写：卡文件不直接写 state（审计 R1），统一走这里。
     scenarioFlag: key => state.scenarioFlags?.[key] ?? null,
     setScenarioFlag: (key, value = true) => {
@@ -311,6 +364,45 @@ export function createMiscApi(state, events, deps) {
       return inv ? resourceBank.bankResources(state, inv, amount, events) : 0
     },
     // P7 TDC 11756a「好钱」：把资源放在卡上（卡级 resources 计数；任务卡结束判定读同一字段）。
+    moveControlledAsset: (asset, locationId) => {
+      const valid = state.investigators.some(inv => inv.assets.includes(asset))
+        && state.locations.some(location => location.id === locationId)
+      if (!valid) return false
+      asset.location = locationId
+      return true
+    },
+    configureControlledAsset: (asset, { health, soakDamageAtLocation } = {}) => {
+      if (!state.investigators.some(inv => inv.assets.includes(asset))) return false
+      if (Number.isSafeInteger(health) && health > 0) asset.customHealth = health
+      if (soakDamageAtLocation) asset.soakDamageAtLocation = true
+      return true
+    },
+    useControlledAssetAction: (asset, kind, maximum = 1) => {
+      const controller = state.investigators[state.currentSeat]
+      if (!controller?.assets.includes(asset) || state.phase !== 'investigation' || controller.turnEnded) return false
+      const kinds = asset.ownTurnActions?.turn === state.turnSerial ? asset.ownTurnActions?.kinds || [] : []
+      if (kinds.includes(kind) || kinds.length >= maximum) return false
+      asset.ownTurnActions = { turn: state.turnSerial, kinds: [...kinds, kind] }
+      return true
+    },
+    withInvestigatorAtLocation: (seat, locationId, resolve) => {
+      const inv = state.investigators[seat]
+      if (!inv || !state.locations.some(location => location.id === locationId) || typeof resolve !== 'function') return null
+      const previous = inv.location
+      inv.location = locationId
+      try {
+        return resolve()
+      } finally {
+        if (inv.location === locationId) inv.location = previous
+      }
+    },
+    moveResourcesToAsset: (seat, asset, amount) => {
+      const owner = state.investigators[seat]
+      if (!owner?.assets.includes(asset) || !Number.isSafeInteger(amount) || amount <= 0 || owner.resources < amount) return 0
+      owner.resources -= amount
+      asset.resources = (asset.resources || 0) + amount
+      return amount
+    },
     placeResourceOnCard: (card, amount = 1) => {
       if (!card || !Number.isFinite(amount) || amount <= 0) return card?.resources || 0
       card.resources = (card.resources || 0) + Math.trunc(amount)
@@ -390,7 +482,7 @@ export function createMiscApi(state, events, deps) {
       return !!inv && !inv.storyInvestigator && !inv.defeated && !inv.resigned
         && !capabilityBlocked(state, inv, 'drawCards') && (inv.deck.length > 0 || (!discardLocked(state, inv) && inv.discard.length > 0))
     },
-    drawCards: (seat, amount) => drawCards(state, state.investigators[seat], amount, events),
+    drawCards: (seat, amount, options) => drawCards(state, state.investigators[seat], amount, events, options),
     checkHandSizeNow: seat => {
       const inv = state.investigators[seat]
       if (inv && !inv.defeated && !inv.resigned) discardHandTo(state, inv,
@@ -404,13 +496,25 @@ export function createMiscApi(state, events, deps) {
       for (const text of texts) info(state, events, text)
       return texts.length
     },
+    discardHandCardsAsCost: (seat, cards) => {
+      const inv = state.investigators[seat]
+      if (!inv || !cards.length || new Set(cards.map(card => card.index)).size !== cards.length) return false
+      const allowed = discardableHandCards(inv)
+      if (!cards.every(({ index, code }) => allowed.some(card => card.index === index && card.code === code))) return false
+      for (const { index } of [...cards].sort((a, b) => b.index - a.index)) spliceHand(inv, index, 1)
+      for (const { code } of cards) discardPlayerCards(state, inv, code)
+      for (const { code } of cards) afterHandDiscard(state, inv, code, events, reactionWindow, cardName, { deferBatch: true })
+      afterHandDiscardBatch(state, inv, cards.map(card => card.code), events, reactionWindow)
+      return true
+    },
     discardFromHand: (seat, code) => {
       const inv = state.investigators[seat]
       const index = inv?.hand.indexOf(code)
       if (index == null || index < 0) return false
-      inv.hand.splice(index, 1)
-      discardPlayerCards(state, inv, code)
-      afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
+      spliceHand(inv, index, 1)
+      if (discardPlayerCardWithWindow(state, inv, code, 'hand', events, reactionWindow)) {
+        afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
+      } else afterHandEmptied(state, inv, events, reactionWindow)
       return true
     },
     chooseOptionalHandDiscard: (seat, source, { required = false } = {}) => {
@@ -519,10 +623,11 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     // 05049 佩妮：下个回合额外一次行动（读点 beginInvestigationPhase 的 inv.extraActionNextTurn）。
-    grantExtraActionNextTurn: seat => {
+    grantExtraActionNextTurn: (seat, count = 1) => {
       const inv = state.investigators[seat]
-      if (!inv) return false
-      inv.extraActionNextTurn = true
+      if (!inv || !Number.isSafeInteger(count) || count < 1) return false
+      inv.extraActionNextTurn = count === 1 && !Number.isInteger(inv.extraActionNextTurn)
+        ? true : (Number(inv.extraActionNextTurn) || 0) + count
       return true
     },
     // 05010 悬案：fromHunch 通道打出后清掉直觉牌库揭示标记（读点 hunch-deck 的 returnHunchCard）。
@@ -575,25 +680,29 @@ export function createMiscApi(state, events, deps) {
       enemy.aloof = false
       return true
     },
-    moveInvestigator: (seat, locationId) => relocateInvestigator(state, seat, locationId, events),
+    moveInvestigator: (seat, locationId, options) => relocateInvestigator(state, seat, locationId, events, null, options),
     damageEnemy: (enemy, amount, seat, source = null) => damageEnemy(state, enemy, amount, seat, events, source),
     // 敌人自愈（狼人德鲁这类「攻击时治愈 1 点伤害」）。只改实例，不触发击败/胜利结算。
     healEnemy: (enemy, amount = 1) => {
       const target = typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy
       if (!target) return 0
       const before = Number(target.damageTaken) || 0
-      target.damageTaken = Math.max(0, before - Math.max(0, Number(amount) || 0))
+      const heal = Math.max(0, Number(amount) || 0)
+      target.damageTaken = Math.max(0, before - heal - (before > 0 && heal > 0 ? consumeHarmBonus(state, target, 'heal') : 0))
       const healed = before - target.damageTaken
       // P7 TDC 11727：治疗/离场后重算持续关键词的章节钩子。
       if (healed > 0) scenarioBehavior(state).enemyHealed?.(state, target, healed, scenarioRuntime(state, events))
       return healed
     },
-    moveEnemy: (enemy, locationId) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
-      ? false : relocateEnemy(state, enemy, locationId, events),
+    canMoveEnemyTo: (enemy, locationId) => !enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      && canRelocateEnemy(state, enemy, locationId),
+    moveEnemy: (enemy, locationId, options) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
+      ? false : relocateEnemy(state, enemy, locationId, events, options),
     engage: (enemy, seat) => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
       ? false : engageEnemy(state, enemy, seat, events),
     canMoveTo: (seat, id) => canMoveTo(state, seat, id),
     canDamageEnemy: (enemy, seat, source = null) => canDamageEnemy(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, seat, source),
+    discardableHandCards: seat => state.investigators[seat] ? discardableHandCards(state.investigators[seat]) : [],
     canDefeatEnemy: (enemy, seat, source = null) => enemyCanBeDefeated(state, typeof enemy === 'string' ? state.enemies.find(e => e.id === enemy) : enemy, source, seat),
     canAutoEvade: (enemy, seat) => canAutoEvade(state, typeof enemy === 'string' ? state.enemies.find(item => item.id === enemy) : enemy, seat),
     autoEvade: enemy => enemyPlayerEffectBlocked(state, enemy, slumberDeps)
@@ -606,6 +715,9 @@ export function createMiscApi(state, events, deps) {
       if (!owner || !target || owner === target || target.defeated || target.resigned) return false
       owner.assets.splice(owner.assets.indexOf(asset), 1)
       target.assets.push(asset)
+      for (const enemy of state.enemies) {
+        if (enemy.attachedToAssetId === asset.id) enemy.location = target.location
+      }
       return true
     },
     setLocationFlag: (id, flag, value) => {
@@ -630,7 +742,7 @@ export function createMiscApi(state, events, deps) {
     },
     ready: card => {
       if (state.enemies.includes(card)) return scenarioRuntime(state, events).readyEnemy(card)
-      if (card) card.exhausted = false
+      if (card && !attachmentPreventsReady(state, card)) card.exhausted = false
     },
     // 移除一张场上卡上的全部/指定数量毁灭标记（月光仪式这类卡用）。
     setAssetDoom: (card, amount = 0) => setCardDoom(state, card, amount),
@@ -681,6 +793,13 @@ export function createMiscApi(state, events, deps) {
       if (options.anyRevealed) test.retargetDifficulty = true
       info(state, events, `🔎 ${inv?.name || '调查员'} 改为在「${target.name}」调查（隐藏值 ${shroudValue}）。`)
       return { locationId, shroudValue }
+    },
+    replaceInvestigationClue: () => {
+      const frame = investigationFrameRef()
+      if (!(frame?.replaceableClues > 0)) return false
+      frame.replaceableClues--
+      frame.replacedClues = (frame.replacedClues || 0) + 1
+      return true
     },
     // 2026-10-25 第七轮修复 05322：把本次调查变成「原地点 + 所选地点」双地点调查（≤2 连接、已揭示）。
     chooseDualInvestigation: (locationId, options = {}) => {
@@ -856,11 +975,13 @@ export function createMiscApi(state, events, deps) {
     readyEnemy: enemy => scenarioRuntime(state, events).readyEnemy(enemy),
     exhaustEnemy: enemy => scenarioRuntime(state, events).exhaustEnemy(enemy),
     putInDiscard: (seat, code, options) => scenarioRuntime(state, events).putInDiscard(seat, code, options),
-    putInHand: (seat, code) => scenarioRuntime(state, events).putInHand(seat, code),
+    putInHand: (seat, code, options) => scenarioRuntime(state, events).putInHand(seat, code, options),
+    drawEncounter: (seat, options) => scenarioRuntime(state, events).drawEncounter(seat, options),
     drawEncounterDiscard: (seat, index) => scenarioRuntime(state, events).drawEncounterDiscard(seat, index),
     spendClues: (seat, n) => scenarioRuntime(state, events).spendClues(seat, n),
     loseClues: (seat, n) => scenarioRuntime(state, events).loseClues(seat, n),
     gainClues: (seat, n) => scenarioRuntime(state, events).gainClues(seat, n),
+    takeControlOfClues: (seat, amount, location) => scenarioRuntime(state, events).takeControlOfClues(seat, amount, location),
     addCluesToLocation: (locationId, amount) => scenarioRuntime(state, events).addCluesToLocation(locationId, amount),
     removeLocationClues: (locationId, amount) => scenarioRuntime(state, events).removeLocationClues(locationId, amount),
     takeDiscardCard: (seat, code) => scenarioRuntime(state, events).takeDiscardCard(seat, code),
@@ -889,7 +1010,50 @@ export function createMiscApi(state, events, deps) {
     disengageEnemy: enemy => scenarioRuntime(state, events).disengage(enemy),
     connectLocations: (aId, bId) => scenarioRuntime(state, events).connectLocations(aId, bId),
     locationAttachments: locationId => scenarioRuntime(state, events).locationAttachments(locationId),
+    discardAttachment: source => scenarioRuntime(state, events).discardAttachment(source),
+    removeDefeatedAssetFromGame: context => {
+      if (context?.when !== 'assetDefeated' || !context.asset) return false
+      context.asset.removedFromGame = true
+      scenarioRuntime(state, events).removeFromGameCards(context.asset.code)
+      return true
+    },
+    defeatAsset: (seat, assetId) => {
+      const owner = state.investigators[seat]
+      const asset = owner?.assets.find(card => card.id === assetId)
+      return Boolean(asset) && checkAssetDefeated(state, owner, asset, events, { force: true })
+    },
+    extendEndingTurn: (context, amount) => {
+      if (context?.when !== 'turnWouldEnd' || !Number.isSafeInteger(amount) || amount <= 0) return false
+      context.extraActions = (context.extraActions || 0) + amount
+      return true
+    },
+    markRequiredFirstAction: source => { source.requiredActionTurn = state.turnSerial },
+    blankTreacheryInPlay: (source, { duration = 'endOfTurn' } = {}) => {
+      const entry = abilityApi(state, events).cardsInPlayTreacheries().find(item => item.attachment === source)
+      if (!entry || isWeaknessCard(cardDef(entry.code))) return false
+      if (duration === 'endOfRound') source.textBlankRound = state.round
+      else {
+        source.textBlankTurn = state.turnSerial ?? 0
+        state.treacheryTextBlankedThisTurn = true
+      }
+      return true
+    },
+    blankLocationAttachment: source => {
+      const actual = state.locations.flatMap(location => location.attachments || []).find(card => card.id === source?.id)
+      if (!actual || cardDef(actual.originalCode || actual.code)?.type !== 'treachery') return false
+      actual.textBlankTurn = state.turnSerial ?? 0
+      state.treacheryTextBlankedThisTurn = true
+      return true
+    },
     attachEncounterToLocation: (code, locationId, extra) => scenarioRuntime(state, events).attachEncounterToLocation(code, locationId, extra),
+    exileDepartingAsset: (seat, asset) => {
+      const owner = state.investigators?.[seat]
+      if (!owner || !asset?.code || owner.assets.includes(asset) || asset.removedFromGame) return false
+      asset.removedFromGame = true
+      scenarioRuntime(state, events).removeFromGameCards(asset.code)
+      exilePlayerCard(state, owner, asset.code, events)
+      return true
+    },
     // 放逐玩家卡：走引擎唯一的 exilePlayerCard 记账（state.exiled / exiledBySeat）。
     exileCard: (code, options = {}) => {
       const seat = options.seat ?? state.currentSeat
@@ -899,13 +1063,18 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     exilePlayedEvent,
-    // 「本次检定再获得 1 个图标」：记录在 committed 条目上（引擎结算图标时读 extraIcons）。
     addCommittedExtraIcons: (icon, options = {}) => {
-      const committed = (state.skillTest?.committed || [])
-        .find(item => options.committedId == null || item.id === options.committedId)
-        || (state.skillTest?.committed || [])[state.skillTest?.committed?.length - 1]
-      if (!committed) return false
-      committed.extraIcons = [...(committed.extraIcons || []), icon]
+      const committed = state.skillTest?.committed || []
+      const item = options.commitment
+        ? committed.find(candidate => candidate === options.commitment)
+        : committed.find(candidate => options.committedId == null || candidate.id === options.committedId)
+      if (!item) return false
+      item.extraIcons = [...(item.extraIcons || []), icon]
+      return true
+    },
+    returnCommitmentOnFailure: item => {
+      if (!state.skillTest?.committed.includes(item) || item.withdrawn || item.cancelled) return false
+      item.onFailDestination = 'hand'
       return true
     },
     // 2026-11-09 P1-14 复核：条目里既有 `api.doomOn` 写法（多个循环的多张卡），但能力面
@@ -915,6 +1084,16 @@ export function createMiscApi(state, events, deps) {
     // 但能力面此前没有这两个入口——记录实际不会写入。补能力面别名，读写仍落在唯一 state.campaign.records。
     campaignRecord: key => scenarioRuntime(state, events).campaignRecord(key),
     setCampaignRecord: (key, value) => scenarioRuntime(state, events).setCampaignRecord(key, value),
+    controlledPlayerCards: seat => {
+      const owner = state.investigators[seat]
+      if (!owner) return []
+      return [owner, ...owner.assets, ...owner.threat, ...inPlayAttachments(state)
+        .filter(card => (card.controllerSeat ?? card.ownerSeat) === seat)].filter(card => {
+        const def = cardDef(card.originalCode || card.code)
+        return !card.facedown && !card.isStoryAsset && !def?.encounterCode && !def?.isStoryAsset
+          && ['investigator', 'asset', 'event', 'skill'].includes(def?.type)
+      })
+    },
     doomOn: (card, amount = 1) => scenarioRuntime(state, events).doomOn(card, amount),
     removeDoom: (amount = 1) => scenarioRuntime(state, events).removeDoom(amount),
     setEnemyAside: (enemy, options) => scenarioRuntime(state, events).setEnemyAside(enemy, options),
@@ -973,6 +1152,19 @@ export function createMiscApi(state, events, deps) {
       inv.scenarioXpBonus = (inv.scenarioXpBonus || 0) + amount
       return true
     },
+    prohibitActionsThisTurn: (seat, kinds) => {
+      const inv = state.investigators[seat]
+      if (!inv || !Array.isArray(kinds) || !kinds.length) return false
+      const previous = inv.prohibitedActions && inv.prohibitedActions.turn === state.turnSerial ? inv.prohibitedActions.kinds : []
+      inv.prohibitedActions = { turn: state.turnSerial, kinds: [...new Set([...previous, ...kinds])] }
+      return true
+    },
+    scheduleActionLoss: (seat, amount = 1) => {
+      const inv = state.investigators[seat]
+      if (!inv || !Number.isSafeInteger(amount) || amount < 1) return false
+      inv.actionLossNextTurn = (inv.actionLossNextTurn || 0) + amount
+      return true
+    },
     gainAction: (seat, amount = 1) => {
       const inv = state.investigators[seat]
       if (inv) inv.actionsLeft += amount
@@ -1024,7 +1216,7 @@ export function createMiscApi(state, events, deps) {
     placeAssetHarm: (card, spec = {}) => {
       const owner = state.investigators.find(inv => inv.assets.includes(card))
       if (!owner) return false
-      const room = harmRoom(card, cardDef(card.code))
+      const room = harmRoom(card, cardDef(card.code), state)
       card.damage = (card.damage || 0) + Math.min(room.damage, Math.max(0, spec.damage || 0))
       card.horror = (card.horror || 0) + Math.min(room.horror, Math.max(0, spec.horror || 0))
       checkAssetDefeated(state, owner, card, events)
@@ -1045,7 +1237,12 @@ export function createMiscApi(state, events, deps) {
     // P6（食梦者 · 托米·马尔登旧印）：在「调查员 ↔ 你控制的支援」之间移动伤害/恐惧。
     //   from / to: { seat, assetId? }（assetId 省略即该座位的调查员本人）
     //   返回实际移动量 { damage, horror }；目标是支援时走一次被击败判定。
-    moveHarm: (from, to, amounts = {}) => {
+    grantEncounterDrawSurge: context => {
+      if (context?.when !== 'encounterDrawn') return false
+      context.gainSurge = true
+      return true
+    },
+    moveHarm: (from, to, amounts = {}, { source: harmSource } = {}) => {
       const resolveTarget = spec => {
         if (!spec) return null
         const seat = Number.isInteger(spec.seat) ? spec.seat : state.currentSeat
@@ -1066,13 +1263,25 @@ export function createMiscApi(state, events, deps) {
       }
       const source = resolveTarget(from)
       const destination = resolveTarget(to)
-      if (!source || !destination || source === destination) return { damage: 0, horror: 0 }
-      const applied = moveHarmBetween(source.entity, destination.entity, amounts, {
-        fromDef: source.kind === 'asset' ? cardDef(source.entity.code) : null,
+      if (!source || !destination || source.entity === destination.entity) return { damage: 0, horror: 0 }
+      const origin = source.kind === 'enemy' ? source : source.entity
+      if (destination.kind === 'enemy') {
+        const damage = Math.min(Math.max(0, Number(amounts.damage) || 0), origin.damage || 0)
+        const seat = source.owner?.seat ?? state.currentSeat
+        if (!damage || !deps.canDamageEnemy(state, destination.entity, seat, harmSource)) return { damage: 0, horror: 0 }
+        origin.damage -= damage
+        if (!deps.damageEnemy(state, destination.entity, damage, seat, events, harmSource)) {
+          origin.damage += damage
+          return { damage: 0, horror: 0 }
+        }
+        return { damage, horror: 0 }
+      }
+      const applied = moveHarmBetween(origin, destination.entity, amounts, {
         toDef: destination.kind === 'asset' ? cardDef(destination.entity.code) : null,
+        state,
       })
       if (applied.damage || applied.horror) {
-        const label = target => target.kind === 'asset' ? cardName(target.entity.code) : target.owner.name
+        const label = target => target.kind === 'investigator' ? target.owner.name : cardName(target.entity.code)
         info(state, events, `↔️ ${label(source)} 与 ${label(destination)} 之间移动了 ${applied.damage} 点伤害、${applied.horror} 点恐惧。`)
         if (destination.kind === 'asset') {
           checkAssetDefeated(state, destination.owner, destination.entity, events)
@@ -1103,7 +1312,7 @@ export function createMiscApi(state, events, deps) {
       if (!owner) return { damage: 0, horror: 0 }
       if (!spec.assetId) return harmRoom(owner)
       const asset = (owner.assets || []).find(item => item.id === spec.assetId)
-      return asset ? harmRoom(asset, cardDef(asset.code)) : { damage: 0, horror: 0 }
+      return asset ? harmRoom(asset, cardDef(asset.code), state) : { damage: 0, horror: 0 }
     },
     // P6（食梦者 · 托尼·摩尔根赏金）：卡牌实例上的具名计数器。
     cardCounterOf: (card, id) => cardCounterOf(card, id),
@@ -1136,7 +1345,7 @@ export function createMiscApi(state, events, deps) {
         const played = doPlay(state, seat, code, events, false, true, null, null, null, null,
           options.free ? playCost(state, owner, cardDef(code)) : (options.discount || 0), null, null,
           { preferredAttachmentTargetId: options.preferredAttachmentTargetId, grantedEvent: options.grantedEvent,
-            handIndex: options.handIndex })
+            handIndex: options.handIndex, skillBonus: options.skillBonus })
         return played ?? owner.hand.filter(item => item === code).length < before
       } finally {
         if (previousSeat === undefined) delete state._resolvingSeat
@@ -1213,11 +1422,12 @@ export function createMiscApi(state, events, deps) {
     },
     // Phase 5（5c-19）：把控制的一张支援拿回手牌（「求助盟友」）。
     // 离场钩子照常结算（leaveAsset），与旧 handler 的写法一致。
-    returnAssetToHand: (seat, card) => {
-      const owner = state.investigators[seat]
-      if (!canLeaveControlledAsset(state, owner, card)) return false
-      if (leaveAsset(state, owner, card, events, { reason: 'return' }) === false || card.removedFromGame) return false
-      if (!card.returnedToHand) putInHand(state, owner, card.code)
+    returnAssetToHand: (seat, card, { toOwner = false } = {}) => {
+      const controller = state.investigators[seat]
+      if (!canLeaveControlledAsset(state, controller, card)) return false
+      const recipient = toOwner ? state.investigators[card.ownerSeat] || controller : controller
+      if (leaveAsset(state, controller, card, events, { reason: 'return' }) === false || card.removedFromGame) return false
+      if (!card.returnedToHand) putInHand(state, recipient, card.code)
       return true
     },
     // Phase 5（5c-19）：读牌库顶 N 张的卡号（**只读**，不移动也不洗牌）。
@@ -1310,6 +1520,14 @@ export function createMiscApi(state, events, deps) {
           }
         }
       }
+      for (const host of [...state.investigators.flatMap(owner => owner.assets || []), ...(state.storyAssets || [])]) {
+        for (const attachment of host.attachments || []) {
+          out.push({ code: codeOf(attachment), hostType: 'asset', host, hostId: host.id, attachment })
+        }
+      }
+      for (const attachment of state.agendaAside || []) {
+        out.push({ code: codeOf(attachment), hostType: 'agendaAside', attachment })
+      }
       return out.filter(entry => cardDef(entry.code)?.type === 'treachery')
     },
     discardCardInPlay: entry => {
@@ -1321,7 +1539,8 @@ export function createMiscApi(state, events, deps) {
       }
       let removed = false
       if (entry.hostType === 'investigator') removed = removeFrom(entry.host?.threat)
-      else if (entry.hostType === 'location' || entry.hostType === 'enemy' || entry.hostType === 'agenda' || entry.hostType === 'act') {
+      else if (entry.hostType === 'agendaAside') removed = removeFrom(state.agendaAside)
+      else if (['location', 'enemy', 'agenda', 'act', 'asset'].includes(entry.hostType)) {
         removed = removeFrom(entry.host?.attachments)
       }
       if (!removed) return false
@@ -1362,6 +1581,12 @@ export function createMiscApi(state, events, deps) {
       return true
     },
     // Phase 5（5c-15）：把伤害设为上限并做击败检查（「我会在地狱里见你」这类自我击败）。
+    defeatWithMentalTrauma: (seat, amount) => {
+      const target = state.investigators[seat]
+      if (!target || target.defeated || target.resigned) return false
+      defeatInvestigatorWithTrauma(state, target, amount, events)
+      return true
+    },
     lethalSelfDamage: seat => {
       const target = state.investigators[seat]
       if (!target) return false
@@ -1378,7 +1603,10 @@ export function createMiscApi(state, events, deps) {
     addExtraOnSuccess: effectData => {
       if (!state.skillTest) return false
       state.skillTest.extraOnSuccess ||= []
-      state.skillTest.extraOnSuccess.push(effectData)
+      const source = currentEffectSource(state)
+      state.skillTest.extraOnSuccess.push(source?.code && effectData.type === 'dealDamage' ? {
+        ...effectData, _damagePresentation: { code: source.code, assetId: source.sourceId, sourceSeat: source.controllerSeat },
+      } : effectData)
       return true
     },
     rerollCurrentTestToken: (context, seat = state._resolvingSeat) => {
@@ -1643,7 +1871,7 @@ export function createMiscApi(state, events, deps) {
         options: committed.map((item, index) => ({ id: String(index), cardCode: item.code, label: cardName(item.code) })) }))
       const entry = committed[chosenIndex] || committed[0]
       removeOne(state.skillTest.committed, entry)
-      putInHand(state, owner, entry.code)
+      putInHand(state, owner, entry.code, { skillIcons: entry.skillIcons })
       info(state, events, `「${cardName(options.source || entry.code)}」把「${cardName(entry.code)}」返回 ${owner.name} 的手牌。`)
       return entry.code
     },
@@ -1838,7 +2066,7 @@ export function createMiscApi(state, events, deps) {
         if (typeof code !== 'string' || !code) throw new TypeError('手牌 code 必须是非空字符串')
         if (!(owner.hand || []).includes(code)) return false
         if (!options.allowDifferentLocation && (owner.location == null || owner.location !== target.location)) return false
-        owner.hand.splice(owner.hand.lastIndexOf(code), 1)
+        spliceHand(owner, owner.hand.lastIndexOf(code), 1)
         target.hand.push(code)
         state.handCardTransfers = [...(state.handCardTransfers || [])
           .filter(item => !(item.holderSeat === targetSeat && item.code === code)),
@@ -1848,9 +2076,9 @@ export function createMiscApi(state, events, deps) {
       },
       // 08051「另一名调查员如同自己手牌打出」：以 targetSeat 为行动者，从 fromSeat 的手牌
       // 走既有的 playCardFromOtherHandForced（费用/目标/入场/反应窗口与普通打出同一条管线）。
-      playCardForSeat: (targetSeat, fromSeat, code) => {
+      playCardForSeat: (targetSeat, fromSeat, code, options) => {
         if (!Number.isSafeInteger(targetSeat) || !state.investigators[targetSeat]) throw new TypeError('代打座位无效')
-        const played = playCardFromOtherHandForced(state, targetSeat, fromSeat, code, events)
+        const played = playCardFromOtherHandForced(state, targetSeat, fromSeat, code, events, options)
         if (!played) return false
         state.handCardTransfers = (state.handCardTransfers || [])
           .filter(item => !(item.code === code && (item.ownerSeat === fromSeat || item.holderSeat === targetSeat)))
@@ -1866,7 +2094,7 @@ export function createMiscApi(state, events, deps) {
         if (!(inv.hand || []).includes(code)) return false
         const level = Number(cardDef(code)?.xp ?? 0)
         if (!Number.isSafeInteger(level) || level < 0 || level > maxLevel) return false
-        inv.hand.splice(inv.hand.lastIndexOf(code), 1)
+        spliceHand(inv, inv.hand.lastIndexOf(code), 1)
         exilePlayerCard(state, inv, code, events)
         return true
       },
@@ -1932,7 +2160,7 @@ export function createMiscApi(state, events, deps) {
         const to = options.to || 'willpower'
         if (!Array.isArray(from) || !from.length || typeof to !== 'string') throw new TypeError('技能替代声明无效')
         const previous = inv.skillSubstitute
-        inv.skillSubstitute = { from: [...from], to, round: state.round }
+        inv.skillSubstitute = { from: [...from], to, round: state.round, ...(options.optional ? { optional: true } : {}) }
         try {
           return performImmediateAction(state, seat, events, options.source || 'takeBasicAction', {
             basicOnly: true, ...options,

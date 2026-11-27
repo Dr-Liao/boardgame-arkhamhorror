@@ -5,15 +5,17 @@
 // 四档混乱符号、水下寄生虫/黑曜石遗物/屏障节点、结局 1/2/3 与无结局、东西向跳章、
 // JSON 存档往返，以及 20 张单卡条目的导入与注册唯一性。
 //
-// 本文件不 import engine.js：behavior 只走内容层函数与既有引擎主值（网格 mechanicState、
-// flood.js 原语），因此可在主进程重建索引前独立运行。
+// 章节夹具覆盖布置与流程，实际引擎事务覆盖卡面选择、结算与状态投影。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { persistEnabled, readSnapshot, saveSnapshot, snapshotPath } from '../../../lib/sessions.js'
-import { scenarioRuntime } from '../src/engine/engine.js'
+import { cardDef, scenarioRuntime, turnBeginningWindow } from '../src/engine/engine.js'
+import { assetHarmCapacity } from '../src/engine/asset-defeat.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { viewState } from '../src/integration/observation.js'
 import {
   fixture as engineFixture, asset as engineAsset, move as engineMove, settle as engineSettle,
   legalMoves as engineLegalMoves,
@@ -623,9 +625,35 @@ test('P7 theDrownedQuarter 黑曜石遗物与屏障节点：符文 Y、资产不
   const barrier = behavior.events.drownedQuarterTakeBarrierNode(state, { seat: 0 }, api)
   assert.equal(barrier.code, BARRIER_NODE_CODE)
   assert.equal(controlledBarrierNode(state), true)
-  barrier.damage = 1
-  assert.equal(behavior.turnBegins(state, inv, api), true)
-  assert.equal(barrier.damage, 0)
+})
+
+test('P7 theDrownedQuarter 11552 屏障节点：五符文加生命、不能击败或弃置、可选回合治疗', () => {
+  for (const take of [false, true]) {
+    const state = engineFixture('01001')
+    state.scenario = { ...state.scenario, id: 'theDrownedQuarter' }
+    const barrier = engineAsset(state, BARRIER_NODE_CODE)
+    const health = () => assetHarmCapacity(cardDef(BARRIER_NODE_CODE), 'damage', state, barrier)
+    state.campaign.records.discoveredGlyphs = ['Q', 'X', 'G', 'K']
+    assert.equal(health(), 1)
+    state.campaign.records.discoveredGlyphs.push('S')
+    assert.equal(health(), 3)
+    assert.equal(viewState(state, 0).investigators[0].assets.find(asset => asset.id === barrier.id)?.health, 3)
+    const api = scenarioRuntime(state, [])
+    api.damageAsset(0, barrier.id, 3)
+    assert.equal(barrier.damage, 3)
+    assert.equal(api.discardAsset(0, barrier.id), null)
+    assert.ok(state.investigators[0].assets.some(asset => asset.id === barrier.id))
+    assert.equal(state.investigators[0].discard.includes(BARRIER_NODE_CODE), false)
+
+    const runTurnBeginning = (draft, events) => turnBeginningWindow(draft, events)
+    resolveTransaction(state, 0, { action: 'barrier-turn' }, runTurnBeginning)
+    const choice = state.pendingChoice
+    assert.equal(choice.kind, 'reaction')
+    const option = choice.options.find(item => take ? item.id.startsWith('desc:11552#') : item.id === 'skip')
+    assert.ok(option)
+    resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: option.id }, runTurnBeginning)
+    assert.equal(state.investigators[0].assets.find(asset => asset.id === barrier.id)?.damage, take ? 2 : 3)
+  }
 })
 
 // ---------------------------------------------------------------------------
@@ -852,15 +880,27 @@ test('P7 theDrownedQuarter 11550 受控剧情资产：合法动作 + 真实智�
   state.skillTest = { source: { code: '01001' } }
   assert.equal(behavior.commitIconMultiplier(state), 0)
   state.skillTest = null
-  // 真实结算：混乱标记 +20 → 智力检定成功 → 卡片离场 → 章节 behavior.assetLeftPlay 结算故事面。
+  // 真实结算：智力检定成功后翻开故事面，并将同一实体移到胜利区。
   engineMove(state, { action: 'ability', assetId: relic.id, abilityIndex: 0 })
+  const resolved = engineMove(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'done' })
   engineSettle(state)
   const inv = state.investigators[0]
   assert.equal(inv.assets.some(item => item.code === '11550'), false, '成功后离场')
   assert.equal(inv.discard.includes('11550'), false, '离场不留在弃牌堆')
   assert.deepEqual(state.campaign.records.discoveredGlyphs, ['Y'], '故事面记录符文 Y「知识」')
-  assert.equal(state.victoryDisplay.some(entry => entry.code === '11550b'), true, '故事卡 11550b 加入胜利区')
-  assert.equal(state.removedFromGame.includes('11550'), true, '实体记录为移出游戏')
+  assert.ok(state.victoryDisplay.some(entry => entry.id === relic.id && entry.code === '11550b' && entry.victory === 1))
+  assert.equal(state.removedFromGame?.includes('11550') ?? false, false)
+  assert.ok(resolved.some(event => event.presentation?.kind === 'story'
+    && event.presentation.code === '11550' && event.presentation.face === 'back'))
+
+  const discarded = engineFixture('01001')
+  discarded.scenario = { ...discarded.scenario, id: 'theDrownedQuarter' }
+  const discardedRelic = engineAsset(discarded, '11550')
+  scenarioRuntime(discarded, []).discardAsset(0, discardedRelic.id)
+  assert.equal(discarded.investigators[0].assets.length, 0)
+  assert.ok(discarded.removedFromGame.includes('11550'))
+  assert.equal(discarded.victoryDisplay.length, 0)
+  assert.equal(discarded.campaign.records.discoveredGlyphs, undefined)
   // 失败路径：检定失败不离场、不产生符文/胜利区。
   const fail = engineFixture('01001')
   fail.chaosBag = ['-20']

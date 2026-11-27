@@ -12,10 +12,7 @@
 //     context = { enemy, seat }，见 enemies.js#engageEnemy）；
 //   · 「最多 2 点伤害和/或恐惧，作为伤害移动」→ 逐点询问伤害/恐惧（每次 1 点；也可停止），
 //     每点对敌人造成 1 点伤害；总量受「最多 2」与敌人剩余生命限制。
-//     引擎没有「把调查员身上的伤/恐移动到敌人」的原语：这里用 api.scenario.healDamage /
-//     healHorror 做**移出**（原始扣减，不是治疗：不触发治疗窗口，也不受坚毅面的
-//     formHealingProhibited 影响——卡面是移动而非治疗），再用 api.damageEnemy 造成伤害。
-//     缺的原语：harm-transfer.js#moveHarm 只支持调查员↔其受控支援，不支持敌人目标。
+//     先移除调查员的伤害/恐惧标记，再按其数量对敌人造成伤害。
 const CODE = '10017'
 
 // 敌人剩余生命：敌人入场时 health 已按人数/印刷加成算好；damageTaken 是已受伤害。
@@ -64,9 +61,7 @@ export default {
             options,
           })
           if (pick !== 'damage' && pick !== 'horror') break
-          // 「移动」不是「治疗」：走剧本运行时的原始扣减（不触发治疗窗口/不被治疗禁止拦截）。
-          if (pick === 'damage') api.scenario.healDamage(inv.seat, 1)
-          else api.scenario.healHorror(inv.seat, 1)
+          if (!api.scenario.removeInvestigatorHarm(inv.seat, pick, 1)) break
           api.damageEnemy(enemy, 1, inv.seat, CODE)
           remaining -= 1
           moved += 1

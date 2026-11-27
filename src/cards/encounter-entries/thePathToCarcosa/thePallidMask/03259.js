@@ -24,7 +24,7 @@ export default {
       return location
     },
     onSpawnFailed(state, code, seat, api) {
-      if (seat != null) api.drawEncounter(seat)
+      if (seat != null) api.drawEncounter(seat, { surgeDraw: true })
     },
   },
 }

@@ -67,6 +67,7 @@ export default {
     {
       kind: 'reaction',
       trigger: 'horrorPlaced',
+      limit: { scope: 'perWindow', owner: 'instance' },
       label: '恐惧放置到汉克身上后：抽 1 张卡',
       resolve: ({ inv, api }) => api.drawCards(inv.seat, 1),
     },

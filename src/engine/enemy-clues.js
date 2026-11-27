@@ -40,7 +40,7 @@ export function moveClueToEnemy(state, enemy, options = {}) {
     owner.clues -= 1
     syncClues(state)
   } else {
-    const location = (state.locations || []).find(item => item.id === enemy.location)
+    const location = (state.locations || []).find(item => item.id === (options.locationId ?? enemy.location))
     if (!location || (Number(location.clues) || 0) < 1) return 0
     location.clues -= 1
   }

@@ -36,7 +36,7 @@ export default {
     const candidates = (state.enemies || []).filter(enemy => hasTrait(enemy, 'Cultist') && canHost(enemy))
     if (!candidates.length) {
       api.info?.('没有可放置毁灭的异教徒敌人：秘社玄仪获得涌动。')
-      api.drawEncounter?.(inv.seat)
+      api.drawEncounter?.(inv.seat, { surgeDraw: true })
       return false
     }
     const scored = candidates.map(enemy => ({ enemy, steps: distance(state, inv.location, enemy.location) }))
@@ -51,7 +51,7 @@ export default {
     const placed = api.doomOn?.(chosen, 1)
     if (placed === 0) {
       api.info?.('毁灭未能放置：秘社玄仪获得涌动。')
-      api.drawEncounter?.(inv.seat)
+      api.drawEncounter?.(inv.seat, { surgeDraw: true })
       return false
     }
     api.setEnemyRoundFightEvadeBonus?.(chosen, 2)

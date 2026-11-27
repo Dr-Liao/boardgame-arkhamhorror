@@ -7,6 +7,7 @@ export default {
     { target: 'skill:agility', amount: 1 },
   ],
   abilities: [
+    { kind: 'commit', skill: { commitCondition: () => false } },
     {
       kind: 'reaction', trigger: 'handCardDiscarded',
       label: '从手牌弃掉月石后：支付费用将其打出',

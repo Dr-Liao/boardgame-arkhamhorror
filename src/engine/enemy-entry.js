@@ -1,10 +1,29 @@
+import { playerLocationRuleActive } from './location-attachments.js'
 import { registeredEntry } from './ability.js'
 import { enemyBody } from './enemy-parts.js'
 import { floodLevel } from './flood.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 
+const movementEngagementPrevention = new WeakMap()
+
+export function duringMovementWithoutEngagement(state, seat, resolve) {
+  const previous = movementEngagementPrevention.get(state)
+  movementEngagementPrevention.set(state, new Set([...(previous || []), seat]))
+  try {
+    return resolve()
+  } finally {
+    if (previous) movementEngagementPrevention.set(state, previous)
+    else movementEngagementPrevention.delete(state)
+  }
+}
+
+export function movementPreventsEngagement(state, seat) {
+  return movementEngagementPrevention.get(state)?.has(seat) === true
+}
+
 export function enemyProtectionBlocks(state, inv, enemy, kind) {
   if (!inv || !enemy) return false
+  if (kind === 'engage' && movementPreventsEngagement(state, inv.seat)) return true
   const record = inv.enemyProtection
   if (!record || record.round !== state.round) return false
   const ids = kind === 'engage' ? record.engage : kind === 'damage' ? record.damage : []
@@ -27,8 +46,18 @@ export function protectFromEnemies(state, seat, ids, { duration = 'endOfRound', 
   return known.length
 }
 
+export function enemyOnlyPreyAllows(state, enemy, inv, isBlanked) {
+  const eligible = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.onlyPrey
+  return typeof eligible !== 'function' || isBlanked(state, enemy) || eligible(state, inv)
+}
+
 export function enemyCanEnterLocation(state, enemy, destination) {
-  if (enemy?.enemyLocation && destination !== enemy.id) return false
+  if (enemy?.shadowMiniKind || (enemy?.enemyLocation && destination !== enemy.id)) return false
+  if (enemy?.location && enemy.location !== destination && playerLocationRuleActive(state, enemy, 'blocksEnemyMove')) return false
+  const origin = state.locations.find(location => location.id === enemy?.location)
+  const originRule = origin && !origin.revealed && registeredEntry(origin.originalCode || origin.code)?.locationRule
+  if (origin?.id !== destination && originRule?.unrevealedRestrictions?.enemyCodesCannotLeave
+    ?.includes(enemy.originalCode || enemy.code)) return false
   const rule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
   const location = state.locations.find(item => item.id === destination)
   // 梦境之门（06015a/b）：「敌人和除卢克·罗宾逊以外的调查员不能进入梦境之门」。
@@ -39,9 +68,12 @@ export function enemyCanEnterLocation(state, enemy, destination) {
   // 「敌人不能进入本地点」（TIC 07252b 拘禁室）：地点侧的声明。移动/猎人/追逐/生成校验
   // 共用本函数，所以一处声明覆盖「进入」与「生成」两条路径；生成落点的改换由
   // enemies.js#spawnEnemy 读取 locationRule.enemySpawnRedirect 处理。
-  if (registeredEntry(location?.originalCode || location?.code)?.locationRule?.enemiesCannotEnter === true) return false
-  // P7 TDC obsidianCanyons 11641/11642：「非弱点敌人可进出开阔天空」——弱点敌人不能进入/生成在开阔天空。
   const locationRule = registeredEntry(location?.originalCode || location?.code)?.locationRule
+  const cannotEnter = locationRule?.enemiesCannotEnter
+  if (cannotEnter === true
+      || (typeof cannotEnter === 'function' && cannotEnter(state, location, enemy))
+      || (!location?.revealed && locationRule?.unrevealedRestrictions?.enemiesCannotEnter === true)) return false
+  // P7 TDC obsidianCanyons 11641/11642：「非弱点敌人可进出开阔天空」——弱点敌人不能进入/生成在开阔天空。
   if (locationRule?.weaknessEnemiesCannotEnter === true
     && String(ALL_CARDS[enemy?.originalCode || enemy?.code]?.subtype || '').toLowerCase().includes('weakness')) return false
   // 「不能进入[[洞穴]]地点」（07164b/07165b 魔鬼礁石的骇物）：禁止类特性。

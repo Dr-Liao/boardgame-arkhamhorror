@@ -125,14 +125,16 @@ test('空洞：归属口径计数、回收、抹除进战役名单；非法输�
 })
 
 test('卡实例计数器扩展：evidence/hollow 白名单与读写（未知 id 拒绝）', () => {
-  // P7 TDC 11709 合入 `ruin`（废墟标记）后白名单扩展；未知 id 仍拒绝。
-  assert.deepEqual([...CARD_COUNTER_IDS], ['bounty', 'evidence', 'hollow', 'ruin'])
+  assert.deepEqual([...CARD_COUNTER_IDS], ['bounty', 'evidence', 'hollow', 'ruin', 'leyline'])
   const card = { code: '09000' }
   assert.equal(addCardCounter(card, 'evidence', 2), 2)
   assert.equal(cardCounterOf(card, 'evidence'), 2)
   assert.throws(() => addCardCounter(card, 'holo', 1), /未知卡牌计数器/)
   assert.throws(() => addCardCounter(card, 'unknown', 1), /未知卡牌计数器/)
   assert.equal(addCardCounter(card, 'evidence', -2), 0)
+  assert.equal(addCardCounter(card, 'leyline', 1), 1)
+  assert.equal(cardCounterOf(card, 'leyline'), 1)
+  assert.equal(addCardCounter(card, 'leyline', -1), 0)
   assert.equal(card.markers, undefined, '归零后不留下空 markers 字段')
 })
 

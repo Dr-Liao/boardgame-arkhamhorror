@@ -32,7 +32,7 @@ export default {
   name: 'Hunting Jacket',
   abilities: [
     {
-      kind: 'action',
+      kind: 'free',
       label: '[fast] 横置：把 1 张非弱点手牌正面朝下附属；每有 1 张附属获得 1 资源',
       target: { kind: 'cardInHand', query: ({ candidate }) => !isWeaknessCode(candidate.code) },
       cost: { action: false, exhaust: true },

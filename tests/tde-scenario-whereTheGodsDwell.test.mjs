@@ -362,11 +362,11 @@ test('混乱标记取值：skull 随幕/密谋编号、tablet -4/-6、cultist �
   assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'skull'), { delta: -3 })
   assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'tablet'), { delta: -4 })
   assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'cultist'), { delta: 0, drawAnother: true })
-  assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'elder_thing'), { delta: 0 })
+  assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'elderthing'), { delta: 0 })
   state.difficulty = 'hard'
   assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'skull'), { delta: -5 })
   assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'tablet'), { delta: -6 })
-  assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'elder_thing'), { delta: -1 })
+  assert.deepEqual(chapter.behavior.resolveChaosToken(state, inv(state), 'elderthing'), { delta: -1 })
   assert.equal(chapter.behavior.resolveChaosToken(state, inv(state), '+1'), null)
   assert.ok(standard)
 })
@@ -419,7 +419,7 @@ test('冰封荒土：调查时揭示骷髅标记 → 选择受伤或失去行动
   loc(state2, 'coldWastes').revealed = true
   inv(state2).location = 'coldWastes'
   chapter.behavior.afterTest(state2, inv(state2), {
-    success: false, value: 1, difficulty: 3, drawn: ['elder_thing'], cancelledTokens: [],
+    success: false, value: 1, difficulty: 3, drawn: ['elderthing'], cancelledTokens: [],
     source: { label: '调查', code: COLD_WASTES },
   }, apiStub(state2, { choose: () => 'loseAction' }))
   assert.equal(inv(state2).damage, 0)

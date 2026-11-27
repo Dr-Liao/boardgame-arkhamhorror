@@ -1,13 +1,6 @@
 // 验收单元 05-a-8：05-a 万象无终分片 8（Before the Black Throne）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-05-a-万象无终-分片-8.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-05-a-万象无终-分片-8.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const code of verdict.pendingCodes || []) if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: 'pending', reason: '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' })
-const failed = [...failedByCode.values()]
+// 2026-11-26 复验通过，逐卡证据保存在生成的验收账本。
 
 // 范围锁定为审计时未验收的 34 条记录（bbt）。
 const codes = ["05313", "05314", "05315", "05316", "05317", "05318", "05319", "05320", "05321", "05322", "05323", "05324", "05325", "05326", "05327", "05328", "05329", "05330", "05331", "05332", "05333", "05334", "05335", "05336", "05337", "05338", "05339", "05340", "05341", "05342", "05343", "05344", "05345", "05346"]
@@ -20,7 +13,7 @@ export default {
   verifiedFn: "tcuShard8CardVerified",
   profile: {
     id: "tcu-before-the-black-throne-2026-11",
-    scope: "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。33 条通过五维验收；1 条（05322）同类规则第 4 次手写暂不切换。",
+    scope: "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。全部通过五维验收。",
     basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。',
     houseRules: [
       '保留项目既有的自动奖励反应与协作请求规则',
@@ -35,7 +28,7 @@ export default {
   select: card => codeSet.has(card.code),
   exclude: [],
   expectedCount: 34,
-  failed,
+  failed: [],
   testFiles: [
     "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
     "games/arkhamhorror/tests/tcu-black-throne.test.mjs",

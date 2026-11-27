@@ -3,7 +3,7 @@
   "unit": "12-a-3",
   "profile": {
     "id": "core2026-player-c-2026-11",
-    "scope": "2026 核心盒 12 段（12081–12120）40 条目录记录。23 条通过五维验收；12086 披露近似、12105–12120 战役侧未迁移暂不切换。",
+    "scope": "2026 核心盒 12 段（12081–12120）40 条目录记录。24 张玩家卡通过，16 张 Brethren of Ash 战役卡缺少本地关卡实现。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 40,
-    "verified": 23,
-    "unverified": 17,
+    "verified": 24,
+    "unverified": 16,
     "unimplemented": 0,
-    "testsPassed": 50
+    "testsPassed": 36
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-12-a-shard3.test.mjs",
-      "sha256": "f3bfa492058a437d4f5660443ddc923a665c64084dda0eb31b663309c39802a3"
+      "sha256": "d4a8de117a8bccc2c12b2ec664212367fa04b4806cff3ee7cfb3c5dc3ab6d3ba"
     },
     {
       "file": "games/arkhamhorror/tests/starter-batch-3.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
-      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+      "sha256": "d9a99f4137ca1129569168f42fa8101317144545ef0c3ac7993e24959581f6db"
     }
   ],
   "entries": [
@@ -101,9 +101,13 @@
       "code": "12086",
       "name": "破瓶子",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目自述 `approximation`：「检定成功后选择弃掉破瓶子换 +1 伤害」被实现为「攻击前询问、成功才弃置」，与印刷选择时机不同（引擎伤害加值须在结算前确定）。按 ACCEPTANCE-ORDER §0.6 披露近似不得 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard3.test.mjs",
+          "test": "12086 破瓶子：实际攻击成功后才选择是否弃置发动的那张牌以增加伤害"
+        }
+      ]
     },
     {
       "code": "12087",
@@ -330,128 +334,128 @@
       "name": "烈火渐起",
       "type": "scenario",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12105.js 不存在、registeredEntry('12105') 返回 null、_reprint-aliases.js/card-identity.js 无 12105 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12106",
       "name": "宵禁时分",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12106.js 不存在、registeredEntry('12106') 返回 null、_reprint-aliases.js/card-identity.js 无 12106 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12107",
       "name": "火起",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12107.js 不存在、registeredEntry('12107') 返回 null、_reprint-aliases.js/card-identity.js 无 12107 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12108",
       "name": "野火遍地",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12108.js 不存在、registeredEntry('12108') 返回 null、_reprint-aliases.js/card-identity.js 无 12108 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12109",
       "name": "有烟处……",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12109.js 不存在、registeredEntry('12109') 返回 null、_reprint-aliases.js/card-identity.js 无 12109 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12110",
       "name": "逃出宿舍",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12110.js 不存在、registeredEntry('12110') 返回 null、_reprint-aliases.js/card-identity.js 无 12110 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12111",
       "name": "寻找阿米蒂奇博士",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12111.js 不存在、registeredEntry('12111') 返回 null、_reprint-aliases.js/card-identity.js 无 12111 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12112",
       "name": "炽热辉煌",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12112.js 不存在、registeredEntry('12112') 返回 null、_reprint-aliases.js/card-identity.js 无 12112 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12113",
       "name": "朋友的房间",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12113.js 不存在、registeredEntry('12113') 返回 null、_reprint-aliases.js/card-identity.js 无 12113 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12114",
       "name": "*烈焰仆从",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12114.js 不存在、registeredEntry('12114') 返回 null、_reprint-aliases.js/card-identity.js 无 12114 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12115",
       "name": "*亨利·阿米蒂奇博士",
       "type": "asset",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12115.js 不存在、registeredEntry('12115') 返回 null、_reprint-aliases.js/card-identity.js 无 12115 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12116",
       "name": "大学广场",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12116.js 不存在、registeredEntry('12116') 返回 null、_reprint-aliases.js/card-identity.js 无 12116 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12117",
       "name": "宿舍",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12117.js 不存在、registeredEntry('12117') 返回 null、_reprint-aliases.js/card-identity.js 无 12117 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12118",
       "name": "科技馆",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12118.js 不存在、registeredEntry('12118') 返回 null、_reprint-aliases.js/card-identity.js 无 12118 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12119",
       "name": "沃伦天文台",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12119.js 不存在、registeredEntry('12119') 返回 null、_reprint-aliases.js/card-identity.js 无 12119 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12120",
       "name": "奥恩图书馆",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "战役侧重发卡无实现：src/cards/entries/12120.js 不存在、registeredEntry('12120') 返回 null、_reprint-aliases.js/card-identity.js 无 12120 到 canonical 的映射、content/** 与 encounter-entries/** 除 cards-data 外无任何引用 → 无条目、无读点、无内容模块。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     }
   ]
 }

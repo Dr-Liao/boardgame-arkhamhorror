@@ -17,6 +17,5 @@ export default {
     cluesPerInvestigator: 1,
     shroud: 3,
     traits: ['Cave', 'Dark'],
-  },
-  note: '近似：「调查失败后 1 点恐惧」的失败窗口不在本章 behavior 读点里，旗标供 P8 接 skillTestResult。',
+  }
 }

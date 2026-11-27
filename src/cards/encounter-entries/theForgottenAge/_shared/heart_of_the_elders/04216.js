@@ -6,4 +6,24 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-export default { code: '04216', scope: 'treachery', implemented: true, flags: { spores: true } }
+const CODE = '04216'
+
+export default {
+  code: CODE, scope: 'treachery', implemented: true,
+  encounterResolve(state, inv, card, api, { location }) {
+    if (!location || !api.attachToLocation(location.id, { code: CODE })) return false
+    api.info?.(`有毒孢子附属到「${location.name}」；本轮结束时结算。`)
+    return { placed: true }
+  },
+  treacheryScript: {
+    onAttachedLocationRoundEnd(state, location, attachment, api) {
+      for (const inv of state.investigators) {
+        if (inv.defeated || inv.resigned || inv.location !== location.id) continue
+        if (api.isPoisoned(inv.seat)) api.horror(inv.seat, 2)
+        else if (api.takeFromSetAside('04102')) api.poison(inv.seat)
+      }
+      api.detachEncounterAttachment(attachment)
+      api.info?.(`有毒孢子：结算并弃掉「${location.name}」上的一张孢子。`)
+    },
+  },
+}

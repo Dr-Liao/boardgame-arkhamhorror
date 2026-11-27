@@ -25,6 +25,7 @@
 // 中文叙事：本地无官方中文源，text.js 固化英文权威正文；中文翻译由 narrative-guides worker 的
 // story-text.js 提供。本文件的 SCENARIO_TEXT 只承载模块自用的印刷文本（离线测试/指南兜底）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { encounterPrey } from '../../card-data.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import { TEXT } from './text.js'
 import { GRAND_VAULT_TOKEN_MEANINGS } from './chaos.js'
@@ -79,15 +80,16 @@ export function encounterDefinitions(codes) {
     if (!card) throw new RangeError(`Unknown The Grand Vault encounter card: ${code}`)
     const base = printed(code)
     if (card.type === 'enemy') {
+      const prey = encounterPrey(card)
       enemies[code] = {
         ...base, fight: card.fight ?? null, evade: card.evade ?? null, health: card.health ?? null,
         damage: card.damage || 0, horror: card.horror || 0,
+        ...(prey ? { prey } : {}),
         ...(Object.hasOwn(card, 'victory') ? { victory: card.victory } : {}),
         elite: (card.traits || []).includes('Elite'),
         hunter: /Hunter\./.test(card.text || ''), aloof: /Aloof\./.test(card.text || ''),
         massive: /Massive\./.test(card.text || ''), retaliate: /Retaliate\./.test(card.text || ''),
       }
-      if (/Prey - Most clues/i.test(card.text || '')) enemies[code].prey = 'mostClues'
     } else if (card.type === 'treachery') {
       treacheries[code] = { ...base, entryRevelation: true, surge: /^Surge\./m.test(card.text || '') }
     } else if (card.type === 'story' || card.type === 'asset') {

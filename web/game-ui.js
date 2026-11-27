@@ -42,6 +42,7 @@ import {
 } from './tcu-ui.js'
 import { renderScenarioInteractions } from './tde-ui.js'
 import { renderMechanicChoice, renderMechanicSummary, floodLabel } from './mechanic-ui.js'
+import { createTimedCardViewer } from './timed-card-view.js'
 
 let h, api, render, state, reset, leave, openFeedback
 let beginInteraction = () => () => {}
@@ -55,6 +56,24 @@ let situationView
 // 调试控制台：单机本机可用 / 联机房主可用。入口是 ` / ~ 键，标题栏不再放按钮。
 let debugConsole
 let scenarioSetupView
+let timedCardViewer, timedZoomEnemyId
+
+const enemyViewAttributes = enemy => ({
+  'data-timed-enemy-view': enemy.viewDurationMs ? enemy.id : null,
+  'data-timed-enemy-seconds': enemy.viewDurationMs ? enemy.viewDurationMs / 1000 : null,
+})
+
+function syncTimedCardView() {
+  const session = state.session
+  const detail = state.cardDetail
+  const active = state.view === 'game' && session?.modId === 'arkhamhorror' && !state.setup
+    && document.visibilityState === 'visible' && document.hasFocus()
+    && (!session.online || state.online?.connected)
+  const detailEnemyId = detail?.sessionId === session?.sessionId ? detail?.def.id : null
+  const enemy = active ? session.state.enemies?.find(item => item.viewDurationMs && item.id === detailEnemyId)
+    || session.state.enemies?.find(item => item.id === timedZoomEnemyId) : null
+  timedCardViewer?.sync(session, session ? mySeat(session) : null, enemy)
+}
 
 // 挂在牌桌之外的浮层（音乐盒）拿不到 .ah-table 上的主题变量：把当前战役色板
 // 直接写到浮层根节点，样式与牌桌共用同一组 --ah-theme-* / --ah-material-*。
@@ -280,11 +299,23 @@ export function createUI(host) {
   // 宿主能力（h/t/api/render/state）注入。调试控制台用 ` / ~ 打开，不在标题栏放按钮。
   debugConsole ||= createDebugConsole({ h, t, api, render, state })
   scenarioSetupView ||= createScenarioSetupView(h, { render: () => render() })
+  if (!timedCardViewer) {
+    timedCardViewer = createTimedCardViewer({ api: (...args) => api(...args), onRefresh: fresh => {
+      if (state.session?.sessionId !== fresh.sessionId || state.session.state.revision >= fresh.state.revision) return
+      state.session = fresh
+      render()
+    } })
+    document.addEventListener('visibilitychange', syncTimedCardView)
+    window.addEventListener('focus', syncTimedCardView)
+    window.addEventListener('blur', () => timedCardViewer.stop())
+    window.addEventListener('pagehide', () => timedCardViewer.stop())
+  }
   hubUi = createHubUI({ ...host, canAct, submitMove: cardMove, refreshSession: refreshCardSession,
+    onCardZoom: enemyId => { timedZoomEnemyId = enemyId; syncTimedCardView() },
     catalogOpen: () => arkhamCatalog.open(), rulebookOpen: () => openRule(), inspectCard: code => openCardDetailDef({...ahCardDef(state.session,code),code}, {runtime:false}) })
   return {
     onOpenSetup: game => { state.cardDetail = null; state.arkhamZoneOpen = null; state.arkhamDeckOpen = false; state.arkhamDeckLibraryOpen = false; if (arkhamCatalog.isOpen) arkhamCatalog.close(); hubUi.onOpenSetup(game) },
-    onDeactivate: () => { stopScenarioImagePreload(); disposeImageResources(); musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; state.arkhamDeckLibraryOpen = false; tableSession = null },
+    onDeactivate: () => { timedCardViewer.stop(); timedZoomEnemyId = null; stopScenarioImagePreload(); disposeImageResources(); musicPlayer.render(false); rulebook.render(false); chaosBagView.reset(); situationView.reset(); scenarioSetupView.reset(); debugConsole.close({ render: false }); state.arkhamZoneOpen = null; state.arkhamDeckLibraryOpen = false; tableSession = null },
     // 大厅切换语言后调用（§8.3）：幂等、同步，只换词典与卡牌语言并重绘；
     // 不重置对局、不重新请求存档、不 location.reload()、不触发 AI 回合。
     onLocaleChange(next) {
@@ -317,6 +348,7 @@ export function createUI(host) {
       return next
     },
     renderOverlays: () => {
+      syncTimedCardView()
       const overlaySession = state.session
       const overlayTheme = overlaySession?.modId === 'arkhamhorror' && overlaySession.state
         ? presentationAttributes(overlaySession.state)
@@ -393,7 +425,7 @@ const AH_TYPE_ICON = { asset: 'supply', event: 'free', skill: 'wild', investigat
 const AH_CLASS_KEYS = { guardian: 'game.class.guardian', seeker: 'game.class.seeker', mystic: 'game.class.mystic', rogue: 'game.class.rogue', survivor: 'game.class.survivor', neutral: 'game.class.neutral', mythos: 'game.class.mythos' }
 const AH_TYPE_KEYS = { asset: 'card.type.asset', event: 'card.type.event', skill: 'card.type.skill', investigator: 'card.type.investigator', enemy: 'card.type.enemy', treachery: 'card.type.treachery', location: 'card.type.location', act: 'card.type.act', agenda: 'card.type.agenda', story: 'card.type.story', scenario: 'card.type.scenario' }
 const AH_PREY_KEYS = { bearer: 'game.prey.bearer', highestCombat: 'game.prey.highestCombat', lowestHealth: 'game.prey.lowestHealth', mostClues: 'game.prey.mostClues', lowestSanity: 'game.prey.lowestSanity', lowestAgility: 'game.prey.lowestAgility', lowestCombat: 'game.prey.lowestCombat', fewestHand: 'game.prey.fewestHand' }
-const AH_SLOT_KEYS = { hand: 'game.slot.hand', 'hand x2': 'game.slot.handx2', ally: 'game.slot.ally', arcane: 'game.slot.arcane', accessory: 'game.slot.accessory', body: 'game.slot.body', tarot: 'game.slot.tarot' }
+const AH_SLOT_KEYS = { hand: 'game.slot.hand', 'hand x2': 'game.slot.handx2', ally: 'game.slot.ally', arcane: 'game.slot.arcane', accessory: 'game.slot.accessory', body: 'game.slot.body', head: 'game.slot.head', tarot: 'game.slot.tarot' }
 const AH_ACTION_KEYS = { fight: 'game.action.fight', evade: 'game.action.evade', engage: 'game.action.engage', move: 'game.action.move', investigate: 'game.action.investigate', advanceAct: 'game.action.advanceAct', drawCultist: 'game.action.drawCultist', draw: 'game.action.draw', resource: 'game.action.resource', endTurn: 'game.action.endTurn', locationAbility: 'game.action.locationAbility' }
 // 敌人-地点双类型实体：敌人面的 legalMoves 动作集合（地点面仍走 investigate/move/地点能力）。
 const ENEMY_FACE_ACTIONS = new Set(['fight', 'evade', 'engage', 'fightHidden', 'evadeHidden'])
@@ -778,7 +810,8 @@ function openCardDetailDef(def, { runtime = !!state.session && !state.setup, sid
   const location = runtime && viewSession()?.state.locations?.find(loc => loc.id === def.id || (def.type === 'location' && (loc.originalCode || loc.code) === (def.originalCode || def.code)))
   if (location) { def = { ...def, ...location, type: 'location' }; interactionKey ||= 'location:' + location.id }
   const code = def.originalCode || def.code || def.artCode
-  const detail = { code, def, runtime, side: side || (location && !location.revealed ? 'back' : 'front'), interactionKey, locationId: location?.id, focusInfo, loading: !!code, returnFocusKey }
+  const detail = { code, def, runtime, sessionId: runtime ? state.session?.sessionId : null,
+    side: side || (location && !location.revealed ? 'back' : 'front'), interactionKey, locationId: location?.id, focusInfo, loading: !!code, returnFocusKey }
   state.cardDetail = detail
   render()
   if (!code) return
@@ -909,7 +942,7 @@ function renderLocationDetail(detail) {
         h('section',{className:'ah-location-occupants'},h('h3',{},t('game.location.occupants')),
           people.length || enemies.length ? h('div',{},
             people.map(inv=>h('button',{className:'is-investigator',onclick:()=>openCardDetailDef({...st.investigatorDefs[inv.code],...inv,type:'investigator'})},tableArt(h,inv.code,inv.name),h('span',{},inv.name))),
-            enemies.map(enemy=>h('button',{className:'is-enemy',onclick:()=>openCardDetail(s,enemy)},tableArt(h,enemy.originalCode || enemy.code,enemy.name),h('span',{},enemy.name)))) : h('p',{},t('game.location.noOccupants'))),
+            enemies.map(enemy=>h('button',{className:'is-enemy', ...enemyViewAttributes(enemy), onclick:()=>openCardDetail(s,enemy)},tableArt(h,enemy.originalCode || enemy.code,enemy.name),h('span',{},enemy.name)))) : h('p',{},t('game.location.noOccupants'))),
         attachments.length ? h('section',{className:'ah-location-attachments'+(detail.focusInfo === 'attached' ? ' is-focused' : '')},h('h3',{},t('game.location.attachments')),
           attachments.map(card=>h('button',{
             className: card.exhausted ? 'is-exhausted' : null,
@@ -954,6 +987,8 @@ function cardDetailCustomizationChecks(session, detail) {
 }
 
 function renderCardDetailModal(detail) {
+  const viewDuration = detail.sessionId === state.session?.sessionId
+    ? state.session?.state.enemies?.find(enemy => enemy.id === detail.def.id)?.viewDurationMs : null
   const close = () => {
     state.cardDetail = null; render()
     if (detail.returnFocusKey) queueMicrotask(() => [...document.querySelectorAll('[data-focus-key]')]
@@ -962,6 +997,8 @@ function renderCardDetailModal(detail) {
   const modal = h('div', { className: 'bg-backdrop ah-carddetail-backdrop' },
     h('div', { className: 'bg-modal ah-carddetail-modal' + (detail.locationId ? ' ah-location-detail' : ''), role: 'dialog', 'aria-modal': 'true', 'aria-label': t('game.detail.aria'), onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close() } } },
       h('button', { className: 'ah-carddetail-close', 'aria-label': t('game.detail.closeAria'), onclick: close }, t('common.close')),
+      viewDuration ? h('p', { className: 'ah-carddetail-view-warning', role: 'status' },
+        t('game.detail.timedView', { seconds: viewDuration / 1000 })) : null,
       detail.locationId ? renderLocationDetail(detail) : renderDetailContent(
         h, detail, renderFullCard, render, viewSession()?.state, cardDetailCustomizationChecks(state.session, detail)),
       !detail.locationId ? renderRuntimeCardState(detail) : null,
@@ -982,6 +1019,7 @@ function renderCardDetailModal(detail) {
 function zoneCards(s, kind) {
   // 「放在密谋牌库旁」的公开卡：保留实例（可能同名多张），卡面由 agendaAsideCards 补全。
   if (kind === 'agendaAside') return agendaAsideCards(s, s.state.agendaAside)
+  if (kind === 'sharedPlay') return s.state.sharedPlayCards || []
   // 复仇点数用虚拟卡记在胜利区；弹窗只列真实卡牌，复仇合计单独显示。
   if (kind === 'victory') {
     return (s.state.victoryDisplay || [])
@@ -999,6 +1037,8 @@ const ZONE_MODAL_META = {
   aside: { titleKey: 'game.zone.asideTitle', icon: 'supply', kicker: 'SCENARIO / SET ASIDE',
     emptyTitleKey: 'game.zone.emptyAside', emptyHintKey: 'game.zone.emptyAsideHint', footerKey: 'game.zone.asideFooter' },
   // 04094 一片漆黑、07185 类「放在密谋牌库旁」的遭遇卡：牌桌卡堆点开的公开区域。
+  sharedPlay: { titleKey: 'game.zone.sharedPlay', icon: 'supply',
+    emptyTitleKey: 'game.zone.emptyAside', emptyHintKey: 'game.zone.emptyAsideHint' },
   agendaAside: { titleKey: 'table.agendaAside.label', icon: 'eye', kicker: 'SCENARIO / NEXT TO AGENDA DECK',
     emptyTitleKey: 'game.zone.emptyAgendaAside', emptyHintKey: 'game.zone.emptyAgendaAsideHint', footerKey: 'game.zone.agendaAsideFooter' },
 }
@@ -1010,6 +1050,7 @@ function renderCardZoneModal(s) {
   const meta = ZONE_MODAL_META[kind]
   const victory = kind === 'victory'
   const agendaAside = kind === 'agendaAside'
+  const sharedPlay = kind === 'sharedPlay'
   const cards = zoneCards(s, kind)
   const title = t(meta.titleKey)
   const close = () => { state.arkhamZoneOpen = null; render() }
@@ -1023,9 +1064,10 @@ function renderCardZoneModal(s) {
       : t('game.zone.asideSummary', { count: cards.length })
   return h('div', { className: 'bg-backdrop ah-card-zone-backdrop', onclick: close },
     h('section', { className: 'ah-card-zone-modal is-' + kind, role: 'dialog', 'aria-modal': 'true', 'aria-label': title,
+      'data-shared-play': sharedPlay ? 'true' : null,
       onclick: event => event.stopPropagation(), onkeydown: event => { if (event.key === 'Escape') close() } },
       h('header', {},
-        h('div', {}, h('small', {}, meta.kicker),
+        h('div', {}, meta.kicker ? h('small', {}, meta.kicker) : null,
           h('h2', {}, tableIcon(meta.icon), title),
           h('p', {}, summary)),
         h('button', { className: 'ah-card-zone-close', 'aria-label': t('game.zone.closeAria', { title }), onclick: close }, t('common.close'))),
@@ -1034,17 +1076,25 @@ function renderCardZoneModal(s) {
           const def = { ...ahCardDefRaw(s, card.code), ...card }
           const name = cardDisplayName(def) || card.code
           const code = def.originalCode || card.originalCode || card.code
-          return h('button', { className: 'ah-card-zone-card', 'data-zone-card': card.code,
-            'aria-label': t('game.zone.view', { name }), title: t('game.zone.viewDetail', { name }), onclick: () => openCardDetail(s, def) },
+          const key = sharedPlay ? `sharedPlay:${card.id}` : null
+          const move = key ? entityMoves(s.state, key)[0] : null
+          const actionLabel = move ? t('game.zone.playSharedCard', { name }) : t('game.zone.view', { name })
+          return h('button', { className: 'ah-card-zone-card', 'data-zone-card': card.code, 'data-interaction': key,
+            'aria-label': actionLabel, title: actionLabel, onclick: () => {
+              if (!move) return openCardDetail(s, def)
+              close()
+              return cardMove(move, s)
+            } },
             h('span', { className: 'ah-card-zone-art' }, tableArt(h, code, name, { unloadOffscreen: true })),
             h('span', { className: 'ah-card-zone-caption' }, h('strong', {}, name),
               victory ? h('small', {}, t('game.kw.victory', { points: def.victory || 0 }))
+                : sharedPlay ? (move ? h('small', {}, actionLabel) : null)
                 : agendaAside ? h('small', {}, t('game.zone.agendaAsideCaption', { type: typeLabel(def.type || 'treachery') }))
                   : h('small', {}, t('game.zone.file', { index: String(index + 1).padStart(2, '0') }))))
         })) : h('div', { className: 'ah-card-zone-empty' }, tableIcon(meta.icon),
           h('strong', {}, t(meta.emptyTitleKey)),
           h('span', {}, t(meta.emptyHintKey))),
-      h('footer', {}, t(meta.footerKey))))
+      meta.footerKey ? h('footer', {}, t(meta.footerKey)) : null))
 }
 
 
@@ -1227,6 +1277,10 @@ function entityDefinition(s, key) {
   if (kind === 'hand') return ahCardDef(s, s.state.investigators.find(inv => inv.seat === Number(parts[0]))?.hand?.[Number(parts[1])])
   // 压在调查员底下的牌 / 直觉牌库揭示的牌：key 的第二段就是卡号本身。
   if (kind === 'beneath' || kind === 'hunch') return ahCardDef(s, id)
+  if (kind === 'sharedPlay') {
+    const card = s.state.sharedPlayCards?.find(item => item.id === id)
+    return card && ahCardDef(s, card.code)
+  }
   if (kind === 'origin') return ahCardDef(s, key.split(':').at(-1))
   if (kind === 'asset') {
     const asset = s.state.investigators.flatMap(inv => [...inv.assets, ...(inv.threat || [])]).find(a => a.id === id)
@@ -1352,6 +1406,7 @@ function renderOfferDetail(h, s, card, fallbackName) {
 function renderPendingChoice(s, humanTurn) {
   const choice = s.state.pendingChoice
   if (!choice) return null
+  if (choice.kind === 'cardName') return renderNamedCardChoice(s, humanTurn, choice)
   if (choice.kind === 'mechanic') return renderMechanicChoice(h, s, {
     disabled: !humanTurn, busy: state.busy,
     onSubmit: async move => {
@@ -1478,6 +1533,25 @@ function renderPendingChoice(s, humanTurn) {
       return h('div', { className: 'ah-visual-cell' }, button,
         h('div', { className: 'ah-offer-details' }, cards.map(card => renderOfferDetail(h, s, card, item.label))))
     })) : null)
+}
+
+function renderNamedCardChoice(s, humanTurn, choice) {
+  const disabled = !humanTurn || state.busy
+  const list = h('div', { className: 'ah-choice-options ah-named-card-results' })
+  const search = h('input', { type: 'search', className: 'ah-named-card-search', disabled, 'aria-label': t('game.choice.cardNameSearch'),
+    placeholder: t('game.choice.cardNameSearch') })
+  const refresh = () => {
+    const query = search.value.toLowerCase().trim()
+    const matches = query ? (choice.options || []).filter(option =>
+      option.label?.toLowerCase().includes(query) || String(option.id).toLowerCase().includes(query)).slice(0, 40) : []
+    list.replaceChildren(...matches.map(option => h('button', {
+      className: 'ah-action ah-choice-option', disabled, 'data-option-id': option.id,
+      onclick: () => cardMove({ action: 'choose', choiceId: choice.id, optionId: option.id }, s),
+    }, option.label)))
+  }
+  search.addEventListener('input', refresh)
+  return h('section', { className: 'ah-choice ah-direct-prompt', 'data-choice-kind': choice.kind },
+    h('div', { className: 'ah-direct-instruction', role: 'status' }, choice.prompt), search, list)
 }
 
 function renderCluePayment(s, humanTurn) {
@@ -1691,6 +1765,11 @@ function renderCardGame(s, autoPassing = false) {
           'aria-haspopup': 'dialog', 'aria-expanded': String(state.arkhamZoneOpen?.kind === 'aside'),
           onclick: () => { state.arkhamZoneOpen = { sessionId: s.sessionId, kind: 'aside' }; render() } },
         tableIcon('supply'), h('span', {}, t('table.aside')), h('b', {}, zoneCards(s, 'aside').length)),
+        st.sharedPlayCards?.length ? h('button', { className: 'bg-btn secondary ah-card-zone-launcher',
+          'aria-label': t('game.zone.sharedPlay'), 'aria-haspopup': 'dialog',
+          'aria-expanded': String(state.arkhamZoneOpen?.kind === 'sharedPlay'),
+          onclick: () => { state.arkhamZoneOpen = { sessionId: s.sessionId, kind: 'sharedPlay' }; render() } },
+        tableIcon('supply'), h('span', {}, t('game.zone.sharedPlay')), h('b', {}, st.sharedPlayCards.length)) : null,
         h('button', { className: 'bg-btn secondary', 'data-situation-toggle': 'true', 'aria-haspopup': 'dialog',
           'aria-expanded': String(situationView.opened), title: t('table.situation.title'), onclick: () => situationView.open(s.sessionId) }, t('table.situation')),
         h('button', { className: 'bg-btn secondary', onclick: () => arkhamCatalog.open() }, t('table.catalog')),
@@ -1799,7 +1878,8 @@ function renderPlayerDock(s, inv, humanTurn) {
       h('div', { className: 'ah-dock-name-row' },
         h('button', { className: 'ah-dock-name', title: inv.name, 'data-interaction': `investigator:${inv.seat}`, onclick: () => openCardDetailDef({ ...s.state.investigatorDefs[inv.code], ...inv, type: 'investigator' }) },
           tableIcon(classIcon(inv.klass)),
-          h('span', { className: 'ah-dock-name-text' }, inv.name)),
+          h('span', { className: 'ah-dock-name-text' }, inv.name),
+          placedCardMarkers(h, { markers: inv.markers, doom: inv.doom })),
         renderReactionModes(s, inv),
         // 头像与三态齿轮同排居中：早先绝对定位在名字行右上角，和齿轮上下错开半个按钮高。
         h('span', { className: 'ah-dock-portrait', 'aria-hidden': 'true' }, tableArt(h, inv.code, inv.name))),
@@ -1909,7 +1989,7 @@ function renderMiniCard(s, reference, exhausted, opts = {}) {
   const usedLines = usedAbilityLines(usage)
   const assetStats = opts.asset ? [
     cd.cost != null ? t('game.card.cost', { cost: cd.cost }) : '',
-    cd.health != null ? t('game.card.healthValue', { value: cd.health }) : '',
+    (reference?.health ?? cd.health) != null ? t('game.card.healthValue', { value: reference?.health ?? cd.health }) : '',
     d.courage ? t('game.card.noSkillIcons') : '',
   ].filter(Boolean).join(' · ') : ''
   const activate = (focusActions = false) => {
@@ -2205,9 +2285,9 @@ function slotBackdrop(kind, mirrored = false) {
 }
 
 function renderEquipmentSlots(s, inv, humanTurn) {
-  const order = ['hand', 'ally', 'arcane', 'accessory', 'body', 'tarot']
-  const labels = { hand: t('game.slot.hand'), ally: t('game.slot.ally'), arcane: t('game.slot.arcane'), accessory: t('game.slot.accessory'), body: t('game.slot.body'), tarot: t('game.slot.tarot') }
-  const capacity = { hand: 2, ally: 1, arcane: 2, accessory: 1, body: 1, tarot: 1 }
+  const capacity = { hand: 2, ally: 1, arcane: 2, accessory: 1, body: 1, head: 1, tarot: 1 }
+  const order = Object.keys(capacity)
+  const labels = Object.fromEntries(order.map(slot => [slot, t(AH_SLOT_KEYS[slot])]))
   const bonuses = ahSlotBonuses(s, inv)
   for (const slot of order) capacity[slot] += bonuses[slot] || 0
   // 调查时少手槽只在 handPenaltyActive 时收起空槽，避免把还能装牌的右手画成可用、服务端却要求弃牌。
@@ -2242,7 +2322,9 @@ function renderEquipmentSlots(s, inv, humanTurn) {
     if (cell < 0) cell = cells.ally.length
     cells.ally[cell] = { asset, restricted: cell >= capacity.ally }
   }
-  const slots = order.flatMap(slot => cells[slot].map((entry, index) => {
+  const headInHand = (inv.hand || []).some(code => normalizeAhSlots(ahCardDef(s, code)).includes('head'))
+  const visibleSlots = order.filter(slot => slot !== 'head' || bonuses.head || cells.head.some(Boolean) || headInHand)
+  const slots = visibleSlots.flatMap(slot => cells[slot].map((entry, index) => {
     const restrictedSlot = slot === 'ally' && index >= capacity.ally
     const label = slot === 'hand' ? [t('game.equip.leftHand'), t('game.equip.rightHand')][index] || t('game.equip.extraHand', { index: index - 1 })
       : restrictedSlot ? t('game.equip.restrictedAlly', { index: index - capacity.ally + 1 })
@@ -2545,6 +2627,7 @@ function renderEnemyChip(s, e, { map = false } = {}) {
     'aria-label': t('game.enemy.aria', { name: e.name, health: e.health - (e.damageTaken || 0), max: e.health }) + (e.exhausted ? t('game.enemy.exhaustedSuffix') : '') + (canEngage ? t('game.enemy.engageableSuffix') : ''),
     'data-inspect-default': map ? 'true' : null,
     'data-interaction': `enemy:${e.id}`,
+    ...enemyViewAttributes(e),
     'data-victory': e.victory > 0 ? e.victory : null,
     'data-choice-target': choiceMove?.optionId || null,
     onkeydown: event => { if (event.key === 'Enter') { if (choiceMove && !state.busy) cardMove(choiceMove, s); else openCardDetail(s, e) } },
@@ -2593,7 +2676,8 @@ function renderActionButtons(s, humanTurn) {
     ? moves.filter(move => !shown.includes(move) && !move.scriptCard && !['play','ability','fight','evade','engage','parley','parleyCultist','move','locationAbility','discardThreat','purgeThreat','payDebt','advanceAct','drawCultist','interruptRitual','sacrificeLita','freeAction'].includes(move.action))
     : []
   const buttons = [...shown, ...additional].map(button)
-  const usedHints = location ? usedActionHints(s.state, location.id) : []
+  const usedLocationId = location?.id ?? (selection?.key?.startsWith('location:') ? selection.key.slice('location:'.length) : null)
+  const usedHints = usedLocationId ? usedActionHints(s.state, usedLocationId) : []
   const def = selection ? entityDefinition(s, selection.key) : null
   return h('div', {
     className: 'ah-actions',

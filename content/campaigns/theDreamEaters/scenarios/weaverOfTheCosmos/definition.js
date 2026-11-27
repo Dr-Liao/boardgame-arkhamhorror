@@ -11,6 +11,7 @@
 // 保留最下方 1 个、把另外 3 个移出游戏并放上 7 个，组成 8 段环）。随机抽取在 setup/actLeftPlay
 // 里由 behavior 决定；本文件只给完整实例表，保证 layout/连接/身份可静态校验。
 // enemies/treacheries 来自 TDE card-data；亚特拉克·纳克亚、四条腿与黑暗中的织网者放在一边。
+import { actRuleFor } from '../../../../../src/cards/card-rules.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
@@ -941,7 +942,9 @@ export const scenario = {
       },
       "objective": {
         "type": "clues",
-        "perInvestigator": 3
+        "perInvestigator": actRuleFor(ACT_CODES[0]).objective.cluesPerInvestigator,
+        "atLocation": WEB[3],
+        "allInvestigatorsAtLocation": true,
       },
       "ruleId": "act1",
       "identityStatus": "mapped"

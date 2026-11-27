@@ -4,8 +4,7 @@
 // 独立克苏鲁牌库（从顶抽/弃回/空库回收/每轮上限）、怒气与部位数值、四档混乱标记、
 // 最终封印印记与勘误、四种结局与战役记录、JSON 存档往返、真实 saveSnapshot/readSnapshot 存档重放。
 //
-// 本文件不 import engine.js：章节 behavior 只走内容层函数与 P2 原语（水位/独立牌库用
-// mechanicState），因此单测可在其他 worker 尚未重建索引时独立运行。
+// 章节夹具验证布置与流程，实际引擎事务验证跨席位选择和牌区变化。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { mkdtempSync, rmSync } from 'node:fs'
@@ -14,6 +13,9 @@ import path from 'node:path'
 import { persistEnabled, readSnapshot, saveSnapshot } from '../../../lib/sessions.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { mechanicState } from '../src/engine/mechanic-state.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { enemy as engineEnemy, fixture as engineFixture } from './core-fixture.mjs'
 import * as chapter from '../content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/index.js'
 import {
   scenario, ACT_CODES, ACT_FIGHT_BACK_CODE, ACT_BANISH_HIM_CODE, AGENDA_CODES, AGENDA_DOOM_CODE,
@@ -233,6 +235,81 @@ const setup = (count = 2, { records = {}, difficulty = 'standard', api: extra = 
   const report = setupScenario(state, api)
   return { state, api, report }
 }
+
+function resolveLocationReaction(state, execute, choose) {
+  resolveTransaction(state, 0, { action: 'ruinedLocationReaction' }, execute)
+  for (let count = 0; state.pendingChoice; count++) {
+    const choice = state.pendingChoice
+    assert.ok(count < 10, choice.prompt)
+    const optionId = choose(choice)
+    assert.ok(choice.options.some(option => option.id === optionId), choice.prompt)
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, execute)
+  }
+}
+
+function addReactionOrigin(state, destination) {
+  const origin = { ...destination, id: 'reactionOrigin', name: '测试起点', connections: [destination.id] }
+  destination.connections = [origin.id]
+  state.locations.push(origin)
+  return origin
+}
+
+test('11693 商业区：星之眷族进入后可支付三资源自动躲避，跳过则正常交战', () => {
+  for (const useReaction of [true, false]) {
+    const state = engineFixture('01001', 2)
+    state.scenario = scenario
+    const [inv, other] = state.investigators
+    const location = state.locations.find(site => site.id === inv.location)
+    location.code = location.originalCode = '11693'
+    location.revealed = true
+    const origin = addReactionOrigin(state, location)
+    other.location = origin.id
+    const enemy = engineEnemy(state, { location: origin.id, engagedSeat: null, traits: ['Star Spawn'] })
+    const initialResources = inv.resources
+    const enter = (draft, events) => scenarioRuntime(draft, events).moveEnemy(
+      draft.enemies.find(item => item.id === enemy.id), location.id)
+    resolveLocationReaction(state, enter, choice => {
+      assert.equal(choice.seat, 0)
+      return useReaction ? 'evade' : 'skip'
+    })
+    const moved = state.enemies.find(item => item.id === enemy.id)
+    assert.equal(moved.location, location.id)
+    assert.equal(moved.exhausted === true, useReaction)
+    assert.equal(moved.engagedSeat, useReaction ? null : 0)
+    assert.equal(state.investigators[0].resources, initialResources - (useReaction ? 3 : 0))
+  }
+})
+
+test('11697 圣玛丽医院：克苏鲁进入可移入线索并逐点选择伤害目标，全队每场一次', () => {
+  const state = engineFixture('01001', 2)
+  state.scenario = scenario
+  const [inv, other] = state.investigators
+  const hospital = state.locations.find(site => site.id === inv.location)
+  hospital.code = hospital.originalCode = '11697'
+  hospital.revealed = true
+  hospital.clues = 0
+  other.location = hospital.id
+  inv.clues = other.clues = 3
+  const origin = addReactionOrigin(state, hospital)
+  const body = engineEnemy(state, { code: '11701', location: origin.id, engagedSeat: null, traits: ['Ancient One'] })
+  const first = engineEnemy(state, { engagedSeat: null })
+  const second = engineEnemy(state, { engagedSeat: null })
+  const moveBody = destination => (draft, events) => scenarioRuntime(draft, events).moveEnemy(
+    draft.enemies.find(item => item.id === body.id), destination, { skipAutoEngage: true })
+  const targets = [first.id, second.id]
+  resolveLocationReaction(state, moveBody(hospital.id), choice => {
+    if (choice.kind === 'enemy') return targets.shift()
+    assert.equal(choice.seat, 0)
+    return '2'
+  })
+  assert.equal(state.investigators[0].clues, 1)
+  assert.equal(state.investigators[1].clues, 3)
+  assert.equal(state.locations.find(site => site.id === hospital.id).clues, 2)
+  assert.equal(state.enemies.find(item => item.id === first.id).damageTaken, 1)
+  assert.equal(state.enemies.find(item => item.id === second.id).damageTaken, 1)
+  resolveLocationReaction(state, moveBody(origin.id), () => assert.fail('离开地点无反应'))
+  resolveLocationReaction(state, moveBody(hospital.id), () => assert.fail('已用完全队每场一次的上限'))
+})
 
 // ---------------------------------------------------------------------------
 // 1. 结构 / manifest / 数据
@@ -990,13 +1067,23 @@ test('P7 theDoomOfArkhamPartII 11705/11709/11715：无情冲锋攻击、拆毁�
   // 11709：真实 runtime 的 addCardCounter('ruin') 生效 → 最近屋顶计数器 +1；第二次 ≥2 → 印刷结算
   {
     const { state, runtime } = withRuntimeState(2, [])
-    // 阵亡结算在测试夹具里只标记 defeated，避免触发完整战役消除流程（计数器/地点结算仍走真实读点）。
-    const counterRuntime = { ...runtime, defeat: inv => { inv.defeated = true } }
-    behavior.resolveCthulhuCard(state, '11709', counterRuntime)
+    state.investigators[0].engaged = []
+    state.campaign.investigators[0] = { status: 'active' }
+    const piles = decksFor(state)
+    piles.deck = ['11705']
+    piles.discard = ['11706', '11707']
+    behavior.resolveCthulhuCard(state, '11709', runtime)
     const rooftop = state.locations.find(location => (location.markers?.ruin || 0) === 1)
     assert.ok(rooftop, '最近屋顶地点废墟计数器 +1')
-    behavior.resolveCthulhuCard(state, '11709', counterRuntime)
-    assert.equal(state.investigators.every(inv => inv.defeated), true, '废墟标记 ≥2 → 全员阵亡')
+    assert.deepEqual([...piles.deck].sort(), ['11705', '11706', '11707', '11709'])
+    assert.deepEqual(piles.discard, [])
+    piles.deck.splice(piles.deck.indexOf('11709'), 1)
+    state.investigators[0].location = rooftop.id
+    behavior.resolveCthulhuCard(state, '11709', runtime)
+    assert.equal(state.investigators[0].defeated, true, '屋顶上的调查员阵亡')
+    assert.equal(state.investigators[0].defeatCause, 'killed')
+    assert.equal(state.campaign.investigators[0].status, 'killed')
+    assert.equal(state.investigators[1].defeated, false, '其他地点的调查员存活')
     assert.equal(state.locations.some(location => location.id === rooftop.id), false, '该屋顶与地点离场')
     assert.equal((state.scenarioFlags?.demolitionRemoved || []).includes(rooftop.id), true)
     assert.equal((state.scenarioFlags?.demolitionRemoved || []).includes('11709'), true, '本卡离场')

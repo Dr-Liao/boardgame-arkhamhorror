@@ -2,7 +2,7 @@
 // Detailed evidence: audit/12-a-4-acceptance.json. Not a promise of all-combination equivalence.
 export const CORE2026_SHARD4_ACCEPTANCE_PROFILE = {
   "id": "core2026-campaign-a-2026-11",
-  "scope": "2026 核心盒 12 段战役侧（12121–12160）40 条目录记录。40 条全部因批次 4 未迁移判实现完整性失败。",
+  "scope": "2026 核心盒 12 段战役侧（12121–12160）40 条目录记录。40 张 Brethren of Ash 战役卡缺少本地关卡实现。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const CORE2026_SHARD4_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const CORE2026_SHARD4_ACCEPTANCE_SHA256 = '9f7b0aa7bb32c22046b99a687a85803f266f53b67e8f3c5f28cb9f4f89a31830'
+export const CORE2026_SHARD4_ACCEPTANCE_SHA256 = 'fcb905e002470974bcf2a7d6ed3fc2f1a78a580f892c48d5268f57e328a4fb7b'
 const verified = new Set([])
 export const core2026Shard4CardVerified = code => verified.has(code)

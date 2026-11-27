@@ -46,7 +46,7 @@ const LEGACY_SCOPES = Object.freeze({
 
 export const LEGACY_LIMIT_NAMES = Object.freeze(Object.keys(LEGACY_SCOPES))
 
-const LIMIT_KEYS = new Set(['scope', 'owner', 'count'])
+const LIMIT_KEYS = new Set(['scope', 'owner', 'count', 'sharedKey'])
 
 /**
  * 规范化上限声明。返回 null（无上限）或冻结对象 { scope, owner, count, label }。
@@ -72,7 +72,10 @@ export function normalizeLimit(raw, origin = 'limit') {
   }
   const count = raw.count ?? 1
   if (!Number.isInteger(count) || count < 1) throw new Error(`${origin}: limit.count 必须是正整数`)
-  return Object.freeze({ scope: raw.scope, owner, count, label: `${raw.scope}/${owner}×${count}` })
+  if (raw.sharedKey != null && (owner !== 'group' || !/^[a-z][a-z0-9-]*$/.test(raw.sharedKey))) {
+    throw new Error(`${origin}: limit.sharedKey 只接受全队上限的标识符`)
+  }
+  return Object.freeze({ scope: raw.scope, owner, count, ...(raw.sharedKey ? { sharedKey: raw.sharedKey } : {}), label: `${raw.scope}/${owner}×${count}` })
 }
 
 // scope → 该次结算的作用域串。ctx 里放引擎能提供的最细粒度标识。
@@ -121,7 +124,8 @@ export function limitKey(state, inv, descriptor, context = null, windowId = null
     ...(windowId ? { windowId } : {}),
   }
   if (normalized.scope === 'perWindow' && context?.tokenIndex != null) ctx.windowInstance = `${state.skillTest?.id}:${context.tokenIndex}`
-  return `${descriptor.id}|${ownerKey(normalized.owner, descriptor, source, inv, ctx)}|`
+  const key = normalized.sharedKey ? `shared:${normalized.sharedKey}|group` : `${descriptor.id}|${ownerKey(normalized.owner, descriptor, source, inv, ctx)}`
+  return `${key}|`
     + `${scopeKey(normalized.scope, state, ctx)}`
 }
 

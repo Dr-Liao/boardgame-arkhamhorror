@@ -8,11 +8,12 @@
 //      ability.js#quickEventView 归一，reactionWindow 枚举、assets.js#playReactionCard 执行。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync } from 'node:fs'
+import { existsSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { fixture } from './core-fixture.mjs'
-import { runtimeCardAvailable } from '../src/engine/engine.js'
+import { drawEncounter, getStat, runtimeCardAvailable } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import {
   quickEventView, registerCardAbilities, registeredEntry,
 } from '../src/engine/ability.js'
@@ -21,20 +22,22 @@ import { REPRINT_ALIASES, reprintAliasesFor } from '../src/cards/card-identity.j
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url))
-const entryFile = code => `${ROOT}src/cards/entries/${code}.js`
+const encounterFiles = new Set(readdirSync(`${ROOT}src/cards/encounter-entries`, { recursive: true })
+  .map(path => path.split(/[\\/]/).at(-1)))
+const entryFileExists = code => existsSync(`${ROOT}src/cards/entries/${code}.js`) || encounterFiles.has(`${code}.js`)
 
 test('P2-4 重印别名表与 cards-data 的双向关系一致，且别名号没有自己的条目文件', () => {
   const pairs = Object.entries(REPRINT_ALIASES)
   assert.ok(pairs.length > 0, '重印别名表不能为空')
   for (const [canonical, aliases] of pairs) {
-    assert.ok(existsSync(entryFile(canonical)), `${canonical} 必须有自己的 canonical 条目文件`)
+    assert.ok(entryFileExists(canonical), `${canonical} 必须有自己的 canonical 条目文件`)
     assert.ok(registeredEntry(canonical), `${canonical} 必须已注册`)
     for (const alias of aliases) {
       assert.equal(ALL_CARDS[alias]?.duplicateOfCode, canonical,
         `cards-data 里 ${alias} 的 duplicateOfCode 必须指向 ${canonical}`)
       assert.equal(ALL_CARDS[canonical]?.duplicatedBy?.includes(alias), true,
         `cards-data 里 ${canonical} 的 duplicatedBy 必须包含 ${alias}`)
-      assert.equal(existsSync(entryFile(alias)), false, `${alias} 是别名，不能有自己的条目文件`)
+      assert.equal(entryFileExists(alias), false, `${alias} 是别名，不能有自己的条目文件`)
     }
   }
   assert.equal(reprintAliasesFor('01022').includes('01522'), true)
@@ -64,10 +67,50 @@ test('P2-4 重印别名沿 canonical 的运行时可用性；构筑可用性仍�
   // 015xx 在 deck/牌池层是 catalog-only；运行时按 canonical 的可用性放行，
   // 否则重印号在反应窗口里会被 runtimeCardAvailable 过滤掉。
   for (const [canonical, aliases] of Object.entries(REPRINT_ALIASES)) {
-    const owner = ALL_CARDS[canonical].type === 'investigator' ? { ...inv, code: canonical } : inv
+    const type = ALL_CARDS[canonical].type
+    if (type === 'enemy' || type === 'treachery') continue
+    const owner = type === 'investigator' ? { ...inv, code: canonical } : inv
     assert.equal(runtimeCardAvailable(state, owner, canonical), true, `${canonical} 运行时可用`)
     for (const alias of aliases) assert.equal(runtimeCardAvailable(state, owner, alias), true, `${alias} 沿 canonical 运行时可用`)
   }
+})
+
+function drawReprint(state, code) {
+  const draw = (draft, events) => drawEncounter(draft, draft.investigators[0], events, { code, from: 'search' })
+  resolveTransaction(state, 0, { action: 'drawReprint' }, draw)
+  for (let count = 0; state.pendingChoice; count++) {
+    const choice = state.pendingChoice
+    assert.ok(count < 30)
+    const optionId = choice.options.find(option => ['done', 'continue', 'skip', 'self'].includes(option.id))?.id
+      || choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, draw)
+  }
+}
+
+test('12166 夜鹰重印：真实抽取保留印刷身份，继承冷漠、猎手和同地点技能减值', () => {
+  const state = fixture()
+  const skills = ['willpower', 'intellect', 'combat', 'agility']
+  const before = skills.map(skill => getStat(state, state.investigators[0], skill))
+  drawReprint(state, '12166')
+  const enemy = state.enemies.find(card => card.code === '12166')
+  assert.ok(enemy)
+  assert.equal(enemy.originalCode, '12166')
+  assert.equal(enemy.location, state.investigators[0].location)
+  assert.equal(enemy.aloof, true)
+  assert.equal(enemy.hunter, true)
+  assert.equal(enemy.engagedSeat, null)
+  assert.deepEqual(skills.map(skill => getStat(state, state.investigators[0], skill)), before.map(stat => stat - 1))
+})
+
+test('12167 渴望死亡重印：真实显现按伤害提高难度，失败受恐惧并弃掉抽到的印刷副本', () => {
+  const state = fixture()
+  state.investigators[0].damage = 2
+  state.chaosBag = ['autofail']
+  drawReprint(state, '12167')
+  assert.equal(state.lastTestResult.difficulty, 4)
+  assert.equal(state.lastTestResult.success, false)
+  assert.equal(state.investigators[0].horror, 2)
+  assert.deepEqual(state.encounterDiscard, ['12167'])
 })
 
 test('P2-4 快速事件统一通道：两种写法归一到同一份候选视图', () => {

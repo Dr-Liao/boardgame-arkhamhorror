@@ -22,6 +22,7 @@
 // 网格坐标走 mechanicState.grid 与 **P7 原语**（grid-map + mechanics.map.place/rotatePorts、
 // mechanics.scenarioDecks take/discard from bottom、mechanics.recordSets、mechanics.progress），
 // 变化只经 api.* 生效。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, configureGrid, gridPosition, adjacentGridSpaces, rotateGridPorts } from '../../../../../src/engine/grid-map.js'
@@ -1389,7 +1390,7 @@ export function actions(state, inv) {
       reason: openSkies.length ? (groupClues >= activeInvestigators(state).filter(other => other.location === here.id).length ? null : '线索不足') : '没有相邻开阔天空',
     })
   }
-  if (options.resign) {
+  if (here.revealed && options.resign) {
     moves.push({
       action: 'scenarioAction', rule: 'obsidianResign', locationId: here.id, actions: 1,
       label: '[action]：撤退。你攀爬下去。',
@@ -1882,7 +1883,7 @@ export function turnEnded(state, inv, api = {}) {
     }) : (hasHand ? 'discard' : 'damage')
     if (choice === 'discard' && hasHand) {
       if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
-      else inv.hand.pop()
+      else spliceHand(inv, -1, 1)[0]
     } else if (typeof api.damage === 'function') api.damage(inv.seat, 1)
     else inv.damage = (Number(inv.damage) || 0) + 1
     return true

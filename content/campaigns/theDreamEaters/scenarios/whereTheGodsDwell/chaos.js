@@ -33,7 +33,7 @@ export function whereTheGodsDwellChaosToken(state, inv, token) {
     return { delta: 0, drawAnother: true }
   }
   if (token === 'tablet') return { delta: hard ? -6 : -4 }
-  if (token === 'elder_thing') return { delta: hard ? -1 : 0 }
+  if (token === 'elderthing' || token === 'elder_thing') return { delta: hard ? -1 : 0 }
   return null
 }
 

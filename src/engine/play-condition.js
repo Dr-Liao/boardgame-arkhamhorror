@@ -18,7 +18,7 @@
 import { EFFECTS } from '../cards/card-effects.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { bondedPlayCostAvailable } from './play-attempt.js'
-import { playDiscardCostChoices } from './play-discard-cost.js'
+import { canPayPlayDiscardCost } from './play-discard-cost.js'
 import { tokenCostAvailable } from './token-cost.js'
 import { sealAvailable } from './seal-entry.js'
 import { canDiscardControlledAsset } from './asset-departure.js'
@@ -139,12 +139,13 @@ function evaluate(item, ctx) {
  * @param {object} helpers 引擎注入的读数（maxSanity / resignAvailable），避免本模块反向依赖引擎
  */
 export function playConditionError(state, inv, code, helpers = {}) {
+  if (registeredEntry(code)?.playRestriction === 'attachmentOnly') return '此牌只能通过效果附属入场'
   if (helpers.playedLimitUsed?.(inv, code)) return '已达到本局的打出上限'
   if (!sealAvailable(state, registeredEntry(code))) return '混乱袋中没有可封印的标记'
   if (!tokenCostAvailable(state, inv, registeredEntry(code)?.additionalTokenCost)) return '无法支付额外混乱标记费用'
   if (!bondedPlayCostAvailable(state, inv, code)) return '场外没有足够的绑定卡牌支付额外打出费用'
   const discardCost = registeredEntry(code)?.discardPlayCost
-  if (discardCost && !playDiscardCostChoices(state, inv, discardCost).length) return '没有能够支付额外弃置费用的牌'
+  if (discardCost && !canPayPlayDiscardCost(state, inv, code, discardCost)) return '没有能够支付额外弃置费用的牌'
   if (inv.forbiddenPlayNames?.round === state.round && inv.forbiddenPlayNames.names.includes(ALL_CARDS[code]?.name || code)) return '本轮不能打出该同名卡牌'
   const ctx = { state, inv, source: { code }, helpers: { ...helpers,
     canDiscardAsset: asset => canDiscardControlledAsset(state, inv, asset),

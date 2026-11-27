@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 import { mechanicState, investigatorAt } from './mechanic-state.js'
 import { registeredEntry } from './ability.js'
 import { splicePlayerDiscard } from './player-zones.js'
@@ -29,7 +30,7 @@ export function swapBeneathWithHand(state, seat, host, beneathCode, handCode) {
   const handIndex = inv.hand.indexOf(handCode)
   if (beneathIndex < 0 || handIndex < 0) return false
   pile[beneathIndex] = handCode
-  inv.hand[handIndex] = beneathCode
+  spliceHand(inv, handIndex, 1, beneathCode)
   return true
 }
 
@@ -54,7 +55,7 @@ export function takeBeneath(state, seat, host, code, destination = 'hand') {
 }
 // The caller supplies the existing commit API so eligibility, costs, icons and windows have one reader.
 export function commitFromOrigin(state, seat, { host = null, code, from = 'beneath', retain = false,
-  ignoreAdditionalCosts = false, ownerSeat = seat, returnToOwnerDeckBottom = false }, commit) {
+  ignoreAdditionalCosts = false, ownerSeat = seat, returnToOwnerDeckBottom = false, destination = null }, commit) {
   const inv = investigatorAt(state, seat)
   const owner = investigatorAt(state, ownerSeat)
   if (ownerSeat !== seat && (from !== 'discard' || !returnToOwnerDeckBottom)) throw new Error('借用弃牌堆卡牌必须指定归还去向')
@@ -77,18 +78,19 @@ export function commitFromOrigin(state, seat, { host = null, code, from = 'benea
   inv.hand.push(code)
   try {
     const item = commit(seat, code, { ignoreAdditionalCosts, syntheticHand: true,
-      ...(returnToOwnerDeckBottom ? { handIndex } : {}) })
+      ...(returnToOwnerDeckBottom || destination ? { handIndex } : {}) })
     if (!item) {
-      inv.hand.splice(handIndex, 1)
+      spliceHand(inv, handIndex, 1)
       restore()
       return false
     }
     if (retain && from === 'beneath') { item.destination = 'origin'; item.origin = { seat, host } }
     if (retain && from === 'discard') item.destination = 'hand'
+    if (from === 'discard' && destination === 'shuffleIntoDeck') item.destination = destination
     if (returnToOwnerDeckBottom) item.returnToOwnerDeckBottom = ownerSeat
     return item
   } catch (error) {
-    if (inv.hand[handIndex] === code) inv.hand.splice(handIndex, 1)
+    if (inv.hand[handIndex] === code) spliceHand(inv, handIndex, 1)
     restore()
     throw error
   }

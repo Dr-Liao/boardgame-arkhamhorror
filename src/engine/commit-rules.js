@@ -1,3 +1,4 @@
+import { hiddenParityBlocks } from './hidden-rules.js'
 import { commitProfile } from './lifecycle.js'
 import { handCommitBlocker } from './tarot-slot.js'
 import { availableResources, spendFromPool } from './resource-bank.js'
@@ -21,9 +22,9 @@ export function payCommitResourceCost(state, owner, code, deps) {
 }
 
 // A remote permission belongs to the specific card, not every card in its owner's hand.
-export function allowsConnectingCommit(state, owner, code, deps) {
+export function allowsConnectingCommit(state, owner, code, deps, options) {
   const profile = commitProfile(code)
-  return profile?.commitFrom === 'connecting' && canCommitToTest(state, owner, code, deps)
+  return profile?.commitFrom === 'connecting' && canCommitToTest(state, owner, code, deps, options)
 }
 
 // Shared by hand, attached cards and effects which force a card into a test.
@@ -37,7 +38,7 @@ export function canCommitToTest(state, owner, code, deps, options = {}) {
   const card = cardDef(code)
   if (!options.ignoreAdditionalCosts && !tokenCostAvailable(state, owner, registeredEntry(code)?.additionalTokenCost)) return false
   if (!options.ignoreAdditionalCosts && availableResources(owner) < commitResourceCost(state, owner, code, deps)) return false
-  if (!card || handCommitBlocker(owner, registeredEntry)) return false
+  if (!card || handCommitBlocker(owner, registeredEntry) || hiddenParityBlocks(state, owner, card, 'commit')) return false
   if (owner.seat !== test.seat && owner.threat?.some(t => registeredEntry(t.code)?.cannotAffectOtherInvestigators)) return false
   if (deps.lolaCanUseCard?.(owner, code) === false) return false
   if (deps.runtimeCardAvailable?.(state, owner, code) === false) return false
@@ -62,5 +63,5 @@ export function canCommitToTest(state, owner, code, deps, options = {}) {
   if (profile.scenarioAbilityOnly && !test.source?.scenarioAbility && !test.source?.ability) return false
   if (/最多投入1张|Max 1 committed/i.test(card.textZh || card.text || '') && rows.some(row => row.code === code)) return false
   if (card.subtype && !profile.mustCommitNextTest && !profile.subtractIcons && !profile.canCommitWeakness) return false
-  return profile.anySkill || commitIcons(state, owner, code, test.skill) !== 0
+  return profile.anySkill || commitIcons(state, owner, code, test.skill, options.extraIcons) !== 0
 }

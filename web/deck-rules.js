@@ -16,6 +16,7 @@ import { t } from './i18n.js'
 const extensions = new Map()
 const cardExtensions = new Map()
 export function registerDeckCardRule(code, rule) {
+  if (rule?.singletonByName != null && typeof rule.singletonByName !== 'boolean') throw new TypeError('Invalid singleton deck restriction')
   if (rule?.minimumTypes && Object.entries(rule.minimumTypes).some(([type, count]) => !['asset', 'event', 'skill'].includes(type) || !Number.isSafeInteger(count) || count < 1)) throw new TypeError('Invalid minimum card-type count')
   if (rule) cardExtensions.set(code, freezeDeep(structuredClone(rule)))
   else cardExtensions.delete(code)
@@ -44,6 +45,7 @@ export function deckRules(investigator, codes = [], cards = {}) {
     if (additions.length) {
       const base = deckRules(investigator)
       return { ...base, size: base.size + additions.reduce((sum, rule) => sum + (rule.sizeBonus || 0), 0),
+        singletonByName: base.singletonByName || additions.some(rule => rule.singletonByName === true),
         minimumTypes: Object.fromEntries([...new Set(additions.flatMap(rule => Object.keys(rule.minimumTypes || {})))].map(type => [type, Math.max(...additions.map(rule => rule.minimumTypes?.[type] || 0))])),
         options: [...base.options, ...additions.flatMap(rule => rule.options || [])] }
     }
@@ -284,7 +286,7 @@ export function factionSelectErrors(investigator, cards) {
   }
   return errors
 }
-export function validateDeckRules(investigator, codes, cards, { partial = false, disciplines = undefined, xp = 0, draftMode = false } = {}) {
+export function validateDeckRules(investigator, codes, cards, { partial = false, disciplines = undefined, xp = 0, draftMode = false, cardCopyLimit } = {}) {
   const rules = deckRules(investigator, codes, cards)
   const errors = validateTraitLimits(codes, cards)
   {
@@ -314,12 +316,14 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
   }
   const counted = ordinary.filter(card => !card.permanent && !card.ignoreDeckLimit)
   if ((!partial && counted.length !== rules.size) || counted.length > rules.size) errors.push(t('misc.deck.size', { size: rules.size, count: counted.length }))
+  const copyLimit = card => cardCopyLimit?.(card.code) ?? (draftMode ? draftCardLimit(card) : deckCardLimit(card))
   // 每张卡各自的 deck_limit（例：06241–06243 三张「增强自我」各限 1 张）。
   const countsByCode = new Map()
   for (const card of ordinary) countsByCode.set(card.code, (countsByCode.get(card.code) || 0) + 1)
   for (const [code, count] of countsByCode) {
     const card = ordinary.find(item => item.code === code)
-    if (count > (draftMode ? draftCardLimit(card) : deckCardLimit(card))) errors.push(t('misc.deck.overLimit', { name: card.name || code, limit: deckCardLimit(card) }))
+    const limit = copyLimit(card)
+    if (count > limit) errors.push(t('misc.deck.overLimit', { name: card.name || code, limit }))
   }
   const names = new Map()
   for (const card of ordinary) {
@@ -329,7 +333,8 @@ export function validateDeckRules(investigator, codes, cards, { partial = false,
   // 同名总张数：Myriad 卡按「同名至多 3 张」跨卡号共享额度；其余卡沿用组内最严 deck_limit。
   for (const [name, group] of names) {
     const myriad = group.some(card => card.myriad === true)
-    const limit = draftMode ? Math.min(...group.map(draftCardLimit)) : myriad ? MYRIAD_TITLE_LIMIT : Math.min(...group.map(deckCardLimit))
+    const limit = rules.singletonByName ? 1
+      : myriad && !draftMode ? MYRIAD_TITLE_LIMIT : Math.min(...group.map(copyLimit))
     if (group.length > limit) {
       errors.push(myriad
         ? t('misc.deck.myriadLimit', { name, limit })

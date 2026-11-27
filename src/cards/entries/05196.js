@@ -31,11 +31,7 @@ export default {
       // 锁头数 = 每位调查员 1 个。
       kind: 'entersPlay',
       label: '入场：按调查员人数放置锁头',
-      resolve: ({ state, source }) => {
-        if (!source) return
-        source.uses = Math.max(1, Number(state.numInvestigators) || 1)
-        source.usesType = 'locks'
-      },
+      resolve: ({ state, source, api }) => api.setAssetUses(source, Math.max(1, Number(state.numInvestigators) || 1)),
     },
     {
       kind: 'action',

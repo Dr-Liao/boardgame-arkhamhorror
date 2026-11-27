@@ -55,7 +55,7 @@ export default {
     }
     if (surge) {
       api.info?.('恐怖夜色：检定失败不少于 3 点，获得涌动。')
-      api.drawEncounter?.(inv.seat)
+      api.drawEncounter?.(inv.seat, { surgeDraw: true })
     }
     return placed // true = 已放置入场（牌库旁）；false = 本卡进遭遇弃牌堆（由引擎弃置）
   },

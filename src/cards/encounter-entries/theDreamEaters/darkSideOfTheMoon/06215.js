@@ -7,6 +7,8 @@
 //   · 隐藏值 = 最高警报等级 → locationRule.shroudModifier（本章 behavior.locationShroudModifier 分派），
 //     印刷值 0（数据在 definition 的 extraRules 里覆盖）；
 //   · 轮末强制 → locationRule.forced.roundEnd（behavior.roundEnded 分派）。
+import { highestCounter } from '../../_shared.js'
+
 const ALARM = 'alarmLevel'
 
 export default {
@@ -14,10 +16,7 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: {
-    shroudModifier(state, location, inv, api) {
-      // X = 最高警报等级（api.counters.highestOf）。
-      return Number(api?.counters?.highestOf?.(ALARM) || 0)
-    },
+    shroudModifier: state => highestCounter(state, ALARM) ?? 0,
     forced: {
       roundEnd(state, location, api) {
         for (const inv of state.investigators || []) {

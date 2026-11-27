@@ -104,6 +104,9 @@
 .ah-choice-staged .ah-committed-cards { flex: none; }
 .ah-visual-choices { position: absolute; bottom: calc(100% + 285px); left: 50%; transform: translateX(-50%); box-sizing: border-box; width: min(1180px,calc(100vw - 32px)); display: grid; grid-template-columns: repeat(auto-fit,minmax(min(210px,100%),1fr)); justify-content: center; gap: 18px; padding: 20px; border: 1px solid #c2a665; background: linear-gradient(145deg,#173029fa,#091c18fc); border-radius: 12px; max-height: 50vh; overflow-x: hidden; overflow-y: auto; box-shadow: 0 18px 54px #000b,inset 0 1px #fff1bf18; }
 .ah-visual-choices:not(:has(.ah-visual-option:not([hidden]))) { display: none; }
+.ah-named-card-search { flex: 0 1 220px; min-width: 0; max-width: 100%; padding: 8px 10px; }
+.ah-named-card-results { flex: 1 1 240px; min-width: 0; max-height: 28vh; overflow-y: auto; }
+.ah-named-card-results:empty { display: none; }
 .ah-visual-option[hidden] { display: none !important; }
 .ah-visual-cell[hidden] { display: none !important; }
 /* 反应提示开关：卡面、详情和角色面板共用图标按钮。

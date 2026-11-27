@@ -25,6 +25,7 @@
 //     相连」同口径）；移动平台/碑匾腔室的印刷连接合并在同一份网格邻接里。
 //   · 幕/议程目标没有专门的引擎 objective 类型 → 目标判定在 roundEnded/checkObjectives 里。
 //   · Good Money「下一章维护阶段不能获得资源」没有引擎读点 → 记入 scenarioFlags 并写原语请求。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { applyCampaignEffect } from '../../../../../src/campaign/campaign-effects.js'
 import { TDC_NO_UPKEEP_RESOURCES, tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
@@ -866,7 +867,7 @@ function discardFromHand(state, inv, count, api) {
       const found = Number(picked)
       if (Number.isInteger(found) && found >= 0 && found < hand.length) index = found
     }
-    const [code] = hand.splice(index, 1)
+    const [code] = spliceHand(inv, index, 1)
     inv.discard ||= []
     inv.discard.push(code)
     discarded += 1

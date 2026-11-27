@@ -1,5 +1,8 @@
+import { handCardIcons, spliceHand } from './hand-icons.js'
+import { beforeNamedDraw, selectNamedDrawOutcome } from './draw-predictions.js'
 import { putInHand } from './hand-entry.js'
 import { blockedByDeckTopLock, deckTopWeaknessShown, passiveDeckTopConfig, sampleRoundEvents, syncPassiveDeckTop } from './eote-investigator-support.js'
+import { hasWindowListener } from './window-listeners.js'
 import { clearPlayerDiscard, discardPlayerCards, replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
@@ -17,12 +20,13 @@ import { availablePlayResources } from './play-payment.js'
 // 它们被卡牌效果、剧本运行时与 API 同时使用。
 
 import { hiddenEnemiesAttackFromHand } from './hidden-enemy.js'
-import { afterHandDiscard, afterHandEmptied } from './hand-discard-window.js'
+import { afterHandDiscard, afterHandDiscardBatch, afterHandEmptied } from './hand-discard-window.js'
+import { discardPlayerCardWithWindow } from './player-discard.js'
 import { afterThreatEntered } from './threat-entry.js'
 import { reactionSource } from './reaction-source.js'
 import { offerEncounterLook } from './encounter-look.js'
 import { playableAssetSearchChoices, searchableAssetZones } from './asset-search-play.js'
-import { emitPresentation } from './presentation-events.js'
+import { presentWeaknessDraw as presentWeakness } from './card-reveal-audio.js'
 import { isHiddenPlayerWeakness } from './hidden-rules.js'
 
 export function createDeckOps(deps) {
@@ -580,6 +584,8 @@ function moveCardTo(state, inv, rawSpec, events) {
     info(state, events, `🚫 ${destinationOwner.name} 的牌库顶被「${cardName(blockedByDeckTopLock(state, destinationOwner).code)}」封锁，无法操纵牌库。`)
     return null
   }
+  const skillIcons = found.zone === 'hand' && spec.to === 'hand'
+    ? handCardIcons(state, found.owner, found.index) : undefined
   // 先摘出来：共享区域是 state 上的数组，场上卡要触发离场钩子。
   if (found.shared) state[found.shared].splice(found.index, 1)
   else if (found.zone === 'play') {
@@ -593,12 +599,13 @@ function moveCardTo(state, inv, rawSpec, events) {
   }
   else if (found.zone === 'attached') found.host.attachments.splice(found.index, 1)
   else if (found.zone === 'discard') splicePlayerDiscard(found.owner, found.index, 1)
+  else if (found.zone === 'hand') spliceHand(found.owner, found.index, 1)
   else found.owner[found.zone].splice(found.index, 1)
 
   const code = spec.code || found.instance?.code
   const owner = state.investigators[spec.ownerSeat ?? seat] || inv
   switch (spec.to) {
-    case 'hand': putInHand(state, owner, code); break
+    case 'hand': putInHand(state, owner, code, { skillIcons }); break
     case 'deckTop': owner.deck.push(code); break
     case 'deckBottom': owner.deck.unshift(code); break
     case 'discard': discardPlayerCards(state, owner, code); break
@@ -702,18 +709,13 @@ function removeOwnedCopies(state, seat, code, events) {
 
 function presentWeaknessDraw(state, inv, def, events) {
   const hidden = def.hidden || registeredEntry(def.code)?.hiddenEnemyInHand || isHiddenPlayerWeakness(def.code)
-  const name = cardName(def.code)
-  const text = hidden ? `${inv.name} 秘密将一张牌加入手牌。`
-    : `⚠️ ${inv.name} 抽到了弱点「${name}」：${def.textZh || def.text || ''}`
-  emitPresentation(state, events, {
-    type: 'presentation', kind: 'weakness', phase: state.phase, round: state.round, seat: inv.seat,
-    ...(hidden ? {} : { code: def.originalCode || def.code, name }), text,
+  return presentWeakness(state, inv, def, events, {
+    hidden, name: cardName(def.code), tekeli: registeredEntry(def.code)?.flags?.tekelili,
     tableState: capturePresentationState(state),
   })
-  return text
 }
 
-function drawCards(state, inv, n, events) {
+function drawCards(state, inv, n, events, { skipTekeli = false } = {}) {
   inv = effectRecipient(state, inv)
   if (!inv || !playerEffectCanAffect(state, inv.seat)) return []
   // 08006 预示者：牌库顶被揭示的弱点封锁时不能抽牌。
@@ -727,6 +729,8 @@ function drawCards(state, inv, n, events) {
     info(state, events, `📜 ${inv.name} 没有牌组，不能抽牌。`)
     return []
   }
+  n = scenarioBehavior(state).beforePlayerDraw?.(state, inv, n, scenarioRuntime(state, events)) ?? n
+  let firstThisRound = false
   const texts = []
   let reshuffles = 0
   let drawnCount = 0
@@ -740,10 +744,40 @@ function drawCards(state, inv, n, events) {
       clearPlayerDiscard(inv)
       reshuffles++
     }
+    const predictions = inv.deck.length ? beforeNamedDraw(state, inv, 'deck', events, reactionWindow) : []
     const code = inv.deck.pop()
+    if (drawnCount === 0 && state.campaign?.id === 'theFeastOfHemlockVale') {
+      firstThisRound = inv.lastDrawRound !== state.round
+      inv.lastDrawRound = state.round
+    }
     drawnCount++
     drawnCodes.push(code)
     const def = cardDef(code)
+    if (predictions.length) {
+      const api = abilityApi(state, events)
+      const outcome = selectNamedDrawOutcome(state, inv, def, predictions, {
+        canCancel: registeredEntry(code)?.cannotBeCanceledRevelation !== true,
+        canPlay: discount => {
+          if (isWeaknessCard(def) || !['asset', 'event'].includes(def?.type)) return false
+          inv.hand.push(code)
+          try { return api.canPlayAsEffect(inv.seat, code, { discount }) }
+          finally { spliceHand(inv, -1, 1)[0] }
+        },
+      })
+      if (outcome?.action === 'cancel') {
+        discardPlayerCards(state, inv, code)
+        continue
+      }
+      if (outcome?.action === 'play') {
+        const handIndex = inv.hand.push(code) - 1
+        if (api.playAsEffect(inv.seat, code, { discount: outcome.discount, handIndex })) continue
+        spliceHand(inv, handIndex, 1)
+      }
+    }
+    if (skipTekeli && registeredEntry(code)?.flags?.tekelili) {
+      discardPlayerCards(state, inv, code)
+      continue
+    }
     if (isWeaknessCard(def)) {
       // 2026-10-25 第六轮修复 05014：抽到弱点前的取消窗口（取消后洗回牌库、不重抽）。
       // 2026-11-09 05015：「不能取消」弱点（条目声明 cannotBeCanceledRevelation）在该窗口不可被取消。
@@ -820,12 +854,11 @@ function drawCards(state, inv, n, events) {
   }
   // 「古代巨石（研究完成）」：抽牌后可按抽到的张数花费秘密。
   if (drawnCount > 0 && !inv.defeated) campaignCardDrawReaction(state, inv, events, drawnCount)
-  if (drawnCount > 0 && !inv.defeated && state.investigators.some(owner =>
-    [owner, ...owner.assets, ...owner.threat].some(source => registeredEntry(source.code)?.abilities?.some(
-      descriptor => descriptor.trigger?.includes('cardsDrawn'))))) {
+  if (drawnCount > 0 && !inv.defeated && hasWindowListener(state, 'cardsDrawn')) {
     state.drawBatchSerial = (state.drawBatchSerial || 0) + 1
     reactionWindow(state, 'cardsDrawn', {
       when: 'cardsDrawn', seat: inv.seat, location: inv.location, drawnCodes,
+      ...(state.campaign?.id === 'theFeastOfHemlockVale' ? { firstThisRound } : {}),
       windowInstance: `draw:${state.drawBatchSerial}`,
     }, events, { allowNested: true })
   }
@@ -870,12 +903,16 @@ function discardRandomFromHand(state, inv, n, events, { nonWeakness = false } = 
       .filter(item => canDiscardFromHand(inv, item.code) && (!nonWeakness || !isWeaknessCard(cardDef(item.code))))
     if (!candidates.length) break
     const chosen = candidates[Math.floor(randomValue(state) * candidates.length)]
-    const code = inv.hand.splice(chosen.index, 1)[0]
+    const code = spliceHand(inv, chosen.index, 1)[0]
+    if (!discardPlayerCardWithWindow(state, inv, code, 'hand', events, reactionWindow)) {
+      afterHandEmptied(state, inv, events, reactionWindow)
+      continue
+    }
     discarded.push(code)
-    discardPlayerCards(state, inv, code)
     info(state, events, `${inv.name} 弃掉了「${cardName(code)}」。`)
-    afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
+    afterHandDiscard(state, inv, code, events, reactionWindow, cardName, { deferBatch: true })
   }
+  afterHandDiscardBatch(state, inv, discarded, events, reactionWindow)
   return discarded
 }
 

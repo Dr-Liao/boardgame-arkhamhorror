@@ -13,7 +13,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import '../src/engine/engine.js'
+import { getStat, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { enemy, fixture } from './core-fixture.mjs'
 import { behavior } from '../content/campaigns/theDreamEaters/scenarios/aThousandShapesOfHorror/behavior.js'
 import { scenario as definition, STAIRS_IDS } from '../content/campaigns/theDreamEaters/scenarios/aThousandShapesOfHorror/definition.js'
 import { tshChaosToken, tshChaosAfterTest } from '../content/campaigns/theDreamEaters/scenarios/aThousandShapesOfHorror/chaos.js'
@@ -44,6 +46,16 @@ import treachery06194 from '../src/cards/encounter-entries/theDreamEaters/aThous
 const CLONE = value => JSON.parse(JSON.stringify(value))
 const THE_UNNAMABLE = '06169b'
 const ACT_CARD = '06172'
+
+function runResolution(state, resolve, select = () => null) {
+  resolveTransaction(state, 0, { action: 'acceptanceShard5' }, resolve)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 20, '选择必须收敛')
+    const choice = state.pendingChoice
+    const id = select(choice) ?? choice.options.find(item => item.id === 'self')?.id ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, resolve)
+  }
+}
 
 function createState (overrides = {}) {
   const state = {
@@ -662,22 +674,25 @@ test('06-a5 06187 神秘阶梯：揭示时移动不可名状之物，伤害不�
 })
 
 // ---------------------------------------------------------------------------
-// 06188 神秘阶梯：移动/撤退的额外费用——弃 1 张含 2 个相同技能图标的手牌
+// 06188 神秘阶梯：真实手牌支付、位置与弃牌守恒
 // ---------------------------------------------------------------------------
-test('06-a5 06188 神秘阶梯：移动/撤退前弃含 2 个相同技能图标的手牌', () => {
-  const state = createState()
-  state.locations.push({ ...CLONE(definition.locations.mysteriousStairs6), id: 'mysteriousStairs6', revealed: true })
+test('06-a5 06188 神秘阶梯：移动/撤退费用可用一张双图标或两张同图标牌支付', () => {
+  const state = fixture()
   const inv = state.investigators[0]
-  inv.location = 'mysteriousStairs6'
-  inv.hand = ['01020'] // 01020 砍刀只有 1 个战斗图标：不合格
-  assert.match(String(location06188.locationRule.moveError(state, inv, 'burialGround')), /不能移动/, '没有合格手牌时不能移动')
-  inv.hand = ['01020', '01089'] // 01089 胆量有 2 个意志图标
-  assert.equal(location06188.locationRule.moveError(state, inv, 'burialGround'), undefined, '有合格手牌时可以移动')
-  const paid = location06188.locationRule.beforeMove(state, inv, 'burialGround', createApi(state))
-  assert.equal(paid, true, '移动前结算弃牌费用')
-  assert.deepEqual(inv.hand, ['01020'], '弃掉含 2 个相同技能图标的手牌')
-  const resignPaid = location06188.locationRule.beforeResign(state, inv, createApi(state))
-  assert.equal(resignPaid, false, '再次撤退时已无合格手牌，费用付不起')
+  const rule = location06188.locationRule
+  inv.hand = ['01020']
+  assert.match(rule.moveError(state, inv), /不能移动/)
+  inv.hand = ['01020', '01089']
+  assert.equal(rule.moveError(state, inv), undefined)
+  runResolution(state, current => rule.beforeMove(current, current.investigators[0], null, scenarioRuntime(current, [])),
+    choice => choice.options.find(option => option.cardCode === '01089')?.id)
+  assert.deepEqual(state.investigators[0].hand, ['01020'])
+  assert.deepEqual(state.investigators[0].discard, ['01089'])
+  assert.equal(rule.beforeResign(state, state.investigators[0], scenarioRuntime(state, [])), false)
+  state.investigators[0].hand = ['01020', '01020']
+  runResolution(state, current => rule.beforeResign(current, current.investigators[0], scenarioRuntime(current, [])))
+  assert.deepEqual(state.investigators[0].hand, [])
+  assert.deepEqual(state.investigators[0].discard, ['01089', '01020', '01020'])
 })
 
 // ---------------------------------------------------------------------------
@@ -699,27 +714,32 @@ test('06-a5 06189 银钥匙：横置取消即将受到的 1 点恐惧', () => {
 // ---------------------------------------------------------------------------
 // 06191 难以描述的鬼魅：显现进威胁区；[action][action] 弃掉
 // ---------------------------------------------------------------------------
-test('06-a5 06191 难以描述的鬼魅：显现进入威胁区域并提供 2 行动摆脱', () => {
-  const state = createState()
+test('06-a5 06191 难以描述的鬼魅：只在不可名状之物同地点时降低全部技能，并提供 2 行动摆脱', () => {
+  const state = fixture()
   const inv = state.investigators[0]
-  const api = createApi(state)
-  const handled = treachery06191.encounterResolve(state, inv, byCode('06191'), api)
-  assert.equal(handled, true, '显现返回已放置')
-  assert.equal(inv.threat.length, 1, '进入威胁区域')
-  assert.equal(treachery06191.threatAction.actions, 2, '[action][action] 摆脱费用为 2 行动')
-  assert.equal(treachery06191.threatAction.noTest, true, '摆脱不需要检定')
+  const skills = ['willpower', 'intellect', 'combat', 'agility']
+  const baseline = skills.map(skill => getStat(state, inv, skill))
+  const api = scenarioRuntime(state, [])
+  assert.equal(treachery06191.encounterResolve(state, inv, byCode('06191'), api), true)
+  const unnamable = enemy(state, { code: THE_UNNAMABLE, originalCode: THE_UNNAMABLE, engagedSeat: null })
+  assert.deepEqual(skills.map(skill => getStat(state, inv, skill)), baseline.map(value => value - 1))
+  unnamable.location = 'elsewhere'
+  assert.deepEqual(skills.map(skill => getStat(state, inv, skill)), baseline)
+  assert.equal(treachery06191.threatAction.actions, 2)
+  assert.equal(treachery06191.threatAction.noTest, true)
 })
 
-// ---------------------------------------------------------------------------
-// 06192 发光的眼睛：显现进入威胁区域
-// ---------------------------------------------------------------------------
-test('06-a5 06192 发光的眼睛：显现进入威胁区域（轮末恐惧见失败清单）', () => {
-  const state = createState()
+test('06-a5 06192 发光的眼睛：轮末计入威胁区本卡及交战敌人，至多 3 恐惧后弃掉本卡', () => {
+  const state = fixture()
   const inv = state.investigators[0]
-  const handled = treachery06192.encounterResolve(state, inv, byCode('06192'), createApi(state))
-  assert.equal(handled, true)
-  assert.equal(inv.threat.length, 1, '进入威胁区域')
-  assert.equal(inv.threat[0].code, '06192')
+  assert.equal(treachery06192.encounterResolve(state, inv, byCode('06192'), scenarioRuntime(state, [])), true)
+  inv.threat.push(byCode('06191'))
+  enemy(state)
+  enemy(state)
+  runResolution(state, current => reactionWindow(current, 'roundEnds', { when: 'roundEnds', round: current.round }, []))
+  assert.equal(state.investigators[0].horror, 3)
+  assert.deepEqual(state.investigators[0].threat.map(card => card.code), ['06191'])
+  assert.deepEqual(state.encounterDiscard, ['06192'])
 })
 
 // ---------------------------------------------------------------------------

@@ -7,7 +7,10 @@
 // 依赖方向：encounter-entries/<归属>/<code>.js → _shared.js → engine/matcher.js / cards-data.js。
 // 条目文件不得 import 聚合入口或 engine.js。
 
+import { spliceHand } from '../../engine/hand-icons.js'
+export { spliceHand }
 import { hasTrait } from '../../engine/matcher.js'
+import { barrierEdges } from '../../engine/edge-barriers.js'
 import { canClaimKey, canGiveKeys } from '../../engine/scenario-keys.js'
 import { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard } from '../../engine/vehicle-state.js'
 // 2026-11-04 合并：backup 侧的 A2 共享工厂（floodBottommost 等）用 floodLevel 读水位。
@@ -19,7 +22,18 @@ import { entryByCode } from './_lookup.js'
 import { traitLabel } from '../trait-labels.js'
 
 export { vehicleOf, vehiclePassengers, vehicleRecord, vehicleCard }
+export { hasPrintedVictory } from '../../engine/victory-destination.js'
+export { canDiscardEntireHand } from '../../engine/player-zones.js'
 export { markerLabelsOf } from '../card-marker-labels.js'
+export { cannotLeaveHand } from '../../engine/ability.js'
+export { highestCounter } from '../../engine/counters.js'
+export { referenceMarkerCount } from '../../engine/marker-count.js'
+export { sealsOf } from '../../campaign/eote-seals.js'
+export { canAttachToLocation } from '../../engine/location-attachments.js'
+export { canChangeChaosToken } from '../../engine/chaos-reveal.js'
+export { frostPoolRoom } from '../../engine/frost.js'
+export { tekeliDeckSize } from '../../engine/eote-tekeli.js'
+export { collapsedTowers, towerDamagePrevented, towerState } from '../../engine/eote-facilities.js'
 
 // 「如果你是本载具的司机」的读法：司机记在 mechanicState.vehicles[id].driver 上。
 export function vehicleDriverOf(state, id) {
@@ -145,12 +159,15 @@ export const isWeaknessCode = code => ['weakness', 'basicweakness'].includes(ALL
 // 条目内需要检查「某卡号」的印刷数据（类型/特性/名称）时的唯一入口：
 // 单卡文件不得直接 import cards-data.js（encounter-entries.test 守卫），统一走本 helper。
 export const cardDefinition = code => ALL_CARDS[code] || null
-export function teamOnce(state, key, scope = 'phase') {
-  const flags = state.scenarioFlags ||= {}
-  const bucket = (flags.teamOnce ||= {})
-  const tag = `${key}:${state.round}:${scope === 'round' ? 'r' : state.phase}`
-  if (bucket[tag]) return false
-  bucket[tag] = true
+const teamOnceTag = (state, key, scope) => `${key}:${state.round}:${scope === 'round' ? 'r' : state.phase}`
+export function teamOnceUsed(state, key, scope = 'phase') {
+  return Boolean(state.scenarioFlags?.teamOnce?.[teamOnceTag(state, key, scope)])
+}
+export function teamOnce(state, api, key, scope = 'phase') {
+  const tag = teamOnceTag(state, key, scope)
+  const limits = state.scenarioFlags?.teamOnce || {}
+  if (limits[tag]) return false
+  api.setScenarioFlag('teamOnce', { ...limits, [tag]: true })
   return true
 }
 export function discoverAt(state, api, inv, location, amount) {
@@ -168,7 +185,7 @@ export function shuffleDeckWith(state, inv, api) {
     ;[inv.deck[index], inv.deck[target]] = [inv.deck[target], inv.deck[index]]
   }
 }
-// 第 109 轮：幽嘶深渊的追击区 helper（从 behavior 复制，供条目使用）。
+// 幽嘶深渊的追击敌人候选和排序。
 export function tfaPursuitEvade(state, entry) {
   const printed = Number(state.scenario.enemies?.[entry.code]?.evade || 0)
   const depth = Math.max(1, Number(state.scenarioFlags?.depthLevel || 1))
@@ -188,16 +205,36 @@ export function tfaPlacePursuit(state, api) {
         id: String(index), label: state.scenario.enemies?.[entry.code]?.name || entry.code,
       })),
     }))] || candidates[0]
-  const index = pursuit.indexOf(chosen)
-  if (index >= 0) pursuit.splice(index, 1)
   const start = state.scenarioFlags?.depthStartLocation
-  const enemy = api.spawn(chosen.code, start)
-  if (!enemy) { pursuit.push(chosen); return null }
-  enemy.damageTaken = chosen.damageTaken || 0
-  if (chosen.code === '04062' && chosen.resources) enemy.harbingerResources = chosen.resources
+  const enemy = api.spawnPursuingEnemy(chosen, start)
+  if (!enemy) return null
   api.info?.(`追击中的「${enemy.name}」在「${start}」现身。`)
   return enemy
 }
+// 显现时指定一名调查员承受诡计，下一次对应伤害类型触发额外伤害并弃牌。
+export function threatHarmEncounter(code, trigger, { surge = false, campaigns = [] } = {}) {
+  return {
+    code, scope: 'treachery', implemented: true, encounterResolveCampaigns: campaigns,
+    harmInterceptor: { trigger, extra: 2, discard: true },
+    encounterResolve(state, inv, card, api) {
+      const physicalCode = originalOf(card)
+      const candidates = activeInvestigators(state)
+      if (!candidates.length) return false
+      const picked = candidates.length === 1 ? candidates[0].seat : api.choose({
+        kind: 'investigator', source: physicalCode, seat: inv.seat,
+        prompt: `选择承受「${ALL_CARDS[physicalCode]?.nameZh || physicalCode}」的调查员。`,
+        options: candidates.map(target => ({ id: String(target.seat), label: target.name })),
+      })
+      const chosen = candidates.find(target => String(target.seat) === String(picked))
+      if (!chosen) throw new Error('必须选择一名调查员')
+      api.threat(chosen.seat, physicalCode)
+      if (!surge) return true
+      api.drawEncounter(inv.seat, { surgeDraw: true })
+      return { placed: true, surgeHandled: true }
+    },
+  }
+}
+
 // 第 101 轮：混乱袋永久加标记（谢幕使者被击败）。
 export function addPermanentChaosTokens(state, token, amount) {
   state.chaosBag = [...(state.chaosBag || []), ...Array(amount).fill(token)]
@@ -355,7 +392,7 @@ export function essexPassengerCompartment(state, inv, api, code, { skill, needed
   if (answer === 'harm') {
     if (damage) api.damage(inv.seat, damage)
     if (horror) api.horror(inv.seat, horror)
-  } else for (const index of answer.split(',').map(Number).sort((a, b) => b - a)) inv.discard.push(inv.hand.splice(index, 1)[0])
+  } else for (const index of answer.split(',').map(Number).sort((a, b) => b - a)) inv.discard.push(spliceHand(inv, index, 1)[0])
 }
 
 // 第 64 轮：剧情资产控制者选择（从 later-behaviors.chooseStoryController 复制，改用 api.choose）。
@@ -630,7 +667,6 @@ export function formLocationLineInEntry(state, api) {  const entryway = doomLoca
 }
 
 export function spawnHarbingerAtDoomInEntry(state, api) {
-  const flags = (state.scenarioFlags ||= {})
   if (!state.locations.length) return null
   const most = Math.max(...state.locations.map(location => location.doom || 0))
   const candidates = state.locations.filter(location => (location.doom || 0) === most)
@@ -640,16 +676,9 @@ export function spawnHarbingerAtDoomInEntry(state, api) {
     options: candidates.map(location => ({ id: location.id, label: `${location.name}（毁灭 ${location.doom || 0}）` })),
   })
   const locationId = (candidates.find(location => location.id === answer) || candidates[0]).id
-  takeFromSetAsideInEntry(state, '04062')
-  flags.harbingerSpawned = true
-  const enemy = api.spawn('04062', locationId)
-  const spawned = enemy || state.enemies.find(item => originalOf(item) === '04062') || null
-  if (spawned) {
-    if (!spawned.damageTaken && flags.harbingerDamage) spawned.damageTaken = flags.harbingerDamage
-    spawned.resources = spawned.resources || 0
-    spawned.tfaRetaliateWhileExhausted = true
-  }
-  return spawned
+  api.takeFromSetAside('04062')
+  api.setScenarioFlag('harbingerSpawned')
+  return api.spawn('04062', locationId)
 }
 
 // 第 114 轮：邪秽誓约的「随机怪物」池（从 theUnspeakableOath 的 behavior 复制）。
@@ -682,16 +711,19 @@ export const pursuitFightOf = (state, code) => Number(pursuitDefinitionOf(state,
 export const isPoisonedInvestigator = inv => (inv?.threat || []).some(card => originalOf(card) === '04102')
   || inv?.poisoned === true
 export const locationOfInvestigator = (state, inv) => (state.locations || []).find(location => location.id === inv?.location)
-// 探索牌库洗混：与章节 behavior 的 mix() 同序（优先 api.shuffle，退化为 Fisher–Yates）。
-export function mixIntoEntry(state, api, list) {
-  if (typeof api?.shuffle === 'function') return api.shuffle([...list])
-  const copy = [...list]
-  const random = () => api?.random?.() ?? 0.5
-  for (let index = copy.length - 1; index > 0; index--) {
-    const target = Math.floor(random() * (index + 1))
-    ;[copy[index], copy[target]] = [copy[target], copy[index]]
+// 猎物离场后，兄弟会暴露的背面仍需要其印刷卡号与最后所在地点。
+export function rememberIchtacasPrey(state, enemy, api) {
+  if (!enemy) return
+  const flags = state.scenarioFlags || {}
+  const prey = flags.ichtacasPrey || []
+  if (!prey.includes(enemy.id)) api.setScenarioFlag('ichtacasPrey', [...prey, enemy.id])
+  const code = originalOf(enemy)
+  if (flags.ichtacasPreyCodes?.[enemy.id] !== code) {
+    api.setScenarioFlag('ichtacasPreyCodes', { ...flags.ichtacasPreyCodes, [enemy.id]: code })
   }
-  return copy
+  if (flags.ichtacasPreyLocations?.[enemy.id] !== enemy.location) {
+    api.setScenarioFlag('ichtacasPreyLocations', { ...flags.ichtacasPreyLocations, [enemy.id]: enemy.location })
+  }
 }
 
 // 第 115 轮：课外活动的实验体沿最短路走向目标地点（原 behavior.moveExperiment 的 BFS）。
@@ -785,6 +817,68 @@ import { capturedAtLocation as capturedSeatsAt } from '../../engine/capture.js'
 
 
 import { keysAt as heldKeysQuery, keysHeldAtLocation as localHeldKeysQuery, keysHeldByGroup as groupKeysQuery } from '../../engine/scenario-keys.js'
+export function randomKeyOnReveal(state, location, api) {
+  return api.mechanics.keys.placeRandom(`location:${location.id}`)
+}
+
+export function removeBarrierParley({ label, cost, kind = 'action', test, requiresNoClues = false, additionalTokenCost }) {
+  const skillLabels = { willpower: '意志', intellect: '智力', combat: '战力', agility: '敏捷' }
+  return {
+    kind, actionKind: 'parley', label, cost,
+    ...(additionalTokenCost ? { additionalTokenCost } : {}),
+    ...(!test ? { criteria: ({ state, source }) => (!requiresNoClues || !source.clues)
+      && barrierEdges(state, source.id).some(edge => edge.count > 0) } : {}),
+    resolve: context => {
+      const { inv, source, api } = context
+      if (!test) return api.barriers.removeConnected(inv.seat, source.id)
+      const difficulty = typeof test.difficulty === 'function' ? test.difficulty(context) : test.difficulty
+      const lowest = test.skill === 'lowest'
+      let skills = Array.isArray(test.skill) ? test.skill : [test.skill]
+      if (lowest) {
+        const rated = Object.keys(skillLabels).map(skill => [skill, api.stat(inv.seat, skill)])
+        const minimum = Math.min(...rated.map(([, value]) => value))
+        skills = rated.filter(([, value]) => value === minimum).map(([skill]) => skill)
+      }
+      const code = originalOf(source)
+      const skill = skills.length === 1 ? skills[0] : api.choice({
+        kind: 'skill', source: code, seat: inv.seat,
+        prompt: lowest ? '选择一个并列最低的技能进行检定。' : '选择本次谈判检定的技能。',
+        options: skills.map(id => ({ id, label: lowest ? skillLabels[id] : `${skillLabels[id]}(${difficulty})` })),
+      })
+      if (!skills.includes(skill)) return
+      return api.test(inv.seat, skill, difficulty, {
+        source: { type: 'scenario', action: 'parley', code, name: source.name, ability: true },
+        target: { kind: 'location', id: source.id }, actionKind: 'parley',
+        resolve: result => { if (result.success) api.barriers.removeConnected(inv.seat, source.id) },
+      })
+    },
+  }
+}
+
+export function dagonOathFront() {
+  const suspect = { when: ({ state, entity }) => state.enemies.includes(entity) && hasTrait(entity, 'Suspect') }
+  const obstaclesAt = (state, id) => (state.locations.find(location => location.id === id)?.attachments || [])
+    .filter(card => hasTrait(ALL_CARDS[originalOf(card)], 'Obstacle'))
+  return {
+    modifiers: [
+      { target: 'enemyHealth', amount: ({ state }) => state.numInvestigators, condition: suspect },
+      { target: 'loses:aloof', condition: suspect },
+      { target: 'cannot:parley', condition: suspect },
+    ],
+    abilities: [{
+      kind: 'free', actionKind: 'activate', range: 'anywhere',
+      label: '花费蓝色、红色、白色或黄色钥匙：弃掉你所在地点的每张[[屏障]]卡牌',
+      additionalKeyCost: { colors: ['blue', 'red', 'white', 'yellow'], scope: 'self' },
+      criteria: ({ state, inv }) => obstaclesAt(state, inv.location).length > 0,
+      resolve: ({ state, inv, api }) => {
+        const obstacles = obstaclesAt(state, inv.location)
+        for (const attachment of obstacles) api.scenario.detachEncounterAttachment(attachment)
+        if (obstacles.length) api.info?.(`🪨 弃掉所在地点的 ${obstacles.length} 张[[屏障]]。`)
+      },
+    }],
+  }
+}
+
 export function keyedFlashbackAbility({ key, keyCount, flashback, requiresNoClues = true, label }) {
   return { kind: 'free', actionKind: 'activate', label,
     limit: { scope: 'perGame', owner: 'group' },
@@ -1376,7 +1470,12 @@ export function shiftAttachedKeys(source, { api, inv = null, state = null } = {}
       const record = api.tsk.keys.get(id)
       if (!record) break
       const face = record.stable ? record.stableFace : record.unstableFace
-      entryByCode(String(face))?.assetRule?.keyShift?.resolve?.({ state, api, inv, keyId: id, enemyId: source.id })
+      const rule = entryByCode(String(face))?.assetRule
+      if (rule?.shift) {
+        api.tsk.keys.shift(id, { force: true, by: 'enemy', seat: inv?.seat })
+        continue
+      }
+      rule?.keyShift?.resolve?.({ state, api, inv, keyId: id, enemyId: source.id })
       if (record.stable) api.tsk.keys.shift(id, { force: true })
       resolved += 1
     }

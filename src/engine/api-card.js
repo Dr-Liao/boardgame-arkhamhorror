@@ -1,10 +1,13 @@
+import { spliceHand } from './hand-icons.js'
 import { discardPlayerCards, splicePlayerDiscard } from './player-zones.js'
 import { bondedSetKey } from './bonded.js'
 import { notifyPlacedAsset } from './investigator-mechanics.js'
 import { putInHand } from './hand-entry.js'
 import { attachControlledAsset, claimHostedAsset } from './hosted-assets.js'
 import { createChaosReveal } from './chaos-reveal.js'
+import { withBaseTestValue } from './test-deferred-effects.js'
 import { currentEffectSource } from './effect-provenance.js'
+import { canLeaveControlledAsset } from './asset-departure.js'
 ﻿// 能力 API · 卡牌与状态写入口（Phase 6 · 6d-7 第一批）。
 //
 // `abilityApi(state, events)` 是个 179 个方法的巨型对象，按域拆开的第一块：
@@ -20,6 +23,10 @@ export function createCardApi(state, events, deps) {
     retrieveBonded,
     shuffleBondedCopyIntoDeck,
     returnBonded,
+    bondedHas,
+    bondedTake,
+    bondedStore,
+    attachCardTo,
     CLASS_NAMES,
     beginChaosTest,
     cardDef,
@@ -79,7 +86,7 @@ export function createCardApi(state, events, deps) {
           || enumerateTargets(state, inv, descriptor.target, { source }).length))
   }
 
-  const resolveCardAbility = (seat, source, { abilityIndex, ignoreCosts = false, ignoreActionCost = false, actionOnly = false, countsAs = null } = {}) => {
+  const resolveCardAbility = (seat, source, { abilityIndex, ignoreCosts = false, ignoreActionCost = false, actionOnly = false, countsAs = null, baseValue, targetId: requiredTarget, skill } = {}) => {
     const inv = state.investigators[seat]
     const revealed = typeof source === 'string' || (source && !inv?.assets.includes(source) && source.id)
     source = abilitySource(source)
@@ -87,20 +94,39 @@ export function createCardApi(state, events, deps) {
     if (!picked) return false
     const { descriptor } = picked
     const targets = enumerateTargets(state, inv, descriptor.target, { source })
-    let targetId = null
-    if (targets.length) targetId = targets.length === 1 ? String(targets[0].id) : requestChoice(state, {
+    let targetId = requiredTarget == null ? null : String(requiredTarget)
+    if (targets.length && targetId == null) targetId = targets.length === 1 ? String(targets[0].id) : requestChoice(state, {
       kind: 'target', source: source.code, seat, prompt: '选择这项能力的目标。',
       options: targets.map(target => ({ id: String(target.id), label: target.label })),
     })
     if (targets.length && !targets.some(target => String(target.id) === targetId)) return false
     const previous = state._revealedAbility
+    const previousFight = state._configuredAbilityFight
+    if (countsAs === 'fight' && (requiredTarget != null || skill)) {
+      state._configuredAbilityFight = { seat, sourceId: source.id, targetId, skill }
+    }
     if (revealed) state._revealedAbility = { seat, source, abilityIndex: picked.index }
     try {
-      return executeDescriptor(state, { inv, source, descriptor, context: { targetId }, events, ignoreCosts, ignoreActionCost })
+      return withBaseTestValue(state, seat, baseValue, () =>
+        executeDescriptor(state, { inv, source, descriptor, context: { targetId }, events, ignoreCosts, ignoreActionCost }))
     } finally {
       if (previous) state._revealedAbility = previous
       else delete state._revealedAbility
+      if (previousFight) state._configuredAbilityFight = previousFight
+      else delete state._configuredAbilityFight
     }
+  }
+
+  function detachControlledAsset(inv, host, asset) {
+    delete asset.attachedToAsset
+    host.attachments = host.attachments.filter(card => !card.assetReference || card.id !== asset.id)
+    const otherAssets = inv.assets.filter(card => card !== asset)
+    if (!canEquip({ ...inv, assets: otherAssets }, cardDef(asset.code))) {
+      inv.assets = otherAssets
+      replaceAssets(state, inv, cardDef(asset.code), events)
+      inv.assets.push(asset)
+    }
+    return true
   }
 
   const putIntoPlay = (seat, code, { attachToAssetId = null, handIndex = null } = {}) => {
@@ -114,7 +140,7 @@ export function createCardApi(state, events, deps) {
       info(state, events, `⛔ 「${cardName(code)}」当前不能放置入场。`)
       return null
     }
-    inv.hand.splice(index, 1)
+    spliceHand(inv, index, 1)
     const asset = newPlayerAssetInstance(state, inv, code)
     if (host) {
       asset.attachedToAsset = host.id
@@ -137,22 +163,26 @@ export function createCardApi(state, events, deps) {
     },
     attachControlledAsset: (seat, assetId, kind, hostId) => attachControlledAsset(state, seat, assetId, kind, hostId),
     claimHostedAsset: (seat, kind, hostId, assetId) => claimHostedAsset(state, seat, kind, hostId, assetId, { canEquip, cardDef }),
-    attachOrSwapControlledAsset: (seat, hostId, assetId) => {
+    attachOrSwapControlledAsset: (seat, hostId, assetId, { maximum = 1, replaceId = undefined } = {}) => {
       const inv = state.investigators[seat]
       const host = inv?.assets.find(asset => asset.id === hostId)
       const incoming = inv?.assets.find(asset => asset.id === assetId && !asset.attachedToAsset)
       if (!host || !incoming || host === incoming) return false
-      const current = inv.assets.find(asset => asset.attachedToAsset === host.id)
-      if (current) delete current.attachedToAsset
+      const attached = inv.assets.filter(asset => asset.attachedToAsset === host.id)
+      const current = replaceId == null ? (replaceId === undefined && maximum === 1 ? attached[0] : null)
+        : attached.find(asset => asset.id === replaceId)
+      if (replaceId != null && !current || !current && attached.length >= maximum) return false
       incoming.attachedToAsset = host.id
-      if (current && !canEquip({...inv,assets:inv.assets.filter(asset=>asset.id!==current.id)},cardDef(current.code))) {
-        inv.assets=inv.assets.filter(asset=>asset.id!==current.id)
-        replaceAssets(state,inv,cardDef(current.code),events)
-        inv.assets.push(current)
-      }
-      host.attachments = (host.attachments || []).filter(card => !card.assetReference)
+      host.attachments ||= []
       host.attachments.push({ id: incoming.id, code: incoming.code, ownerSeat: seat, assetReference: true })
+      if (current) detachControlledAsset(inv, host, current)
       return true
+    },
+    detachControlledAsset: (seat, hostId, targetId) => {
+      const inv = state.investigators[seat]
+      const host = inv?.assets.find(asset => asset.id === hostId)
+      const attached = inv?.assets.find(asset => asset.id === targetId && asset.attachedToAsset === hostId)
+      return Boolean(host && attached) && detachControlledAsset(inv, host, attached)
     },
     repeatResolvedAbility: context => {
       const inv = state.investigators[context?.seat]
@@ -202,7 +232,7 @@ export function createCardApi(state, events, deps) {
         || incoming?.type !== 'asset' || !matches(outgoing) || !matches(incoming) || cost(incoming) > cost(outgoing)) return false
       if (!canEquip({ ...inv, assets: inv.assets.filter(item => item !== asset) }, incoming)) return false
       const slot = inv.assets.indexOf(asset)
-      inv.hand.splice(handIndex, 1)
+      spliceHand(inv, handIndex, 1)
       asset.returnedToHand = true
       leaveAsset(state, inv, asset, events)
       putInHand(state, state.investigators[asset.ownerSeat] || inv, asset.originalCode || asset.code)
@@ -224,6 +254,58 @@ export function createCardApi(state, events, deps) {
     // 主卡与副本的关系来自卡面数据（bondedCards / bondedTo），引擎不认卡号。
     bonded: {
       group: code => bondedGroupOf(code),
+      has: (seat, code) => bondedHas(state, state.investigators[seat], code),
+      attachToEnemy: (seat, code, enemy) => {
+        const inv = state.investigators[seat]
+        if (!inv || !state.enemies.includes(enemy) || !bondedTake(state, inv, code)) return null
+        const card = attachCardTo(state, seat, code, enemy, { hostEnemyId: enemy.id })
+        if (!card) bondedStore(state, inv, code)
+        return card
+      },
+      putAssetIntoPlay: (seat, code) => {
+        const inv = state.investigators[seat]
+        const definition = cardDef(code)
+        if (!inv || definition?.type !== 'asset' || !bondedTake(state, inv, code)) return null
+        replaceAssets(state, inv, definition, events)
+        const asset = newPlayerAssetInstance(state, inv, code, { ownerSeat: seat })
+        inv.assets.push(asset)
+        notifyPlacedAsset(state, seat, asset, events, reactionWindow)
+        return asset
+      },
+      swapAsset: (seat, source, nextCode, { transferUses = false } = {}) => {
+        const inv = state.investigators[seat]
+        const outgoing = bondedGroupOf(source?.code)
+        const incoming = bondedGroupOf(nextCode)
+        if (!outgoing || !incoming || outgoing.main !== incoming.main || source.code === nextCode
+          || cardDef(nextCode)?.type !== 'asset' || !canLeaveControlledAsset(state, inv, source)) return null
+        const owner = state.investigators[source.ownerSeat ?? seat]
+        if (!bondedTake(state, owner, nextCode)) return null
+        const fields = { ownerSeat: owner.seat }
+        if (transferUses && source.uses != null) {
+          fields.uses = source.uses
+          fields.usesType = source.usesType
+        }
+        if (source.location != null) fields.location = source.location
+        bondedStore(state, owner, source.originalCode || source.code)
+        const replacement = newPlayerAssetInstance(state, inv, nextCode, {
+          ...fields, id: source.id, enteredRound: source.enteredRound,
+        })
+        for (const key of ['damage', 'horror', 'doom', 'clues', 'resources', 'counters', 'attachments', 'beneath']) {
+          if (Object.hasOwn(source, key)) replacement[key] = source[key]
+        }
+        inv.assets[inv.assets.indexOf(source)] = replacement
+        return replacement
+      },
+      returnAsset: (seat, source) => {
+        const inv = state.investigators[seat]
+        if (!source || source.returnedToHand || !inv) return false
+        if (inv.assets.includes(source) && leaveAsset(state, inv, source, events, { reason: 'bonded' }) === false) return false
+        if (source.returnedToHand) return true
+        const owner = state.investigators[source.ownerSeat ?? seat]
+        if (!bondedStore(state, owner, source.originalCode || source.code)) return false
+        source.returnedToHand = true
+        return true
+      },
       retrieve: (seat, mainCode, options = {}) => retrieveBonded(state, state.investigators[seat], mainCode, { ...options, events }),
       shuffleCopyIntoDeck: (seat, main, code) => shuffleBondedCopyIntoDeck(state, state.investigators[seat], main, code),
       return: (seat, mainCode) => returnBonded(state, state.investigators[seat], mainCode, { events }),

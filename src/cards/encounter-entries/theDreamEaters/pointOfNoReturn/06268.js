@@ -4,16 +4,7 @@
 //
 // 显现检定用 api.test（失败差值逐点结算）；每个失败点三选一（无法执行的选项不提供）。
 
-const EMPTY = Object.freeze({ state: null, inv: null })
-
-function nearestEnemy(state, inv) {
-  const enemies = (state.enemies || []).filter(enemy => !enemy.defeated)
-  const here = enemies.find(enemy => enemy.location === inv.location)
-  if (here) return here
-  const location = (state.locations || []).find(entry => entry.id === inv.location)
-  const neighbors = new Set(location?.connections || [])
-  return enemies.find(enemy => neighbors.has(enemy.location)) || null
-}
+import { failedBy } from '../../_shared.js'
 
 export default {
   code: '06268',
@@ -22,12 +13,14 @@ export default {
   encounterResolve(state, inv, card, api) {
     api.test?.(inv.seat, 'willpower', 3, result => {
       if (result.success) return
-      const failedBy = Math.max(0, 3 - Number(result.value ?? 0))
-      for (let index = 0; index < failedBy; index += 1) {
+      const failures = failedBy(result, 3)
+      for (let index = 0; index < failures; index += 1) {
         const options = []
-        if (Number(inv.clues || 0) > 0) {
-          options.push({ id: 'location', label: '将你的 1 个线索放到你所在地点' })
-          if (nearestEnemy(state, inv)) {
+        const location = state.locations.find(entry => entry.id === inv.location)
+        const enemies = inv.clues > 0 ? api.nearestEnemies(inv, { fallback: true }) : []
+        if (inv.clues > 0) {
+          if (location) options.push({ id: 'location', label: '将你的 1 个线索放到你所在地点' })
+          if (enemies.length) {
             options.push({ id: 'enemy', label: '将你的 1 个线索放到最近的敌人上' })
           }
         }
@@ -39,10 +32,16 @@ export default {
             prompt: '「鲜血的滋味」：选择一项。', options,
           }) ?? options[0].id)
         if (answer === 'location') {
-          api.placeClues?.(inv.seat, 1)
+          const amount = api.loseClues(inv.seat, 1)
+          if (amount) api.addCluesToLocation(location.id, amount)
           api.info?.(`🩸 ${inv.name} 把 1 个线索放到「${state.locations?.find(entry => entry.id === inv.location)?.name || ''}」。`)
         } else if (answer === 'enemy') {
-          const enemy = nearestEnemy(state, inv)
+          const id = enemies.length === 1 ? enemies[0].id : api.choose({
+            kind: 'enemy', source: '06268', seat: inv.seat,
+            prompt: '选择最近的敌人放置线索。',
+            options: enemies.map(enemy => ({ id: enemy.id, label: enemy.name || enemy.id })),
+          })
+          const enemy = enemies.find(candidate => candidate.id === id)
           if (enemy) {
             api.moveClueToEnemy?.(enemy, { from: 'investigator', seat: inv.seat })
             api.info?.(`🩸 ${inv.name} 把 1 个线索放到「${enemy.name}」上。`)

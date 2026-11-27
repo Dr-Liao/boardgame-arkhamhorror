@@ -1,15 +1,30 @@
-// 08721 罗尔德·埃尔斯沃思（Roald Ellsworth） · 剧情资产（伙伴）· expedition_team
-// 归属：战役共用 · edgeOfTheEarth/_shared（开局/关卡由章节按 Partner 原语交给调查员）。
-// 卡面：伙伴。使用(5补给)。[free]任意调查员回合期间，横置并花费 1 补给：选择一张附属到任意地点的诡计，其印刷文本框视为空白直到本回合结束。
-// 读点：条目 uses/usesType 提供「使用(N secret/supply/ammo/resources)」次数（实例创建时由
-//   campaign 侧照抄）；主动/反应能力走 abilities 描述子，写入只走 ctx.api。
+// 08721 罗尔德·埃尔斯沃思 · 伙伴。使用（5 补给）。
+const CODE = '08721'
+
+const attachedAtLocation = location => (location.attachments || []).filter(attachment => attachment.code)
 
 export default {
-  code: '08721', scope: 'storyAsset', implemented: true,
-  flags: { partner: true, partnerRules: { free: 'blankNonWeaknessTreacheryText' } },
+  code: CODE, scope: 'storyAsset', implemented: true,
+  flags: { partner: true },
   uses: 5, usesType: 'supplies',
-  note: '「把地点附属诡计的印刷文本框视为空白直到本回合结束」需要引擎的临时文本空白读点（P7 读点请求 primitive-requests/p7-08721.json）；条目先声明伙伴数据与能力条件。',
-  abilities: [],
+  betweenActionsAnyTurn: true,
+  abilities: [{
+    kind: 'free', actionKind: 'activate',
+    label: '横置并花费 1 补给：令地点附属诡计的文本框视为空白至回合结束',
+    cost: { exhaust: true, uses: 1 },
+    criteria: ({ state, helpers }) => state.phase === 'investigation'
+      && state.locations.some(location => attachedAtLocation(location).some(attachment => helpers.cardType(attachment.code) === 'treachery')),
+    resolve: ({ inv, api }) => {
+      const candidates = api.cardsInPlayTreacheries().filter(card => card.hostType === 'location')
+      if (!candidates.length) return
+      const id = candidates.length === 1 ? candidates[0].attachment.id : api.choice({
+        kind: 'card', source: CODE, seat: inv.seat, prompt: '选择要视为空白的地点附属诡计。',
+        options: candidates.map(({ attachment, code, host }) => ({
+          id: attachment.id, cardCode: code, label: api.cardName(code) + '（' + host.name + '）',
+        })),
+      })
+      const target = candidates.find(card => card.attachment.id === id)
+      if (target) api.blankLocationAttachment(target.attachment, { until: 'endOfTurn' })
+    },
+  }],
 }
-
-

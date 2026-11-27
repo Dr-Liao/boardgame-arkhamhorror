@@ -4,6 +4,8 @@ import { canChangeFloodLevel, floodLevel } from './flood.js'
 import { enemyIsPart } from './enemy-parts.js'
 import { registeredEntry } from './ability.js'
 import { normalizePatrolTarget } from './patrol-target.js'
+import { enemyTextBlanked } from './card-text.js'
+import { vehicleOf } from './vehicles.js'
 
 export { normalizePatrolTarget }
 
@@ -43,11 +45,22 @@ export function setEnemyKeywords(state, enemy, keywords, { enabled, throughRound
 
 // P7 TDC 11635：敌人「不能移动」可由条目 enemyRule.immobile 声明，也可由内容层
 // api.scenario.setEnemyKeywords(enemy, ['immobile'], ...) 动态改写；读点：relocateEnemy / 巡逻 / 猎手移动。
+export function enemyAttachmentRules(enemy) {
+  return (enemy?.attachments || []).flatMap(card =>
+    registeredEntry(card.originalCode || card.code)?.assetRule?.enemyAttachmentRule || [])
+}
+
+export function enemyIsMassive(state, enemy) {
+  return (!!enemy?.massive && !enemyTextBlanked(state, enemy)) || enemyAttachmentRules(enemy).some(rule => rule.massive)
+}
+
 export function enemyIsImmobile(state, enemy) {
+  if (enemy?.attachedToAssetId || enemyAttachmentRules(enemy).some(rule => rule.cannotMove)) return true
   const overridden = enemyKeywordOverride(state, enemy, 'immobile')
   if (overridden != null) return overridden
   if (enemy?.immobile) return true
-  return registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.immobile === true
+  const rule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
+  return rule?.immobile === true || (!enemyTextBlanked(state, enemy) && rule?.immobileWhile?.(state, enemy) === true)
 }
 
 export function enemyKeywordOverride(state, enemy, keyword) {
@@ -67,11 +80,22 @@ export function validateEnemyKeywords(state) {
   }
 }
 
+export function enemyAttackingDamageBonus(state, enemy, inv) {
+  if (enemyTextBlanked(state, enemy)) return 0
+  const bonus = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.attackDamageBonus
+  if (typeof bonus === 'function') return Number(bonus(state, enemy, inv)) || 0
+  if (bonus?.unlessTargetInVehicle && vehicleOf(state, inv.seat)) return 0
+  return Number(bonus?.amount) || 0
+}
+
 export function enemyHasAttackKeyword(state, enemy, keyword, printed, entryOf = registeredEntry) {
+  const here = state.locations.find(location => location.id === enemy.location)
+  if (!enemy.elite && entryOf(here?.originalCode || here?.code)?.locationRule?.enemyKeywordDisabled?.nonElite?.includes(keyword)) return false
   const overridden = enemyKeywordOverride(state, enemy, keyword)
   if (overridden != null) return overridden
-  if (printed || enemyHasLocationKeyword(state, enemy, keyword)) return true
   const entry = entryOf(enemy.originalCode || enemy.code)
+  const conditional = enemyTextBlanked(state, enemy) ? undefined : entry?.enemyRule?.keywordWhile?.(state, enemy, keyword)
+  if ((conditional ?? printed) || enemyHasLocationKeyword(state, enemy, keyword)) return true
   // P7 TDC 11727：「其上有伤害时获得警戒和反击」——条目级条件关键词（伤害清零即失效）。
   if (Array.isArray(entry?.enemyRule?.whileDamagedKeywords)
     && entry.enemyRule.whileDamagedKeywords.includes(keyword) && Number(enemy.damageTaken) > 0) return true
@@ -157,10 +181,10 @@ export function resolveElusive(state, enemy, enabled, deps) {
   return true
 }
 
-export function resolveElusiveAfterAttack(state, enemy, entryOf, runtime, blanked) {
+export function resolveElusiveAfterAttack(state, enemy, entryOf, runtime, blanked, ignore = () => false) {
   if (!enemy || enemy.exhausted || !state.enemies.includes(enemy) || blanked(enemy)) return false
   const printed = entryOf(enemy.originalCode || enemy.code)?.enemyRule?.elusive === true
-  if (!enemyHasAttackKeyword(state, enemy, 'elusive', printed, entryOf)) return false
+  if (!enemyHasAttackKeyword(state, enemy, 'elusive', printed, entryOf) || ignore()) return false
   const api = runtime()
   return resolveElusive(state, enemy, true, { blanked, choice: api.choose, move: api.moveEnemy,
     disengage: api.disengage, exhaust: api.exhaustEnemy })

@@ -21,24 +21,13 @@
 //      以替换标记继续结算 —— 与 05324 / 09049 同一读点）。
 //   · 「没有贡品则与破碎冠冕交换」的近似见 approximation。
 //
-// approximation（逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10134.json）：
-//   缺「绑定卡就地交换」原语 —— 反向交换要求破碎冠冕在手牌（10133 的交换会把它放在那里），
-//   然后 api.putAssetIntoPlay 放置入场 + 本卡返回手牌；印刷是本卡回到场外绑定集合。
+// 绑定卡交换直接在原支援槽位完成。
 const CODE = '10134'
 const BROKEN = '10133'
 
 function swapToBroken({ inv, source, api }) {
-  if (!(inv.hand || []).includes(BROKEN)) {
-    api.info('「暮光冠冕」：破碎冠冕不在手牌，无法交换（缺绑定卡就地交换原语）。')
-    return false
-  }
-  if (!api.putAssetIntoPlay(inv.seat, BROKEN)) {
-    api.info('「暮光冠冕」：破碎冠冕无法放置入场（槽位不满足）。')
-    return false
-  }
-  if (source) api.returnAssetToHand(inv.seat, source)
-  api.info('👑 「暮光冠冕」：没有贡品，与破碎冠冕交换（破碎冠冕入场，暮光冠冕返回手牌）。')
-  return true
+  if (!api.bonded.swapAsset(inv.seat, source, BROKEN, { transferUses: false })) return
+  api.info('暮光冠冕与破碎冠冕交换。')
 }
 
 export default {
@@ -47,8 +36,6 @@ export default {
   uses: 0,
   usesType: 'offerings',
   assetRule: { controlledTraitLimit: { trait: 'Mask', amount: 1 } },
-  simplified: true,
-  note: 'approximation: 缺「绑定卡就地交换」原语，反向交换要求破碎冠冕在手牌（10133 交换时放入），放置入场后本卡返回手牌而不是场外绑定集合，见 primitive-requests/10134.json。',
   abilities: [
     {
       kind: 'reaction',

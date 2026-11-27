@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { registerContentBundle } from '../content/registered.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import { manifest as tfaCampaignPack } from '../content/packs/tfaCampaign/manifest.js'
 import { manifest as tfaCampaignManifest } from '../content/campaigns/theForgottenAge/manifest.js'
 import * as shattered from '../content/campaigns/theForgottenAge/scenarios/shatteredAeons/index.js'
@@ -89,7 +90,15 @@ function makeApi(state, overrides = {}) {
     moves: [], tests: [], choices: [], removed: [], drawn: [], poisoned: [],
     advanceAct: 0, advanceAgenda: 0, shuffledDiscard: 0, discarded: [], defeatedEnemies: [],
   }
+  const runtime = scenarioRuntime(state, [])
   const api = {
+    takeFromVictory: runtime.takeFromVictory,
+    takeEncounterDiscard: runtime.takeEncounterDiscard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    addToExplorationDeck: runtime.addToExplorationDeck,
+    shuffleExploration: runtime.shuffleExploration,
+    setScenarioFlag: runtime.setScenarioFlag,
+    doomOn: runtime.doomOn,
     calls,
     info: text => calls.info.push(String(text)),
     random: () => 0.5,
@@ -1376,7 +1385,7 @@ test('破碎永世标志位有读取者：describe 显示、起始手牌只减�
   // 04318 背面重复揭示时时间之窗只洗入一次。
   state.explorationDeck = ['aPocketInTime']
   const act = { originalCode: '04318', code: '04318' }
-  shattered.behavior.actReveal(state, act, api)
-  shattered.behavior.actReveal(state, act, api)
+  shattered.behavior.actReveal(state, act, makeApi(state))
+  shattered.behavior.actReveal(state, act, makeApi(state))
   assert.equal(state.explorationDeck.filter(entry => entry === 'aPocketInTime').length, 1)
 })

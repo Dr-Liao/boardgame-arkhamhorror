@@ -18,15 +18,11 @@
 //     记录键 'classifiedNewSpecies' 与基础卡 10044 的 api.recordResearch 写点同源（FHV P7 战役日志）。
 //     卡面数据本身是 catalog-only，条目不提供任何 buildable 标记。
 //
-// approximation（逐条披露，见 artifacts/migration/fhv/primitive-requests/10059.json）：
-//   ① 窗口条件里的「隐藏值」读地点实例的 shroud + shroudMod；地点附属/章节钩子产生的**有效**
-//      隐藏值只有 api.locationShroud（结算期）能读，条件阶段没有对应 helper。
 const CODE = '10059'
 const GROWTH = 'growth'
 const UNCANNY_GROWTH = '10045'
 
 const growthOf = source => Math.max(0, Number(source?.uses) || 0)
-const shroudOf = location => Math.max(0, Number(location?.shroud || 0) + Number(location?.shroudMod || 0))
 
 function searchUncannyGrowth({ inv, api }) {
   const taken = api.bonded.retrieve(inv.seat, CODE, { handCount: 1 })
@@ -37,8 +33,6 @@ function searchUncannyGrowth({ inv, api }) {
 export default {
   code: CODE,
   name: 'Ravenous Myconid (Sentient Strain)',
-  simplified: true,
-  note: 'approximation: encounterDrawn 条件里的「隐藏值」用地点 shroud + shroudMod 计算；地点附属/章节钩子给的有效隐藏值需在条件阶段读 api.locationShroud（当前没有 helper），见 primitive-requests/10059.json。',
   researchRequirement: 'classifiedNewSpecies',
   researchUpgradeFrom: '10044',
   uses: 0,
@@ -57,13 +51,13 @@ export default {
       kind: 'reaction',
       trigger: 'encounterDrawn',
       label: '调查员抽取非弱点诡计时，若其地点隐藏值不大于生长数：取消该诡计并移除全部生长',
-      criteria: [({ state, source, context, helpers }) => {
+      criteria: [({ source, context, helpers }) => {
         if (!source || !context || !context.cardCode || context.weakness === true) return false
         if (helpers.cardType(context.cardCode) !== 'treachery') return false
         const growth = growthOf(source)
         if (growth <= 0) return false
-        const location = (state.locations || []).find(entry => entry.id === context.location)
-        return Boolean(location) && shroudOf(location) <= growth
+        const shroud = helpers.locationShroud(context.location, context.seat, { includeLocationState: true })
+        return Number.isFinite(shroud) && shroud <= growth
       }],
       resolve: ({ source, context, api }) => {
         const growth = growthOf(source)

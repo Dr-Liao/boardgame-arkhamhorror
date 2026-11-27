@@ -555,7 +555,7 @@
   "sources": [
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
+      "sha256": "7197c3a66b66ff0cd47885ca53d013653e720a9cc35ff41b5ce46b814d1673f5"
     },
     {
       "path": "artifacts/migration/tcu/mechanism-scan.json",

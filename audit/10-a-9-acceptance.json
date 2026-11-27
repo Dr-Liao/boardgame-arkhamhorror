@@ -3,7 +3,7 @@
   "unit": "10-a-9",
   "profile": {
     "id": "fhv-campaign-f-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10644c–10676）43 条目录记录。31 条通过五维验收；12 条检定前 fast/渲染时序无读点暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10644c–10676）43 条目录记录，全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 43,
-    "verified": 31,
-    "unverified": 12,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 221
+    "testsPassed": 239
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
-      "sha256": "cf67e92cce35d08fc5b92abbd0c94b0ba380a28ce71a3dec82e0cb609f5a9c42"
+      "sha256": "440e244f50c44cc13787d8491ef6798af1bdbc8b7ad6b643c16cb70e75724d25"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
-      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
+      "sha256": "dfb255b8ae281ada3ea106818023d2e9bb5c1b2b0139226319b7b830d994e860"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
@@ -62,6 +62,10 @@
     {
       "file": "games/arkhamhorror/tests/fhv-campaign-records.test.mjs",
       "sha256": "5228e2dca842a993f7278244c415b995019f850e5af32a792e08ab7f0a4b672c"
+    },
+    {
+      "file": "tests/hall/card-views.test.mjs",
+      "sha256": "da500bd911d7ce628f8e57a800a80c22c577d566d8d0e51c22ce3dbef1669a48"
     }
   ],
   "entries": [
@@ -213,65 +217,189 @@
       "code": "10652",
       "name": "寂灭",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「单次查看宇宙密使超过 15 秒即发疯」；条目 note 披露引擎无计时读点，仅保留 flags.cosmicEmissaryGaze → 子句无实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时插入他人的待决检定，保存续算后仍可回答原选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时让正在等待投入的检定者退场，调查结果未结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 最后一位检定者凝视超时后清理检定，结算整场冒险"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 凝视宇宙密使：复用 15 秒规则，非行动席位发疯并写入战役日志"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 议程1a：深渊抽牌替换 + 背面结算声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 议程背面选择第二种技能，逐点在受伤和洗入真正顶牌之间选择"
+        },
+        {
+          "file": "tests/hall/card-views.test.mjs",
+          "test": "10652 10653 10654 联机客人凝视超时，由房主提交并广播，普通行动无法伪造"
+        }
+      ]
     },
     {
       "code": "10653",
       "name": "危险瘴气",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 10652：凝视超过 15 秒发疯只保留界面标记。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时插入他人的待决检定，保存续算后仍可回答原选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时让正在等待投入的检定者退场，调查结果未结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 最后一位检定者凝视超时后清理检定，结算整场冒险"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10653 凝视宇宙密使：复用 15 秒规则，非行动席位发疯并写入战役日志"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10653 议程2a：深渊抽牌替换 + 背面结算声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10653 议程背面选择第二种技能，逐点在受伤和洗入真正顶牌之间选择"
+        },
+        {
+          "file": "tests/hall/card-views.test.mjs",
+          "test": "10652 10653 10654 联机客人凝视超时，由房主提交并广播，普通行动无法伪造"
+        }
+      ]
     },
     {
       "code": "10654",
       "name": "往升",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 10652：凝视超过 15 秒发疯只保留界面标记。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时插入他人的待决检定，保存续算后仍可回答原选择"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 凝视超时让正在等待投入的检定者退场，调查结果未结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10652 10653 10654 最后一位检定者凝视超时后清理检定，结算整场冒险"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10654 凝视宇宙密使：复用 15 秒规则，非行动席位发疯并写入战役日志"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10654 议程3a：深渊抽牌替换 + 背面结算声明"
+        },
+        {
+          "file": "tests/hall/card-views.test.mjs",
+          "test": "10652 10653 10654 联机客人凝视超时，由房主提交并广播，普通行动无法伪造"
+        }
+      ]
     },
     {
       "code": "10655",
       "name": "破碎记忆",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷 [fast] 花费 1 个线索：本次技能检定 +2；fateOfTheVale/behavior.js 无读点（note 披露未接线）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10655 破碎记忆：巢穴反应 + Ex Nihilo 背面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10655 花费线索使本次检定技能值 +2，下一次检定不保留加值"
+        }
+      ]
     },
     {
       "code": "10656",
       "name": "失落自我",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 10655 的 [fast] 缺失；且 `advanceToAct3` 仍写 `state.actIndex = 2`（fateOfTheVale/behavior.js），引擎 actReveal 后再 `++` → 越过 3 张幕牌库，幕 3a 永不揭示、R1–R5 不可达（full-scan §467-468 未修复）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10656 失落自我：洞穴 ≥3 目标 + 幕间四选项"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10656 引擎推进后保留幕间选定的第三幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10656 花费线索使本次检定技能值 +2，下一次检定不保留加值"
+        }
+      ]
     },
     {
       "code": "10657",
       "name": "山谷的命运(版本一)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 10655/10656 的 [fast] 缺失，且该条目 note 未披露。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10657 山谷的命运 v.I：背面结局 1/2（自己动手需棱柱碎片）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10657 花费线索使本次检定技能值 +2，下一次检定不保留加值"
+        }
+      ]
     },
     {
       "code": "10658",
       "name": "山谷的命运(版本二)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「你可以花费 1[每人] 线索使其以横置状态入场」为可选；note 披露实现简化为「谈判成功即横置入场」→ 可选项无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10658 居民谈判成功后逐个选择是否花费线索使其横置入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10658 山谷的命运 v.II：居民谈判（弃 1 手牌 / 意志智力 3）"
+        }
+      ]
     },
     {
       "code": "10659",
       "name": "山谷的命运(版本三)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "note 披露：placeKindling 按 1/人 线索 = 1 引线逐次结算（一次行动不解析 X）；「花 5 资源或弃 1 张[[道具]]支援换额外 1 引线」未接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10659 一个行动支付 X/人线索，可另花五资源或弃一个道具得额外引线"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10659 山谷的命运 v.III：引线（X/人线索）+ 5 张着火了推进"
+        }
+      ]
     },
     {
       "code": "10660",
@@ -289,17 +417,41 @@
       "code": "10661",
       "name": "破碎自我",
       "type": "investigator",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "note 披露：只实现手牌上限 -3、X 技能与旧印 +2；[reaction]「投入卡牌技能图标翻倍」与旧印「可以抽 1 张卡」缺条目级窗口/收益读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661 破碎自我：同一检定可翻倍一张投入牌，旧印可抽一张牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661 破碎自我：手牌上限 -3、X=手牌数、旧印 +2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661b 旧时记忆：从深渊揭示/抽取时花线索反应声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661b 旧时记忆：在一次真实遭遇抽取中取消显现并移出深渊卡牌"
+        }
+      ]
     },
     {
       "code": "10661b",
       "name": "旧时记忆",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "note 披露：「取消该卡牌的显现效果并将其移出游戏」没有取消窗口读点；只把旧时记忆入场，深渊抽牌结果交给调用方。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661b 旧时记忆：从深渊揭示/抽取时花线索反应声明"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10661b 旧时记忆：在一次真实遭遇抽取中取消显现并移出深渊卡牌"
+        }
+      ]
     },
     {
       "code": "10662a",
@@ -321,9 +473,13 @@
       "code": "10662b",
       "name": "宇宙密使",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「宇宙密使得到 +2[每人] 生命」；条目/definition 未声明 healthPerInvestigator，fate behavior 的 enemyStatModifier 只处理水晶仿体 → 数值不生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10662b 宇宙密使（破碎面）：被击败时每位调查员意志(100)失败即阵亡"
+        }
+      ]
     },
     {
       "code": "10663a",
@@ -469,9 +625,17 @@
       "code": "10670",
       "name": "深渊",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「敌军阶段期间，每个在深渊的[[破碎]]敌人失去冷漠」；note 披露只保留卡面文本（未接线）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10670 深渊：进入时深渊有牌即阵亡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard9.test.mjs",
+          "test": "10-a-9 10670b 深渊（故事面）：从底抽/弃顶/五类揭示规则"
+        }
+      ]
     },
     {
       "code": "10670b",

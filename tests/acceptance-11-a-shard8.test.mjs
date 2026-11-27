@@ -5,6 +5,8 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { fixture, legalMoves, move, settle, asset } from './core-fixture.mjs'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -219,21 +221,82 @@ for (const [code, check] of passCases) {
   test(`${code} 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行`, () => { check() })
 }
 
-// ---- 5 张失败卡：11692–11696 废墟地点印刷能力没有读点 -----------------------------------
-const ruinedFails = {
-  '11692': ['北区', '意志(3) 看克苏鲁牌库顶 3 张', /northside.*(willpower|peek|cthulhu)/i, 1],
-  '11693': ['商业区', '星之眷族进入时花 3 资源自动躲避', /downtown.*(autoEvade|Star Spawn)/i, 2],
-  '11694': ['东镇', '弃盟友降水位抽 3 张', /easttown.*(discardAlly|drawThree)/i, 1],
-  '11695': ['米斯卡塔尼克大学', '弃智识图标牌治恐惧', /miskatonicUniversity.*(healHorror|intellectIcon)/i, 1],
-  '11696': ['河岸城', '敏捷/智识(3) 开排水', /emergencyDrain|rivertown.*decreaseFlood/i, 2],
+function ruinedLocation(code, seats = 1) {
+  const state = fixture('01001', seats)
+  const location = state.locations.find(site => site.id === state.investigators[0].location)
+  location.code = location.originalCode = code
+  location.revealed = true
+  return { state, location, api: scenarioRuntime(state, []) }
 }
-for (const [code, [name, ability, regex, max]] of Object.entries(ruinedFails)) {
-  test(`${code} ${name}（废墟）：不能完全淹没读点；印刷能力「${ability}」无读点（缺口）`, () => {
-    assert.equal(locationRuleFor(code).floodBounds.max, max, '不能完全淹没（engine floodBounds 读点）')
-    assert.ok(/floodBounds/.test(engineText('flood.js')), '引擎 floodBounds 读点存在')
-    assert.equal(regex.test(logicText(D2_BEHAVIOR)), false, `缺口：${name} 印刷能力没有章节读点`)
-  })
-}
+
+const ruinedAction = state => legalMoves(state, 0).find(action => action.action === 'entityAbility')
+
+test('11692 北区（废墟）：意志检定成功后选择弃牌并重排克苏鲁牌库', () => {
+  const { state, api } = ruinedLocation('11692')
+  const deck = api.mechanics.scenarioDecks
+  deck.initialize('cthulhu', ['11709', '11710', '11711', '11712'], { shuffle: false })
+  move(state, ruinedAction(state))
+  settle(state, choice => choice.source === '11692'
+    ? (choice.options.some(option => option.id === 'skip') ? '1' : '2') : null)
+  assert.deepEqual(deck.top('cthulhu', 3), ['11710', '11712', '11709'])
+  assert.deepEqual(state.scenarioFlags.mechanics.scenarioDecks.cthulhu.discard, ['11711'])
+  assert.equal(ruinedAction(state), undefined)
+  assert.equal(locationRuleFor('11692').floodBounds.max, 1)
+})
+
+test('11693 商业区（废墟）：有星之眷族进入时可支付三资源自动躲避', () => {
+  const entry = registeredEntry('11693')
+  assert.deepEqual(entry.flags.enemyEntryReaction, { trait: 'Star Spawn', resourceCost: 3, effect: 'autoEvade' })
+})
+
+test('11694 东镇（废墟）：弃掉盟友、降低水位、抽三张牌', () => {
+  const { state, api, location } = ruinedLocation('11694')
+  api.mechanics.water.set(location.id, 1)
+  const ally = asset(state, '01018')
+  const other = asset(state, '01006')
+  move(state, ruinedAction(state))
+  settle(state)
+  const inv = state.investigators[0]
+  assert.deepEqual(inv.discard, [ally.code])
+  assert.ok(inv.assets.some(card => card.id === other.id))
+  assert.deepEqual(inv.hand, ['01088', '01088', '01088'])
+  assert.equal(api.mechanics.water.level(location.id), 0)
+  assert.equal(ruinedAction(state), undefined)
+  assert.equal(locationRuleFor('11694').floodBounds.max, 1)
+})
+
+test('11695 米斯卡塔尼克大学（废墟）：弃两张智识牌，治愈另一席位及其盟友', () => {
+  const { state, location } = ruinedLocation('11695', 2)
+  const [inv, other] = state.investigators
+  inv.hand = ['01039', '01039', '01088']
+  inv.horror = 1
+  other.location = location.id
+  other.horror = 1
+  const ally = asset(state, '01018', { horror: 1 }, 1)
+  move(state, ruinedAction(state))
+  settle(state, choice => choice.source === '11695'
+    ? ['hand:0', 'hand:1', 'asset:' + ally.id, 'investigator:1']
+      .find(id => choice.options.some(option => option.id === id)) : null)
+  assert.deepEqual(state.investigators[0].discard, ['01039', '01039'])
+  assert.deepEqual(state.investigators[0].hand, ['01088'])
+  assert.equal(state.investigators[0].horror, 1)
+  assert.equal(state.investigators[1].horror, 0)
+  assert.equal(state.investigators[1].assets.find(card => card.id === ally.id).horror, 0)
+  assert.equal(ruinedAction(state), undefined)
+  assert.equal(locationRuleFor('11695').floodBounds.max, 1)
+})
+
+test('11696 河岸城（废墟）：选择智识检定，成功降低相邻地点的水位', () => {
+  const { state, api, location } = ruinedLocation('11696')
+  const adjacent = { id: 'adjacent', name: '相邻地点', revealed: true, connections: [location.id] }
+  state.locations.push(adjacent)
+  location.connections.push(adjacent.id)
+  api.mechanics.water.set(adjacent.id, 1)
+  move(state, ruinedAction(state))
+  settle(state, choice => choice.source === '11696' ? 'intellect' : null)
+  assert.equal(api.mechanics.water.level(adjacent.id), 0)
+  assert.equal(ruinedAction(state), undefined)
+})
 
 // ---- 逐卡字面标题（严格标题证据扫描要求标题含字面卡号；逻辑同上，不含模板变量） ----
 test('11660 沉没之城逐卡字面标题证据（条目/章节接线）', () => { assert.equal(typeof registeredEntry('11660') === 'object' ? 'object' : typeof registeredEntry('11660'), 'object', '条目已注册'); assert.equal(typeof entries['11660'], 'object') })
@@ -274,8 +337,3 @@ test('11689 沉没之城逐卡字面标题证据（条目/章节接线）', () =
 test('11690 沉没之城逐卡字面标题证据（条目/章节接线）', () => { assert.equal(typeof registeredEntry('11690') === 'object' ? 'object' : typeof registeredEntry('11690'), 'object', '条目已注册'); assert.equal(typeof entries['11690'], 'object') })
 test('11691a 沉没之城逐卡字面标题证据（条目/章节接线）', () => { assert.equal(typeof registeredEntry('11691a') === 'object' ? 'object' : typeof registeredEntry('11691a'), 'object', '条目已注册'); assert.equal(typeof entries['11691a'], 'object') })
 test('11691b 沉没之城逐卡字面标题证据（条目/章节接线）', () => { assert.equal(typeof registeredEntry('11691b') === 'object' ? 'object' : typeof registeredEntry('11691b'), 'object', '条目已注册'); assert.equal(typeof entries['11691b'], 'object') })
-test('11694 沉没之城废墟地点：不能完全淹没（floodBounds 引擎读点）+ 印刷能力缺读点', () => { assert.equal(locationRuleFor('11694').floodBounds.max, 1); assert.ok(/floodBounds/.test(engineText('flood.js'))) })
-test('11696 沉没之城废墟地点：不能完全淹没（floodBounds 引擎读点）+ 印刷能力缺读点', () => { assert.equal(locationRuleFor('11696').floodBounds.max, 2); assert.ok(/floodBounds/.test(engineText('flood.js'))) })
-test('11693 沉没之城废墟地点：不能完全淹没（floodBounds 引擎读点）+ 印刷能力缺读点', () => { assert.equal(locationRuleFor('11693').floodBounds.max, 2); assert.ok(/floodBounds/.test(engineText('flood.js'))) })
-test('11695 沉没之城废墟地点：不能完全淹没（floodBounds 引擎读点）+ 印刷能力缺读点', () => { assert.equal(locationRuleFor('11695').floodBounds.max, 1); assert.ok(/floodBounds/.test(engineText('flood.js'))) })
-test('11692 沉没之城废墟地点：不能完全淹没（floodBounds 引擎读点）+ 印刷能力缺读点', () => { assert.equal(locationRuleFor('11692').floodBounds.max, 1); assert.ok(/floodBounds/.test(engineText('flood.js'))) })

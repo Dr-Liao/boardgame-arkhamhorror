@@ -2,7 +2,7 @@
 // Detailed evidence: audit/09-a-10-acceptance.json. Not a promise of all-combination equivalence.
 export const TSK_SHARD10_ACCEPTANCE_PROFILE = {
   "id": "tsk-campaign-g-2026-11",
-  "scope": "绯红密钥 09 段 tskc 战役卡（09737–09770b）41 条目录记录。23 条通过五维验收；17 条实现缺口、1 条待稳定探针暂不切换。",
+  "scope": "绯红密钥 09 段 tskc 战役卡（09737–09770b）41 条目录记录。41 条通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TSK_SHARD10_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TSK_SHARD10_ACCEPTANCE_SHA256 = '8cb1a90d7f071753b8150d6caf4cf6a241c0a3daa3b430efd5fd665f02675887'
-const verified = new Set(["09737","09740","09741","09742","09743","09744","09752","09753","09754","09755","09756","09757","09758","09760","09761","09763","09766","09767","09768b","09769a","09769b","09770a","09770b"])
+export const TSK_SHARD10_ACCEPTANCE_SHA256 = 'e411c8667bf99c0a3c0d9d09673d83ecb70e2382e8601545a39c7de60de0e9ab'
+const verified = new Set(["09737","09738","09739","09740","09741","09742","09743","09744","09745","09746","09747a","09747b","09747c","09748a","09748b","09749a","09749b","09750","09751","09752","09753","09754","09755","09756","09757","09758","09759","09760","09761","09762","09763","09764","09765","09766","09767","09768a","09768b","09769a","09769b","09770a","09770b"])
 export const tskShard10CardVerified = code => verified.has(code)

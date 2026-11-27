@@ -9,6 +9,7 @@
 //
 // 资源池和支援资源分别保存；费用可组合支付，损失仅扣资源池。
 
+import { currentEffectSource } from './effect-provenance.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { capabilityBlocked } from './modifiers.js'
 import { enemyEngagedRestricts } from './enemy-entry.js'
@@ -102,7 +103,7 @@ export function createResourceBank(deps) {
   }
 
   // 「获得资源」的唯一入口（卡牌效果）：寄存的规则在这里落实。
-  function gainResource(state, inv, amount, events = []) {
+  function gainResource(state, inv, amount, events = [], { basicAction = false } = {}) {
     inv = effectRecipient(state, inv)
     if (inv && !playerEffectCanAffect(state, inv.seat)) return 0
     if (!inv || !Number.isFinite(amount) || amount <= 0) return 0
@@ -110,16 +111,12 @@ export function createResourceBank(deps) {
     // 「与你交战期间你不能获得资源」（07183 追猎的深潜者）：敌方持续限制的读点。
     if (enemyEngagedRestricts(state, inv, 'gainResources')) return 0
     const asset = bankAsset(inv)
-    if (asset && ruleOf(inv.code).redirectGain) {
+    if (!basicAction && asset && ruleOf(inv.code).redirectGain) {
       asset.resources = (asset.resources || 0) + amount
       info(state, events, `💰 ${inv.name} 获得的 ${amount} 资源放在「${cardName(asset.code)}」上（共 ${asset.resources}）。`)
     } else inv.resources += amount
     // P7 TDC 11756a「获得 1 个或更多资源后」：统一资源获得入口开反应窗口（无监听者零变化）。
-    try {
-      onResourcesGained?.(state, inv, amount, events)
-    } catch {
-      // 资源已到账；窗口失败不阻断获得（与其它展示窗口同口径 fail-open）。
-    }
+    onResourcesGained?.(state, inv, amount, events, basicAction ? null : currentEffectSource(state))
     return amount
   }
 

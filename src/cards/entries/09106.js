@@ -9,16 +9,13 @@
 // 读点：
 //   · 玩家的「显现」事件没有独立的显现通道（引擎只为弱点类型开显现）：本卡把 Revelation 实现为
 //     手牌来源的强制能力，挂在 `cardDrawn` 窗口（抽到本卡的那次窗口，context.cardCode 命中）；
-//   · 修正写进 api.addEffect（duration:'endOfPhase'，modifiers 用 audience:'all' 对每位调查员生效）。
-// approximation: ①「每轮最多 2 张[[抉择]]」是特质作用域上限，条目只能声明本卡每轮 2 次；
-//   ②「直到调查阶段结束」用 endOfPhase 到期（若在调查阶段外抽到会提前结束）。
+//   · 修正写进 api.addEffect（duration:'endOfInvestigation'，modifiers 用 audience:'all' 对每位调查员生效）。
 const code = '09106'
 
 const SKILLS = [['willpower', '意志'], ['intellect', '智力'], ['combat', '战斗'], ['agility', '敏捷']]
 
 export default {
   code,
-  note: 'approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；「直到调查阶段结束」用 endOfPhase 到期。',
   playCondition: [{ when: () => false, message: '「整装待发」具有显现，只能在抽到时结算' }],
   abilities: [
     {
@@ -26,9 +23,9 @@ export default {
       fromHand: true,
       noPlayCost: true,
       trigger: 'cardDrawn',
-      limit: { scope: 'perRound', owner: 'investigator', count: 2 },
+      limit: { scope: 'perRound', owner: 'group', count: 2, sharedKey: 'dilemma' },
       label: '显现：选择两项技能，所有调查员所选 +1、其余 -1 直到调查阶段结束',
-      criteria: [({ inv, context }) => context?.cardCode === code && (inv.hand || []).includes(code)],
+      criteria: [({ inv, context }) => context?.cardCode === code && context.seat === inv.seat && (inv.hand || []).includes(code)],
       resolve: ({ inv, api }) => {
         const chosen = []
         for (let pick = 0; pick < 2; pick++) {
@@ -44,7 +41,7 @@ export default {
           target: `skill:${id}`, amount: chosen.includes(id) ? 1 : -1, audience: 'all',
         }))
         api.addEffect({
-          duration: 'endOfPhase', sourceCode: code, controllerSeat: inv.seat,
+          duration: 'endOfInvestigation', sourceCode: code, controllerSeat: inv.seat,
           label: '整装待发：所选技能 +1，其余技能 -1',
           modifiers,
         })

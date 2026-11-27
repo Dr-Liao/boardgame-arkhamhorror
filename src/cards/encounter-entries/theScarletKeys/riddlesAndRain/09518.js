@@ -8,17 +8,13 @@
 //   · 隐匿 → enemyScript.concealed（behavior.spawnForbiddenAt / spawnFailed / distributeConcealedEnemy
 //     按 `perInvestigator` 分配迷你卡；未注册条目时回落到 definition 的 CONCEALED_DECOYS_PER_INVESTIGATOR）；
 //   · 谈判 → entityActionDescriptors（actionKind:'parley'，range:'here'，只在场景 4 出现）；
-//   · 资源 → api.addCardCounter(source, 'bounty', 1)（引擎的「敌人资源」只有剧本运行时入口
-//     api.setEnemyResources，卡条目面没有；通用卡计数器是卡条目唯一可写入口。近似 6：
-//     behavior.parleyResources 同时读 enemy.resources 与 bounty 计数，见 primitive-requests/09518.json）。
+//   · 盘问使用剧本检定入口，成功时给敌人增加 1 个资源。
 const CODE = '09518'
-const PARLEY_COUNTER = 'bounty'
 
 export default {
   code: CODE,
   scope: 'enemy',
   implemented: true,
-  note: 'approximation: 谈判资源改记通用卡计数器 bounty（behavior.parleyResources 同时读 enemy.resources）',
   enemyScript: {
     concealed: { perInvestigator: 1 },
     parleyResourcesGoal: 1,
@@ -40,14 +36,12 @@ export default {
           options: [{ id: 'willpower', label: '意志' }, { id: 'intellect', label: '智力' }] })
         : 'willpower'
       const skill = skills.includes(chosen) ? chosen : 'willpower'
-      api.test(inv.seat, skill, 5, {
-        source: { type: 'scenario', action: 'parley', code: CODE, ability: true },
-        resolve: result => {
-          if (!result?.success) return
-          api.addCardCounter(source, PARLEY_COUNTER, 1)
-          api.info('🕵️ 「盘问」成功：戴红手套的男子上放置 1 个资源。')
-        },
-      })
+      api.scenario.test(inv.seat, skill, 5, result => {
+        if (!result?.success) return
+        const current = Math.max(Number(source.resources) || 0, api.cardCounterOf(source, 'bounty'))
+        api.scenario.setEnemyResources(source, current + 1)
+        api.info('🕵️ 「盘问」成功：戴红手套的男子上放置 1 个资源。')
+      }, 0, { action: 'parley', code: CODE })
     },
   }],
 }

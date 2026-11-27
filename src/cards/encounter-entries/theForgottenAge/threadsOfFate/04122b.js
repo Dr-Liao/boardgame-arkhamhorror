@@ -11,8 +11,7 @@ export default { code: '04122b', scope: 'enemy', enemyRule: {"victory":1},
   enemyScript: {
     onSpawn(state, enemy, api) {
       if (state.relicOfAges?.enemyId === enemy.id) return
-      state.relicOfAges = { code: '04061', location: enemy.location, enemyId: enemy.id }
-      const name = (state.locations || []).find(entry => entry.id === enemy.location)?.name || enemy.location
-      api?.info?.(`🏺 古代遗物附属到敌人（「${name}」）。`)
+      api.takeFromSetAside('04061')
+      api.moveRelicOfAges({ location: enemy.location, enemyId: enemy.id })
     },
   } }

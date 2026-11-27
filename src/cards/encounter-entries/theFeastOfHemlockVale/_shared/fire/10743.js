@@ -16,10 +16,8 @@
 //   · [action] 检定敏捷(4) 成功弃掉本卡 = treacheryRule.attachmentAbilities（读点：parley.js#
 //     parleyMovesFor 的 locationAttachment 枚举 → ability-exec.js#doEntityAbility → executeDescriptor；
 //     与 07299 石障同一写法）。弃卡 = api.scenario.detachEncounterAttachmentById（按 id 摘除，跨克隆稳定）。
-//   · 「轮末：本地每张有生命值的卡牌受到 1 点直接伤害」：引擎对地点附属没有轮末窗口来源
-//     （phases.js#upkeepPhase 的轮末只枚举 agenda.attachments / agendaAside，ability-rules.js 的窗口来源
-//     不枚举 location.attachments），因此只落 flags.roundEndDirectDamage 数据，note 披露为未接线。
-import { entryDistance, originalOf } from '../../../_shared.js'
+//   · 轮末强制能力同时结算附属地点里有生命值的调查员、支援与敌人。
+import { ALL_CARDS, entryDistance, originalOf } from '../../../_shared.js'
 
 const CODE = '10743'
 const NAME = '“着火了！”'
@@ -28,6 +26,23 @@ const DIFFICULTY = 4
 
 const hasFire = location =>
   (location.attachments || []).some(attachment => String(originalOf(attachment)) === CODE)
+
+const hasHealth = card => Number.isFinite(card.health ?? ALL_CARDS[originalOf(card)]?.health)
+
+function burnLocation({ state, source, api }) {
+  const location = state.locations.find(place => place.attachments?.some(card => card.id === source.id))
+  if (!location) return
+  const investigators = state.investigators.filter(inv => !inv.defeated && !inv.resigned && inv.location === location.id)
+  const assets = investigators.flatMap(inv => inv.assets.filter(hasHealth).map(asset => ({ seat: inv.seat, id: asset.id })))
+  const enemies = state.enemies.filter(enemy => !enemy.defeated && enemy.location === location.id
+    && api.enemyHealth(enemy) != null)
+  const uncontrolled = (state.storyAssets || []).filter(asset => asset.location === location.id && hasHealth(asset))
+  const origin = { type: 'encounter', code: CODE }
+  for (const { seat, id } of assets) api.scenario.damageAsset(seat, id, 1, { direct: true })
+  for (const enemy of enemies) api.damageEnemy(enemy, 1, null, origin)
+  for (const asset of uncontrolled) api.scenario.damageUncontrolledStoryAsset(asset.id, 1)
+  for (const inv of investigators) api.directDamage(inv.seat, 1)
+}
 
 // 「没有附属“着火了！”的地点」；优先与某个已附属地点相连的候选（印刷的 if able）。
 function nearestEligibleLocations(state, fromId) {
@@ -98,7 +113,11 @@ export default {
       },
     }],
   },
-  note: '显现（附属到最近且没有同卡附属的地点，优先与已附属地点相连）与 [action] 敏捷(4) 摆脱自足实现'
-    + '（附属行动走 treacheryRule.attachmentAbilities 这条既有的地点附属行动管线）。'
-    + '「轮末本地每张有生命值的卡牌受到 1 点直接伤害」没有地点附属的轮末窗口来源，本批只落 flags 数据。',
+  abilities: [{
+    kind: 'forced',
+    trigger: 'roundEnds',
+    silent: true,
+    label: '轮末：附属地点每张有生命值的卡牌受到 1 点直接伤害',
+    resolve: burnLocation,
+  }],
 }

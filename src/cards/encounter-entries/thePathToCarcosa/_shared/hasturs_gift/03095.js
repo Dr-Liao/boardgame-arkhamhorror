@@ -9,8 +9,9 @@ export default {
   code: '03095', scope: 'enemy', implemented: true,
   enemyScript: {
     onEngage(state, enemy, inv, api) {
-      api.damage(inv.seat, 1)
-      api.damageEnemy(enemy.id, 1, inv.seat, 'encounter')
+      const presentation = { code: enemy.originalCode || enemy.code, sourceEnemyId: enemy.id }
+      api.damage(inv.seat, 1, presentation)
+      api.damageEnemy(enemy.id, 1, inv.seat, 'encounter', presentation)
     },
   },
 }

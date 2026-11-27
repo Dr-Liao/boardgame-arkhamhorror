@@ -31,9 +31,7 @@
 //   src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07282.js
 //
 // 引擎读点：
-//   · 正面实体规则 / [fast] 清屏障：与 07280 同一句印刷模板，逐条读点见 07280.js。
-//     同句模板的共享工厂请求：
-//     artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json
+//   · 正面嫌犯修正与 [fast] 清屏障由 dagonOathFront() 共享。
 //   · 目标 = act-agenda.js#checkAct 读 `actRule.objective`；「本场景上的线索」= `state.actClues`，
 //     写入口是 scenarioRuntime#placeCluesOnAct（07291 的行动 / 线索类效果共用；手持线索不计数）。
 //   · 背面 = content entry-rules.actReveal → 本文件 actRule.onReveal（api 是 scenarioRuntime）：
@@ -43,20 +41,11 @@
 //
 // implemented: true
 
-import { ALL_CARDS, hasTrait, originalOf } from '../../_shared.js'
+import { dagonOathFront, originalOf } from '../../_shared.js'
 
 const DAGON_SLUMBERING = '07292a'
 const DAGON_AWAKENED = '07292b'
 const CLUES_PER_INVESTIGATOR = 3
-
-const suspect = { when: ({ state, entity }) => (state.enemies || []).includes(entity) && hasTrait(entity, 'Suspect') }
-
-const isObstacle = attachment => hasTrait(ALL_CARDS[originalOf(attachment)], 'Obstacle')
-
-const obstacleAttachmentsAt = (state, locationId) => {
-  const location = state.locations.find(candidate => candidate.id === locationId)
-  return (location?.attachments || []).filter(isObstacle)
-}
 
 const inPlay = (state, code) => state.enemies.some(enemy => !enemy.defeated && !enemy.removedFromGame
   && String(originalOf(enemy)) === code)
@@ -66,11 +55,7 @@ const inVictoryDisplay = (state, code) => (state.victoryDisplay || [])
 
 export default {
   code: '07282', scope: 'act', implemented: true,
-  modifiers: [
-    { target: 'enemyHealth', amount: ({ state }) => state.numInvestigators, condition: suspect },
-    { target: 'loses:aloof', condition: suspect },
-    { target: 'cannot:parley', condition: suspect },
-  ],
+  ...dagonOathFront(),
   actRule: {
     objective(state) {
       return (state.actClues || 0) >= CLUES_PER_INVESTIGATOR * state.numInvestigators
@@ -85,15 +70,4 @@ export default {
       api.finish('resolution1')
     },
   },
-  abilities: [{
-    kind: 'free', actionKind: 'activate', range: 'anywhere',
-    label: '花费蓝色、红色、白色或黄色钥匙：弃掉你所在地点的每张[[屏障]]卡牌',
-    additionalKeyCost: { colors: ['blue', 'red', 'white', 'yellow'], scope: 'self' },
-    criteria: ({ state, inv }) => obstacleAttachmentsAt(state, inv.location).length > 0,
-    resolve: ({ state, inv, api }) => {
-      const obstacles = obstacleAttachmentsAt(state, inv.location)
-      for (const attachment of obstacles) api.scenario.detachEncounterAttachment(attachment)
-      if (obstacles.length) api.info?.(`🪨 弃掉所在地点的 ${obstacles.length} 张[[屏障]]。`)
-    },
-  }],
 }

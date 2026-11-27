@@ -5,7 +5,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { ALL_CARDS } from '../../../_shared.js'
+import { ALL_CARDS, spliceHand } from '../../../_shared.js'
 
 export default {
   code: '03102', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
@@ -25,7 +25,7 @@ export default {
     if (x <= 0 || totalItemsCost() < x) {
       // 弃不够时不能只弃一部分充数：本次效果没有弃掉任何卡牌 → 涌动。
       api.info?.('锈蚀：没有足够的道具可弃，本次效果没有弃掉任何卡牌，本卡获得涌动。')
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     let remaining = x
@@ -47,7 +47,7 @@ export default {
       const picked = options.find(option => option.id === choice) || options[0]
       if (String(picked.id).startsWith('hand:')) {
         const index = Number(String(picked.id).slice(5))
-        const [cardCode] = inv.hand.splice(index, 1)
+        const [cardCode] = spliceHand(inv, index, 1)
         if (cardCode) inv.discard.push(cardCode)
       } else {
         const assetId = String(picked.id).slice(6)
@@ -62,7 +62,7 @@ export default {
     }
     if (!discarded) {
       api.info?.('锈蚀：本次效果没有弃掉任何卡牌，本卡获得涌动。')
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
     }
     return false
   },

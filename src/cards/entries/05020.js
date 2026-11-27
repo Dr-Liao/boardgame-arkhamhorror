@@ -22,7 +22,7 @@ export default {
       kind: 'played',
       label: '拷问',
       // 「谈判」行动不引发借机攻击（与 P2.7 的谈判原语同一口径，事件卡写在 played 描述子上）。
-      noOpportunityAttack: true,
+      countsAs: 'parley',
       resolve: ({ state, inv, api }) => {
         const targets = state.enemies.filter(enemy => enemy.location === inv.location
           && !enemy.defeated

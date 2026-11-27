@@ -292,7 +292,7 @@ test('P7 cityOfTheElderThings 代表遭遇卡：真相开端/崩塌废墟/冻伤
   assert.equal(state.investigators[0].threat.find(item => item.code === RAW_CODES.frostbitten).counters, 1)
   chapter.behavior.resolveEncounter(state, inv, { code: RAW_CODES.possessed }, api)
   assert.ok(state.investigators[0].threat.some(item => item.code === RAW_CODES.possessed))
-  assert.equal(registeredEntry(RAW_CODES.possessed).flags.threatHorrorSink, true)
+  assert.equal(registeredEntry(RAW_CODES.possessed).threatHorrorSink, true)
 })
 
 test('P7 cityOfTheElderThings 专属诡计已接线：entryRevelation + campaignRule 才有真实遭遇结算', () => {

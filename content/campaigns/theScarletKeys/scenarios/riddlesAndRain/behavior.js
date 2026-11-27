@@ -194,8 +194,8 @@ function placeBackLocations(state, key, api) {
 
 /** 伦敦雨街的强制补线索：「如果没有线索，补到 1/调查员」。 */
 export function refillRainyLondonStreets(state, api = {}) {
-  const location = locationOf(state, RAW.rainyLondonStreets)
-  if (!location) return 0
+  const location = locationOf(state, 'rainyLondonStreets')
+  if (!location?.revealed || location.clues > 0) return 0
   const target = numInvestigators(state)
   const missing = Math.max(0, target - (location.clues || 0))
   if (!missing) return 0

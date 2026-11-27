@@ -8,7 +8,7 @@ export default {
       if (api.mechanics.barriers.count(location.id, destination) > 0) continue
       if (api.mechanics.barriers.change(location.id, destination, 1) !== false) placed++
     }
-    if (!placed) api.drawEncounter(inv.seat)
+    if (!placed) api.drawEncounter(inv.seat, { surgeDraw: true })
     return false
   },
 }

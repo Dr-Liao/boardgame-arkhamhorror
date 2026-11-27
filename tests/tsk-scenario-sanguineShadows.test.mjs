@@ -8,6 +8,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { validateTskState } from '../src/engine/tsk-primitives.js'
 import { initializeScarletKeys, scarletKey } from '../src/engine/tsk-scarlet-keys.js'
 import * as chapter from '../content/campaigns/theScarletKeys/scenarios/sanguineShadows/index.js'
@@ -461,7 +462,7 @@ test('P7 sanguineShadows 混乱标记：skull = -冒险参考卡标靶数（困�
   state.difficulty = 'standard'
   const tablet = sanguineShadowsChaosToken(state, inv, 'tablet')
   assert.equal(tablet.delta, -1)
-  assert.equal(tablet.cancelCommitted, true)
+  assert.equal(tablet.cancelCommitted, 'all')
   assert.deepEqual(sanguineShadowsChaosToken(state, inv, 'cultist'), { delta: -5, rider: 'reshuffleConcealedOnFail' })
   assert.equal(sanguineShadowsChaosToken(state, inv, 'bless'), null, '未声明的标记交回引擎默认表')
   // 检定后 rider：cultist 失败 2 点以上重洗；elderthing 失败二选一。
@@ -495,12 +496,13 @@ test('P7 sanguineShadows 遭遇卡：三张专属诡计按 treacheryRule.resolve
   assert.equal(registeredEntry(RAW_CODES.catAndMouse).treacheryRule.resolveKind, 'catAndMouse')
   assert.equal(registeredEntry(RAW_CODES.callingCard).treacheryRule.resolveKind, 'callingCard')
   // 技高一筹：检定智力 4；失败时选「放毁灭」。
+  const doomBefore = state.doom
   state.testResults = [{ success: false, value: 1, difficulty: 4 }]
   state.choices = ['doom']
   assert.equal(behavior.resolveEncounter(state, inv, { code: RAW_CODES.outsmarted }, api), true)
   assert.equal(state.testCalls[0].skill, 'intellect')
   assert.equal(state.testCalls[0].difficulty, 4)
-  assert.equal(state.doom, 1, '失败后按选择放 1 个毁灭')
+  assert.equal(state.doom, doomBefore + 1, '失败后按选择放 1 个毁灭')
   // 猫抓老鼠：在一张诱饵上揭露（真身会被翻回而不是揭露）。
   const elsewhere = setup(stateFor(1))
   const elsewhereApi = apiStub(elsewhere)
@@ -626,7 +628,7 @@ test('P7 sanguineShadows 恸哭女士：稳定面发现线索后翻面、动荡�
   const api = apiStub(state)
   const inv = state.investigators[0]
   inv.location = targetLocations(state)[0]
-  inv.assets = [{ id: 'asset-1', code: '01001' }]
+  inv.assets = [{ id: 'asset-1', code: '01018' }]
   initializeScarletKeys(state, [{
     id: WEEPING_LADY_KEY.id,
     stableFace: WEEPING_LADY_KEY.stableFace,
@@ -634,18 +636,9 @@ test('P7 sanguineShadows 恸哭女士：稳定面发现线索后翻面、动荡�
     bearer: { type: 'none' },
   }])
   state.campaign.tsk.keys.keys[WEEPING_LADY_KEY.id].bearer = { type: 'investigator', seat: 0 }
-  api.mechanics = {
-    tsk: {
-      keys: {
-        bind: (id, bearer) => { state.campaign.tsk.keys.keys[id].bearer = bearer; return true },
-        shift: id => {
-          const record = state.campaign.tsk.keys.keys[id]
-          record.stable = !record.stable
-          return { id, stable: record.stable }
-        },
-      },
-    },
-  }
+  api.canDiscoverClueAt = (_seat, id) => state.locations.some(location => location.id === id && location.clues > 0)
+  api.canDiscardAsset = (seat, id) => state.investigators[seat].assets.some(asset => asset.id === id)
+  api.mechanics = createMechanicsApi(state, { abilityApi: () => api })
   const location = state.locations.find(item => item.id === inv.location)
   location.clues = 2
   state.choices = [inv.location]
@@ -655,12 +648,13 @@ test('P7 sanguineShadows 恸哭女士：稳定面发现线索后翻面、动荡�
   assert.equal(scarletKey(state, WEEPING_LADY_KEY.id).stable, false)
   assert.equal(inv.clues, 1)
   // 动荡面：每位调查员弃一个支援，然后翻回稳定面。
+  state.round++
   const unstable = shiftWeepingLady(state, 0, api)
   assert.equal(unstable.kind, 'discardAsset')
   assert.equal(inv.assets.length, 0)
   assert.equal(scarletKey(state, WEEPING_LADY_KEY.id).stable, true)
-  assert.equal(registeredEntry(RAW_CODES.weepingLadyStable).assetRule.shift.kind, 'discoverClue')
-  assert.equal(registeredEntry(RAW_CODES.weepingLadyUnstable).assetRule.shift.kind, 'discardAsset')
+  assert.equal(typeof registeredEntry(RAW_CODES.weepingLadyStable).assetRule.shift, 'function')
+  assert.equal(typeof registeredEntry(RAW_CODES.weepingLadyUnstable).assetRule.shift, 'function')
 })
 
 // ---------------------------------------------------------------------------
@@ -798,7 +792,7 @@ test('P7 sanguineShadows 条目：十条专属条目（4 敌人/3 诡计/1 剧�
     { code: RAW_CODES.sanguineWatcher, amount: 5 })
   assert.equal(registeredEntry(RAW_CODES.apportionedKa).enemyScript.returnToShadowsOnExposed, true)
   assert.deepEqual(registeredEntry(RAW_CODES.laChicaRojaAlly).abilities[0].trigger, ['turnEnded'])
-  assert.equal(registeredEntry(RAW_CODES.boundNightgaunt).enemyRule.doubleNegative, true)
+  assert.equal(registeredEntry(RAW_CODES.boundNightgaunt).enemyRule.doubleNegativeOnFight, true)
   // 声明即接线：SET_ASIDE_CODES 里的每张卡都有条目或明确的章节流程位置。
   for (const code of SET_ASIDE_CODES) {
     assert.ok(LOCATIONS || code, code)

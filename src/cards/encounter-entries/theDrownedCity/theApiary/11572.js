@@ -5,9 +5,10 @@ export default {
   code: '11572',
   scope: 'location',
   implemented: true,
+  flags: { endTurnTest: { skill: 'agility', difficulty: 1 } },
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('apiaryPlaceLocation', { code: card.code, seat: inv.seat }) === true
   },
-  note: "data-type（地点从遭遇牌库进入）：显现由 behavior.applyRevelation 结算（放入场地 + 该地点显现效果）。中央腔室（与面朝环位相连；回合结束若在本地点：敏捷(1) 失败则移动到连接地点或主母攻击）",
+  note: '中央腔室与其朝向的地点双向相连。调查员在揭示的中央腔室结束回合时检定敏捷(1)，失败时在合法的相连移动与场上主母发起攻击之间选择。',
   abilities: [],
 }

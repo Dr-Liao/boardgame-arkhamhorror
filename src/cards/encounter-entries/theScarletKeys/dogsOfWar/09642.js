@@ -1,11 +1,18 @@
 // 09642 证券交易所 · 地点（dogsOfWar）
 // 印刷数据由章节 definition 的 location() 从卡表读取；地点能力由章节 behavior 承接。
-// approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）
+
 export default {
   code: '09642',
   scope: 'location',
   implemented: true,
   flags: { printedShroud: 2, printedClues: 2, },
-  note: 'approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）',
+  locationRule: {
+    enemiesCannotEnter: (state, location) => {
+      if (!location.revealed) return false
+      const loci = [...(state.enemies || []), ...(state.storyAssets || []), ...state.locations]
+        .filter(card => card.keyLocus === true && !card.defeated)
+      return loci.length !== 1 || (loci[0].originalCode || loci[0].code) !== '09654b'
+    },
+  },
   abilities: [],
 }

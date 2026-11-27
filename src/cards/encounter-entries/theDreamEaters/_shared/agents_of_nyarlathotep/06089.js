@@ -10,9 +10,8 @@ export default {
   scope: 'treachery',
   implemented: true,
   hiddenRule: {
-    cannotPlayOddWordsInTitle: true,
-    cannotCommitOddWordsInTitle: true,
-    discardEvenWordsAction: true,
+    parity: { play: 'title', commit: 'title' },
+    discard: { even: 'title' },
   },
   // TDE card-data.encounterDefinitions 已合并条目 hiddenRule：标题词数限制由引擎 hidden-rules 读点解释。
 }

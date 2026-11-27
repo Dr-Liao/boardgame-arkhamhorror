@@ -20,12 +20,7 @@
 //     inv.threat 逐卡求和的唯一读点，与 04085「伊格的诅咒」/ 07106 同一通道）。
 //   · 「[action][action]：弃掉」= kind:'action' + cost:{ action: 2 } + api.removeThreat
 //     （harm-threat.js#removeThreat 是威胁区卡离场的唯一写入口，弃牌进 inv.discard）。
-//
-// approximation（逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10135.json）：
-//   ① 「除非通过上述能力，否则不能离场」没有威胁区读点：引擎只有 threatCannotLeaveWhileCounters
-//      （按卡上计数拦截）。其它效果弃置威胁区卡（例如剧本「弃掉你威胁区的一张卡」）时本卡仍会离场。
-//   ② 「受到 1 点伤害」走普通伤害分配（api.harm 默认策略）：可以被有生命值的支援承接，
-//      与印刷的「承受 1 点伤害」一致（不是直接伤害）。
+
 const CODE = '10135'
 const CARD_NAME = '手部残疾'
 
@@ -33,8 +28,7 @@ export default {
   code: CODE,
   name: 'Maimed Hand',
   threatEffect: { healthModifier: -1 },
-  simplified: true,
-  note: 'approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截），其它效果弃置威胁卡时仍会离场；②1 点伤害按普通伤害分配（可被支援承接），见 primitive-requests/10135.json。',
+  cannotLeavePlay: true,
   abilities: [
     {
       kind: 'weakness',
@@ -65,7 +59,7 @@ export default {
       cost: { action: 2 },
       resolve: ({ inv, source, api }) => {
         if (!source) return
-        api.removeThreat(source)
+        if (!api.removeThreat(source, { force: true })) return
         api.info(`🩹 ${inv.name} 花费 2 行动弃掉「${CARD_NAME}」。`)
       },
     },

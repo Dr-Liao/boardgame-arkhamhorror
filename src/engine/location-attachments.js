@@ -9,11 +9,40 @@
 //
 // 卡文件只经 api.attachToLocation 调用；本模块不写日志（文案由调用方保留，避免重放指纹漂移）。
 
+import { ALL_CARDS } from '../cards/cards-data.js'
+import { currentRevelation, grantRevelationSurge } from './resolution-scope.js'
+import { registeredEntry } from './ability.js'
 import { rememberScenarioDeckAttachment } from './scenario-decks.js'
+
+export function playerLocationRuleActive(state, enemy, field) {
+  return !enemy.elite && (state.playerLocationAttachments || []).some(card =>
+    card.location === enemy.location && card[field] === true)
+}
+
+export function canAttachToLocation(location, { player = false } = {}) {
+  if (!location) return false
+  const rule = registeredEntry(location.originalCode || location.code)?.locationRule
+  return (!player || !rule?.noPlayerAttachments) && (location.revealed || !rule?.unrevealedRestrictions?.cannotAttach)
+}
+
+export function leaveLocationActionCost(state, inv, location = state.locations.find(item => item.id === inv.location)) {
+  if (!location?.revealed) return 0
+  const rule = registeredEntry(location.originalCode || location.code)?.locationRule?.leaveActionCost
+  return Math.max(0, Number(typeof rule === 'function' ? rule(state, location, inv) : rule) || 0)
+}
+
+export function applyLocationAttachmentSurge(state, location, code) {
+  const grant = registeredEntry(location.originalCode || location.code)?.locationRule?.surgeAttachedTreachery
+  if (!grant || ALL_CARDS[code]?.type !== 'treachery') return
+  if (grant === 'revelation' && currentRevelation() == null) return
+  const time = `${state.round}:${state.phaseInstance ?? state.phase}`
+  if (location.attachmentSurgeAt === time) return
+  if (grantRevelationSurge(code) || grant !== 'revelation') location.attachmentSurgeAt = time
+}
 
 export function attachLocationCard(state, locationId, fields = {}) {
   const location = (state.locations || []).find(item => item.id === locationId)
-  if (!location) return null
+  if (!canAttachToLocation(location, { player: fields.scope === 'player' })) return null
   const code = fields.originalCode || fields.code
   if (fields.scope === 'player') {
     state.playerLocationAttachments ||= []
@@ -38,6 +67,7 @@ export function attachLocationCard(state, locationId, fields = {}) {
     ...(fields.extra || {}),
   }
   location.attachments.push(rememberScenarioDeckAttachment(attachment))
+  applyLocationAttachmentSurge(state, location, code)
   return attachment
 }
 

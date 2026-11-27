@@ -66,6 +66,7 @@ export default {
     {
       kind: 'reaction',
       trigger: 'harmAssigned',
+      limit: { scope: 'perWindow', owner: 'instance' },
       label: '伤害放置到汉克身上后：获得 2 资源',
       criteria: [({ inv, context }) => context?.seat === inv.seat && (context?.damage || 0) >= 1],
       resolve: ({ inv, api }) => api.gainResources(inv.seat, 2),

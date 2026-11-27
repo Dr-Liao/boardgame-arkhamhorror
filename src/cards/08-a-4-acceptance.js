@@ -2,7 +2,7 @@
 // Detailed evidence: audit/08-a-4-acceptance.json. Not a promise of all-combination equivalence.
 export const EOTE_SHARD4_ACCEPTANCE_PROFILE = {
   "id": "eote-campaign-a-2026-11",
-  "scope": "地球边缘 08 段 eoec 战役卡（08501–08545）45 条目录记录。15 条通过五维验收；19 条失败（含 12 张 api.test 签名错误）+11 条 pending 暂不切换。",
+  "scope": "地球边缘 08 段 eoec 战役卡（08501–08545）45 条目录记录。45 条通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const EOTE_SHARD4_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const EOTE_SHARD4_ACCEPTANCE_SHA256 = '62591a82ce0f6267cd9fdd4ad02d6e43e4b9d8fdf1d5ca0c1e7ba68c715eff5b'
-const verified = new Set(["08504","08505","08507","08509","08511","08516","08523","08524","08525","08528","08529","08531","08532","08533","08534"])
+export const EOTE_SHARD4_ACCEPTANCE_SHA256 = 'c9d670d2f0f60d635b6487d1758271051fe874ac505f8490afa19507dfdf620d'
+const verified = new Set(["08501","08502","08503","08504","08505","08506","08507","08508","08509","08510","08511","08512","08513","08514","08515","08516","08517","08518","08519","08520","08521","08522","08523","08524","08525","08526","08527","08528","08529","08530","08531","08532","08533","08534","08535","08536","08537","08538","08539","08540","08541","08542","08543","08544","08545"])
 export const eoteShard4CardVerified = code => verified.has(code)

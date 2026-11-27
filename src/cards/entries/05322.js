@@ -15,33 +15,11 @@
 //   actions.js 把调查 source 固定为地点），不是发起能力的卡号；因此用 endOfTest 标记识别本卡的调查，
 //   criteria 同时兼容将来 sourceCard 直接带能力卡号的情况。
 
-const SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing']
+import { connectedLocationsWithin } from './_shared.js'
 
-// 与 inv 所在地点相距 1–2 次连接、已揭示且在场上的其他地点（不含自身）。
-function locationsWithinTwo(state, inv) {
-  const here = state.locations.find(location => location.id === inv.location)
-  if (!here) return []
-  const found = new Map()
-  let frontier = [here.id]
-  const seen = new Set(frontier)
-  for (let depth = 1; depth <= 2; depth++) {
-    const next = []
-    for (const id of frontier) {
-      const location = state.locations.find(item => item.id === id)
-      for (const connection of location?.connections || []) {
-        if (seen.has(connection)) continue
-        seen.add(connection)
-        const target = state.locations.find(item => item.id === connection)
-        if (target && target.id !== here.id && target.revealed === true && target.inPlay !== false) {
-          found.set(target.id, target)
-        }
-        next.push(connection)
-      }
-    }
-    frontier = next
-  }
-  return [...found.values()]
-}
+const SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing']
+const revealedNearby = (state, inv) => connectedLocationsWithin(state.locations, inv.location, 2)
+  .filter(location => location.revealed === true)
 
 function thisCardInvestigation(state, inv, context) {
   if (context?.sourceCard === '05322') return true
@@ -70,10 +48,10 @@ export default {
         if (!context || context.seat !== inv.seat) return false
         if (!SYMBOLS.includes(context.token)) return false
         if (!thisCardInvestigation(state, inv, context)) return false
-        return locationsWithinTwo(state, inv).length > 0
+        return revealedNearby(state, inv).length > 0
       }],
       resolve: ({ state, inv, api }) => {
-        const targets = locationsWithinTwo(state, inv)
+        const targets = revealedNearby(state, inv)
         if (!targets.length) return
         const locationId = targets.length === 1 ? targets[0].id
           : api.choice({ kind: 'location', source: '05322', seat: inv.seat,

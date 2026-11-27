@@ -20,7 +20,7 @@
     "verified": 40,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 52
+    "testsPassed": 54
   },
   "testFiles": [
     {
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
-      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+      "sha256": "d9a99f4137ca1129569168f42fa8101317144545ef0c3ac7993e24959581f6db"
     }
   ],
   "entries": [

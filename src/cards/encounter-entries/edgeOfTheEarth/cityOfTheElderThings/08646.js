@@ -15,8 +15,9 @@ export default {
     threatArea: true,
     resolveKind: "frostbitten"
   },
+  redirectHeal: { optional: true },
   flags: {
-    frostWeakness: true,
-    healAsOneDamageApproximation: true
+    frostWeakness: 'damage',
+    threatDamageSink: true
   }
 }

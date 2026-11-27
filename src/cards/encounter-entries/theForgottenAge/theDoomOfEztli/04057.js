@@ -5,24 +5,12 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { takeFromSetAsideInEntry } from '../../_shared.js'
-
 export default {
   code: '04057', scope: 'act',
   actRule: {
     onReveal(state, act, api) {
-      takeFromSetAsideInEntry(state, '04068')
-      const deck = [...(state.explorationDeck || []), 'chamberOfTime']
-      if (typeof api.shuffle === 'function') {
-        state.explorationDeck = api.shuffle(deck)
-      } else {
-        const copy = [...deck]
-        for (let index = copy.length - 1; index > 0; index--) {
-          const target = Math.floor((api.random?.() ?? 0) * (index + 1))
-          ;[copy[index], copy[target]] = [copy[target], copy[index]]
-        }
-        state.explorationDeck = copy
-      }
+      api.takeFromSetAside('04068')
+      api.addToExplorationDeck(['chamberOfTime'])
       api.info?.('🧭 「时间石室」洗入探索牌库。')
       const hasChalk = state.investigators
         .filter(inv => !inv.defeated && !inv.resigned)
@@ -30,10 +18,7 @@ export default {
       if (hasChalk) {
         api.info?.('✏️ 有人带着粉笔，你们抄下了雕文：本场景移出游戏。')
       } else {
-        state.victoryDisplay.push({
-          id: 'act:04057', code: '04057', originalCode: '04057',
-          victory: 0, vengeance: 1, name: act.name,
-        })
+        api.addStoryToVictory('04057', { sourceId: 'act:04057', vengeance: 1 })
         api.info?.('📜 没有粉笔：本场景放进胜利区，并获得复仇 1。')
       }
     },

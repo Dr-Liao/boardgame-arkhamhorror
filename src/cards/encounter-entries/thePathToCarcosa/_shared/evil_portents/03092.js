@@ -13,7 +13,7 @@ export default {
     // 「场上的毁灭标记总数」包括密谋/地点/敌人与调查员支援、威胁区上的毁灭。
     const doom = doomInPlayInEntry(state)
     if (!doom) {
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     api.test(inv.seat, 'willpower', doom, result => {

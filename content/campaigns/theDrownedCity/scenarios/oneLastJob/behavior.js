@@ -227,11 +227,12 @@ export function setupScenario(state, api = {}) {
 // ---------------------------------------------------------------------------
 // 行动（幕 1 谈判 / 幕 2 头目谈判 / 密所外星语言）
 // ---------------------------------------------------------------------------
+const parleyHealth = enemy => Math.max(0, (Number(enemy.health) || 0) - (Number(enemy.damageTaken) || 0))
 function act1ParleyCandidates(state, inv) {
   return enemiesInPlay(state).filter(enemy => enemy.location === inv.location
-    && enemy.engagedSeat === inv.seat
+    && (enemy.engagedSeat != null || enemy.massive)
     && hasTrait(enemy, 'Criminal')
-    && (Number(enemy.health) || 0) - (Number(enemy.damageTaken) || 0) <= (Number(inv.clues) || 0))
+    && parleyHealth(enemy) <= (Number(inv.clues) || 0))
 }
 
 function act2ParleySpec(state, inv) {
@@ -248,16 +249,16 @@ export function actions(state, inv) {
   if (!here) return []
   const moves = []
   const actCode = currentActCode(state)
-  // 幕 1「[fast] 花费 X 个线索：谈判。弃掉一名与你交战、剩余生命值为 X 的罪犯敌人。」
+  // 幕 1「[fast] 花费 X 个线索：谈判。弃掉本地点一名已交战、剩余生命值为 X 的罪犯敌人。」
   if ([ACT1_V1_CODE, ACT1_V2_CODE].includes(actCode)) {
     const parleyFlags = actFlags(state).parley || {}
     const candidates = act1ParleyCandidates(state, inv)
     moves.push({
-      action: 'scenarioAction', rule: 'oneLastJobParley', locationId: here.id, actions: 1,
-      label: '谈判：弃掉一名与你交战、剩余生命值不超过你线索数的[[罪犯]]敌人，并在幕上放置 1 个线索',
+      action: 'scenarioAction', rule: 'oneLastJobParley', scriptCard: 'act', locationId: here.id, actions: 0, fast: true,
+      label: `谈判：花费等于敌人剩余生命值的线索，弃掉本地点一名已交战的[[罪犯]]敌人并在幕上放置 ${parleyFlags.clueOnAct} 个线索`,
       reason: parleyFlags.discardEngagedCriminal !== true
         ? '该行动尚未在条目中实现'
-        : (candidates.length ? null : '你所在地点没有与你交战且剩余生命值不超过你线索数的[[罪犯]]敌人'),
+        : (candidates.length ? null : '本地点没有已交战且剩余生命值不超过你线索数的[[罪犯]]敌人'),
     })
   }
   // 幕 2 头目谈判（萨迪·谢尔顿 / 内奥米·欧巴尼恩）。
@@ -303,6 +304,10 @@ export function actions(state, inv) {
   return moves
 }
 
+export function fastActions(state, inv) {
+  return actions(state, inv).filter(move => move.rule === 'oneLastJobParley' && !move.reason)
+}
+
 export function performAction(state, inv, move, api = {}) {
   if (!move || !inv || inv.defeated || inv.resigned) return false
   if (move.rule === 'oneLastJobParley') return parleyAction(state, inv, api)
@@ -313,17 +318,22 @@ export function performAction(state, inv, move, api = {}) {
 }
 
 function parleyAction(state, inv, api) {
+  const rule = actFlags(state).parley
   const candidates = act1ParleyCandidates(state, inv)
-  if (!candidates.length) return false
-  const enemy = candidates[0]
-  const health = Math.max(1, (Number(enemy.health) || 1) - (Number(enemy.damageTaken) || 0))
-  const clues = Number(inv.clues) || 0
-  const pay = Math.min(clues, health)
-  inv.clues -= pay
-  safeCall(api, 'defeatEnemy', enemy)
-  if (Array.isArray(state.enemies)) state.enemies = state.enemies.filter(item => item !== enemy)
-  setCluesOnAct(state, cluesOnAct(state) + 1)
-  info(api, `${inv.name} 花费 ${pay} 个线索与「${enemy.name || codeOf(enemy)}」谈判：弃掉该敌人，幕上放置 1 个线索。`)
+  if (!rule?.discardEngagedCriminal || !candidates.length) return false
+  const selected = candidates.length > 1 ? api.choose?.({ kind: 'enemy', seat: inv.seat,
+    prompt: '选择要谈判的罪犯敌人', options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name || codeOf(enemy) })),
+  }) : candidates[0].id
+  const enemy = candidates.find(item => item.id === selected)
+  if (!enemy) return false
+  const pay = parleyHealth(enemy)
+  if (pay && api.canSpendClues?.(inv.seat) === false) return false
+  if (api.spendClues) api.spendClues(inv.seat, pay)
+  else inv.clues -= pay
+  if (api.discardEnemy) api.discardEnemy(enemy)
+  else state.enemies = state.enemies.filter(item => item !== enemy)
+  setCluesOnAct(state, cluesOnAct(state) + rule.clueOnAct)
+  info(api, `${inv.name} 花费 ${pay} 个线索与「${enemy.name || codeOf(enemy)}」谈判：弃掉该敌人，幕上放置 ${rule.clueOnAct} 个线索。`)
   return true
 }
 
@@ -713,7 +723,7 @@ export function afterEvade(state, inv, enemy, result = null, api = {}) {
       prompt: '内奥米首次被躲避：是否有调查员受到 1 点伤害以取消她的重整？', options })
     const target = state.investigators?.[Number(pick)]
     if (pick !== 'none' && target && target.location === enemy.location && !target.defeated) {
-      safeCall(api, 'damage', target.seat, 1)
+      safeCall(api, 'damage', target.seat, 1, { code: codeOf(enemy), sourceEnemyId: enemy.id })
       prevented = true
     }
   }
@@ -934,6 +944,7 @@ export const behavior = {
   locationPlaced,
   afterDeckSetup,
   actions,
+  fastActions,
   performAction,
   checkObjectives,
   afterParley,

@@ -1,11 +1,15 @@
 // 09689 域外来客之巢 · 地点（withoutATrace）
-// 印刷数据由章节 definition 的 location() 从卡表读取；地点能力由章节 behavior 承接。
-// approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）
+// 敌人在此处失去冷漠由敌人关键词读点计算；其余地点能力由章节 behavior 结算。
+import { hasTrait } from '../../_shared.js'
+
 export default {
   code: '09689',
   scope: 'location',
   implemented: true,
   flags: { victory: 1, printedShroud: 5, printedClues: 2, },
-  note: 'approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）',
+  modifiers: [{
+    target: 'loses:aloof',
+    condition: { when: ({ source, entity }) => source.revealed && hasTrait(entity, 'Outsider') },
+  }],
   abilities: [],
 }

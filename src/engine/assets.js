@@ -1,4 +1,8 @@
-import { choosePlayShuffle, payAdditionalPlayDamage, payAdditionalPlayHorror, preparePlayAttempt, quickPlayReduction } from './play-attempt.js'
+import { spliceHand } from './hand-icons.js'
+import { customizationEffect } from './tsk-customizable.js'
+import { sharedPlayOwner } from './shared-play.js'
+import { hiddenParityBlocks } from './hidden-rules.js'
+import { choosePlayShuffle, payAdditionalPlayDamage, payAdditionalPlayHorror, preparePlayAttempt, quickPlayReduction, reactionPlayCostIncrease } from './play-attempt.js'
 import { capabilityBlocked } from './modifiers.js'
 import { withPlayedEventDisposal } from './event-play-disposal.js'
 import { withEventTestBonus } from './effect-provenance.js'
@@ -9,7 +13,7 @@ import { payTokenCost } from './token-cost.js'
 import { keysOnExit } from './scenario-keys.js'
 import { removeVehicle } from './vehicles.js'
 import { recordPlayedCard } from './action-history.js'
-import { assetTextBlanked } from './card-text.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { consumeNextPlayDiscount } from './effect-state.js'
 import { afterHandEmptied } from './hand-discard-window.js'
 import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
@@ -73,7 +77,12 @@ export function createAssets(deps) {
   }
 
   function assetPassiveBonus(inv, key) {
-    return (inv.assets || []).reduce((sum, asset) => sum + (assetEffect(inv, asset)?.passive?.[key] || 0), 0)
+    return (inv.assets || []).reduce((sum, asset) => {
+      const passive = assetEffect(inv, asset)?.passive
+      if ((key === 'healthBonus' || key === 'sanityBonus')
+          && (inv.resources || 0) < (passive?.statCapacityResourcesAtLeast ?? 0)) return sum
+      return sum + (passive?.[key] || 0)
+    }, 0)
   }
 
   function assetPassiveData(code) {
@@ -187,13 +196,25 @@ export function createAssets(deps) {
   // 只有命中谓词的候选能使用该额外容量；受限占用不计入普通槽位。
   // - traitsAny：候选需拥有其中任一特性（01008 书位 / 02147 武器位 / 05112 法术位）；
   // - unique: false：候选必须是非独特（04006 米奇「只能放非独特盟友」这类盟友受限槽）。
-  function restrictedSlotInfo(inv, slot, cardCode) {
+  function adjustableSlotAllocations(inv) {
+    const specs = (inv.assets || []).filter(asset => !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset))
+      .flatMap(asset => registeredEntry(asset.code)?.restrictedSlots || [])
+      .filter(spec => Array.isArray(spec.slots) && spec.slots.length)
+    return specs.reduce((allocations, spec) => allocations.flatMap(allocation =>
+      spec.slots.map(slot => [...allocation, { ...spec, slot }])), [[]])
+  }
+
+  function restrictedSlotInfo(inv, slot, cardCode, allocation = []) {
     const controlled = [...(inv.assets || []), ...(inv.threat || [])]
-    const specs = []
+    const specs = allocation.filter(spec => spec.slot === slot)
     for (const holder of controlled) {
+      if (assetTextBlanked(holder, inv) || assetTextBlankedExceptForced(holder)) continue
+      for (const attachment of holder.attachments || []) {
+        if (attachment.restrictedSlot?.slot === slot && !assetTextBlanked(attachment, inv)) specs.push(attachment.restrictedSlot)
+      }
       const spec = registeredEntry(holder.code)?.restrictedSlots
       for (const entry of (Array.isArray(spec) ? spec : spec ? [spec] : [])) {
-        if (entry && entry.slot === slot) specs.push(entry)
+        if (entry && !entry.slots && entry.slot === slot) specs.push(entry)
       }
     }
     if (!specs.length) return { capacity: 0, occupancy: 0, eligible: false }
@@ -235,6 +256,10 @@ export function createAssets(deps) {
 
   function canEquip(inv, card) {
     if (exceedsControlledTraitLimit(inv, card)) return false
+    return adjustableSlotAllocations(inv).some(allocation => fitsAssetSlots(inv, card, allocation))
+  }
+
+  function fitsAssetSlots(inv, card, allocation) {
     const need = {}
     for (const s of normalizedSlots(card)) {
       if (s === 'handx2') need.hand = (need.hand || 0) + 2
@@ -251,7 +276,9 @@ export function createAssets(deps) {
       const delta = (reliefWithCard[slot] || 0) - (reliefNow[slot] || 0)
       if (delta > 0) candidateRelief[slot] = delta
     }
-    for (const [s, n] of Object.entries(need)) {
+    const slots = allocation.length ? new Set([...Object.keys(need), ...Object.keys(usage)]) : Object.keys(need)
+    for (const s of slots) {
+      const n = need[s] || 0
       let cap = SLOT_CAPACITY[s] ?? 0
       // 「你调查该地点时少 1 个手部槽位」只在调查行动里由 handPenaltyActive 打开。
       // 平时打出单手武器不能因为这个惩罚把空着的另一只手当成已满。
@@ -261,7 +288,7 @@ export function createAssets(deps) {
       // 受限额外槽的唯一读点：restrictedSlots（书位 / 武器位 / 法术位 / 非独特盟友槽）。
       // 容量只给命中谓词的候选；受限占用不占普通槽，因此还要从普通占用里扣掉 occupancy
       // （同时覆盖「候选卡是受限类型」与「在场受限卡可移入受限槽、把普通槽让给候选」）。
-      const restricted = restrictedSlotInfo(inv, s, card.code)
+      const restricted = restrictedSlotInfo(inv, s, n ? card.code : null, allocation)
       if (restricted.eligible) cap += restricted.capacity
       const ordinaryUsage = Math.max(0, (usage[s] || 0) - restricted.occupancy)
       let totalUsage = ordinaryUsage + (restricted.eligible ? restricted.occupancy : 0)
@@ -271,7 +298,7 @@ export function createAssets(deps) {
     return true
   }
 
-  const REPLACEMENT_SLOT_LABELS = { hand: '手部', arcane: '法术', ally: '盟友', accessory: '饰品', body: '身体', tarot: '塔罗' }
+  const REPLACEMENT_SLOT_LABELS = { hand: '手部', arcane: '法术', ally: '盟友', accessory: '饰品', body: '身体', head: '头部', tarot: '塔罗' }
   const baseSlot = slot => String(slot).replace(/x2$/, '')
 
   // 腾槽候选 = 占用了「待打出卡所需槽位」的支援。
@@ -282,6 +309,7 @@ export function createAssets(deps) {
   function replacementCandidates(state, inv, card) {
     const needed = new Set(normalizedSlots(card).map(baseSlot))
     if (!needed.size) return []
+    for (const allocation of adjustableSlotAllocations(inv)) for (const spec of allocation) needed.add(spec.slot)
     return inv.assets.filter(asset => {
       if (!canDiscardControlledAsset(state, inv, asset) || assetEffect(inv, asset)?.cannotDiscard) return false
       return occupiedSlots(inv, asset).some(slot => needed.has(baseSlot(slot)))
@@ -291,6 +319,8 @@ export function createAssets(deps) {
   // 只返回「弃到刚好够槽位」的最小方案：腾槽时必须停手，不能顺手多弃无关资产；
   // 同一层（张数相同）的全部组合都保留，玩家仍可自己决定先弃哪一张。
   function assetReplacementPlans(inv, card, state) {
+    const customizedSlots = state && !card.slotsOverride && customizationEffect(state, inv.seat, card.code, 'slots')
+    if (Array.isArray(customizedSlots)) card = { ...card, slots: customizedSlots, slotsOverride: true }
     if (exceedsControlledTraitLimit(inv, card)) return []
     if (canEquip(inv, card)) return [[]]
     const assets = replacementCandidates(state, inv, card)
@@ -376,11 +406,16 @@ export function createAssets(deps) {
 
   function leaveAsset(state, inv, asset, events = [], options = {}) {
     if (!inv.assets.includes(asset)) return
+    const entry = registeredEntry(asset.code)
+    if (entry?.assetRule?.cannotBeDefeated && (asset.cannotLeavePlay || entry.cannotLeavePlay)) return false
     // 2026-10-25 第七轮修复 05019：「不能离场」的支援（动态条件）拒绝一切离场路径。
     const leaveGuard = registeredEntry(asset.code)?.cannotLeavePlayWhile
     if (typeof leaveGuard === 'function' && leaveGuard(state, inv, asset) === true) {
       info(state, events, `「${cardName(asset.code)}」当前不能离场。`)
       return false
+    }
+    for (const enemy of state.enemies.filter(item => item.attachedToAssetId === asset.id)) {
+      deps.discardEnemyCard(state, enemy, events)
     }
     const healthBefore = getMaxHealth(inv)
     const sanityBefore = getMaxSanity(inv)
@@ -414,7 +449,7 @@ export function createAssets(deps) {
     }
     // 「如果其离场，将其从游戏中移除」（04311 第七印记的封印 / 03182a 丹尼尔·契斯特菲尔德）。
     // Phase 6（6e-16）：从条目级字段读（旧 DSL 条目回落）。
-    const removeOnLeave = registeredEntry(asset.code)?.removeFromGameWhenEmpty
+    const removeOnLeave = asset.removeFromGameOnLeave === true || registeredEntry(asset.code)?.removeFromGameWhenEmpty
       || registeredEntry(asset.code)?.removeFromGameOnLeave
     if (removeOnLeave) {
       asset.removedFromGame = true
@@ -426,7 +461,7 @@ export function createAssets(deps) {
     const leaveDescriptor = descriptorOfKind(asset.code, 'leavesPlay')
     if (leaveDescriptor?.resolve) {
       leaveDescriptor.resolve({
-        state, inv, seat: inv.seat, source: asset, descriptor: leaveDescriptor, events, context: {},
+        state, inv, seat: inv.seat, source: asset, descriptor: leaveDescriptor, events, context: { defeated: options.defeated === true },
         api: abilityApi(state, events),
       })
     } else {
@@ -435,7 +470,7 @@ export function createAssets(deps) {
         resolveEffect(state, inv.seat, { ...leaveEffect, assetId: asset.id }, makeRuntime(state, events))
       }
     }
-    scenarioBehavior(state).assetLeftPlay?.(state, inv, asset, scenarioRuntime(state, events))
+    scenarioBehavior(state).assetLeftPlay?.(state, inv, asset, scenarioRuntime(state, events), { reason })
     // 2026-10-25：新增「支援离场后」通用玩家卡反应窗口（05152 妥善养护：
     // 带附属升级的支援被弃置/放回后，把该支援与其升级返回手牌）。
     // context 带 asset 实例与附件数；调用方随后是否把卡放进弃牌堆由原逻辑决定。
@@ -544,19 +579,22 @@ export function createAssets(deps) {
     // 隐私弱点（03084d「你不能打出事件」）兜底：候选窗口已按同一读点过滤，
     // 这里再拦一次，避免内容层/通道直接调用执行器时绕过窗口。
     const def = cardDef(copyCode || peek)
-    if (playTypeBlocked(state, inv, def?.type) || capabilityBlocked(state, inv, 'play')) return false
+    if (playTypeBlocked(state, inv, def?.type) || hiddenParityBlocks(state, inv, def, 'play') || capabilityBlocked(state, inv, 'play')) return false
+    const quick = quickEventView(copyCode || peek)
+    const descriptor = quick?.descriptor || null
     const attempt = preparePlayAttempt(state, inv, copyCode || peek, events, deps, discount)
     if (attempt.cancelled) return false
     const costWindow = { when: 'beforePlayCost', seat: inv.seat, location: inv.location,
       cardCode: copyCode || peek, playedCardId: peek, playedCardCode: def?.code, cardType: def?.type || null,
-      cost: Math.max(0, attempt.cost - attempt.costReduction), costReduction: 0, costIncrease: 0,
+      cost: Math.max(0, attempt.cost - attempt.costReduction), costReduction: 0,
+      costIncrease: reactionPlayCostIncrease(descriptor, state, inv, context),
       availableResources: availablePlayResources(state, inv, def) }
-    if (quickPlayReduction(state, inv, def)) reactionWindow(state, 'beforePlayCost', costWindow, events, { allowNested: true })
+    if (descriptor?.useBeforePlayCost || quickPlayReduction(state, inv, def)) reactionWindow(state, 'beforePlayCost', costWindow, events, { allowNested: true })
     const cost = Math.max(0, costWindow.cost + costWindow.costIncrease - costWindow.costReduction)
     const { remaining, payments } = choosePlayUses(state, inv, def, cost, deps)
     if (availableResources(inv) < remaining) return false
     if (!payTokenCost(state, inv, registeredEntry(copyCode || peek)?.additionalTokenCost)) return false
-    const code = inv.hand.splice(index, 1)[0]
+    const code = spliceHand(inv, index, 1)[0]
     const beneathBefore = (inv.beneath || []).length
     resourceBank.spendFromPool(inv, remaining, state)
     spendPlayUses(state, payments, events, deps)
@@ -571,11 +609,12 @@ export function createAssets(deps) {
     info(state, events, fastLabel, { kind: 'play', seat: inv.seat, code })
     // P2-4 快速事件统一通道：无论旧写法（played+fast）还是新写法（reaction+fromHand+quickEvent），
     // 都由这里的同一执行器结算（alreadyPaid：费用与「快速打出」日志已在上面付过/写过）。
-    const quick = quickEventView(copyCode || code)
-    const descriptor = quick?.descriptor || null
     const disposal = {}
     if (!fromChannel) afterHandEmptied(state, inv, events, reactionWindow)
+    const previousReaction = state._reaction
+    const previousCost = context.playCost
     state._reaction = context
+    if (descriptor?.useBeforePlayCost) context.playCost = costWindow
     try {
       withEventTestBonus(state, inv.seat, copyCode || code, costWindow.skillBonus, () => withPlayedEventDisposal(context, disposal, () => {
         if (descriptor) {
@@ -588,7 +627,12 @@ export function createAssets(deps) {
         }
       }))
     } finally {
-      delete state._reaction
+      if (previousReaction === undefined) delete state._reaction
+      else state._reaction = previousReaction
+      if (descriptor?.useBeforePlayCost) {
+        if (previousCost === undefined) delete context.playCost
+        else context.playCost = previousCost
+      }
     }
     if (copyCode && registeredEntry(code)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
@@ -596,6 +640,7 @@ export function createAssets(deps) {
     } else {
       // 2026-10-25 本循环修复 05018（fast-event-disposal）：快速反应事件与普通打出走同一份「打出后去向」口径。
       // 之前这里固定 disposePlayedEvent，导致 exileAfterPlay 的快速事件（05018 神秘乐曲）进了弃牌堆。
+      const eventOwner = sharedPlayOwner(state, inv, code)
       const playedFlags = quick?.descriptor || {}
       const entryFlags = registeredEntry(copyCode || code) || {}
       const removeAfterPlay = playedFlags.removeAfterPlay === true || entryFlags.removeAfterPlay === true
@@ -610,8 +655,8 @@ export function createAssets(deps) {
       } else if (addToVictory) {
         state.victoryDisplay.push({ id: nextInstanceId(state, 'c'), code, originalCode: code, victory: cardDef(code)?.victory || 0 })
         info(state, events, `💎 「${cardName(code)}」被加入胜利展示区。`)
-      } else if (exileAfterPlay) exilePlayerCard(state, inv, code, events)
-      else if (shuffleBackAfterPlay) inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
+      } else if (exileAfterPlay) exilePlayerCard(state, eventOwner, code, events)
+      else if (shuffleBackAfterPlay) eventOwner.deck = replacePlayerZoneCards(state, eventOwner, shuffle([...eventOwner.deck, code], () => randomValue(state)), 'shuffle')
       else if (entryFlags.keepOnPlay !== true) {
         // 黛安娜在描述子结束时已经把这张卡从弃牌堆之前的位置挪到底下。
         // 快速事件是先离手、结算完才弃牌；若这里再弃一次，同一张卡会同时待在底下和弃牌堆。
@@ -620,7 +665,8 @@ export function createAssets(deps) {
         if (!movedBeneath) {
           if (choosePlayShuffle(state, inv, attempt)) {
             inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, code], () => randomValue(state)), 'shuffle')
-          } else disposePlayedEvent(inv, code)
+          } else if (eventOwner !== inv) eventOwner.discard.push(code)
+          else disposePlayedEvent(inv, code)
         }
       }
     }

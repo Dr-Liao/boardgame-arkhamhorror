@@ -6,9 +6,7 @@
 // 读点：investigateSuccess 窗口（调查成功后、发现线索前）+ 支援费用 {exhaust, uses}；
 // 弃牌堆取道具 api.moveCard({from:'discard',to:'hand'})；连接地点线索 api.discoverClue(seat,1,locationId)。
 //
-// approximation: 「不发现你所在地点的 1 个线索」的替换没有可写入口（investigateSuccess 上下文不可改
-// 调查结算），因此本实现按追加效果处理（标准线索仍会发现）；已提交请求 m2-3-08104。
-//
+// 替代一条标准调查线索，其他额外线索照常结算。
 // 一张卡一个文件：这张卡的行为只在这里维护。
 
 export default {
@@ -18,13 +16,19 @@ export default {
   abilities: [
     { kind: 'reaction', trigger: 'investigateSuccess', label: '调查成功：横置并花 1 秘密，取回道具或在连接地点发现线索',
       cost: { exhaust: true, uses: 1 },
-      criteria: ({ inv, source, context }) => Boolean(source) && context?.seat === inv.seat,
-      resolve: ({ inv, source, api }) => {
+      criteria: ({ state, inv, source, context, helpers }) => {
+        if (!source || context?.seat !== inv.seat) return false
+        const location = state.locations.find(item => item.id === context.location)
+        return Boolean(location?.clues > 0 && (inv.discard.some(code => helpers.cardTraits(code)
+          .some(trait => String(trait).toLowerCase() === 'item'))
+          || location.connections?.some(id => helpers.canDiscoverClueAt(inv.seat, id))))
+      },
+      resolve: ({ state, inv, source, context, api }) => {
         if (!source) return
-        const items = [...new Set(inv.discard.filter(code => api.cardType(code) === 'asset'
-          && api.cardTraits(code).some(trait => String(trait).toLowerCase() === 'item')))]
+        const items = [...new Set(inv.discard.filter(code => api.cardTraits(code).some(trait => String(trait).toLowerCase() === 'item')))]
         const here = api.locName(inv.location) || inv.location
-        const connected = (api.moveDestinations?.(inv.seat) || [])
+        const connected = (state.locations.find(location => location.id === context.location)?.connections || [])
+          .filter(id => api.canDiscoverClueAt(inv.seat, id))
         const options = []
         if (items.length) options.push({ id: 'item', label: '从弃牌堆取回一张[[道具]]卡牌' })
         if (connected.length) options.push({ id: 'clue', label: '在一个连接地点发现 1 个线索' })
@@ -32,12 +36,13 @@ export default {
         const picked = options.length === 1 ? options[0].id : api.choice({
           kind: 'effect', source: '08104', seat: inv.seat, prompt: `选择「${here}」调查成功后的收益。`, options,
         })
+        if (!api.replaceInvestigationClue()) return
         if (picked === 'item') {
           const code = items.length === 1 ? items[0] : api.choice({
             kind: 'card', source: '08104', seat: inv.seat, prompt: '选择要取回的[[道具]]卡牌。',
             options: items.map(value => ({ id: value, label: api.cardName(value) })),
           })
-          api.moveCard({ code, from: 'discard', to: 'hand' })
+          api.moveCard({ code, from: 'discard', to: 'hand' }, { seat: inv.seat })
         } else {
           const locationId = connected.length === 1 ? connected[0] : api.choice({
             kind: 'location', source: '08104', seat: inv.seat, prompt: '选择要发现线索的连接地点。',

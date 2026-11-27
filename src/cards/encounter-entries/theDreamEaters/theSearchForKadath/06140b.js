@@ -6,8 +6,6 @@
 export default {
   code: '06140b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
-    signs: 1,
     resolve(state, api, ctx = {}) {
       const locationId = ctx.location?.id || ctx.inv?.location || 'serannian'
       for (const inv of (state.investigators || [])) {

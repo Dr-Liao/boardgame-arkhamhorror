@@ -5,4 +5,4 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-export default { code: '04190', scope: 'treachery', treacheryRule: {"threatArea":true} }
+export default { code: '04190', scope: 'treachery', implemented: true }

@@ -1,12 +1,13 @@
 ﻿// 09-a 绯红密钥 · 分片 6（09584–09622）独立验收证据。
 //
 // 逐卡证据：标题含卡号；真实执行条目能力 / 章节 behavior 分派 / 章节数据读取。
-// 失败卡的用例同样真实执行当前实现，并断言「读点缺失」的具体事实（供报告失败清单引用）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 
-import '../src/engine/engine.js'
+import { advanceAgenda, drawEncounter, enemyEvadeValue, enemyFightValue, executeDescriptor, legalMoves, scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { asset, enemy, fixture } from './core-fixture.mjs'
 import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import * as dealings from '../content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js'
@@ -32,6 +33,17 @@ function stateFor(count = 1, extra = {}) {
     campaign: { leadSeat: 0, records: {}, completedSteps: [], partners: {} },
     victoryDisplay: [], doom: 0, chaosBag: [], difficulty: 'standard', numInvestigators: count,
     phase: 'investigation', round: 1, status: 'playing', ...extra,
+  }
+}
+
+function runEffect(state, execute) {
+  resolveTransaction(state, state.currentSeat, { action: 'acceptScarletKeyEffect' }, execute)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 80, '待决选择未收敛')
+    const choice = state.pendingChoice
+    const optionId = ['done', 'skip', 'self'].find(id => choice.options.some(option => option.id === id))
+      ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, execute)
   }
 }
 const entryOf = code => registeredEntry(code)
@@ -204,9 +216,32 @@ for (const [code, expected] of Object.entries({
   })
 }
 
-test('09595 幕：德西离场强制（放一边 + 全体 1 恐惧）缺 behavior.storyAssetLeftPlay 读点', () => {
-  assert.equal(typeof dm.behavior.storyAssetLeftPlay, 'undefined', '本章没有消费「剧情支援离场」的钩子')
-  assert.equal(source('../content/campaigns/theScarletKeys/scenarios/dancingMad/behavior.js').includes('storyAssetLeftPlay'), false)
+test('09595 幕：德西离场时放在一边，全体受到 1 点恐惧', () => {
+  const state = fixture('01001', 2)
+  state.scenario = { ...state.scenario, id: dm.scenario.id }
+  state.acts = [{ code: '09595', originalCode: '09595' }]
+  state.actIndex = 0
+  state.storyAssets = [{ id: 'desiderio', code: '09607b', originalCode: '09607b', location: state.investigators[0].location }]
+  runEffect(state, draft => scenarioRuntime(draft, []).removeStoryAsset('desiderio'))
+  assert.deepEqual(state.investigators.map(inv => inv.horror), [1, 1])
+  assert.equal(state.storyAssets.length, 0)
+  assert.ok(state.scenarioZones.setAside.includes('09607b'))
+  assert.ok(!state.encounterDiscard.includes('09607b'))
+})
+
+test('09595 幕／09608 惨遭夺舍：德西被选中时移出场地并放在一边', () => {
+  const state = fixture('01001', 2)
+  state.scenario = { ...state.scenario, id: dm.scenario.id }
+  state.acts = [{ code: '09595', originalCode: '09595' }]
+  state.actIndex = 0
+  asset(state, '09607b', { traits: ALL_CARDS['09607b'].traits })
+  state.chaosBag = ['autofail']
+  state.encounterDeck = ['09608']
+  runEffect(state, draft => drawEncounter(draft, draft.investigators[0], []))
+  assert.deepEqual(state.investigators.map(inv => inv.horror), [1, 1])
+  assert.deepEqual(state.investigators[0].assets, [])
+  assert.ok(state.scenarioZones.setAside.includes('09607b'))
+  assert.ok(!scenarioRuntime(state, []).mechanics.tsk.hollow.isHollowed('09607b'))
 })
 
 test('09596 幕：隐匿 X 的团队付线索改直接交战由 concealEnemy 实现（幕 2 v.I 目标口径）', () => {
@@ -260,18 +295,30 @@ test('09602 热带花园：调查成功 3+ 抽回空洞 / 失败 3+ 把非弱点
   assert.equal(result, null, '无空洞候选时不结算（读点已进入）')
 })
 
-test('09603 哈瓦那大剧院：花费 2 资源降低隐藏值，但缺少「直到你的回合结束」的到期清理', () => {
-  const state = stateFor()
-  state.scenario = { locations: { teatro: { originalCode: '09603' } } }
-  state.locations = [{ id: 'teatro', code: '09603', connections: [], revealed: true, shroud: 4 }]
-  state.investigators[0].location = 'teatro'
-  const moves = dm.behavior.actions(state, state.investigators[0])
-  const action = moves.find(move => move.rule === 'granTeatroShroud')
-  assert.ok(action)
-  dm.behavior.performAction(state, state.investigators[0], action, { info: () => {} })
-  assert.equal(state.locations[0].shroudMod, -2)
-  dm.behavior.roundEnded(state, { info: () => {} })
-  assert.equal(state.locations[0].shroudMod, -2, '回合结束后仍为 -2（未实现到期清理）')
+test('09603 哈瓦那大剧院：花费 2 个资源降低本回合隐藏值，结束回合或再次行动时恢复', () => {
+  const state = fixture('01001', 2)
+  state.scenario = { ...state.scenario, id: dm.scenario.id, locations: dm.scenario.locations }
+  const loc = { id: 'granTeatroDeLaHabana', code: '09603', connections: [], revealed: true, shroud: 4 }
+  state.locations = [loc]
+  const [inv, other] = state.investigators
+  inv.location = other.location = loc.id
+  state.currentSeat = inv.seat
+  const descriptor = entryOf('09603').abilities[0]
+  assert.equal(descriptor.criteria({ state, inv, source: loc }), true)
+  const theaterActions = () => legalMoves(state, 0).filter(move => move.entityId === loc.id || move.rule === 'granTeatroShroud')
+  assert.equal(theaterActions().length, 1)
+  executeDescriptor(state, { inv, source: loc, descriptor, events: [] })
+  assert.equal(inv.resources, 28)
+  assert.equal(theaterActions().length, 0)
+  const shroud = () => scenarioRuntime(state, []).locationShroud(loc.id, state.currentSeat, { includeLocationState: true })
+  assert.equal(shroud(), 2)
+  inv.turnEnded = true
+  assert.equal(shroud(), 4)
+  inv.turnEnded = false
+  state.turnSerial++
+  assert.equal(shroud(), 4)
+  state.currentSeat = other.seat
+  assert.equal(shroud(), 4)
 })
 
 test('09604 海景游艇俱乐部：调查改为查看迷你卡已揭示面（investigateResult 读点）', () => {
@@ -343,8 +390,8 @@ test('09608 惨遭夺舍：显现意志(4)失败把[[盟友]]/[[道具]]作为�
   }
   entry.encounterResolve(state, state.investigators[0], {}, api)
   assert.deepEqual(calls[0], ['test', 'willpower', 4])
-  assert.equal(calls[1][0], 'hollow')
-  assert.equal(calls[2][0], 'removeAsset')
+  assert.equal(calls[1][0], 'removeAsset')
+  assert.equal(calls[2][0], 'hollow')
 })
 
 // ---------------------------------------------------------------------------
@@ -360,18 +407,23 @@ test('09609 如履薄冰（剧本参考卡）：内容层提供混乱标记表�
   assert.equal(typeof oti.behavior.resolveChaosToken, 'function')
 })
 
-for (const code of ['09610', '09611']) {
-  test(`${code} 议程：背面空洞化脚本动作有 behavior 读点，但正面「每 N×人数空洞移除若干并放毁灭」无读点`, () => {
-    const agenda = otiDef.AGENDAS.find(item => item.originalCode === code)
-    assert.ok(agenda)
-    assert.equal(typeof oti.behavior.agendaReveal, 'function', '背面动作读点存在')
-    const state = stateFor()
-    state.agendas = [{ originalCode: code }]
-    state.agendaIndex = 0
-    const handled = oti.behavior.agendaReveal(state, state.agendas[0], { info: () => {}, mechanics: { tsk: { hollow: { hollow: () => {}, recall: () => {} } } } })
-    assert.equal(handled, true)
-    assert.equal('hollowForced' in agenda, false, '正面空洞强制阈值未在任何数据/读点声明')
-    assert.equal(typeof oti.behavior.agendaForced, 'undefined', '没有正面强制的窗口读点')
+// 09610/09611 的中文版正面只有风味文字与毁灭阈值。空洞阈值强制是疯星乱舞 09592/09593 的规则。
+for (const [index, code, threshold] of [[0, '09610', 7], [1, '09611', 6]]) {
+  test(`${code} 议程：正面毁灭阈值 ${threshold}，推进后各将一张盟友或道具设为空洞`, () => {
+    assert.equal(ALL_CARDS[code].textZh, '', '正面只印风味文字')
+    assert.match(ALL_CARDS[code].backTextZh, /盟友.*道具.*空洞/)
+    const state = fixture('01001', 2)
+    state.scenario = { ...state.scenario, id: oti.scenario.id }
+    state.agendas = structuredClone(otiDef.AGENDAS)
+    state.agendaIndex = index
+    state.doom = threshold
+    state.investigators[0].hand = ['01018']
+    state.investigators[1].hand = ['01021']
+    assert.equal(String(state.agendas[index].originalCode), code)
+    runEffect(state, draft => advanceAgenda(draft, [], 'doom'))
+    assert.equal(state.agendaIndex, index + 1)
+    assert.deepEqual(state.investigators.map(inv => inv.hand), [[], []])
+    assert.deepEqual(scenarioRuntime(state, []).mechanics.tsk.hollow.cards().map(card => card.code).sort(), ['01018', '01021'])
   })
 }
 
@@ -409,12 +461,20 @@ test('09615a 夜魇游荡：幕 3 目标（真实形态被揭露后推进）+ �
   assert.equal(typeof enterOutsidersLair, 'function')
 })
 
-test('09615b 域外来客之巢：显现入场语义由幕 3 背面实现，但「无线索时奇美拉 -1 攻击/躲避」无读点', () => {
-  const location = otiDef.LOCATIONS.outsidersLair
-  assert.ok(location)
-  assert.equal(String(location.originalCode), '09615b')
-  assert.equal(typeof oti.behavior.enemyStatModifier, 'undefined', '没有敌人属性修正读点')
-  assert.equal(OTI_SRC.includes('enemyStatModifier'), false)
+test('09615b 域外来客之巢：已揭示并无线索时真实形态攻防各 -1', () => {
+  const state = fixture()
+  state.scenario = { ...state.scenario, id: oti.scenario.id }
+  const lair = { ...otiDef.LOCATIONS.outsidersLair, id: 'outsidersLair', revealed: false, clues: 0 }
+  state.locations.push(lair)
+  const chimera = enemy(state, { code: '09626', originalCode: '09626', fight: 4, evade: 3 })
+  const variant = enemy(state, { code: '09627', originalCode: '09627', fight: 4, evade: 3, engagedSeat: null })
+  const stats = enemy => [enemyFightValue(state, enemy, state.investigators[0]), enemyEvadeValue(state, enemy, state.investigators[0])]
+  assert.deepEqual(stats(chimera), [4, 3])
+  lair.revealed = true
+  assert.deepEqual(stats(chimera), [3, 2])
+  assert.deepEqual(stats(variant), [4, 3])
+  lair.clues = 1
+  assert.deepEqual(stats(chimera), [4, 3])
 })
 
 test('09616 最后一刻：幕 4 目标（真实形态被击败）+ 背面按索恩版本分流结局', () => {
@@ -441,11 +501,23 @@ test('09617 安克雷奇：[action] 空洞回收 + [action] 撤退（地点数�
   assert.ok(OTI_SRC.includes('hollowRecall'), '空洞回收行动读点')
 })
 
-test('09618 费尔班克斯：[reaction] 花费 2 资源取消[[危险]]诡计效果无任何读点', () => {
-  const location = otiDef.LOCATIONS.fairbanks
-  assert.equal(String(location.originalCode), '09618')
-  assert.equal(typeof oti.behavior.cancelHazard, 'undefined')
-  assert.equal(/cancelHazard|cancelTreachery/.test(OTI_SRC), false, 'behavior 没有该反应窗口')
+test('09618 费尔班克斯：抽到[[危险]]诡计时支付 2 个资源取消并弃置', () => {
+  const state = fixture()
+  const location = { ...otiDef.LOCATIONS.fairbanks, id: 'fairbanks', revealed: true }
+  state.locations = [location]
+  state.investigators[0].location = location.id
+  state.encounterDeck = ['graspingHands']
+  const draw = draft => drawEncounter(draft, draft.investigators[0], [])
+  resolveTransaction(state, 0, { action: 'drawAtFairbanks' }, draw)
+  const choice = state.pendingChoice
+  assert.ok(choice)
+  const cancel = choice.options.find(option => /费尔班克斯|09618/.test(JSON.stringify(option)))
+  assert.ok(cancel, JSON.stringify(choice.options))
+  resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: cancel.id }, draw)
+  assert.ok(!state.pendingChoice)
+  assert.equal(state.investigators[0].resources, 28)
+  assert.equal(state.investigators[0].damage, 0)
+  assert.deepEqual(state.encounterDiscard, ['graspingHands'])
 })
 
 test('09619 山间溪流：进入检定 + 最后一个线索后放置 3 张界外荒地（locationEntered/cluesRemoved 读点）', () => {
@@ -475,10 +547,27 @@ test('09620 冰封湖面：本地调查员检定揭示符号后弃 1 张手牌�
   assert.equal(calls[0][0], 'harm', '选择受恐惧 → 受 1 点恐惧')
 })
 
-test('09621 偏远小路：本地点每轮第一张[[危险]]诡计获得涌动无任何读点', () => {
-  const location = otiDef.LOCATIONS.isolatedRoad
-  assert.equal(String(location.originalCode), '09621')
-  assert.equal(/firstHazard|gainsSurge/.test(OTI_SRC), false, 'behavior 没有首张危险诡计获得涌动的读点')
+test('09621 偏远小路：同一轮只有第一张[[危险]]诡计涌动，下一轮重新计数', () => {
+  const state = fixture()
+  const location = { ...otiDef.LOCATIONS.isolatedRoad, id: 'isolatedRoad', revealed: true }
+  state.locations = [location]
+  const inv = state.investigators[0]
+  inv.location = location.id
+  const draw = draft => drawEncounter(draft, draft.investigators[0], [])
+  const reveal = () => {
+    state.encounterDeck = ['dissonantVoices', 'graspingHands']
+    resolveTransaction(state, 0, { action: 'drawAtIsolatedRoad' }, draw)
+    while (state.pendingChoice) {
+      const choice = state.pendingChoice
+      const optionId = choice.options.find(option => ['skip', 'done', 'self'].includes(option.id))?.id ?? choice.options[0].id
+      resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, draw)
+    }
+    return state.encounterDeck.length
+  }
+  assert.equal(reveal(), 0)
+  assert.equal(reveal(), 1)
+  state.round++
+  assert.equal(reveal(), 0)
 })
 
 test('09622 被遗忘的哨站：[action] 抽 3 张卡（每场一次）行动读点', () => {

@@ -3,7 +3,7 @@
   "unit": "08-a-6",
   "profile": {
     "id": "eote-campaign-c-2026-11",
-    "scope": "地球边缘 08 段 eoec 战役卡（08573b–08607）45 条目录记录。21 条通过五维验收；24 条 fatalMirage 逐卡规则声明无读点/结构条件缺陷暂不切换。",
+    "scope": "地球边缘 08 段 eoec 战役卡（08573b–08607）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,27 +17,23 @@
   },
   "summary": {
     "total": 45,
-    "verified": 21,
-    "unverified": 24,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 159
+    "testsPassed": 182
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
-      "sha256": "6f8060a59f3748e302f1a2cd3481ec04938285ab1c2467a0396f4677e99bac15"
+      "sha256": "c3fca0cfcbd32811f253cce200f146065789479503e5b4414c104b197da24096"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-fatalMirage.test.mjs",
-      "sha256": "9625cd3ace52514d9f8f71346f0d6093577677de52af8deea7fce400fe07f353"
+      "sha256": "82e9b7cf47b295a615166362384332323dc7853839a362bd14f5d42c85f7dc90"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
-      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
-      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+      "sha256": "92c6bf729a67340ce191066ab6b8fe1fd3be2e7cf1f45e3f47bef9f0f501c182"
     },
     {
       "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
@@ -77,9 +73,17 @@
       "code": "08574",
       "name": "黑色岩石",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「伙伴艾弗里在场时本地点 -2 帷幕」与「[fast] 加 1 frost：发现 2 线索（团队每场一次）」无读点：flags.investigatorShroudBonus / freeFrostForClues 无任何引擎或内容层消费，条目也没有 abilities；mirageId 亦为未读字段。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08574 黑色岩石：克莱普尔降低帷幕 2，添加寒霜取得 2 线索且团队仅可一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08574b 地点记忆剧情：伙伴活着时生成放一边的记忆敌人，伙伴被划掉时放逐记忆并允许推进"
+        }
+      ]
     },
     {
       "code": "08574b",
@@ -97,9 +101,25 @@
       "code": "08575",
       "name": "狩猎失败之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08575 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08575 记忆敌人：真实专属反应或谈判对敌人造成 3 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08575 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08575b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08575b",
@@ -117,9 +137,25 @@
       "code": "08576",
       "name": "去世病人之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08576 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08576 记忆敌人：真实专属反应或谈判对敌人造成 2 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08576 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08576b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08576b",
@@ -137,9 +173,25 @@
       "code": "08577",
       "name": "失踪父亲之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08577 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08577 记忆敌人：真实专属反应或谈判对敌人造成 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08577 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08577b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08577b",
@@ -157,9 +209,25 @@
       "code": "08578",
       "name": "饱经战乱的国家之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08578 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08578 记忆敌人：真实专属反应或谈判对敌人造成 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08578 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08578b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08578b",
@@ -177,9 +245,25 @@
       "code": "08579",
       "name": "悔恨航程之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08579 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08579 记忆敌人：真实专属反应或谈判对敌人造成 2 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08579 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08579b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08579b",
@@ -197,9 +281,25 @@
       "code": "08580",
       "name": "无法述说的恶魔之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08580 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08580 记忆敌人：真实专属反应或谈判对敌人造成 3 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08580 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08580b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08580b",
@@ -217,9 +317,25 @@
       "code": "08581",
       "name": "可怕发现之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08581 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08581 记忆敌人：真实专属反应或谈判对敌人造成 4 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08581 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08581b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08581b",
@@ -237,9 +353,25 @@
       "code": "08582",
       "name": "翻译异星文字之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08582 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08582 记忆敌人：真实专属反应或谈判对敌人造成 4 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08582 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08582b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08582b",
@@ -257,9 +389,25 @@
       "code": "08583",
       "name": "单恋之记忆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Prey「拥有对应伙伴的调查员」未映射（flags.preyPartner 无读点；章节敌人定义 prey 缺失），且专属反应/谈判能力（reaction*/parley* flags）没有条目 abilities、引擎窗口或内容层钩子；仅「被击败翻面」与 Alert/Retaliate 生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08583 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08583 记忆敌人：真实专属反应或谈判对敌人造成 2 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08583 记忆敌人：真实击败翻面，背面进入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08583b 记忆敌人剧情：记录直面内心恶魔、伙伴切换坚毅、进胜利区并允许推进"
+        }
+      ]
     },
     {
       "code": "08583b",
@@ -277,105 +425,193 @@
       "code": "08584",
       "name": "恐怖阴影",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「位于已破除幻景地点时失去冷漠」与「发现/控制本地线索后放置等量毁灭」两个强制无读点：flags.losesAloofAtFlippedLocation / doomOnClueDiscover 无消费方，条目无 abilities。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08584 恐怖阴影：幻景破除前冷漠，发现或取得线索各放等量毁灭"
+        }
+      ]
     },
     {
       "code": "08585",
       "name": "易散之雾",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附属到最近未破除幻景地点并放 2 线索 / 翻面额外花 2 线索或各受 2 伤 / 地点破除幻景后弃掉」全部无读点：treacheryRule.attachToNearestUnflippedLocation 与 flags.attachLocationClues / discardWhenLocationFlipped 无消费方，且无 encounterResolve 或声明式检定。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08585 易散之雾：实际显现附属并增加 2 线索，破除幻景时付额外线索后弃置"
+        }
+      ]
     },
     {
       "code": "08586",
       "name": "回首往事",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "显现二选一（受 2 恐惧 / 当前密谋放 1 毁灭且可推进）无读点：treacheryRule.chooseOne 无消费方，无 encounterResolve 或声明式检定；Peril 由卡文解析生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08586 回首往事：实际显现可选择 2 恐惧或在密谋加 1 毁灭"
+        }
+      ]
     },
     {
       "code": "08587",
       "name": "威廉·戴尔教授",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08587 坚毅伙伴：快速治疗 2 点 horror，横置并花 1 使用，无行动消耗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08587 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        }
+      ]
     },
     {
       "code": "08588",
       "name": "丹佛斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08588 丹佛斯：真实忒咳哩弱点结算后抽 3 张，抽到的忒咳哩直接弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08588 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        }
+      ]
     },
     {
       "code": "08589",
       "name": "伊里亚·阿什瓦克",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[fast] 能力被声明为 action（时机错误）且 uses 资产无使用数/类型；resolve 直接调用 api.evade(seat,{enemyId,skill,baseValue}) 与引擎攻击/躲避面不一致，能力不可按卡面使用；partnerRules 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08589 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08589 阿什瓦克：真实快速躲避基础敏捷 6，成功可移动到相邻地点"
+        }
+      ]
     },
     {
       "code": "08590",
       "name": "玛拉·辛哈医生",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08590 坚毅伙伴：快速治疗 2 点 damage，横置并花 1 使用，无行动消耗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08590 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        }
+      ]
     },
     {
       "code": "08591",
       "name": "艾弗里·克莱普尔",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08591 克莱普尔：实际取消寒霜，再揭示新标记或扣 1 补给"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08591 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        }
+      ]
     },
     {
       "code": "08592",
       "name": "詹姆斯·“曲奇”·弗雷德里克斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[fast] 攻击能力时机错误（声明 action）且 uses 未接线；「本轮不能攻击」以 addEffect 空 modifiers 实现，不产生实际禁止攻击读点；partnerRules 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08592 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08592 曲奇：真实快速攻击基础战斗 6，只有非精英敌人失去本轮攻击能力"
+        }
+      ]
     },
     {
       "code": "08593",
       "name": "艾米·肯斯勒博士",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[fast] 调查能力时机错误（声明 action）且 uses 未接线；成功后只查看自己牌库顶 1 张，缺「任一位调查员牌库或遭遇牌库」与「可弃掉该牌」子句；partnerRules 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08593 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08593 肯斯勒：真实快速调查基础智力 6，成功查看并弃掉遭遇牌库顶牌"
+        }
+      ]
     },
     {
       "code": "08594",
       "name": "罗尔德·埃尔斯沃思",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08594 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08594 埃尔斯沃思：可横置或花补给，令场上非弱点诡计文本空白直到回合结束"
+        }
+      ]
     },
     {
       "code": "08595",
       "name": "高田弘子",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伙伴能力完全缺失：flags.partnerRules 字符串无读点，条目 abilities 为空；choosePartner 创建的资产 uses/usesType 也不从条目接线（ALL_CARDS 无 uses 字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08595 坚毅伙伴：真实选择生成卡面印刷的使用数和类型"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08595 高田弘子：实际行动获得 1 资源并移入选择的至多 3 资源"
+        }
+      ]
     },
     {
       "code": "08596",
       "name": "失落之峰",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "剧本参考卡没有单卡条目文件（同战役 08549 参考卡有 entry）。标记数值与失败追加效果只写在内容层 chaos.js/behavior.js，没有 scenarioRule 条目读点，违反「一张有行为的卡=一个文件」与「声明即接线」，无法按 08-a 账本逐卡切换 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08596 失落之峰：混乱标记的骷髅数值随地点高度和难度变化"
+        }
+      ]
     },
     {
       "code": "08597",
@@ -489,9 +725,13 @@
       "code": "08606",
       "name": "迎风通路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「如果其高度为 0」条件未实现：内容层 locationRevealed 对 placeCluesPerInvestigator 不检查高度，任何高度揭示都会放 1×人数线索（测试在高度 1 记录到 +2，与卡面不符）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard6.test.mjs",
+          "test": "08606 迎风通路：从下方进入放 1 线索，揭示时仅高度为 0 才按人数放线索"
+        }
+      ]
     },
     {
       "code": "08607",

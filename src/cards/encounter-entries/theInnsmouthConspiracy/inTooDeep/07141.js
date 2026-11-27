@@ -1,4 +1,4 @@
-import { keysAt, barrierEdges } from '../../_shared.js'
+import { keysAt, removeBarrierParley } from '../../_shared.js'
 export default {
   code: '07141', scope: 'location', implemented: true,
   abilities: [
@@ -14,11 +14,9 @@ export default {
         if (locations.some(location => location.id === id)) api.moveInvestigator(inv.seat, id)
       },
     },
-    {
-      kind: 'action', actionKind: 'parley', label: '谈判：弃置1张受控资产，移除1个屏障',
+    removeBarrierParley({
+      label: '谈判：弃置1张受控资产，移除1个屏障',
       cost: { action: 1, discardControlledAsset: 1 },
-      criteria: ({ state, source }) => barrierEdges(state, source.id).length > 0,
-      resolve: ({ inv, source, api }) => api.barriers.removeConnected(inv.seat, source.id),
-    },
+    }),
   ],
 }

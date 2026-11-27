@@ -1,6 +1,8 @@
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { encounterRules } from '../../encounter-rules.js'
+import { teamOnce, teamOnceUsed } from '../../../../../src/cards/encounter-entries/_shared.js'
 import { actRuleFor, agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { symbolConnections } from '../../card-data.js'
@@ -419,30 +421,6 @@ function exploreFrom(state, inv, api) {
 
 const isWeaknessCode = code => ['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype)
 
-// 每场 / 每阶段 / 每轮「团队仅限一次」的标记。key 由效果自己给，scope 决定按轮还是按阶段。
-function teamOnce(state, key, scope = 'phase') {
-  const flags = state.scenarioFlags ||= {}
-  const bucket = (flags.teamOnce ||= {})
-  const tag = `${key}:${state.round}:${scope === 'round' ? 'r' : state.phase}`
-  if (bucket[tag]) return false
-  bucket[tag] = true
-  return true
-}
-
-// 「发现本地点的 N 个线索」：从地点搬到调查员的线索池（与引擎调查成功同一口径）。
-function discoverAt(state, api, inv, location, amount) {
-  if (!inv || !location) return 0
-  // 04186 帕德玛重整时，任何[[古代]]地点的线索均不能被发现（含地点卡自身的发现效果）。
-  if (isAncient(location)
-    && state.enemies.some(enemy => original(enemy) === PADMA && !enemy.exhausted)) return 0
-  const found = Math.min(Math.max(0, amount), location.clues || 0)
-  if (found <= 0) return 0
-  location.clues -= found
-  api.gainClues(inv.seat, found)
-  notifyAncientLastClue(state, location, api)
-  return found
-}
-
 function nearestEnemyTo(state, locationId) {
   const candidates = state.enemies.filter(enemy => !enemy.defeated)
   if (!candidates.length) return null
@@ -558,15 +536,6 @@ function brotherhoodHandBlocks(state, locationId) {
     || (here?.connections || []).includes(hand.location)
 }
 
-function notifyAncientLastClue(state, location, api) {
-  if (!isAncient(location) || (location.clues || 0) > 0) return
-  const hand = state.enemies.find(enemy => original(enemy) === HAND_OF_THE_BROTHERHOOD
-    && !enemy.exhausted && !enemy.defeated)
-  if (!hand) return
-  hand.doom = (hand.doom || 0) + 1
-  api.info?.(`🌑 古代地点的最后一个线索被发现：兄弟会之手上放置 1 个毁灭标记。`)
-}
-
 // 04179 的反应：抽取一张[[巫术]]（Hex）卡牌后发现本地点的 1 个线索（团队每阶段一次）。
 // 巫术卡都是遭遇诡计，因此主触发点是引擎的 encounterDrawn 钩子（src/engine/encounter.js
 // 在抽到遭遇牌、结算显现之前调用）；玩家牌库抽牌仍走 cardDrawn，两处共用这一份实现。
@@ -575,22 +544,32 @@ function chapultepecHillHexReaction(state, inv, code, api) {
   if (!inv) return
   const location = here(state, inv)
   if (original(location) !== '04179' || !hasTrait({ code }, 'Hex')) return
-  if (brotherhoodHandBlocks(state, inv.location)) return
-  if (!teamOnce(state, '04179clue')) return
-  const found = discoverAt(state, api, inv, location, 1)
-  if (found) api.info?.(`🌿 查普尔特佩克山：${inv.name} 抽到巫术卡牌后发现了 ${found} 个线索。`)
+  discoverAncientClueReaction(state, inv, location, api)
 }
 
-// 04174 的反应：在本地点击败或躲避蛇族后，发现本地点的 1 个线索（团队每阶段一次）。
+// 04174 在本地点击败或躲避蛇族后，可以发现 1 个线索。
 function temploMayorReaction(state, api, enemy, seat) {
-  if (!enemy || !hasTrait(enemy, 'Serpent')) return
+  if (!enemy || !hasTrait(enemy, 'Serpent') || !Number.isInteger(seat)) return
   const location = state.locations.find(entry => entry.id === enemy.location)
   if (!location || original(location) !== '04174') return
-  if (brotherhoodHandBlocks(state, location.id)) return
-  if (!teamOnce(state, '04174clue')) return
-  const inv = state.investigators[Number.isInteger(seat) ? seat : state.currentSeat]
-  const found = discoverAt(state, api, inv, location, 1)
-  if (found) api.info?.(`🏛️ 大神庙：${inv.name} 击败或躲避蛇族后发现了 ${found} 个线索。`)
+  discoverAncientClueReaction(state, state.investigators[seat], location, api)
+}
+
+function discoverAncientClueReaction(state, inv, location, api) {
+  if (!inv || inv.defeated || inv.resigned || inv.location !== location.id) return
+  if (!location.clues || brotherhoodHandBlocks(state, location.id)) return
+  if (!api.canDiscoverClueAt(inv.seat, location.id)) return
+  const code = original(location)
+  const key = `${code}clue`
+  if (teamOnceUsed(state, key)) return
+  const answer = api.choose({
+    kind: 'reaction', source: code, cardCode: code, seat: inv.seat, canSkip: true,
+    prompt: `「${location.name}」：是否发现本地点的 1 个线索？`,
+    options: [{ id: 'discover', label: '发现 1 个线索' }, { id: 'skip', label: '不发动' }],
+  })
+  if (answer !== 'discover') return
+  teamOnce(state, api, key)
+  api.discoverClue(inv.seat, 1, location.id)
 }
 
 // 第 92 轮：古代地点的 [action] 由地点条目 ancientAction 声明。
@@ -780,11 +759,6 @@ export const behavior = {
     return !(padma && isAncient(location))
   },
 
-  // 引擎调查路径拿掉最后一个线索时也要通知（04188）。
-  cluesRemoved(state, location, amount, api) {
-    if ((amount || 0) > 0) notifyAncientLastClue(state, location, api)
-  },
-
   actions(state, inv) {
     // 关键：恶蛇的关键词是持续效果（古代地点有线索 → 反击/警戒，否则猎手）。
     // 每次生成合法行动（玩家决策前）都重算一遍，避免只在 5 个时点更新。
@@ -847,15 +821,15 @@ export const behavior = {
   },
 
   // 04174 的反应：在本地点击败蛇族后，发现本地点的 1 个线索（团队每阶段一次）。
-  enemyDefeated(state, enemy, api) {
+  enemyDefeated(state, enemy, api, outcome) {
     const replaced = encounterRules.enemyDefeated?.(state, enemy, api)
-    temploMayorReaction(state, api, enemy, enemy.defeatedBy)
+    temploMayorReaction(state, api, enemy, outcome ? outcome.sourceSeat : enemy.defeatedBy)
     return replaced
   },
 
   afterEvade(state, inv, enemy, result, api) {
     encounterRules.afterEvade?.(state, inv, enemy, result, api)
-    temploMayorReaction(state, api, enemy, inv?.seat)
+    if (result?.success !== false) temploMayorReaction(state, api, enemy, inv?.seat)
   },
 
   performAction(state, inv, move, api) {
@@ -1162,7 +1136,7 @@ function discardForCost(state, inv, required, api) {
     const picked = remaining[Number(answer)] || remaining[0]
     remaining.splice(remaining.indexOf(picked), 1)
     const index = inv.hand.indexOf(picked)
-    if (index >= 0) inv.hand.splice(index, 1)
+    if (index >= 0) spliceHand(inv, index, 1)
     inv.discard.push(picked)
     total += handCost(picked)
   }

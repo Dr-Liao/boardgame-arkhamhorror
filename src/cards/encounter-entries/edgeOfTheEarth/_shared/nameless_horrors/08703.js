@@ -2,8 +2,7 @@
 // 卡面：显现 - 将忒咳哩-哩牌库顶的 1 张卡牌洗入你的牌库，不要查看内容。然后将渎神幻象放置入场，
 //   放到你的威胁区域。你抽取的每张忒咳哩-哩弱点的效果额外结算一次。
 //   [action]：检定[willpower](3)。如果你检定成功，弃掉渎神幻象。
-// 读点：威胁区放置 api.threat；「弱点效果额外结算一次」需要引擎的弱点重复结算读点
-//   （primitive-requests/p7-08703.json）；[action] 走威胁区条目 abilities。
+// 弱点结算读取 tekeliliDoubleResolution，弃掉本卡的行动由威胁区能力提供。
 const CODE = '08703'
 
 export default {
@@ -27,6 +26,5 @@ export default {
       } })
     },
   }],
-  note: '「抽取的每张忒咳哩-哩弱点额外结算一次」需要引擎的弱点重复结算读点（primitive-requests/p7-08703.json）。',
 }
 

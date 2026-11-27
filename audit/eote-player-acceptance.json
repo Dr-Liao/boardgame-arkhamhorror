@@ -20,8 +20,8 @@
     "total": 115,
     "verified": 115,
     "missing": 0,
-    "simplified": 53,
-    "simplifiedDisclosed": 53,
+    "simplified": 18,
+    "simplifiedDisclosed": 18,
     "buildable": 111,
     "dependencyOnly": 4,
     "basicWeaknesses": 4,
@@ -196,7 +196,7 @@
     },
     {
       "path": "src/cards/entries/08024.js",
-      "sha256": "502d664b403e128ed8f473de8ef8c35bd498f1d34257a8f20c81bfb8c4d78f8c"
+      "sha256": "fd97c4b4bae016a9acd29064a51237f9cde4940361548cb68096b27ddfa15cc8"
     },
     {
       "path": "src/cards/entries/08025.js",
@@ -248,7 +248,7 @@
     },
     {
       "path": "src/cards/entries/08037.js",
-      "sha256": "1d310ee639421a0a844c383c743f79e38753966c53e1d45becb95fdc4db71bb3"
+      "sha256": "eb83b8ad932f650ba625ce9dd58c06dd2fcd7fd4d3ec051689787c4f34f04f96"
     },
     {
       "path": "src/cards/entries/08038.js",
@@ -272,11 +272,11 @@
     },
     {
       "path": "src/cards/entries/08043.js",
-      "sha256": "8c5da26ae8d06e469da545c58a35bad7e6796b65f4a5f484d23ba62fdee441f5"
+      "sha256": "7a6ef953e7cba212893b0f67b1314e728eee9c8534d3c87ffe67e5a4a2977e48"
     },
     {
       "path": "src/cards/entries/08044.js",
-      "sha256": "3923c94f1cbbdc38f7df6c8f996b13638df607efca405edb034d2fb3760754e2"
+      "sha256": "e15026de621ca7139f18b155f6edf7beadf03fb4bc9398fd5f9b2ca215192ba3"
     },
     {
       "path": "src/cards/entries/08045.js",
@@ -284,11 +284,11 @@
     },
     {
       "path": "src/cards/entries/08046.js",
-      "sha256": "d573f0bb7d1549ae61e2ac6b2b174144f86e7dab7283f429aa968f2e84fde695"
+      "sha256": "7b4beba25f665f072b913fd53d826c353d5532e2431163a1225f7fb67dc76f88"
     },
     {
       "path": "src/cards/entries/08047.js",
-      "sha256": "2904fb85fd795a194701d165ef1219c12e10c623498bba9fd498adf1ee642e45"
+      "sha256": "2a43021d92185e7d48d60f95a0f2a233d299607235a0d080714fb11c6bd7835b"
     },
     {
       "path": "src/cards/entries/08048.js",
@@ -296,7 +296,7 @@
     },
     {
       "path": "src/cards/entries/08049.js",
-      "sha256": "eb895509b17fa66acbee5e20caee917ec5400e71890cfd8ac825f1f8e2f79537"
+      "sha256": "4b9ebe28c1ae8e3fc404a370ddeceab177e292a52f30e672707c154e5eabfcb8"
     },
     {
       "path": "src/cards/entries/08050.js",
@@ -304,11 +304,11 @@
     },
     {
       "path": "src/cards/entries/08051.js",
-      "sha256": "6da3d7fc0edaf06cc78a4db49e438b05f74023f242b0fdfd92c6cadbabf4f4b5"
+      "sha256": "b75817fd64232d36683f7d115efe5ce0a896f4144a55be6ba3f173e3881245b1"
     },
     {
       "path": "src/cards/entries/08052.js",
-      "sha256": "c06f8291b82a3d6ba3ba6a00047aa6b759dcf684825c5a0e58a60d1aebf2872a"
+      "sha256": "0c84aad023b557575d8871d66dfc50a07dffbf1e378f5c33c203454e4cb90011"
     },
     {
       "path": "src/cards/entries/08053.js",
@@ -320,15 +320,15 @@
     },
     {
       "path": "src/cards/entries/08055.js",
-      "sha256": "edbacb2d515876310aa1ccd098c97b04e79e784590307d76c0ac1c95ef62d50b"
+      "sha256": "d0295e84730f451f402f92bd556a3178e945e745f3e856ed809f46d816a5a708"
     },
     {
       "path": "src/cards/entries/08056.js",
-      "sha256": "918e005225f0547128a1d24f986797be1a528d908ab0af685c56b9d7e20886da"
+      "sha256": "4aca2781b731ea01a3184685cc79bb9936a97145e64e6913e447a23b372c117a"
     },
     {
       "path": "src/cards/entries/08057.js",
-      "sha256": "85f4b795d7d1255effdca54be6e5b1a6fda19dd9ff9403d457cb69a4d567c26a"
+      "sha256": "0afffdcb6a155b15e682b1f806722fb571f06d4993a85be0a0d9264ab066fe09"
     },
     {
       "path": "src/cards/entries/08058.js",
@@ -348,7 +348,7 @@
     },
     {
       "path": "src/cards/entries/08062.js",
-      "sha256": "0c7d7a4c17bf0717c6d33cf82192ad5bf5061f222da5c9bcb6754d9d59423fab"
+      "sha256": "d207af4d5f067a64f851ad405c64393cece0c4ae3cf557c4d3709b54e88d6c8b"
     },
     {
       "path": "src/cards/entries/08063.js",
@@ -356,15 +356,15 @@
     },
     {
       "path": "src/cards/entries/08064.js",
-      "sha256": "b5137413599f42ecd5dfb5bac488830c772d95b35ed897018f006377238b9f3f"
+      "sha256": "98277c53575d482002088f223532fe5be5b5c4621a2337811d3255c98c7db88a"
     },
     {
       "path": "src/cards/entries/08065.js",
-      "sha256": "24ddcfc7d26bc3926fa7b6420f0c1a3fcdf27056f33b39fe4e5fa0d4fc02bb3e"
+      "sha256": "7b2d80e91916798f497b1d703c0329d04b0d93309313f4e1335a31b1e7befbd6"
     },
     {
       "path": "src/cards/entries/08066.js",
-      "sha256": "da17af008b42d2a87ed899232706ece8829c445ad1f3dcf35de7a08769964f1f"
+      "sha256": "ad158be784c74c298a9c03375fa70ba0ba47916852be4c15c2bdc08369078342"
     },
     {
       "path": "src/cards/entries/08067.js",
@@ -376,7 +376,7 @@
     },
     {
       "path": "src/cards/entries/08069.js",
-      "sha256": "672addb50a2cd30ad920ff9e553061308b4bfbfe4833f659c507c715c68c4338"
+      "sha256": "33bbc56d05c486bdcebace03d844b69c8f72844ccbbb437c7ad2da34ac4ec0ef"
     },
     {
       "path": "src/cards/entries/08070.js",
@@ -412,11 +412,11 @@
     },
     {
       "path": "src/cards/entries/08078.js",
-      "sha256": "33549d88d9e8f630d01f995188c5fbb2bc33fdc1a6f0ae2998badaac5dee969c"
+      "sha256": "6ec1963e1ba97fbc7b2d87639e8a916c8ef85b3582dffc8637ba21e13d653681"
     },
     {
       "path": "src/cards/entries/08079.js",
-      "sha256": "5b815c4140e563a364aceefd81ab2896861dd19c8629d5c1b55fb7881cdf17ec"
+      "sha256": "20916afedb6f09e8d6027d1befc1dc176de1855990a14c475bd0390b62e78072"
     },
     {
       "path": "src/cards/entries/08080.js",
@@ -424,7 +424,7 @@
     },
     {
       "path": "src/cards/entries/08081.js",
-      "sha256": "29625f6373eec7aea24ca5308d8dcaa435d159e0141a109da1df7f91732732e4"
+      "sha256": "e5b9562bdecacb9d1a765b71b64a1652787e705a0095694a042e597e8de6536b"
     },
     {
       "path": "src/cards/entries/08082.js",
@@ -436,11 +436,11 @@
     },
     {
       "path": "src/cards/entries/08084.js",
-      "sha256": "d40199ab1815e34abc332abfb6c1ad0eb21ee746b5ae93528a407a75cc2eb594"
+      "sha256": "28a22500e2392c5d2cc0923da3de21d51021acc3d8ba3fd10ff6b0cc4a88758a"
     },
     {
       "path": "src/cards/entries/08085.js",
-      "sha256": "3611dae72dcefa6dd668429d6e0155aa505f61b0686741724b7444427288b1ab"
+      "sha256": "2eb535b757a7f31fb71912d0970ca2ff6f817f1638e3bf83f73770b24ac7b644"
     },
     {
       "path": "src/cards/entries/08086.js",
@@ -448,15 +448,15 @@
     },
     {
       "path": "src/cards/entries/08087.js",
-      "sha256": "5f8eb6b991cb5a614d59b04d787fd78abdb380e0282a96d772f11356e72d026d"
+      "sha256": "738dafef788040e90b67e5d3fa50d00ee23e4eb58e816b7a0f1dcd6f5247acde"
     },
     {
       "path": "src/cards/entries/08088.js",
-      "sha256": "4e3b377b5d3ac09ef054aa9bff53b3c0014467161f54e01b0622faed7d33c898"
+      "sha256": "c05df00c48946d3f5620e0dfde34605239ca7d8bec183012e25f346a08905376"
     },
     {
       "path": "src/cards/entries/08089.js",
-      "sha256": "92c973188dfcced37b72081f8d124c8871d7c7fa9ef278c1bfc735147b8fdf79"
+      "sha256": "79e23247d1877f78307452399055ce9ee1916dc423cd3d3c9248fd51e0c48d84"
     },
     {
       "path": "src/cards/entries/08090.js",
@@ -488,7 +488,7 @@
     },
     {
       "path": "src/cards/entries/08097.js",
-      "sha256": "993d981a618001d87614730b6b095d4cb1a53ef5ff1acf875bfb76577bc1cb49"
+      "sha256": "c88b6cc543057bf92cf724d6df4c70dd031111de87e2695e1a2f683dc2522781"
     },
     {
       "path": "src/cards/entries/08098.js",
@@ -516,7 +516,7 @@
     },
     {
       "path": "src/cards/entries/08104.js",
-      "sha256": "00ac8775f552bdb8c24d6ecf95daf31cbd0ff2d6ef213261c8cfa4155a34d584"
+      "sha256": "ab0d038da5a5aa4d692166ff7687aa5c79c7c3394e10fc22b111bd009c3c0b4a"
     },
     {
       "path": "src/cards/entries/08105.js",
@@ -524,7 +524,7 @@
     },
     {
       "path": "src/cards/entries/08106.js",
-      "sha256": "465882c557e8a93d4e4ad1c8ad94def112f300bb0037df85460d46e1988dc276"
+      "sha256": "4a96d8758fb0dfc94c879c52302a3e233d1f6613b6565514674fb2769b01f2c2"
     },
     {
       "path": "src/cards/entries/08107.js",
@@ -548,11 +548,11 @@
     },
     {
       "path": "src/cards/entries/08112.js",
-      "sha256": "69372e04106ff1b6d8fb2813271a2b9b5227bdec58422e969358811e3d502556"
+      "sha256": "97c70882e646bc8820b66dd6ee29f2b063cc1e20fc06830acb1e0f7f6879b92b"
     },
     {
       "path": "src/cards/entries/08113.js",
-      "sha256": "1da9852f3ef3349288fa078ebf516005860c7a82ebef8832d28a59aa87a813ed"
+      "sha256": "5bf41dc481712dbe56019d132b7df31bb06092854f96436ff043b816d2dd3338"
     },
     {
       "path": "src/cards/entries/08114.js",
@@ -580,27 +580,27 @@
     },
     {
       "path": "src/cards/entries/08120.js",
-      "sha256": "ddcc26428d480b751d4cd30a9634e1aaff988da95be5ddbb585ad290e9815206"
+      "sha256": "cca95145f51d32e27cea613cf2e477111ad259b2067b0667c54b49b79b84e5f9"
     },
     {
       "path": "src/cards/entries/08121.js",
-      "sha256": "e1af105cd1cd8a572b5e08923566f48dbae1d01cb4c7ab23d94de20b4a554c70"
+      "sha256": "5700fcda86646dbbfe7bd4dc206de4e07f4d89fbe3bb4c740713fa3e2a671f9e"
     },
     {
       "path": "src/cards/entries/08122.js",
-      "sha256": "4b3b2e72084fe3e0a554ef8bf55f6ce79a547feaf73ee9afb9cd2cfc19ffde8b"
+      "sha256": "5ca0480a188653f49479936872673ab4d4da0bcf50caf74d036b2c2750bc6892"
     },
     {
       "path": "src/cards/entries/08123.js",
-      "sha256": "52baca4157c8d07b82daf3ce9b1e020dcf4d8bec3967352cb57d5dc942385a7c"
+      "sha256": "f7fd92134520ae18c811e62d5a8f8e7772ce366b3b6b7ffd3e633423e4def0c9"
     },
     {
       "path": "src/cards/entries/08124.js",
-      "sha256": "a5614a0c0053f28673cc752180af2b58ab41a62d51b4437f0bbdf9b83c5e29ec"
+      "sha256": "b2cf835f209a71d6a2a19143e6bc0f0663b5599dbea1338fe3afce844d9e5644"
     },
     {
       "path": "src/cards/entries/08125.js",
-      "sha256": "ebc9da9454f8ee3254f7dc455940940efe72b19bca82ce000a6095a97a585bb1"
+      "sha256": "b9dd2a985dd39344c76a11c1f0fc6cc187604ee58296c6a3bb51d78ad23082c6"
     },
     {
       "path": "src/cards/entries/08126.js",
@@ -620,19 +620,19 @@
     },
     {
       "path": "src/cards/entries/08130.js",
-      "sha256": "4b120fe47776959c1da30085aaafdab6f6fc99f963c97d16159c8b83085cfdc6"
+      "sha256": "a0b49051ff0b916c72221894df2902dfbcb2ea82cb549ee42613b3f2b8e850a6"
     },
     {
       "path": "src/cards/entries/08131.js",
-      "sha256": "98e441a9290c4549e9cbd6814911b5ea970a7bcde8dfc8a76a26522a390ec835"
+      "sha256": "fceed42542cab129f5b3ae687d52b169ad5271111ace3279b4565435d740ff3e"
     },
     {
       "path": "src/cards/entries/08132.js",
-      "sha256": "7a1b8b9a45f8028f9bdd76ce83158253aed3abd7d9a541311b93d41f25b69d4b"
+      "sha256": "5686ce7fb77f3e348e80c406f1031aaf9b034d85833e1937cbd11675ee346c92"
     },
     {
       "path": "src/cards/entries/08133.js",
-      "sha256": "63afb2a92e133e3760ca63c3ca5e5a9706968a6b12ee83ead04c55fbdf516e0f"
+      "sha256": "707318910952b9a24d0d80a651851f28383495d42d83d1404d62f532a79bd832"
     }
   ],
   "entries": [
@@ -654,7 +654,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 153,
+          "line": 152,
           "test": "P6 08019 全副武装 第一回合开始：从手中打出任意张[[道具]]支援（每张 -1），本回合少 3 个行动"
         }
       ]
@@ -689,7 +689,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 462,
+          "line": 461,
           "test": "P6 08020 正面迎击 敌人先攻击你；本次攻击自动成功并造成 2 点伤害（approximation）"
         }
       ]
@@ -729,7 +729,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 473,
+          "line": 472,
           "test": "P6 08021 “到我身后！” 另一位调查员被攻击时改为攻击你并交战，取消 1 点恐惧（approximation）"
         }
       ]
@@ -752,7 +752,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 172,
+          "line": 171,
           "test": "P6 08022 成群结队 每控制一张不同职阶的卡牌：攻击 +1[combat] 且 +1 伤害"
         }
       ]
@@ -775,7 +775,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 186,
+          "line": 185,
           "test": "P6 08023 扫堂腿 攻击加入[agility]、+1 伤害，成功自动躲避该敌人"
         }
       ]
@@ -792,31 +792,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation：commit 描述符的 iconBonus 上下文没有 getStat（原语请求 m2-1-08024.json），"
-          },
-          {
-            "source": "comment",
-            "line": 23,
-            "detail": "// 引擎在真实检定管线里传入 skillList 数组，这里同时兼容字符串（印刷基值近似仍保留）。"
-          }
-        ]
-      },
-      "implementation": "502d664b403e128ed8f473de8ef8c35bd498f1d34257a8f20c81bfb8c4d78f8c",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fd97c4b4bae016a9acd29064a51237f9cde4940361548cb68096b27ddfa15cc8",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 488,
-          "test": "P6 08024 防御姿态 手中/投入时获得等于敏捷的战斗图标、等于战斗的敏捷图标（approximation）"
+          "line": 487,
+          "test": "P6 08024 防御姿态：根据当前敏捷和战斗计算投入图标"
         }
       ]
     },
@@ -838,7 +821,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 203,
+          "line": 202,
           "test": "P6 08025 蝴蝶对剑 攻击 +1[combat]；可横置再次攻击（加入[agility]，+1 伤害）"
         }
       ]
@@ -861,7 +844,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 218,
+          "line": 217,
           "test": "P6 08026 闪躲 取消敌人攻击；敏捷(1)成功后对该敌人造成 1 点伤害"
         }
       ]
@@ -884,7 +867,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 230,
+          "line": 229,
           "test": "P6 08027 战斗训练 沉稳：+1[combat] +1[agility]，伤害优先分配给本卡，每次检定可花 1 资源 +1"
         }
       ]
@@ -930,7 +913,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 497,
+          "line": 498,
           "test": "P6 08028 追猎行动 真实神话阶段：替代本次遭遇抽取；生成遭遇敌人并交战；击败后获得 3 资源"
         }
       ]
@@ -965,7 +948,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 244,
+          "line": 243,
           "test": "P6 08029 提尔斯哈之牙 攻击已揭示地点敌人：移动至其地点，加入[agility]，+3 伤害"
         }
       ]
@@ -1000,7 +983,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 267,
+          "line": 266,
           "test": "P6 08030 蝴蝶对剑 第一次 +2[combat]；可再次攻击；两次都成功横置使第二次 +1 伤害"
         }
       ]
@@ -1035,7 +1018,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 536,
+          "line": 537,
           "test": "P6 08031 强制学习 牌库 +15；补给阶段抽 2 弃 1（approximation：重整末尾再抽 1 弃 1）"
         }
       ]
@@ -1058,7 +1041,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 282,
+          "line": 281,
           "test": "P6 08032 耶利米·科尔比 +1[intellect]；入场后揭示牌库顶 5 张，按费用奇偶抽牌并洗回其余"
         }
       ]
@@ -1098,7 +1081,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 552,
+          "line": 553,
           "test": "P6 08033 通路档案 额外费用在 4 地点放灵脉；调查带灵脉地点后移到本卡，满 4 弃卡得资源（approximation）"
         }
       ]
@@ -1133,7 +1116,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 577,
+          "line": 578,
           "test": "P6 08034 繁星密语 弃牌库顶：弱点洗回，非弱点本回合每次检定获得其图标（approximation）"
         }
       ]
@@ -1156,7 +1139,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 302,
+          "line": 301,
           "test": "P6 08035 登山靴 +1[agility]；最后一个线索被发现后横置移动到有线索/未揭示的连接地点"
         }
       ]
@@ -1179,7 +1162,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 323,
+          "line": 322,
           "test": "P6 08036 加入马队 每控制一张不同职阶的卡牌费用 -1；快速移动到任意已揭示地点"
         }
       ]
@@ -1196,26 +1179,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation：同 08024 —— commit iconBonus 拿不到 getStat（原语请求 m2-1-08024.json），"
-          }
-        ]
-      },
-      "implementation": "1d310ee639421a0a844c383c743f79e38753966c53e1d45becb95fdc4db71bb3",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "eb83b8ad932f650ba625ce9dd58c06dd2fcd7fd4d3ec051689787c4f34f04f96",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 601,
-          "test": "P6 08037 地区勘测 手中/投入时获得等于敏捷的智力图标、等于智力的敏捷图标（approximation）"
+          "line": 602,
+          "test": "P6 08037 地区勘测：根据当前敏捷和智识计算投入图标"
         }
       ]
     },
@@ -1237,7 +1208,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 339,
+          "line": 338,
           "test": "P6 08038 医学教科书 行动：智力(2)成功治愈 1（超 2 点则 2）；失败必须横置或造成 1 伤害"
         }
       ]
@@ -1260,7 +1231,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 361,
+          "line": 360,
           "test": "P6 08039 发掘古物 选择至多 2 张[seeker]支援；难度=费用和；成功依次入场，遗物支援各抽 1 张"
         }
       ]
@@ -1283,7 +1254,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 381,
+          "line": 380,
           "test": "P6 08040 科学理论 沉稳：+1[intellect] +1[combat]，伤害优先分配给本卡，每次检定可花 1 资源 +1"
         }
       ]
@@ -1318,7 +1289,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 609,
+          "line": 612,
           "test": "P6 08041 通路档案 入场 4 灵脉；免费把 1 灵脉移到非精英敌人（approximation）"
         }
       ]
@@ -1353,7 +1324,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 624,
+          "line": 627,
           "test": "P6 08042 通路档案 入场 4 灵脉；免费把 1 灵脉移到已揭示地点（approximation）"
         }
       ]
@@ -1370,25 +1341,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "// approximation：灵脉不落在敌人实例上（请求 m2-1-08033.json），敌人标记只扣 uses；「与带灵脉敌人"
-          }
-        ]
-      },
-      "implementation": "8c5da26ae8d06e469da545c58a35bad7e6796b65f4a5f484d23ba62fdee441f5",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7a6ef953e7cba212893b0f67b1314e728eee9c8534d3c87ffe67e5a4a2977e48",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 643,
+          "line": 646,
           "test": "P6 08043 通路档案 入场 4 灵脉；免费移灵脉到非精英敌人，行动不触发趁乱攻击（approximation）"
         }
       ]
@@ -1405,25 +1364,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "// approximation：灵脉不落在调查员实例上（请求 m2-1-08033.json）；移动灵脉只扣 uses，动作的"
-          }
-        ]
-      },
-      "implementation": "3923c94f1cbbdc38f7df6c8f996b13638df607efca405edb034d2fb3760754e2",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "e15026de621ca7139f18b155f6edf7beadf03fb4bc9398fd5f9b2ca215192ba3",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 658,
+          "line": 661,
           "test": "P6 08044 通路档案 入场 4 灵脉；行动令调查员抽 1 并治愈 1 点伤害（approximation）"
         }
       ]
@@ -1458,7 +1405,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 394,
+          "line": 393,
           "test": "P6 08045 亵渎预言 入场指定坐标点；不在坐标点时 +1[智力] +1[敏捷] 且忽略趁乱攻击；可移动任意调查员至坐标点"
         }
       ]
@@ -1475,25 +1422,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation：牌库 −5 由 deckConstruction.sizeBonus 表达（构筑层已读）。「每张非弱点/非署名卡"
-          }
-        ]
-      },
-      "implementation": "d573f0bb7d1549ae61e2ac6b2b174144f86e7dab7283f429aa968f2e84fde695",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7b4beba25f665f072b913fd53d826c353d5532e2431163a1225f7fb67dc76f88",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 681,
+          "line": 684,
           "test": "P6 08046 地下支持 建造时牌库 -5（近似：同名限制待构筑层接线）"
         }
       ]
@@ -1510,30 +1445,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 7,
-            "detail": "// approximation：引擎没有「移动期间不触发交战」的临时标记（请求 m2-1-08047.json）。这里每次"
-          },
-          {
-            "source": "comment",
-            "line": 39,
-            "detail": "// 该移动期间敌人不会与你交战（近似：移动后立即解除所有交战）。"
-          }
-        ]
-      },
-      "implementation": "2904fb85fd795a194701d165ef1219c12e10c623498bba9fd498adf1ee642e45",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "2a43021d92185e7d48d60f95a0f2a233d299607235a0d080714fb11c6bd7835b",
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 690,
+          "line": 693,
           "test": "P6 08047 提前侦察 最多移动 3 次，移动期间不与敌交战（approximation：移动后立即解除交战）"
         }
       ]
@@ -1556,7 +1474,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-1.test.mjs",
-          "line": 426,
+          "line": 425,
           "test": "P6 08048 21点 依次揭示直到停下，按总和（忽视 +/-）获得资源"
         }
       ]
@@ -1573,26 +1491,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 32,
-            "detail": "// approximation: 引擎的快速事件候选只在抽牌者自己的窗口枚举，无法把触发范围扩到"
-          }
-        ]
-      },
-      "implementation": "eb895509b17fa66acbee5e20caee917ec5400e71890cfd8ac825f1f8e2f79537",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4b9ebe28c1ae8e3fc404a370ddeceab177e292a52f30e672707c154e5eabfcb8",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
           "line": 127,
-          "test": "P6 08049 反间谍活动：取消诡计显现并由「遭遇牌库→你的牌库」升级改抽自己牌库"
+          "test": "P6 08049 反间谍活动：实际取消显现，可多付 2 改抽自己的牌库"
         }
       ]
     },
@@ -1614,7 +1520,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 166,
+          "line": 140,
           "test": "P6 08050 欺骗制度：每控制一种不同职阶获得 1 资源；无卡牌时不获得"
         }
       ]
@@ -1631,40 +1537,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 4,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 7,
-            "detail": "// approximation: 引擎没有「把一张手牌交给他人并按如同自己手牌打出」的通道（playCardFromOtherHand"
-          },
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// 该调查员」近似，且不代收打出费用（费用差额记在报告）。主效果（揭示/另一方决定/抽1/得费用资源）正确。"
-          },
-          {
-            "source": "comment",
-            "line": 47,
-            "detail": "// approximation：AI 座位的选择由引擎自动决定，测试/单机环境下改为由打出者确认"
-          },
-          {
-            "source": "comment",
-            "line": 48,
-            "detail": "// （「另一位调查员的决定」在多人真人局仍应由该座位选择，见报告 approximation）。"
-          }
-        ]
-      },
-      "implementation": "6da3d7fc0edaf06cc78a4db49e438b05f74023f242b0fdfd92c6cadbabf4f4b5",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b75817fd64232d36683f7d115efe5ce0a896f4144a55be6ba3f173e3881245b1",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 547,
+          "line": 523,
           "test": "P6 08051 不当交易：揭示手牌道具，另一位调查员打出后你抽 1 并获得其印刷费用资源"
         }
       ]
@@ -1681,25 +1560,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// 因此这里读 cards-data 的印刷技能值（近似；已登记 primitive request 让主进程把修正后属性"
-          }
-        ]
-      },
-      "implementation": "c06f8291b82a3d6ba3ba6a00047aa6b759dcf684825c5a0e58a60d1aebf2872a",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "0c84aad023b557575d8871d66dfc50a07dffbf1e378f5c33c203454e4cb90011",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 181,
+          "line": 155,
           "test": "P6 08052 行业专家：获得等于最低（未检定）技能值的万能图标"
         }
       ]
@@ -1739,7 +1606,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 568,
+          "line": 544,
           "test": "P6 08053 红色闹钟（2经验）：回合开始放充能/拿资源，1/2/3 充能分支；真实窗口移动按当前连接"
         }
       ]
@@ -1762,7 +1629,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 193,
+          "line": 167,
           "test": "P6 08054 金钱万能：把进行中的检定改为资源技能检定并抽 1 张"
         }
       ]
@@ -1779,36 +1646,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation:"
-          },
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "//   · 「放一边」用「移入原所有者弃牌堆 + api.playCardFromDiscard」近似（引擎没有 setAside 的"
-          },
-          {
-            "source": "comment",
-            "line": 43,
-            "detail": "// 近似：把「放在一边期间可以打出」落成「其所有者现在可以立即从弃牌堆打出一次」。"
-          }
-        ]
-      },
-      "implementation": "edbacb2d515876310aa1ccd098c97b04e79e784590307d76c0ac1c95ef62d50b",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d0295e84730f451f402f92bd556a3178e945e745f3e856ed809f46d816a5a708",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 627,
-          "test": "P6 08055 黑市：从任意调查员牌库顶揭示共 5 张放在一边（近似：置入弃牌堆）"
+          "line": 603,
+          "test": "P6 08055 黑市：调查阶段揭示五张进入公共场外区，下一调查阶段洗回"
         }
       ]
     },
@@ -1824,30 +1669,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 22,
-            "detail": "// approximation: 沉稳关键字只覆盖「非直接恐惧必须先分配」。非直接伤害用旧读点"
-          },
-          {
-            "source": "comment",
-            "line": 23,
-            "detail": "// assetRule.redirectOneDamageToSelf 近似（每次伤害结算把 1 点转移到本卡，而非全部）。"
-          }
-        ]
-      },
-      "implementation": "918e005225f0547128a1d24f986797be1a528d908ab0af685c56b9d7e20886da",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4aca2781b731ea01a3184685cc79bb9936a97145e64e6913e447a23b372c117a",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 207,
+          "line": 181,
           "test": "P6 08056 刚毅果敢：+1 意志/+1 敏捷、沉稳先吃非直接恐惧、花 1 资源 +1 档位"
         }
       ]
@@ -1864,25 +1692,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 16,
-            "detail": "// approximation: 引擎 getMaxHealth/getMaxSanity 不读 modifiers，因此「10+ 资源 +1 生命/神智」"
-          }
-        ]
-      },
-      "implementation": "85f4b795d7d1255effdca54be6e5b1a6fda19dd9ff9403d457cb69a4d567c26a",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "0afffdcb6a155b15e682b1f806722fb571f06d4993a85be0a0d9264ab066fe09",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 241,
+          "line": 217,
           "test": "P6 08057 黑色扇子：资源阈值 15/20 的每回合额外行动与技能修正（10+ 生命/神智待引擎读点）"
         }
       ]
@@ -1922,7 +1738,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 637,
+          "line": 618,
           "test": "P6 08058 红色闹钟（5经验）：先拿取再放充能，1/2/3 充能分支"
         }
       ]
@@ -1945,7 +1761,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 700,
+          "line": 681,
           "test": "P6 08059 掉进兔子洞：真实关间计价（前 2 次升级 -1 经验、新购 +1 经验、每关间重置）"
         }
       ]
@@ -1968,7 +1784,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 268,
+          "line": 244,
           "test": "P6 08060 咏春棍：额外法术槽；每个已填槽 +1 战斗，至少 2 个则 +1 伤害"
         }
       ]
@@ -1991,7 +1807,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 295,
+          "line": 271,
           "test": "P6 08061 冥想放空：每个已填法术槽治愈 1 点伤害或恐惧"
         }
       ]
@@ -2008,25 +1824,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation: 「额外充能数 = 职阶数」用 entersPlay + api.setAssetUses 动态初值；"
-          }
-        ]
-      },
-      "implementation": "0c7d7a4c17bf0717c6d33cf82192ad5bf5061f222da5c9bcb6754d9d59423fab",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "d207af4d5f067a64f851ad405c64393cece0c4ae3cf557c4d3709b54e88d6c8b",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 743,
+          "line": 724,
           "test": "P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一次基础行动"
         }
       ]
@@ -2049,7 +1853,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 312,
+          "line": 288,
           "test": "P6 08063 力量之风：打出时放置 2 充能；回合中抽到时自动打出"
         }
       ]
@@ -2066,31 +1870,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation: 引擎没有「抽牌前指定卡名并在抽牌管线里按卡名匹配」的读点。这里挂在"
-          },
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "// 刚抽到的卡」近似；「打出且费用 -2」用 api.playCard({discount:2})，取消玩家牌=弃掉该卡，"
-          }
-        ]
-      },
-      "implementation": "b5137413599f42ecd5dfb5bac488830c772d95b35ed897018f006377238b9f3f",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "98277c53575d482002088f223532fe5be5b5c4621a2337811d3255c98c7db88a",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 767,
-          "test": "P6 08064 先见：指定卡牌与抽到的卡相同 → 取消/弃掉；遭遇牌可取消显现"
+          "line": 748,
+          "test": "P6 08064 先见：实际遭遇抽牌前指定卡名，命中后取消显现"
         }
       ]
     },
@@ -2106,25 +1893,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// 属性（近似；已写 primitive request，待主进程把修正值读点接进 iconBonus 后改一行即可）。"
-          }
-        ]
-      },
-      "implementation": "24ddcfc7d26bc3926fa7b6420f0c1a3fcdf27056f33b39fe4e5fa0d4fc02bb3e",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "7b2d80e91916798f497b1d703c0329d04b0d93309313f4e1335a31b1e7befbd6",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 332,
+          "line": 308,
           "test": "P6 08065 密教理论：投入时获得等于[智慧]的[意志]图标与等于[意志]的[智慧]图标"
         }
       ]
@@ -2143,11 +1918,11 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "da17af008b42d2a87ed899232706ece8829c445ad1f3dcf35de7a08769964f1f",
+      "implementation": "ad158be784c74c298a9c03375fa70ba0ba47916852be4c15c2bdc08369078342",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 342,
+          "line": 318,
           "test": "P6 08066 平行命运：查看 6 张后放回且可抽取 1 张；洗回分支来自同一读点"
         }
       ]
@@ -2187,7 +1962,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 368,
+          "line": 344,
           "test": "P6 08067 天文地图集：横置看顶 1 张，非弱点则正面朝下附属（最多 5 张）"
         }
       ]
@@ -2210,7 +1985,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 416,
+          "line": 392,
           "test": "P6 08068 治愈真言：花费 1 充能治愈同地点调查员总计 2 点伤害"
         }
       ]
@@ -2229,11 +2004,11 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "672addb50a2cd30ad920ff9e553061308b4bfbfe4833f659c507c715c68c4338",
+      "implementation": "33bbc56d05c486bdcebace03d844b69c8f72844ccbbb437c7ad2da34ac4ec0ef",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 430,
+          "line": 406,
           "test": "P6 08069 情绪稳定：沉稳先吃非直接恐惧；法术检定期间 +1 技能值"
         }
       ]
@@ -2273,7 +2048,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 795,
+          "line": 761,
           "test": "P6 08070 真法魔典：揭示手牌法术支援并结算其能力"
         }
       ]
@@ -2296,7 +2071,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 449,
+          "line": 425,
           "test": "P6 08071 补给匮乏：游戏第一个回合开始时弃掉牌库顶 10 张（每局一次）"
         }
       ]
@@ -2319,17 +2094,17 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 806,
+          "line": 772,
           "test": "P6 08072 沙夫纳的目录：用自己的秘密支付道具费用，耗尽后弃掉"
         },
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 827,
+          "line": 793,
           "test": "P6 08072 沙夫纳的目录：由同地点队友选择代付，可混合资源和多本目录"
         },
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 855,
+          "line": 821,
           "test": "P6 08072 沙夫纳的目录：不能支付非道具或远处的卡，拒绝代付后保留手牌和秘密"
         }
       ]
@@ -2352,7 +2127,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 469,
+          "line": 445,
           "test": "P6 08073 绷带：同地点调查员/盟友受伤后花 1 补给治愈 1 点"
         }
       ]
@@ -2375,7 +2150,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 884,
+          "line": 850,
           "test": "P6 08074 应急装备：真实打出后声明式附属到道具支援（3 耐久）；宿主检定期间花 1 耐久 +2"
         }
       ]
@@ -2398,7 +2173,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 496,
+          "line": 472,
           "test": "P6 08075 厄运手镯：检定中花 1 充能 +2（每次检定一次）；被攻击后获得充能"
         }
       ]
@@ -2433,7 +2208,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 917,
+          "line": 883,
           "test": "P6 08076 阅后即焚：放逐一张 0-5 级手牌、发现 2 线索；等级≥2 时移除 1 毁灭"
         }
       ]
@@ -2456,7 +2231,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 522,
+          "line": 498,
           "test": "P6 08077 人多力量大：每有一种不同职阶获得 1 个万能图标"
         }
       ]
@@ -2473,25 +2248,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// （近似；primitive request 已登记，主进程把修正值读点接进 iconBonus 后改一行即可）。"
-          }
-        ]
-      },
-      "implementation": "33549d88d9e8f630d01f995188c5fbb2bc33fdc1a6f0ae2998badaac5dee969c",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "6ec1963e1ba97fbc7b2d87639e8a916c8ef85b3582dffc8637ba21e13d653681",
       "evidence": [
         {
           "file": "eote-player-m2-2.test.mjs",
-          "line": 532,
+          "line": 508,
           "test": "P6 08078 无畏精神：获得等于[战斗]的[意志]图标与等于[意志]的[战斗]图标"
         }
       ]
@@ -2508,26 +2271,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 6,
-            "detail": "// approximation: 「该攻击的伤害/恐惧不能分配给盟友支援」没有回溯改写分配策略的引擎读点，"
-          }
-        ]
-      },
-      "implementation": "5b815c4140e563a364aceefd81ab2896861dd19c8629d5c1b55fb7881cdf17ec",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "20916afedb6f09e8d6027d1befc1dc176de1855990a14c475bd0390b62e78072",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 500,
-          "test": "P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌"
+          "line": 511,
+          "test": "P6 08079 血债血偿：同一回合中的两次敌人攻击分别允许打出一次"
         }
       ]
     },
@@ -2549,7 +2300,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 116,
+          "line": 115,
           "test": "P6 08080 灭火器：攻击 +1 伤害，弃掉时自动躲避所有交战敌人"
         }
       ]
@@ -2566,25 +2317,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "//     approximation: 目前只有恐惧侧生效；伤害仍按普通分配（印刷要求伤害也先分配给本卡）。"
-          }
-        ]
-      },
-      "implementation": "29625f6373eec7aea24ca5308d8dcaa435d159e0141a109da1df7f91732732e4",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "e5b9562bdecacb9d1a765b71b64a1652787e705a0095694a042e597e8de6536b",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 129,
+          "line": 128,
           "test": "P6 08081 有胆有识：快速沉稳 +1 意志/+1 智力"
         }
       ]
@@ -2619,7 +2358,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 508,
+          "line": 540,
           "test": "P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整"
         }
       ]
@@ -2642,7 +2381,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 139,
+          "line": 138,
           "test": "P6 08083 医学生：真实打出后治愈同地点调查员或盟友支援 1 伤害 1 恐惧"
         }
       ]
@@ -2661,11 +2400,11 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "d40199ab1815e34abc332abfb6c1ad0eb21ee746b5ae93528a407a75cc2eb594",
+      "implementation": "28a22500e2392c5d2cc0923da3de21d51021acc3d8ba3fd10ff6b0cc4a88758a",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 177,
+          "line": 176,
           "test": "P6 08084 追踪：沿最短路径移动 2 次，或在无人地点发现线索"
         }
       ]
@@ -2684,11 +2423,11 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "3611dae72dcefa6dd668429d6e0155aa505f61b0686741724b7444427288b1ab",
+      "implementation": "2eb535b757a7f31fb71912d0970ca2ff6f817f1638e3bf83f73770b24ac7b644",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 196,
+          "line": 195,
           "test": "P6 08085 追踪（3 级）：移动 2 次并在每个进入地点发现 1 个线索"
         }
       ]
@@ -2728,12 +2467,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 209,
+          "line": 208,
           "test": "P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 596,
+          "line": 663,
           "test": "P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加 1 伤害"
         }
       ]
@@ -2750,26 +2489,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation:"
-          }
-        ]
-      },
-      "implementation": "5f8eb6b991cb5a614d59b04d787fd78abdb380e0282a96d772f11356e72d026d",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "738dafef788040e90b67e5d3fa50d00ee23e4eb58e816b7a0f1dcd6f5247acde",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 522,
-          "test": "P6 08087 狙击：添加「符号标记视为 0」的延迟效果"
+          "line": 554,
+          "test": "P6 08087 狙击：打出不触发借机攻击，只修改下一次枪械攻击的符号标记"
         }
       ]
     },
@@ -2787,12 +2514,12 @@
       "channel": "descriptor",
       "simplified": false,
       "simplification": null,
-      "implementation": "4e3b377b5d3ac09ef054aa9bff53b3c0014467161f54e01b0622faed7d33c898",
+      "implementation": "c05df00c48946d3f5620e0dfde34605239ca7d8bec183012e25f346a08905376",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 221,
-          "test": "P6 08088 老旧的霰弹枪：事件后使用值 2；成功按超过难度造成 1~3 伤害"
+          "line": 220,
+          "test": "P6 08088 老旧的霰弹枪：只在事件期间入场带 2 弹药，成功伤害至多 3"
         }
       ]
     },
@@ -2808,26 +2535,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation:"
-          }
-        ]
-      },
-      "implementation": "92c973188dfcced37b72081f8d124c8871d7c7fa9ef278c1bfc735147b8fdf79",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "79e23247d1877f78307452399055ce9ee1916dc423cd3d3c9248fd51e0c48d84",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 532,
-          "test": "P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动"
+          "line": 579,
+          "test": "P6 08089 快拔枪套：只能附属单手枪械，附属枪械攻击仍消耗弹药"
         }
       ]
     },
@@ -2849,7 +2564,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 235,
+          "line": 246,
           "test": "P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能"
         }
       ]
@@ -2872,7 +2587,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 544,
+          "line": 599,
           "test": "P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印"
         }
       ]
@@ -2895,7 +2610,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 247,
+          "line": 258,
           "test": "P6 08092 克图格亚的烙印（4 级）：+2 技能值，最多花 3 充能"
         }
       ]
@@ -2918,7 +2633,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 259,
+          "line": 270,
           "test": "P6 08093 巨石锤：加入意志，成功超过难度 3 点时 +2 伤害并击退"
         }
       ]
@@ -2941,7 +2656,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 271,
+          "line": 282,
           "test": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害"
         }
       ]
@@ -2964,7 +2679,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 283,
+          "line": 294,
           "test": "P6 08095 防护服：危险诡计显现前自伤并取消显现"
         }
       ]
@@ -2987,7 +2702,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 271,
+          "line": 282,
           "test": "P6 08094/08096 长柄大锤：两种挥砸的修正与伤害"
         }
       ]
@@ -3004,31 +2719,19 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "// approximation: 横置查看以「日志展示该未揭示地点的揭示面信息」实现，不改变地点揭示状态"
-          }
-        ]
-      },
-      "implementation": "993d981a618001d87614730b6b095d4cb1a53ef5ff1acf875bfb76577bc1cb49",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "c88b6cc543057bf92cf724d6df4c70dd031111de87e2695e1a2f683dc2522781",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 296,
+          "line": 307,
           "test": "P6 08097 袖珍望远镜：调查相连的已揭示地点"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 607,
-          "test": "P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面"
+          "line": 674,
+          "test": "P6 08097 袖珍望远镜：横置私下查看相连未揭示地点的揭示面"
         }
       ]
     },
@@ -3050,12 +2753,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 308,
+          "line": 319,
           "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 324,
+          "line": 335,
           "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
         }
       ]
@@ -3078,7 +2781,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 343,
+          "line": 354,
           "test": "P6 08099 吉恩·波尔格：移动后把连接地点的线索搬到自己所在地点"
         }
       ]
@@ -3101,12 +2804,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 308,
+          "line": 319,
           "test": "P6 08098/08100 远古海图：横置花秘密免费执行移动/调查行动"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 324,
+          "line": 335,
           "test": "P6 08098/08100 远古海图：不是自己的回合时玩家窗口不提供"
         }
       ]
@@ -3129,7 +2832,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 355,
+          "line": 366,
           "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
         }
       ]
@@ -3152,7 +2855,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 372,
+          "line": 383,
           "test": "P6 08102 保护魂灵：真实 assetLeavesPlay 窗口（盟友离场后返回拥有者手牌或抽 3 张）"
         }
       ]
@@ -3175,7 +2878,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 355,
+          "line": 366,
           "test": "P6 08101/08103 占卜：不发现标准线索，改为按充能发现线索"
         }
       ]
@@ -3192,26 +2895,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 9,
-            "detail": "// approximation: 「不发现你所在地点的 1 个线索」的替换没有可写入口（investigateSuccess 上下文不可改"
-          }
-        ]
-      },
-      "implementation": "00ac8775f552bdb8c24d6ecf95daf31cbd0ff2d6ef213261c8cfa4155a34d584",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "ab0d038da5a5aa4d692166ff7687aa5c79c7c3394e10fc22b111bd009c3c0b4a",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 583,
-          "test": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索"
+          "line": 638,
+          "test": "P6 08104/08106 威廉·韦伯教授：取回道具，按等级替代本地调查线索"
         }
       ]
     },
@@ -3233,7 +2924,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 425,
+          "line": 436,
           "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
         }
       ]
@@ -3250,26 +2941,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 1,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation: 与 08104 相同——「不发现所在地点线索改为连接地点线索」是追加而非替换，"
-          }
-        ]
-      },
-      "implementation": "465882c557e8a93d4e4ad1c8ad94def112f300bb0037df85460d46e1988dc276",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "4a96d8758fb0dfc94c879c52302a3e233d1f6613b6565514674fb2769b01f2c2",
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 583,
-          "test": "P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索"
+          "line": 638,
+          "test": "P6 08104/08106 威廉·韦伯教授：取回道具，按等级替代本地调查线索"
         }
       ]
     },
@@ -3291,17 +2970,17 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 425,
+          "line": 436,
           "test": "P6 08105/08107 破冰锥：真实攻击检定窗口出现 +1 技能值（横置）"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 445,
+          "line": 456,
           "test": "P6 08107 破冰锥（3 级）：真实窗口弃掉自身换取成功后 +1 伤害"
         },
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 620,
+          "line": 693,
           "test": "P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索"
         }
       ]
@@ -3324,7 +3003,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-3.test.mjs",
-          "line": 489,
+          "line": 500,
           "test": "P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人交换位置"
         }
       ]
@@ -3347,12 +3026,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 124,
+          "line": 126,
           "test": "P6 08109 身形虚化 成功躲避：花 1 充能并获得 1 个额外行动"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 141,
+          "line": 143,
           "test": "P6 08109 身形虚化 没有充能时能力不可用"
         }
       ]
@@ -3375,12 +3054,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 177,
+          "line": 179,
           "test": "P6 08110 虚影易位 与已揭示地点的非精英敌人交换位置"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 190,
+          "line": 192,
           "test": "P6 08110 虚影易位 已揭示地点没有非精英敌人时不能打出"
         }
       ]
@@ -3403,7 +3082,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 157,
+          "line": 159,
           "test": "P6 08111 身形虚化 成功后可花 2 充能获得 2 个额外行动"
         }
       ]
@@ -3420,31 +3099,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "comment",
-            "line": 8,
-            "detail": "// approximation: 引擎没有「在本次检定里追加第二枚标记并把它计入」的读点（existing 只有"
-          },
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "//   的替代标记通道近似：额外揭示 1 枚标记，把负值取正后作为替代标记结算（骷髅 → 自动失败）。"
-          }
-        ]
-      },
-      "implementation": "69372e04106ff1b6d8fb2813271a2b9b5227bdec58422e969358811e3d502556",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "97c70882e646bc8820b66dd6ee29f2b063cc1e20fc06830acb1e0f7f6879b92b",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 496,
-          "test": "P6 08112 再来一张！ 额外揭示 1 枚标记：负值取正结算；骷髅则自动失败"
+          "line": 498,
+          "test": "P6 08112 再来一张！保留原标记，额外负值取正，额外骷髅自动失败"
         }
       ]
     },
@@ -3460,37 +3122,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 印刷触发为「游戏结束或你退场时」；引擎无该窗口，近似为每轮结束时检查资源 < 10 → 流放自身。"
-          },
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "//       移出游戏 api.playerTools.removeAssetFromGame（流放近似：进入 removedFromGame 而非战役 exiled）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "// approximation: 引擎没有「游戏结束/退场时」的通用条目强制窗口。这里近似为每轮结束时检查"
-          }
-        ]
-      },
-      "implementation": "1da9852f3ef3349288fa078ebf516005860c7a82ebef8832d28a59aa87a813ed",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "5bf41dc481712dbe56019d132b7df31bb06092854f96436ff043b816d2dd3338",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 521,
-          "test": "P6 08113 大肆借贷 打出后获得 10 资源；轮末资源 <10 时流放自身"
+          "line": 522,
+          "test": "P6 08113 大肆借贷：打出后获得 10 资源，剧本结束时不足 10 则从战役牌组流放"
         }
       ]
     },
@@ -3512,12 +3151,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 208,
+          "line": 210,
           "test": "P6 08114 珍贵记忆（来自前世）：失败且低于难度 2+ 后横置治愈自身 1 伤害"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 222,
+          "line": 224,
           "test": "P6 08114 珍贵记忆（来自前世）：成功且超过难度 2+ 后横置治愈自身 1 恐惧"
         }
       ]
@@ -3540,7 +3179,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 235,
+          "line": 237,
           "test": "P6 08115 珍贵记忆（来自后世）：失败治愈恐惧、成功治愈伤害（与前世互换）"
         }
       ]
@@ -3563,12 +3202,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 250,
+          "line": 252,
           "test": "P6 08116 护身法宝 将被击败时弃掉并取消最多 2 点伤害"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 263,
+          "line": 265,
           "test": "P6 08116 护身法宝 伤害不足以击败你时不提供反应"
         }
       ]
@@ -3591,12 +3230,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 282,
+          "line": 284,
           "test": "P6 08117 尘世宁静 每超过难度 1 点可花 1 充能治愈 1 伤害"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 295,
+          "line": 297,
           "test": "P6 08117 尘世宁静 成功且等于难度时失去 1 资源"
         }
       ]
@@ -3619,12 +3258,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 323,
+          "line": 325,
           "test": "P6 08118 附魔弓 意志替代战斗：+1 技能值、+1 伤害并横置"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 339,
+          "line": 341,
           "test": "P6 08118 附魔弓 花 1 充能攻击连接地点的非精英敌人"
         }
       ]
@@ -3647,7 +3286,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 307,
+          "line": 309,
           "test": "P6 08119 尘世宁静 意志(0) 成功且等于难度时失去 2 资源"
         }
       ]
@@ -3664,42 +3303,14 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 4,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 「本卡资源可支付指定特性卡」用 beforePlayCost 窗口减费近似（费用枚举仍要求资源池可支付）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "//       （与 07264 同模板）；「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点（费用枚举仍按资源池判定）。"
-          },
-          {
-            "source": "comment",
-            "line": 13,
-            "detail": "//   本卡在 beforePlayCost 窗口用「从本卡花费资源 → context.costReduction」近似："
-          }
-        ]
-      },
-      "implementation": "ddcc26428d480b751d4cd30a9634e1aaff988da95be5ddbb585ad290e9815206",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "cca95145f51d32e27cea613cf2e477111ad259b2067b0667c54b49b79b84e5f9",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 573,
-          "test": "P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费"
+          "line": 570,
+          "test": "P6 08120 先知先觉：补满和提升法术检定，并用卡上资源支付法术费用"
         }
       ]
     },
@@ -3715,36 +3326,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 「本卡资源可支付指定特性卡」用 beforePlayCost 窗口减费近似（费用枚举仍要求资源池可支付）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
-          }
-        ]
-      },
-      "implementation": "e1af105cd1cd8a572b5e08923566f48dbae1d01cb4c7ab23d94de20b4a554c70",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "5700fcda86646dbbfe7bd4dc206de4e07f4d89fbe3bb4c740713fa3e2a671f9e",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 593,
+          "line": 586,
           "test": "P6 08121 一探究竟 轮初补满 + Tome 检定 +1"
         }
       ]
@@ -3761,36 +3349,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 「本卡资源可支付指定特性卡」用 beforePlayCost 窗口减费近似（费用枚举仍要求资源池可支付）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
-          }
-        ]
-      },
-      "implementation": "4b3b2e72084fe3e0a554ef8bf55f6ce79a547feaf73ee9afb9cd2cfc19ffde8b",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "5ca0480a188653f49479936872673ab4d4da0bcf50caf74d036b2c2750bc6892",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 597,
+          "line": 590,
           "test": "P6 08122 好勇斗狠 轮初补满 + Melee 检定 +1"
         }
       ]
@@ -3807,36 +3372,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 「本卡资源可支付指定特性卡」用 beforePlayCost 窗口减费近似（费用枚举仍要求资源池可支付）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
-          }
-        ]
-      },
-      "implementation": "52baca4157c8d07b82daf3ce9b1e020dcf4d8bec3967352cb57d5dc942385a7c",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "f7fd92134520ae18c811e62d5a8f8e7772ce366b3b6b7ffd3e633423e4def0c9",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 601,
+          "line": 594,
           "test": "P6 08123 技艺精湛 轮初补满 + Tool 检定 +1"
         }
       ]
@@ -3853,36 +3395,13 @@
       "deckLimit": 2,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 「本卡资源可支付指定特性卡」用 beforePlayCost 窗口减费近似（费用枚举仍要求资源池可支付）。"
-          },
-          {
-            "source": "comment",
-            "line": 11,
-            "detail": "//       「资源可支付指定特性卡」用 beforePlayCost 窗口减费近似。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 引擎费用管线没有「支援资源作为支付来源」的读点；本卡用 beforePlayCost 减费近似"
-          }
-        ]
-      },
-      "implementation": "a5614a0c0053f28673cc752180af2b58ab41a62d51b4437f0bbdf9b83c5e29ec",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b2cf835f209a71d6a2a19143e6bc0f0663b5599dbea1338fe3afce844d9e5644",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 605,
+          "line": 598,
           "test": "P6 08124 古物藏家 轮初补满 + Favor 检定 +1"
         }
       ]
@@ -3899,32 +3418,14 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 购买层（构筑时选卡）留 P7；开局 setup 一次性结算 2 点创伤 + 3 点额外经验，并用战役记录防重复。"
-          },
-          {
-            "source": "comment",
-            "line": 10,
-            "detail": "// approximation: 构筑/购买层（选卡时结算创伤与经验）留 P7；本条目在每场冒险 setup 时一次性结算："
-          }
-        ]
-      },
-      "implementation": "ebc9da9454f8ee3254f7dc455940940efe72b19bca82ce000a6095a97a585bb1",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "b9dd2a985dd39344c76a11c1f0fc6cc187604ee58296c6a3bb51d78ad23082c6",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 613,
-          "test": "P6 08125 危险处境 setup：一次性 2 点创伤 + 3 经验"
+          "line": 606,
+          "test": "P6 08125 危险处境：起始构筑时选择 2 点创伤并取得 3 经验，只结算一次"
         }
       ]
     },
@@ -3946,12 +3447,12 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 361,
+          "line": 363,
           "test": "P6 08126 厚重皮衣 揭示符号标记后：自身受 1 伤害，取消并重抽"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 377,
+          "line": 379,
           "test": "P6 08126 厚重皮衣 自动失败与数字标记不提供反应"
         }
       ]
@@ -3974,17 +3475,17 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 397,
+          "line": 399,
           "test": "P6 08127 雪橇犬 2 张共占 1 个盟友槽"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 408,
+          "line": 410,
           "test": "P6 08127 雪橇犬 横置 X 张：移动 X 次"
         },
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 426,
+          "line": 428,
           "test": "P6 08127 雪橇犬 横置 X 张：攻击 +X 战斗并造成 X 点伤害"
         }
       ]
@@ -4007,7 +3508,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 444,
+          "line": 446,
           "test": "P6 08128 驯兽之杖 2 个生物专用盟友槽 + 自己回合打出生物费用 -1"
         }
       ]
@@ -4030,7 +3531,7 @@
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 470,
+          "line": 472,
           "test": "P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治疗"
         }
       ]
@@ -4047,31 +3548,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 动作后锁读 actionResolvedAtLocation（窗口不带行动类型），近似为任意行动后锁住印刷行动类型至回合结束。"
-          },
-          {
-            "source": "comment",
-            "line": 16,
-            "detail": "// approximation: actionResolvedAtLocation 窗口不带行动类型，近似为任意行动后立即锁住"
-          }
-        ]
-      },
-      "implementation": "4b120fe47776959c1da30085aaafdab6f6fc99f963c97d16159c8b83085cfdc6",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "a0b49051ff0b916c72221894df2902dfbcb2ea82cb549ee42613b3f2b8e850a6",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 652,
+          "line": 664,
           "test": "P6 08130 臂伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能攻击/启动"
         }
       ]
@@ -4088,31 +3571,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 动作后锁读 actionResolvedAtLocation（窗口不带行动类型），近似为任意行动后锁住印刷行动类型至回合结束。"
-          },
-          {
-            "source": "comment",
-            "line": 16,
-            "detail": "// approximation: actionResolvedAtLocation 窗口不带行动类型，近似为任意行动后立即锁住"
-          }
-        ]
-      },
-      "implementation": "98e441a9290c4549e9cbd6814911b5ea970a7bcde8dfc8a76a26522a390ec835",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "fceed42542cab129f5b3ae687d52b169ad5271111ace3279b4565435d740ff3e",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 678,
+          "line": 692,
           "test": "P6 08131 腿伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能移动/撤退/躲避"
         }
       ]
@@ -4129,36 +3594,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 3,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 资源行动用 capability:gainResources 近似；动作后锁近似为任意行动后锁住印刷行动类型至回合结束。"
-          },
-          {
-            "source": "comment",
-            "line": 13,
-            "detail": "// approximation: 「资源行动」用 capability:gainResources 近似（会同时禁止卡牌效果获得资源，略偏严）；"
-          },
-          {
-            "source": "comment",
-            "line": 14,
-            "detail": "//       动作后锁近似为任意行动后锁住印刷类型至回合结束。"
-          }
-        ]
-      },
-      "implementation": "7a1b8b9a45f8028f9bdd76ce83158253aed3abd7d9a541311b93d41f25b69d4b",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "5686ce7fb77f3e348e80c406f1031aaf9b034d85833e1937cbd11675ee346c92",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 700,
+          "line": 720,
           "test": "P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）"
         }
       ]
@@ -4175,31 +3617,13 @@
       "deckLimit": 1,
       "status": "verified",
       "channel": "descriptor",
-      "simplified": true,
-      "simplification": {
-        "kinds": [
-          "comment",
-          "note"
-        ],
-        "count": 2,
-        "disclosures": [
-          {
-            "source": "note",
-            "path": "note",
-            "detail": "approximation: 动作后锁近似为任意行动后锁住印刷行动类型至回合结束。"
-          },
-          {
-            "source": "comment",
-            "line": 12,
-            "detail": "// approximation: 动作后锁近似为任意行动后锁住印刷三类行动至回合结束。"
-          }
-        ]
-      },
-      "implementation": "63afb2a92e133e3760ca63c3ca5e5a9706968a6b12ee83ead04c55fbdf516e0f",
+      "simplified": false,
+      "simplification": null,
+      "implementation": "707318910952b9a24d0d80a651851f28383495d42d83d1404d62f532a79bd832",
       "evidence": [
         {
           "file": "eote-player-m2-4.test.mjs",
-          "line": 721,
+          "line": 741,
           "test": "P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行动后不能谈判/抽取/调查"
         }
       ]

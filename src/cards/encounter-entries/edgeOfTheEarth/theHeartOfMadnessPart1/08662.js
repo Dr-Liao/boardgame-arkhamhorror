@@ -1,6 +1,4 @@
-﻿// 08662 休眠（Dormancy）· 幕 1
-// 正面目标：如果有激活封印放在伊夸之门上，推进。背面：按刚放上的封印种类分别治疗效果（由 P8 封印批次接通）。
-// 读点：objective 数据由 definition/behavior.checkObjectives 读取（引擎 act-agenda.js 直接读 act.objective）。
+// 08662 蛰伏 · 幕 1。将首枚激活封印放到门上后，给放置者对应收益。
 export default {
   code: '08662',
   scope: 'act',
@@ -8,7 +6,17 @@ export default {
   actRule: {
     objective: { type: 'activatedSealOnGate' },
     onLeave(state, act, api) {
-      api.info?.('🫀 休眠背面：检查刚放上门的激活封印并结算对应治疗/抽牌/额外行动（封印批次近似）。')
+      const gate = state.scenario.startLocation
+      const seal = api.mechanics.eoteCampaign.seals.at(gate).find(item => item.active && item.placedBySeat != null)
+      if (!seal) return
+      const seat = seal.placedBySeat
+      switch (seal.kind) {
+        case 'A': api.healDamage(seat, 1); break
+        case 'B': api.drawCards(seat, 2); break
+        case 'C': api.healHorror(seat, 1); break
+        case 'D': api.gainAction(seat, 1); break
+        case 'E': api.gainResources(seat, 3); break
+      }
     },
   },
 }

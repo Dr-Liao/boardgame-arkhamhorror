@@ -10,7 +10,6 @@
 // chaos.js，断言可观察状态（线索、手牌/隐藏手牌、胜利区、遭遇牌库、幕推进、毁灭、记录），
 // 不写「条目存在」式空断言。
 //
-// 只读验收：本文件不修改 src/**、content/**、audit/**。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readdirSync } from 'node:fs'
@@ -63,6 +62,13 @@ function stateFor(count = 2) {
     chaosBag: ['+1', '0', '-1', 'autofail', 'eldersign'],
     difficulty: 'standard', numInvestigators: count, round: 1, phase: 'investigation', status: 'playing',
   }
+}
+
+function liveState(count = 1) {
+  const state = engine.createGameState({ seed: 'acceptance-06-a-shard8', playerInvestigator: '01001' },
+    Array.from({ length: count }, (_, seat) => ({ seat })))
+  engine.startScenario(state, 0, [], 'whereTheGodsDwell')
+  return state
 }
 
 function placeLocations(state, ids) {
@@ -172,7 +178,7 @@ function apiStub(state, overrides = {}) {
       }
       return true
     },
-    attackFromHiddenEnemy: (seat, code) => { api.attacks.push({ seat, code }) },
+    attackFromHiddenEnemy: (seat, code) => { api.attacks.push({ seat, code }); return true },
     test: (seat, skill, difficulty, resolve) => resolve({ success: true, value: difficulty + 1, difficulty, skill }),
     spawn: (code, locationId, seat = null) => {
       const enemy = {
@@ -302,7 +308,7 @@ function apiStub(state, overrides = {}) {
       api.defeatedEnemies = [...(api.defeatedEnemies || []), enemy.code]
       return true
     },
-    resolveEnemyPhaseOf: enemy => { api.enemyPhaseResolved = [...(api.enemyPhaseResolved || []), enemy.code]; return { attacked: true } },
+    resolveEnemyPhaseOf: enemy => { api.enemyPhaseResolved = [...(api.enemyPhaseResolved || []), enemy.code]; return { attackResolved: true } },
     ...overrides,
   }
   return api
@@ -349,15 +355,16 @@ test('06288 混沌之形 背面：act 4 时给被遗忘的高塔补线索、揭�
   assert.equal(earlyApi.revealed.length, 0, 'act 4 之前不结算该背面')
 })
 
-test('06289 混沌化身 背面：每位未被击败/撤退的调查员被击败', () => {
-  const state = setup(stateFor(2))
-  const api = apiStub(state)
-  behavior.agendaReveal(state, state.agendas[2], api)
-  assert.deepEqual(state.investigators.map(owner => owner.defeated), [true, true])
-  assert.ok(state.investigators.every(owner => owner.defeatCause === 'chaosIncarnate'))
-  // 已知缺口（见报告失败清单）：「driven insane」子句没有本地读点——本条只调用 api.defeat，
-  // 未调用 api.driveInsane；战役记录 status 不会写成 insane。
-  assert.equal(state.investigators.every(owner => !owner.drivenInsane), true, '当前实现不发疯（缺口）')
+test('06289 混沌化身背面：场上的每位调查员被击败并发疯，战役记录写入精神创伤', () => {
+  const state = liveState(2)
+  behavior.agendaReveal(state, state.agendas[2], engine.scenarioRuntime(state, []))
+  for (const owner of state.investigators) {
+    assert.equal(owner.defeated, true)
+    assert.equal(owner.drivenInsane, true)
+    assert.equal(state.campaign.investigators[owner.seat].status, 'insane')
+    assert.ok(state.campaign.trauma[owner.seat].mental > 0)
+    assert.ok(state.campaign.records.drivenInsaneInvestigators.includes(owner.code))
+  }
 })
 
 test('06291 袍下之人：靠近+打晕后可用 [action] 直接击败大祭司并推进幕', () => {
@@ -625,16 +632,22 @@ test('06312 荒土蠕虫：生成于冰封荒土或大礼堂（二选一），�
   const picked = behavior.spawnLocation(state, '06312', null, 0, api)
   assert.deepEqual([...chosenOptions].sort(), [cold.id, castle.id].sort(), '候选为冰封荒土与大礼堂')
   assert.equal(picked, castle.id, '按队长选择生成')
-  assert.equal(state.scenario.enemies['06312'].prey, 'Lowest [agility]')
-  assert.equal(state.scenario.enemies['06312'].hunter, true)
-  // 已知缺口（见报告失败清单）：引擎 preyTarget 的排序表用 camelCase key（lowestAgility），
-  // 而 definition 里是印刷短语；条目没有 enemyRule.prey 覆盖 → 猎物排序未接线。
-  assert.equal(entryOf('06312').enemyRule?.prey, undefined, '缺少 lowestAgility 覆盖（缺口）')
+  const live = liveState(2)
+  const enemy = live.scenario.enemies['06312']
+  assert.equal(enemy.hunter, true)
+  live.investigators[0].agility = 4
+  live.investigators[1].agility = 1
+  assert.equal(engine.preyTarget(live, enemy, [0, 1]), 1, '敏捷较低的调查员成为猎物')
 })
 
-test('06313 无面欺诈者：猎物「手牌最多」缺少引擎 prey 键（实现缺口已记录）', () => {
-  assert.equal(stateFor().scenario.enemies['06313'].prey, 'Most cards in hand')
-  assert.equal(entryOf('06313').enemyRule?.prey, undefined, '缺少 mostCardsInHand 覆盖（缺口）')
+test('06313 无面欺诈者：手牌最多的调查员成为猎物', () => {
+  const state = liveState(2)
+  const enemy = state.scenario.enemies['06313']
+  state.investigators[0].hand = ['01016']
+  state.investigators[1].hand = ['01023', '01024']
+  assert.equal(engine.preyTarget(state, enemy, [0, 1]), 1)
+  state.investigators[0].hand.push('01017', '01018')
+  assert.equal(engine.preyTarget(state, enemy, [0, 1]), 0)
 })
 
 // ---------------------------------------------------------------------------
@@ -688,15 +701,50 @@ test('06318 万千化身：揭示手中全部奈亚拉托提普、逐张攻击�
     scenarioEnemyRole: 'nyarlathotepTrueShape', location: 'theOnyxCastle',
   })
   const api = apiStub(state)
-  entryOf('06318').encounterResolve(state, inv0, ALL_CARDS['06318'], api)
+  assert.equal(entryOf('06318').encounterResolve(state, inv0, ALL_CARDS['06318'], api), false)
   assert.ok(api.revealed.includes('06306') && api.revealed.includes('06307'), '揭示手中全部复制品')
   assert.equal(api.attacks.length, 2, '每张复制品各攻击一次')
   assert.ok(state.encounterDeck.includes('06306') && state.encounterDeck.includes('06307'), '攻击后洗回遭遇牌库')
   assert.deepEqual(api.enemyPhaseResolved, ['06293'], '真形在场上时如同敌军阶段移动并攻击')
-  assert.equal(state.scenarioFlags.myriadFormsAttacked, true)
-  // 已知缺口（见报告失败清单）：「若没有奈亚拉托提普因此攻击则获得涌动」没有读点：
-  // 条目写的 scenarioFlags.myriadFormsAttacked 全仓没有读取方，章节也没有 encounterGainsSurge。
-  assert.equal(behavior.encounterGainsSurge, undefined, '章节未接线涌动判定（缺口）')
+})
+
+test('06318 万千化身：实际抽取时仅在没有奈亚拉托提普攻击的情况下再抽一张', () => {
+  for (const hasCopy of [false, true]) {
+    const state = liveState()
+    const owner = state.investigators[0]
+    const events = []
+    if (hasCopy) engine.scenarioRuntime(state, events).hiddenCards.place(owner.seat, '06306')
+    state.encounterDeck = ['06311', '06318']
+    engine.drawEncounter(state, owner, events)
+    assert.ok(state.encounterDiscard.includes('06318'))
+    if (hasCopy) {
+      assert.equal(owner.horror, 1)
+      assert.equal(owner.hand.includes('06306'), false)
+      assert.equal(owner.hiddenCards.includes('06306'), false)
+      assert.deepEqual([...state.encounterDeck].sort(), ['06306', '06311'])
+      assert.equal(state.enemies.some(enemy => enemy.originalCode === '06311'), false)
+    } else {
+      assert.equal(owner.horror, 0)
+      assert.deepEqual(state.encounterDeck, [])
+      assert.ok(state.enemies.some(enemy => enemy.originalCode === '06311'))
+    }
+  }
+})
+
+test('06318 万千化身：场上真形完成攻击则阻止涌动，攻击被禁止时仍涌动', () => {
+  for (const blocked of [false, true]) {
+    const state = liveState()
+    const owner = state.investigators[0]
+    const events = []
+    const shape = engine.scenarioRuntime(state, events).spawnStoryEnemy('06293', owner.location,
+      { horror: 1, elite: true, traits: ['Ancient One'] }, { scenarioEnemyRole: 'nyarlathotepTrueShape' })
+    assert.equal(shape.engagedSeat, owner.seat)
+    if (blocked) owner.enemyPassiveTraits = ['Ancient One']
+    state.encounterDeck = ['06311', '06318']
+    engine.drawEncounter(state, owner, events)
+    assert.equal(owner.horror, blocked ? 0 : 1)
+    assert.equal(state.enemies.some(enemy => enemy.originalCode === '06311'), blocked)
+  }
 })
 
 // ---------------------------------------------------------------------------
@@ -773,7 +821,7 @@ test('06322 众神所弃：意志(3)失败后按差值选择不同数字，每�
 // 混乱标记（06286 剧本参考卡的经验证补充）
 // ---------------------------------------------------------------------------
 
-test('06286 混乱标记表：skull 随幕/密谋编号、tablet -4/-6、cultist 再揭示一个；elderthing 读数缺口已记录', () => {
+test('06286 混乱标记表：skull 随幕/密谋编号、tablet -4/-6、cultist 再揭示一个；elderthing 分难度结算', () => {
   const state = setup(stateFor())
   const inv0 = inv(state, 0)
   state.actIndex = 2 // 幕 3
@@ -787,9 +835,9 @@ test('06286 混乱标记表：skull 随幕/密谋编号、tablet -4/-6、cultist
   assert.equal(cultist.drawAnother, true)
   state.difficulty = 'standard'
   assert.equal(whereTheGodsDwellChaosToken(state, inv0, 'tablet').delta, -4)
-  // 已知缺口（见报告失败清单）：引擎抽取的实际标记 id 是 `elderthing`（tde-chaos.js 明确小写无下划线），
-  // 而 chaos.js 只匹配 `elder_thing`，因此这里返回 null，引擎回落到 SYMBOL_DEFAULTS.elderthing = -3；
-  // 印刷值为简单/普通 0、困难/专家 -1。本条断言锁定「当前实现未命中」的事实，不冒充正确。
-  assert.equal(whereTheGodsDwellChaosToken(state, inv0, 'elderthing'), null, '引擎 id 未命中（实现缺口）')
-  assert.equal(whereTheGodsDwellChaosToken(state, inv0, 'elder_thing').delta, 0, '旧测试用的 id 才命中')
+  const live = liveState()
+  for (const [difficulty, delta] of [['easy', 0], ['standard', 0], ['hard', -1], ['expert', -1]]) {
+    live.difficulty = difficulty
+    assert.equal(engine.resolveSpecialToken(live, 0, inv(live), 'elderthing', []).delta, delta, difficulty)
+  }
 })

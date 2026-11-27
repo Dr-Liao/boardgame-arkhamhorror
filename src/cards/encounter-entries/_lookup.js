@@ -9,6 +9,8 @@
 //
 // 条目之间禁止互相 import；需要看另一张卡时只从这里取。
 
+import { ENCOUNTER_REPRINT_ALIASES, reprintEntry } from '../entries/_reprint-aliases.js'
+
 let entryList = null
 let byCode = null
 
@@ -22,7 +24,16 @@ function list() {
   return entryList
 }
 
-const table = () => (byCode ||= new Map(list().map(entry => [entry.code, entry])))
+const table = () => {
+  if (byCode) return byCode
+  byCode = new Map(list().map(entry => [entry.code, entry]))
+  for (const [canonical, aliases] of Object.entries(ENCOUNTER_REPRINT_ALIASES)) {
+    const entry = byCode.get(canonical)
+    if (!entry) continue
+    for (const code of aliases) byCode.set(code, reprintEntry(entry, code))
+  }
+  return byCode
+}
 
 export const entryByCode = code => table().get(code) || null
 export const nonPlayerEntryFor = entryByCode

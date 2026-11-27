@@ -1,87 +1,88 @@
 // 08043 通路档案
-// 卡面：研究完成。使用(4 灵脉)。每套牌库仅限 1 张。
-//       [free]：从本支援上移动 1 灵脉到一个非[[精英]]敌人。
-//       [action]：选择一位与带有灵脉的敌人交战的调查员。该调查员与带有灵脉的一个敌人解除交战，
-//       并移动至一个连接地点。你可以移除该灵脉来自动躲避该敌人。本行动不会触发趁乱攻击。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护。
-// 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
-//
-// approximation：灵脉不落在敌人实例上（请求 m2-1-08033.json），敌人标记只扣 uses；「与带灵脉敌人
-// 交战」退化为任意交战敌人。解除交战用 api.autoEvadeEnemy（会同时横置敌人：卡面只解除交战），
-// 之后再移动到所选连接地点；noOpportunityAttack 由描述子声明。
+// 灵脉从支援的使用值移至敌人；解除交战和自动躲避是两个独立效果。
+import { cardCounterOf } from '../../engine/card-counters.js'
+
+const code = '08043'
+const active = person => !person.defeated && !person.resigned
+const targets = state => state.enemies.filter(enemy => !enemy.elite && !enemy.defeated)
+const markedEnemies = (state, person) => state.enemies.filter(enemy =>
+  !enemy.defeated && cardCounterOf(enemy, 'leyline') > 0
+  && (enemy.engagedSeat === person.seat || (enemy.massive && !enemy.exhausted && enemy.location === person.location)))
+const destinations = (state, person, canMove) => {
+  const here = state.locations.find(location => location.id === person.location)
+  return (here?.connections || []).filter(id => canMove(person.seat, id))
+}
+const eligibleInvestigators = (state, canMove) => state.investigators.filter(person => active(person)
+  && markedEnemies(state, person).length && destinations(state, person, canMove).length)
+
 export default {
-  code: '08043',
+  code,
+  uses: 4,
+  usesType: 'leyline',
   abilities: [
     {
       kind: 'entersPlay',
-      label: '入场：获得 4 个灵脉（使用次数）',
-      resolve: ({ source, api }) => {
-        if (source) api.setAssetUses(source, 4)
-      },
+      label: '入场：获得 4 个灵脉',
+      resolve: ({ source, api }) => { if (source) api.setAssetUses(source, 4) },
     },
     {
       kind: 'free',
       label: '从本支援移动 1 灵脉到一个非精英敌人',
-      cost: { action: false },
-      resolve: ({ state, inv, source, api }) => {
-        if (!source || (source.uses || 0) <= 0) return api.info('通路档案：本支援上没有灵脉。')
-        const candidates = (state.enemies || []).filter(enemy => !enemy.elite)
-        if (!candidates.length) return api.info('通路档案：没有非精英敌人。')
-        const chosen = candidates.length === 1 ? candidates[0].id : api.choice({
-          kind: 'target', source: '08043', seat: inv.seat,
-          prompt: '通路档案：选择要放置灵脉的非精英敌人。',
+      cost: { uses: 1 },
+      criteria: ({ state }) => targets(state).length > 0,
+      resolve: ({ state, inv, api }) => {
+        const candidates = targets(state)
+        if (!candidates.length) return
+        const id = candidates.length === 1 ? candidates[0].id : api.choice({
+          kind: 'target', source: code, seat: inv.seat,
+          prompt: '选择要放置灵脉的非精英敌人。',
           options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
-        const enemy = candidates.find(item => item.id === chosen) || candidates[0]
-        api.setAssetUses(source, (source.uses || 0) - 1)
-        api.info(`通路档案：把 1 灵脉移到「${enemy.name}」上（近似：仅扣减灵脉数）。`)
+        const enemy = candidates.find(item => item.id === id)
+        if (enemy) api.addCardCounter(enemy, 'leyline')
       },
     },
     {
       kind: 'action',
-      label: '选择与带灵脉敌人交战的调查员：解除交战并移动到连接地点；可移除灵脉自动躲避',
+      label: '解除和带灵脉敌人的交战并移动；可移除灵脉自动躲避',
       cost: { action: true },
       noOpportunityAttack: true,
-      resolve: ({ state, inv, source, api }) => {
-        const investigators = (state.investigators || []).filter(person => !person.defeated && !person.resigned
-          && (person.engaged || []).length > 0)
-        if (!investigators.length) return api.info('通路档案：没有与敌人交战的调查员。')
-        const chosenInvestigator = investigators.length === 1 ? String(investigators[0].seat) : api.choice({
-          kind: 'investigator', source: '08043', seat: inv.seat,
-          prompt: '通路档案：选择与敌人交战的调查员。',
-          options: investigators.map(person => ({ id: String(person.seat), label: person.name })),
+      criteria: ({ state, helpers }) => eligibleInvestigators(state, helpers.canMoveTo).length > 0,
+      resolve: ({ state, inv, api }) => {
+        const candidates = eligibleInvestigators(state, api.canMoveTo)
+        if (!candidates.length) return
+        const seat = candidates.length === 1 ? candidates[0].seat : Number(api.choice({
+          kind: 'investigator', source: code, seat: inv.seat,
+          prompt: '选择与带有灵脉的敌人交战的调查员。',
+          options: candidates.map(person => ({ id: String(person.seat), label: person.name })),
+        }))
+        const person = candidates.find(item => item.seat === seat)
+        if (!person) return
+        const enemies = markedEnemies(state, person)
+        const enemyId = enemies.length === 1 ? enemies[0].id : api.choice({
+          kind: 'target', source: code, seat: inv.seat,
+          prompt: '选择要解除交战的带灵脉敌人。',
+          options: enemies.map(enemy => ({ id: enemy.id, label: enemy.name })),
         })
-        const person = investigators.find(item => String(item.seat) === String(chosenInvestigator)) || investigators[0]
-        const enemy = (state.enemies || []).find(item => (person.engaged || []).includes(item.id))
-        if (!enemy) return api.info('通路档案：该调查员没有交战的敌人。')
-        api.autoEvadeEnemy(enemy)
-        const here = (state.locations || []).find(location => location.id === person.location)
-        const destinations = (here?.connections || [])
-          .map(id => (state.locations || []).find(location => location.id === id))
-          .filter(Boolean)
-        if (!destinations.length) {
-          api.info('通路档案：没有连接地点。')
-        } else {
-          const chosenLocation = destinations.length === 1 ? destinations[0].id : api.choice({
-            kind: 'location', source: '08043', seat: inv.seat,
-            prompt: '通路档案：选择要移动到的连接地点。',
-            options: destinations.map(location => ({ id: location.id, label: api.locName(location.id) })),
-          })
-          const target = destinations.find(location => location.id === chosenLocation) || destinations[0]
-          api.moveInvestigator(person.seat, target.id)
-          api.info(`通路档案：${person.name} 解除与「${enemy.name}」的交战并移动到「${api.locName(target.id)}」。`)
-        }
-        if ((source.uses || 0) > 0) {
-          const remove = api.choice({
-            kind: 'effect', source: '08043', seat: inv.seat, canSkip: true,
-            prompt: '通路档案：是否移除 1 灵脉来自动躲避该敌人？',
-            options: [{ id: 'skip', label: '不移除' }, { id: 'remove', label: '移除灵脉自动躲避' }],
-          })
-          if (remove === 'remove') {
-            api.setAssetUses(source, (source.uses || 0) - 1)
-            api.autoEvadeEnemy(enemy)
-          }
+        const enemy = enemies.find(item => item.id === enemyId)
+        const locations = destinations(state, person, api.canMoveTo)
+        if (!enemy || !locations.length) return
+        const location = locations.length === 1 ? locations[0] : api.choice({
+          kind: 'location', source: code, seat: inv.seat,
+          prompt: '选择要移动到的连接地点。',
+          options: locations.map(id => ({ id, label: api.locName(id) })),
+        })
+        if (!locations.includes(location)) return
+        api.disengageEnemy(enemy)
+        api.moveInvestigator(person.seat, location)
+        if (cardCounterOf(enemy, 'leyline') === 0) return
+        const remove = api.choice({ kind: 'effect', source: code, seat: inv.seat, canSkip: true,
+          prompt: '是否移除该敌人的 1 灵脉来自动躲避？',
+          options: [{ id: 'skip', label: '不移除' }, { id: 'remove', label: '移除灵脉并自动躲避' }],
+        })
+        if (remove === 'remove') {
+          api.addCardCounter(enemy, 'leyline', -1)
+          api.autoEvadeEnemy(enemy)
         }
       },
     },

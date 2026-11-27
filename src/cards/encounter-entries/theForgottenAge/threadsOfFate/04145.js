@@ -15,7 +15,7 @@ export default {
     const location = (state.locations || []).find(entry => entry.id === inv.location)
     if (!location) return false
     if ((location.clues || 0) === 0) {
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     // 卡面没有「每个地点仅限 1 张」：第二张仍会附属，但「额外 1 行动」只算一次（与旧实现一致）。

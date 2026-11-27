@@ -19,6 +19,5 @@ export default {
     cluesPerInvestigator: 1,
     shroud: 3,
     traits: ['Cave', 'Dark'],
-  },
-  note: '近似：印刷为 [fast]，本实现放在普通剧本行动里（同一团队每轮一次的限制保留），已在 behavior 披露。',
+  }
 }

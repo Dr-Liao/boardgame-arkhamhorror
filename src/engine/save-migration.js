@@ -456,10 +456,20 @@ export function repairRuntimeCardModels(state, changes = []) {
   }
   if (Array.isArray(state.scenarioFlags?.agendaAside) && state.scenarioFlags.agendaAside.length) {
     state.agendaAside ||= []
-    for(const card of state.scenarioFlags.agendaAside) {
-      const code=typeof card==='string'?card:card.code
-      state.instanceSeq ||= {c:0,e:0}
-      state.agendaAside.push(typeof card==='string' ? {code,originalCode:code,id:'agendaAside:c'+(++state.instanceSeq.c)} : card)
+    for (const card of state.scenarioFlags.agendaAside) {
+      const code = typeof card === 'string' ? card : card.code
+      if (typeof card !== 'string') {
+        state.agendaAside.push(card)
+        continue
+      }
+      const doom = registeredEntry(code)?.flags?.doomOnStart
+      const setAside = state.scenarioZones?.setAside
+      const index = setAside?.indexOf(code) ?? -1
+      if (doom > 0 && index >= 0) setAside.splice(index, 1)
+      state.instanceSeq ||= { c: 0, e: 0 }
+      state.agendaAside.push({
+        code, originalCode: code, id: 'agendaAside:c' + (++state.instanceSeq.c), ...(doom > 0 ? { doom } : {}),
+      })
     }
     delete state.scenarioFlags.agendaAside
     changes.push('把密谋旁的旧标记恢复为公共区域实体')

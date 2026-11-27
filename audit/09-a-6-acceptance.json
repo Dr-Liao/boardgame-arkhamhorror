@@ -3,7 +3,7 @@
   "unit": "09-a-6",
   "profile": {
     "id": "tsk-campaign-c-2026-11",
-    "scope": "绯红密钥 09 段 tskc 战役卡（09584–09622）45 条目录记录。38 条通过五维验收；7 条子句无读点暂不切换。",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09584–09622）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 45,
-    "verified": 38,
-    "unverified": 7,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 184
+    "testsPassed": 181
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
-      "sha256": "7a1f0e4766f04c3c886c70cbdbc0c2eef658aa79b2e309c11c50c691b36a84b0"
+      "sha256": "b8488ca13256e2f863e60c2e52b3d1910fb5cce5edea0b5ca55ede4accf743ce"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-riddlesAndRain.test.mjs",
@@ -33,11 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-dancingMad.test.mjs",
-      "sha256": "55245f8711f093dc0d50e326d32981d8ce925432acda4aaf23107ba06b1e29dc"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+      "sha256": "0e58c66eb131108edfa435770546261fb54dde1daba6dd6de82cf70b0f0d76b9"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
@@ -45,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
@@ -245,9 +241,21 @@
       "code": "09595",
       "name": "一失足(版本一)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "幕 1 v.I 正面强制「如果德西德柔·戴佳多·欧瓦瑞兹离场：将他放在一边，每位调查员受到 1 点恐惧」无读点：章节 behavior 没有 storyAssetLeftPlay 等「剧情支援离场」窗口消费方（engine 已有该钩子），条目又是数据型。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09595 幕／09608 惨遭夺舍：德西被选中时移出场地并放在一边"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09595 幕：德西离场时放在一边，全体受到 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09595 幕：背面处置由 ACT_BACK_HANDLERS / behavior 行动与目标读点承接"
+        }
+      ]
     },
     {
       "code": "09596",
@@ -357,9 +365,13 @@
       "code": "09603",
       "name": "哈瓦那大剧院",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「隐藏值 -2 直到你的回合结束」未实现到期：behavior.performAction 直接把 location.shroudMod 减 2，且 behavior.roundEnded 不清理；实测回合结束后仍为 -2（永久修正，超出印刷时限）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09603 哈瓦那大剧院：花费 2 个资源降低本回合隐藏值，结束回合或再次行动时恢复"
+        }
+      ]
     },
     {
       "code": "09604",
@@ -441,6 +453,10 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09595 幕／09608 惨遭夺舍：德西被选中时移出场地并放在一边"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
           "test": "09608 惨遭夺舍：显现意志(4)失败把[[盟友]]/[[道具]]作为空洞，无候选改 2 恐惧"
         },
         {
@@ -465,17 +481,25 @@
       "code": "09610",
       "name": "失落与遗忘",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "议程 1 正面强制「有至少 5×人数放一边空洞 → 选 3×人数移除并在本密谋放 1 毁灭（可推进）」无读点：onThinIce 的 AGENDAS 未声明 hollowForced，behavior 也没有对应的正面强制窗口（对比 dancingMad 的 checkHollowForcedDoom）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09610 议程：正面毁灭阈值 7，推进后各将一张盟友或道具设为空洞"
+        }
+      ]
     },
     {
       "code": "09611",
       "name": "虚空之眼",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "议程 2 正面强制「有至少 4×人数放一边空洞 → 选 2×人数移除并放 1 毁灭」无读点：同 09610，onThinIce AGENDAS 无 hollowForced、behavior 无该强制窗口。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09611 议程：正面毁灭阈值 6，推进后各将一张盟友或道具设为空洞"
+        }
+      ]
     },
     {
       "code": "09612",
@@ -525,7 +549,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
-          "test": "09615b 域外来客之巢：显现入场语义由幕 3 背面实现，但「无线索时奇美拉 -1 攻击/躲避」无读点"
+          "test": "09615b 域外来客之巢：已揭示并无线索时真实形态攻防各 -1"
         }
       ]
     },
@@ -533,9 +557,13 @@
       "code": "09615b",
       "name": "域外来客之巢",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "域外来客之巢第二句「域外来客之巢没有线索时，虚空奇美拉（真实形态）得到 -1 攻击和 -1 躲避」无读点：onThinIce behavior 没有 enemyStatModifier 钩子（第一句显现入场语义由幕 3 背面 enterOutsidersLair 实现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09615b 域外来客之巢：已揭示并无线索时真实形态攻防各 -1"
+        }
+      ]
     },
     {
       "code": "09616",
@@ -565,9 +593,13 @@
       "code": "09618",
       "name": "费尔班克斯",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "费尔班克斯 [reaction]「位于此地的调查员抽取[[危险]]诡计时：花费 2 资源取消其效果并弃掉」无任何读点：behavior 无 cancelHazard/cancelTreachery 窗口（encounterDrawn 仅服务索恩换钥匙）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09618 费尔班克斯：抽到[[危险]]诡计时支付 2 个资源取消并弃置"
+        }
+      ]
     },
     {
       "code": "09619",
@@ -597,9 +629,13 @@
       "code": "09621",
       "name": "偏远小路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "偏远小路「本地点调查员每轮揭示的第一张[[危险]]诡计获得涌动」无读点：onThinIce behavior 没有 firstHazard/gainsSurge 一类的遭遇抽取修正。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard6.test.mjs",
+          "test": "09621 偏远小路：同一轮只有第一张[[危险]]诡计涌动，下一轮重新计数"
+        }
+      ]
     },
     {
       "code": "09622",

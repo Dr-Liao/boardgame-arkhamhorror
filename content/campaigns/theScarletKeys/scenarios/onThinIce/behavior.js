@@ -15,12 +15,13 @@
 //   5. 幕 4 背面「绝杀一击」：按场上索恩是剧情支援/敌人/不在场分流 R1/R2/R3。
 //   6. 密谋 1/2 背面：每位调查员把一个[[盟友]]/[[道具]]支援或同名手牌放在一边作为空洞。
 //   7. 密谋 3 背面「灭绝」：收齐空洞，每位调查员放逐自己经验值费用最高的空洞 → R4（本场冒险从未发生）。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { exposeWithReaction } from '../../concealed.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
-import { isPendingChoice } from '../../../../../src/engine/resolution.js'
+import { isPendingChoice } from '../../../../../src/engine/resolution-error.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import {
-  assetRuleFor, enemyRuleFor, encounterResolveFor, resolveDeclarativeTreacheryTest, treacheryTestFor,
+  assetRuleFor, enemyRuleFor, encounterResolveFor, locationRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../../../src/cards/card-rules.js'
 import {
   concealedAt, concealedMiniCards, distributeConcealed, exposeMiniCard,
@@ -342,7 +343,7 @@ export function hollowFromHand(state, seat, api, { code = null, source = 'hollow
   }
   const hollow = hollowApi(api)
   if (!hollow) return null
-  inv.hand = hand.filter((item, index) => item !== chosen || index !== hand.indexOf(chosen))
+  spliceHand(inv, hand.indexOf(chosen), 1)
   try {
     hollow.hollow({ code: chosen, source, scope: 'investigator', seat })
   } catch {
@@ -1245,6 +1246,12 @@ export const behavior = {
   },
 
   // ---- 敌人 ----
+  enemyStatModifier(state, enemy, stat) {
+    const lair = locationOf(state, OUTSIDERS_LAIR)
+    if (!lair) return 0
+    return locationRuleFor(codeOf(lair))?.enemyStatModifier?.(lair, enemy, stat) ?? 0
+  },
+
   enemySpawned(state, enemy, api) {
     const rule = enemyRuleFor(codeOf(enemy))
     if (rule?.spawnNearestWilderness) relocateToNearestWilderness(state, enemy, api)
@@ -1272,12 +1279,12 @@ export const behavior = {
 
   enemyDefeated(state, enemy, api) {
     const code = codeOf(enemy)
-    if (code === RAW_CODES.thorneEnemy) {
+    if (enemyRuleFor(code)?.handsKeyToInvestigatorOnDefeat) {
       const keys = api?.mechanics?.tsk?.keys
       let attached = false
       try {
         const record = keys?.get?.(SABLE_GLASS_KEY.id)
-        attached = record?.bearer?.type === 'enemy'
+        attached = record?.bearer?.type === 'enemy' && record.bearer.enemyId === enemy.id
       } catch {
         attached = false
       }

@@ -68,6 +68,10 @@ define('entersAttachedLocation', '敌人或调查员进入附属地点后', 'rea
 define('damagePlacedOnSelf', '伤害或恐惧放置到调查员后', 'reaction')
 define('wouldDiscardFromHand', '将要弃掉手牌时', 'interrupt')
 define('handCardDiscarded', '一张手牌被弃掉后', 'reaction')
+define('handCardsDiscarded', '一批手牌被弃掉后', 'reaction')
+define('wouldDiscardPlayerCard', '一张玩家卡将被弃掉时', 'reaction')
+define('deckCardDiscarded', '一张牌库里的卡被弃掉后', 'reaction')
+define('attachedEnemyDefeated', '所附属的敌人被击败时', 'reaction')
 define('handEmptied', '调查员失去最后一张手牌后', 'reaction')
 define('encounterCardDiscardedFromPlay', '调查员从场上弃掉敌人或诡计后', 'reaction')
 define('treacheryWouldDiscard', '诡计结算后将要弃掉时', 'interrupt')
@@ -142,13 +146,20 @@ for (const [id, label] of [
 // P0-A 新增窗口：能力层需要的时机，引擎在对应位置开窗。
 // 注意：注册 ≠ 已接线；下面每一个都在 engine.js 有确切的 openAbilityWindow /
 // triggerReaction 调用点，新增窗口时请同时补上调用点与测试。
+define('cardAboutToBeDrawn', '将要抽取卡牌时', 'interrupt')
 define('cardDrawn', '抽取卡牌后', 'reaction', 60)
 define('cardsDrawn', '一次抽牌完成后', 'reaction', 60)
+define('tekeliWouldResolve', '忒咳哩-哩即将结算', 'interrupt')
+define('tekeliResolved', '忒咳哩-哩结算后', 'reaction')
 define('floodChanged', '地点淹没等级改变后', 'reaction', 220)
 define('spellChargesSpent', '花费法术支援的充能后', 'reaction', 60)
 define('mythosEncounterStep', '神话阶段抽取遭遇卡步骤开始前', 'reaction', 60)
 define('tokenEffectWouldResolve', '揭示的混乱标记效果结算前', 'reaction', 60)
 define('clueDiscovered', '发现线索后', 'reaction', 61)
+define('actionTaken', '执行行动后', 'reaction')
+define('enemyExhausted', '敌人横置后', 'reaction')
+define('clueControlTaken', '取得线索控制权后', 'reaction')
+define('cityKeyControlled', '取得数值钥匙的控制权时', 'reaction')
 // P7 TDC 11624/11625/11627：弃掉遭遇牌库顶的牌后（reaction 或 forced 均可监听）。
 define('encounterCardsDiscardedFromTop', '弃掉遭遇牌库顶的牌后', 'reaction', 61)
 define('investigateSuccess', '调查成功后', 'reaction', 62)
@@ -158,6 +169,16 @@ define('scenarioStarts', '冒险开始时', 'reaction', 64)
 // P7 TDC 共享任务卡：战役结束时判定「任务成功/失败」的卡级窗口（11753a–11760a）。
 define('gameEnds', '战役结束时', 'reaction', 64)
 // P7 TDC 11756a：获得资源后的反应（把其中 1 个资源放到任务卡上）。
+define('cluesSpent', '花费线索后', 'reaction')
+define('cluesPlaced', '将调查员的线索放置到地点后', 'reaction')
+define('healOverflow', '超出调查员已有伤害或恐惧的治疗后', 'reaction')
+define('investigatorResigning', '调查员撤退时', 'reaction')
+define('scenarioEnding', '冒险结束时', 'reaction')
+define('turnWouldEnd', '回合即将结束时', 'reaction')
+define('actAdvanced', '场景推进后', 'reaction')
+define('agendaAdvanced', '密谋推进后', 'reaction')
+define('tskWouldExpose', '即将揭露隐匿迷你卡时', 'interrupt')
+define('tskEnteredShadows', '敌人进入阴影区后', 'reaction')
 define('resourcesGained', '获得资源后', 'reaction', 64)
 define('enemyEngaged', '与敌人交战后', 'reaction', 65)
 // 「被击败时」的强制效果（黑山羊眷族的临死反噬）在敌人离场后、剧本结算/胜利区之前开窗。

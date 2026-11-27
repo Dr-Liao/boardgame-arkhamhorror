@@ -1,3 +1,5 @@
+import { spliceHand } from './hand-icons.js'
+import { customizationEffect } from './tsk-customizable.js'
 import { putInHand } from './hand-entry.js'
 import { withPlayedEventDisposal } from './event-play-disposal.js'
 import { choosePlayShuffle, payAdditionalPlayDamage } from './play-attempt.js'
@@ -25,12 +27,13 @@ import { preparePlayAttempt, payBondedPlayCost, payAdditionalPlayHorror } from '
 import { withOptionalLocationIgnore, ignoreLocationTrigger } from './location-effect-scope.js'
 import { recordPlayedCard } from './action-history.js'
 import { consumeNextPlayDiscount } from './effect-state.js'
+import { sharedPlayOwner } from './shared-play.js'
 import { parleyDiscardProvider } from './play-channels.js'
 import { notePromiseEvent } from './turn-promises.js'
 import { payTokenCost, tokenCostAvailable } from './token-cost.js'
 import { chooseEntrySeal, sealAvailable } from './seal-entry.js'
 import { playTimingSource } from './play-timing.js'
-import { payPlayDiscardCost, playDiscardCostChoices } from './play-discard-cost.js'
+import { canPayPlayDiscardCost, payPlayDiscardCost } from './play-discard-cost.js'
 import { actionsAvailable, consumeAction } from './restricted-actions.js'
 import { enemyCannotBeExhausted } from './enemy-restrictions.js'
 import { cancelResolution } from './resolution.js'
@@ -120,7 +123,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   const restoreOtherHandCard = () => {
     if (!otherHandOwner || otherHandOwner === inv) return false
     const index = inv.hand.lastIndexOf(cardId)
-    if (index >= 0) inv.hand.splice(index, 1)
+    if (index >= 0) spliceHand(inv, index, 1)
     if (!(otherHandOwner.hand || []).includes(cardId)) (otherHandOwner.hand ||= []).push(cardId)
     return true
   }
@@ -163,7 +166,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   if (playAccess(cardId).onlyFromDiscard && !fromDiscard && origin !== 'discard') return
   if (!lolaCanUseCard(inv, cardId)) return
   if (def.type === 'skill' || (isWeaknessCard(def) && !playAccess(cardId).playableWeakness)) return
-  if (cannotPlayTypes(inv).has(def.type)) {
+  if (cannotPlayTypes(inv, state).has(def.type)) {
     info(state, events, `⛔ ${inv.name} 受「刺耳之声」影响，不能打出${def.type === 'asset' ? '支援' : '事件'}。`)
     return
   }
@@ -171,7 +174,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     { playCost, cardDef, reactionWindow, shuffle, randomValue }, playDiscount)
   if (playAttempt.cancelled) return
   const discardPlayCost = registeredEntry(playedDef.code)?.discardPlayCost
-  if (discardPlayCost && !discardPlayCost.upTo && !playDiscardCostChoices(state, inv, discardPlayCost).length) {
+  if (discardPlayCost && !discardPlayCost.upTo
+    && !canPayPlayDiscardCost(state, inv, cardId, discardPlayCost, options.handIndex)) {
     restoreOtherHandCard()
     info(state, events, '没有能够支付额外弃置费用的牌。')
     return
@@ -214,7 +218,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   } else {
     if (options.handIndex != null) {
       if (inv.hand[options.handIndex] !== cardId) return
-      inv.hand.splice(options.handIndex, 1)
+      spliceHand(inv, options.handIndex, 1)
     } else if (!removeCardByCode(inv.hand, cardId)) return
     playedFromHand = !otherHandContext && !options.syntheticHand && inv.hand.length === 0
   }
@@ -238,13 +242,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const variableCostEntry = registeredEntry(cardId)?.chooseResourceCostOnPlay ? registeredEntry(cardId) : null
     let cost
     if (variableCostEntry) {
+      const maximum = Math.min(availablePlayResources(state, inv, playedDef), playAttempt.maxVariableResourceCost ?? Infinity)
       cost = Number(requestChoice(state, { kind: 'resource', source: cardId, seat,
         prompt: `选择为「${cardName(cardId)}」支付多少资源（X）。`,
-        options: Array.from({ length: availablePlayResources(state, inv, playedDef) + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
+        options: Array.from({ length: maximum + 1 }, (_, i) => ({ id: String(i), label: `${i}` })),
       }))
       if (variableCostEntry.variableCostPaidAs === 'paidX') chosenVariableCost = cost
     } else {
-      cost = playCost(state, inv, playedDef)
+      cost = playCost(state, inv, playedDef, { rawActionDiscount: true })
     }
     // 2026-10-27「如同手牌」通道：折扣由 play-channels 原语显式传入（直觉牌库等），
     // 不再写 inv.playDiscount；预览/校验/扣费同源，支付前窗口看到的也是折后费用。
@@ -376,11 +381,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         playCostWindow.discardedCards.push(discarded)
       }
     } else if (discardPlayCost) {
-      const discardedCard = payPlayDiscardCost(state, inv, cardId, discardPlayCost, events, deps)
-      if (!discardedCard) {
-        cancelResolution(state, (restored, emitted) => info(restored, emitted, '额外弃置费用已无法支付。'))
+      const discarded = []
+      for (let index = 0; index < (discardPlayCost.count ?? 1); index++) {
+        const card = payPlayDiscardCost(state, inv, cardId, discardPlayCost, events, deps)
+        if (!card) cancelResolution(state, (restored, emitted) => info(restored, emitted, '额外弃置费用已无法支付。'))
+        discarded.push(card)
       }
-      playCostWindow.discardedCard = discardedCard
+      if (discardPlayCost.count) playCostWindow.discardedCards = discarded
+      else playCostWindow.discardedCard = discarded[0]
     }
     if (emptiedBackpack && inv.assets.includes(emptiedBackpack)) {
       inv.discard.push(emptiedBackpack.code)
@@ -409,7 +417,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   // 2026-10-25：05021「附属到同地点任意调查员」——kind:'investigator' 也走这条通道
   // （attachmentTargets 返回调查员对象，attachCardTo 写入 inv.attachments）。
   const attachSpec = registeredEntry(copyCode || cardId)?.attachTo
-  if (attachSpec && ['asset', 'investigator', 'playerCard'].includes(attachSpec.kind)) {
+  if (attachSpec && ['asset', 'investigator', 'playerCard', 'enemy'].includes(attachSpec.kind)) {
     const candidates = attachmentTargets(state, inv, attachSpec, cardId)
     if (!candidates.length) {
       // 没有合法宿主：把卡放回被取出的位置（P7 顺带修：这里原本引用从未存在的
@@ -435,7 +443,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     const isInvestigatorTarget = attachSpec.kind === 'investigator'
     const preferred = candidates.find(candidate => candidate.id === options.preferredAttachmentTargetId)
     const chosen = preferred?.id ?? (candidates.length === 1 ? candidates[0].id : requestChoice(state, { kind: 'target', source: cardId, seat,
-      prompt: `选择要附属「${cardName(cardId)}」的${attachSpec.kind === 'playerCard' ? '调查员或支援' : isInvestigatorTarget ? '调查员' : '支援'}。`,
+      prompt: `选择要附属「${cardName(cardId)}」的${attachSpec.kind === 'playerCard' ? '调查员或支援' : isInvestigatorTarget ? '调查员' : attachSpec.kind === 'enemy' ? '敌人' : '支援'}。`,
       options: candidates.map(asset => ({ id: asset.id,
         label: isInvestigatorTarget || asset.investigator ? (asset.label || asset.name || cardName(asset.code)) : cardName(asset.code) })) }))
     const candidate = candidates.find(asset => asset.id === chosen) || candidates[0]
@@ -443,7 +451,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     // 此前把 attachments 写在临时包装上，commit 后丢失。
     const target = candidate.investigator || (isInvestigatorTarget && state.investigators[candidate.seat]) || candidate
     const attachment = options.removeEventAfter
-      ? null : attachCardTo(state, seat, cardId, target)
+      ? null : attachCardTo(state, seat, cardId, target, attachSpec.kind === 'enemy' ? { hostEnemyId: target.id } : {})
     if (options.removeEventAfter) (state.removedFromGame ||= []).push(cardId)
     // P6 原语（08074 应急装备）：附属事件按条目 uses/usesType 初始化耐久/充能，
     // 否则「使用(3 耐久)」的附属事件没有可花费的资源。只在条目声明了 uses 时写入。
@@ -451,7 +459,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       attachment.uses = registeredEntry(cardId).uses
       if (registeredEntry(cardId).usesType) attachment.usesType = registeredEntry(cardId).usesType
     }
-    if (registeredEntry(cardId)?.assetRule?.hostExtraSlot) {
+    const slotOptions = registeredEntry(cardId)?.assetRule?.hostRestrictedSlot
+    if (attachment && slotOptions) {
+      const slot = requestChoice(state, { kind: 'effect', source: cardId, seat,
+        prompt: '选择额外槽位的类型。', options: slotOptions.slots.map(id => ({ id, label: id === 'hand' ? '手部' : '饰品' })),
+      })
+      attachment.restrictedSlot = { slot, traitsAny: slotOptions.traitsAny, count: 1 }
+    }
+    if (registeredEntry(cardId)?.assetRule?.hostExtraSlot || slotOptions) {
       const owner = state.investigators.find(owner => owner.assets.includes(target))
       if (owner) deps.enforceAssetSlotCapacity(state, owner, target, events)
     }
@@ -460,7 +475,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (onAttach.ammo) target.uses = (target.uses || 0) + onAttach.ammo
     info(state, events, `「${cardName(cardId)}」附属到「${cardName(target.code)}」。`)
     if (!noAction) spendAction(state, inv)
-    return
+    return options.reportPlayResult ? true : undefined
   }
 
   if (def.unique) {
@@ -474,14 +489,17 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
   }
 
   // 跨座位代打：槽位替换按控制者（牌主）判定，而不是代打者。
-  const needsSlots = def.type === 'asset' && !options.hostIgnoresSlots && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation
-  const replaceAfterPayment = origin || availablePlayResources(state, inv, def) > availableResources(inv)
-  if (needsSlots && !replaceAfterPayment) replaceAssets(state, controller, def, events)
+  const customizedSlots = def.type === 'asset' && customizationEffect(state, controller.seat, cardId, 'slots')
+  const equipmentDef = Array.isArray(customizedSlots) ? { ...def, slots: customizedSlots, slotsOverride: true } : def
+  const customController = def.type === 'asset' && customizationEffect(state, controller.seat, cardId, 'playUnderAnyAtLocation') === true
+  const needsSlots = def.type === 'asset' && !options.hostIgnoresSlots && !registeredEntry(cardId)?.assetRule?.playUnderAnyAtLocation && !customController
+  const replaceAfterPayment = origin || discardPlayCost?.anyControlled || availablePlayResources(state, inv, def) > availableResources(inv)
+  if (needsSlots && !replaceAfterPayment) replaceAssets(state, controller, equipmentDef, events)
 
   const paid = payPlayCost()
   if (!paid.ok) return
   const cost = paid.cost
-  if (needsSlots && replaceAfterPayment) replaceAssets(state, controller, def, events)
+  if (needsSlots && replaceAfterPayment) replaceAssets(state, controller, equipmentDef, events)
 
   if (def.type === 'asset') {
     // Phase 5（5b-8）：资产入场时读的 passive（额外行动等）也要认条目。
@@ -499,9 +517,10 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     if (def.type === 'asset') {
       const anyControlProvider = (controller.assets || []).some(item =>
         registeredEntry(item.code)?.assetRule?.playUnderAnyAtLocation)
-      if (anyControlProvider) {
+      if (anyControlProvider || customController) {
         const candidates = (state.investigators || []).filter(other => other && !other.defeated && !other.resigned
-          && other.location === controller.location)
+          && other.location === controller.location
+          && (!customController || deps.assetReplacementPlans(other, equipmentDef, state).length))
         if (candidates.length > 1) {
           const chosen = requestChoice(state, { kind: 'investigator', source: cardId, seat,
             prompt: `「${cardName(cardId)}」由谁控制？`,
@@ -511,10 +530,14 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         }
       }
     }
+    if (customController) replaceAssets(state, placedController, equipmentDef, events)
     const seal = chooseEntrySeal(state, entryFlags, { seat: placedController.seat, code: cardId,
       choose: spec => requestChoice(state, spec), label: tokenLabel })
     if (seal === false) throw new Error('入场封印费用已失效')
-    const asset = newPlayerAssetInstance(state, placedController, cardId)
+    const physicalOwner = sharedPlayOwner(state, inv, cardId)
+    const ownerSeat = physicalOwner.seat !== placedController.seat && (state._playedUnderControl || customController) ? physicalOwner.seat : null
+    const asset = newPlayerAssetInstance(state, placedController, cardId, ownerSeat == null ? {} : { ownerSeat })
+    if (Array.isArray(customizedSlots)) Object.assign(asset, { slots: customizedSlots, slotsOverride: true })
     playedAsset = asset
     if (seal) {
       sealChaosToken(state, seal, asset.id, inv.seat)
@@ -583,7 +606,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
     playedAtLocation = effectiveLocation
     if (asIfLocation) inv.location = asIfLocation
     try {
-      withEventTestBonus(state, seat, copyCode || cardId, playedContext.playCost?.skillBonus, () => withPlayedEventDisposal(playedContext, disposal, () => {
+      withEventTestBonus(state, seat, copyCode || cardId, (playedContext.playCost?.skillBonus || 0) + (options.skillBonus || 0), () => withPlayedEventDisposal(playedContext, disposal, () => {
         if (playedDescriptor?.resolve) {
           // quietPlay 保留数据体事件的日志格式（03189）。
           executeDescriptor(state, { inv, source: { code: cardId, id: cardId }, descriptor: playedDescriptor,
@@ -605,6 +628,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       disposal.fromHandShuffle = true
     }
     delete state._playDisposal
+    const eventOwner = sharedPlayOwner(state, inv, cardId)
     if (playedContext.victoryAttached) { /* Defeat resolution already placed the event in victory. */ }
     else if (copyCode && registeredEntry(cardId)?.copiesBeneathEvents) {
       state.removedFromGame ||= []
@@ -617,12 +641,12 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
         victory: cardDef(cardId)?.victory || 0 })
       info(state, events, `💎 「${cardName(cardId)}」被加入胜利展示区。`)
     } else if (discardProvider) (state.removedFromGame ||= []).push(cardId)
-    else if (disposal.exileAfterPlay) exilePlayerCard(state, inv, cardId, events)
-    else if (entryFlags.returnToHandAfterPlay) putInHand(state, inv, cardId)
+    else if (disposal.exileAfterPlay) exilePlayerCard(state, eventOwner, cardId, events)
+    else if (entryFlags.returnToHandAfterPlay) putInHand(state, eventOwner, cardId)
     else if (disposal.becomesAsset) { /* 「危险预感」等：卡牌本身留在场上，由效果创建实例。 */ }
     else if (disposal.shuffleBackAfterPlay && (fromDiscard || origin === 'discard' || disposal.fromHandShuffle)) {
-      inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, cardId], () => randomValue(state)), 'shuffle')
-      info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
+      eventOwner.deck = replacePlayerZoneCards(state, eventOwner, shuffle([...eventOwner.deck, cardId], () => randomValue(state)), 'shuffle')
+      info(state, events, `「${cardName(cardId)}」洗回 ${eventOwner.name} 的牌库。`)
       const draw = entryFlags.drawAfterShuffleBack
       if (draw) abilityApi(state, events).drawCards(inv.seat, draw)
     }
@@ -634,7 +658,8 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       if (choosePlayShuffle(state, inv, playAttempt)) {
         inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, cardId], () => randomValue(state)), 'shuffle')
         info(state, events, `「${cardName(cardId)}」洗回 ${inv.name} 的牌库。`)
-      } else disposePlayedEvent(inv, cardId)
+      } else if (eventOwner !== inv) eventOwner.discard.push(cardId)
+      else disposePlayedEvent(inv, cardId)
       if (inv.discard[index] === cardId && (playedContext.returnAtEndOfTurn || hasWindowListener(state, 'eventPlayed'))) {
         discardedEvent = { code: cardId, index }
         if (playedContext.returnAtEndOfTurn) {
@@ -659,7 +684,7 @@ function doPlay(state, seat, cardId, events, fromDiscard = false, noAction = fal
       cardCode: cardId, location: inv.location }, events, { allowNested: true })
   }
   if (!noAction) spendAction(state, inv)
-  return playedAsset
+  return playedAsset ?? (options.reportPlayResult ? true : undefined)
 }
 
 function doInvestigate(state, seat, opts, events, noSpend) {
@@ -703,8 +728,9 @@ function runInvestigate(state, seat, opts, events, noSpend) {
     return
   }
   const locationRule = registeredEntry(loc.originalCode || loc.code)?.locationRule
-  if (locationRule?.beforeInvestigate && !ignoreLocationTrigger(state, loc.id, requestChoice, '调查前的地点能力')
-    && locationRule.beforeInvestigate(state, inv, loc, scenarioRuntime(state, events)) === false) return
+  const locationBefore = locationRule?.beforeInvestigate && !ignoreLocationTrigger(state, loc.id, requestChoice, '调查前的地点能力')
+    ? locationRule.beforeInvestigate(state, inv, loc, scenarioRuntime(state, events)) : undefined
+  if (locationBefore === false) return
   if (inv.defeated || inv.resigned) {
     locationRule?.afterInvestigate?.(state, inv, loc, null, scenarioRuntime(state, events))
     return
@@ -726,7 +752,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
   }
   const scenarioShroud = (scenarioBehavior(state).locationShroudModifier?.(state, loc, inv) || 0) + attachmentShroud
     + (locationRule?.shroudModifier?.(state, loc, inv) || 0)
-    + entityModifierTotal(state, loc, 'locationShroud')
+    + entityModifierTotal(state, loc, 'locationShroud') + (Number(locationBefore?.shroudModifier) || 0)
   // 「骷髅钥匙」：附属地点的帷幕设为 1（现在是附属条目上的声明式标记 shroudAsOne）。
   const keyed = (loc.attachments || []).some(entry => entry.shroudAsOne === true)
   const difficulty = keyed ? 1
@@ -764,8 +790,10 @@ function runInvestigate(state, seat, opts, events, noSpend) {
       }
     }
     // 调查结果窗口（在发现线索之前）：04064 华美石室要先把线索翻成毁灭。
-    let investigationReplaced = !ignoreLocationTrigger(state, loc.id, requestChoice, '调查结果的地点效果')
-      && scenarioBehavior(state).investigateResult?.(state, inv, loc, r, scenarioRuntime(state, events)) === false
+    const locationBehavior = scenarioBehavior(state)
+    let investigationReplaced = Boolean(locationBehavior.investigateResult
+      && !ignoreLocationTrigger(state, loc.id, requestChoice, '调查结果的地点效果')
+      && locationBehavior.investigateResult(state, inv, loc, r, scenarioRuntime(state, events)) === false)
     if (r.success) for (const source of inv.threat.slice()) {
       if (registeredEntry(source.originalCode || source.code)?.treacheryRule?.investigationSuccessReplacement?.({
         state, inv, source, location: loc, result: r, api: abilityApi(state, events),
@@ -776,17 +804,27 @@ function runInvestigate(state, seat, opts, events, noSpend) {
       // 「未知的呼唤」需要知道本回合是否成功调查了被指定的地点。
       if (inv.investigatedTurnRound !== state.round) { inv.investigatedTurnRound = state.round; inv.investigatedThisTurn = [] }
       if (!inv.investigatedThisTurn.includes(loc.id)) inv.investigatedThisTurn.push(loc.id)
-      const gain = (1 + (opts.clueBonus || 0) + (opts.successClueBonus?.(r) || 0) + (opts.clueBonusForResult?.(r) || 0)
+      let gain = (1 + (opts.clueBonus || 0) + (opts.successClueBonus?.(r) || 0) + (opts.clueBonusForResult?.(r) || 0)
         + (opts.clueIfNoResources && inv.resources === 0 ? 1 : 0) + (r.clueBonus || 0)
         + (opts.successByClueEvery ? Math.floor(successBy / opts.successByClueEvery) : 0)) * (r.rewardMultiplier || 1)
       info(state, events, `${inv.name} 调查成功（${SKILL_NAMES[skill]} ${r.value} vs ${difficulty}）。`)
-      triggerReaction(state, seat, 'investigateSuccess', events, { seat, location: loc.id, successBy: r.value - difficulty })
+      triggerReaction(state, seat, 'investigateSuccess', events, { seat, location: loc.id, successBy: r.value - difficulty },
+        { skipAbilityWindow: true })
       // 2026-11-13 P1-8：调查成功也要开反应窗口（09067 等「成功后快速打出」的手牌快速事件
       // 只在 reactionWindow 的候选枚举里；triggerReaction 只结算旧式反应）。
+      const frame = investigationFrameRef()
+      const clueLocation = state.locations.find(item => item.id === frame?.retarget?.locationId) || loc
+      if (frame && !investigationReplaced && !opts.noClueDiscovery) {
+        frame.replaceableClues = Math.min(gain, Math.max(0, clueLocation.clues || 0))
+      }
       reactionWindow(state, 'investigateSuccess', {
         when: 'investigateSuccess', seat, location: loc.id, successBy: r.value - difficulty,
         prompt: '调查成功后',
       }, events, { allowNested: true })
+      if (frame) {
+        gain -= frame.replacedClues || 0
+        delete frame.replaceableClues
+      }
       if (loc.flipAfterInvestigate) {
         const next = placeDreamGate(state, loc.flipAfterInvestigate, {
           connectToRevealed: true, ownerCode: loc.dreamGateOwner, ownerSeat: loc.dreamGateOwnerSeat,
@@ -794,7 +832,7 @@ function runInvestigate(state, seat, opts, events, noSpend) {
         if (inv.location === loc.id) inv.location = next.id
       }
       // 「改为不发现线索」的调查（02282/02283/02287）先走完调查成功窗口，再交给卡面回调。
-      if (opts.onInvestigateSuccess) opts.onInvestigateSuccess(r, { state, inv, loc })
+      if (opts.onInvestigateSuccess?.(r, { state, inv, loc, successBy }) === true) investigationReplaced = true
       // 2026-10-25 第七轮修复 05158：可在检定中把调查重定向到连接地点（改用该地点的隐藏值）。
       const retarget = investigationFrameRef()?.retarget || null
       const dual = investigationFrameRef()?.dual || null

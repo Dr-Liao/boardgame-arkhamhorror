@@ -14,10 +14,12 @@ import { fixture, move, asset, enemy, settle, decisionSeat, legalMoves, validate
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import {
-  applyHarm, canEquip, drawCards, executeDescriptor, getStat, healDamageFrom, healHorrorFrom, performTest, reactionWindow, slotUsage,
+  applyHarm, canEquip, drawCards, executeDescriptor, getStat, healDamageFrom, healHorrorFrom,
+  performTest, reactionWindow, slotUsage,
 } from '../src/engine/engine.js'
-import { capabilityBlocked, playCostDelta } from '../src/engine/modifiers.js'
+import { playCostDelta } from '../src/engine/modifiers.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { loadEoteWorld, createHubGame, legalFor, playMove, settleChoices } from './eote-p8-fixture.mjs'
 
 import entry08109 from '../src/cards/entries/08109.js'
 import entry08110 from '../src/cards/entries/08110.js'
@@ -493,57 +495,52 @@ test('P6 08129 请求支援 按控制的职阶依次结算：伤害/线索/治�
 // 08112 「再来一张！」
 // ---------------------------------------------------------------------------
 
-test('P6 08112 再来一张！ 额外揭示 1 枚标记：负值取正结算；骷髅则自动失败', () => {
-  const resolveWithToken = token => {
+test('P6 08112 再来一张！保留原标记，额外负值取正，额外骷髅自动失败', () => {
+  const playInInvestigation = face => {
     const state = fixture('01001')
-    state.investigators[0].assets = []
-    state.investigators[0].hand = ['08112']
-    state.skillTest = { seat: 0, skill: 'willpower', difficulty: 1, committed: [], stage: 'ST.4', drawn: [] }
-    state.chaosBag = [token]
-    const context = { when: 'tokenReveal', seat: 0, token: '0' }
-    const descriptor = registeredEntry('08112').abilities.find(ability => ability.kind === 'played')
-    runTest(state, draft => executeDescriptor(draft, {
-      inv: draft.investigators[0], source: { id: 'probe:08112', code: '08112' }, descriptor, events: [],
-      context, silent: false,
-    }))
-    return context
+    const inv = state.investigators[0]
+    inv.hand = ['08112']
+    inv.intellect = 8
+    state.locations.find(location => location.id === inv.location).clues = 2
+    state.chaosBag = [face, face]
+    move(state, { action: 'investigate' })
+    resolveChoices(state, pickOption(/再来一张/))
+    assert.ok(state.investigators[0].discard.includes('08112'))
+    assert.deepEqual(state.lastTestResult.drawn, [face, face])
+    return state.lastTestResult
   }
-  // 额外揭示的标记为 -2：取正后作为替代标记（+2）。
-  assert.equal(resolveWithToken('-2').replacementToken, '+2', '负值取正：-2 → +2')
-  // 额外揭示的标记为骷髅：改为自动失败。
-  assert.equal(resolveWithToken('skull').replacementToken, 'autofail', '骷髅 → 自动失败')
+  const numbers = playInInvestigation('-2')
+  assert.equal(numbers.value, 8, '原先 -2，额外 +2')
+  assert.equal(numbers.success, true)
+  assert.equal(playInInvestigation('skull').success, false)
 })
 
 // ---------------------------------------------------------------------------
 // 08113 大肆借贷
 // ---------------------------------------------------------------------------
 
-test('P6 08113 大肆借贷 打出后获得 10 资源；轮末资源 <10 时流放自身', () => {
-  const state = fixture('01001')
-  state.investigators[0].assets = []
-  const loan = asset(state, '08113')
-  state.investigators[0].resources = 0
-  runTest(state, draft => reactWindowProbe(draft, {
-    when: 'assetEnteredPlay', seat: 0, assetCode: '08113', assetId: loan.id,
-  }), pickOption(/【能力】大肆借贷/))
-  assert.equal(state.investigators[0].resources, 10, '打出后获得 10 资源')
-  // 资源不足 10：轮末强制流放（近似窗口）。
-  state.investigators[0].resources = 5
-  runTest(state, draft => reactWindowProbe(draft, { when: 'roundEnds', round: draft.round }))
-  const inv = state.investigators[0]
-  assert.equal(inv.assets.some(item => item.id === loan.id), false, '大肆借贷已离场')
-  assert.ok((state.removedFromGame || []).includes('08113'), '被流放（移出游戏）')
-  // 资源足够 10 时轮末不流放。
-  const rich = fixture('01001')
-  rich.investigators[0].assets = []
-  asset(rich, '08113')
-  rich.investigators[0].resources = 10
-  runTest(rich, draft => reactWindowProbe(draft, { when: 'roundEnds', round: draft.round }))
-  assert.equal(rich.investigators[0].assets.some(item => item.code === '08113'), true, '资源 ≥10 时不流放')
+test('P6 08113 大肆借贷：打出后获得 10 资源，剧本结束时不足 10 则从战役牌组流放', () => {
+  for (const finalPool of [9, 10]) {
+    const state = fixture('01001')
+    state.investigators[0].hand = ['08113']
+    state.investigators[0].resources = 0
+    state.campaign.investigators[0].deck.push('08113')
+    move(state, { action: 'play', cardId: '08113' })
+    resolveChoices(state, pickOption(/大肆借贷|获得 10 资源/))
+    assert.equal(state.investigators[0].resources, 10)
+    state.investigators[0].resources = finalPool
+    runTest(state, draft => reactWindowProbe(draft, { when: 'roundEnds', round: draft.round }))
+    assert.ok(state.investigators[0].assets.some(item => item.code === '08113'))
+
+    move(state, { action: 'debug', kind: 'endScenario', resolutionKey: 'r1' })
+    settle(state)
+    assert.equal(state.campaign.investigators[0].deck.includes('08113'), finalPool === 10)
+    assert.equal(state.campaign.scenarioResults.at(-1).investigators[0].deck.includes('08113'), finalPool === 10)
+  }
 })
 
 // ---------------------------------------------------------------------------
-// 08120–08124 天赋（轮初补满 + 特性检定 +1 + 支付近似）
+// 08120–08124 天赋（轮初补满、特性检定 +1、支付打出费用）
 // ---------------------------------------------------------------------------
 
 // 五张天赋共用同一模板：轮初补满 2 资源；在指定特性卡的技能检定期间花 1 资源换 +1 技能值。
@@ -570,24 +567,20 @@ function talentBehavior(code, testSourceCode, cardName) {
   assert.equal(state.investigators[0].assets.find(item => item.id === talent.id).uses, 1, `${code} 花费 1 资源`)
 }
 
-test('P6 08120 先知先觉 轮初补满 + Spell 检定 +1；近似支付减费', () => {
+test('P6 08120 先知先觉：补满和提升法术检定，并用卡上资源支付法术费用', () => {
   talentBehavior('08120', '01061', '先知先觉')
-  // 近似支付：从本卡资源减费打出 [[Spell]] 支援（01061 探知术，费用 1）。
   const state = fixture('01001')
-  state.investigators[0].assets = []
   const talent = asset(state, '08120')
   state.investigators[0].hand = ['01061']
-  state.investigators[0].resources = 1
-  move(state, { action: 'play', cardId: '01061' })
-  resolveChoices(state, pending => {
-    const spend = pending.options.find(option => String(option.label || '') === '花费 1 资源')
-    if (spend) return spend.id
-    return pending.options.find(option => String(option.label || '').includes('【能力】先知先觉'))?.id ?? null
-  })
+  state.investigators[0].resources = 0
+  const playSpell = { action: 'play', cardId: '01061' }
+  assert.equal(validateMove(state, 0, playSpell), null)
+  move(state, playSpell)
+  resolveChoices(state, pending => pending.kind === 'resource' ? '1' : null)
   const inv = state.investigators[0]
-  assert.equal(inv.assets.find(item => item.id === talent.id).uses, 1, '支付时花费 1 点本卡资源')
-  assert.equal(inv.resources, 1, '资源没有从资源池扣除（以本卡资源抵费）')
-  assert.ok(inv.assets.some(item => item.code === '01061'), '探知术已打出')
+  assert.equal(inv.assets.find(item => item.id === talent.id).uses, 1)
+  assert.equal(inv.resources, 0)
+  assert.ok(inv.assets.some(item => item.code === '01061'))
 })
 
 test('P6 08121 一探究竟 轮初补满 + Tome 检定 +1', () => {
@@ -610,22 +603,37 @@ test('P6 08124 古物藏家 轮初补满 + Favor 检定 +1', () => {
 // 08125 危险处境
 // ---------------------------------------------------------------------------
 
-test('P6 08125 危险处境 setup：一次性 2 点创伤 + 3 经验', () => {
-  const state = fixture('01001')
-  state.investigators[0].assets = []
-  const descriptor = registeredEntry('08125').abilities.find(ability => ability.kind === 'setup')
-  const resolveSetup = draft => executeDescriptor(draft, {
-    inv: draft.investigators[0], source: { id: 'probe:08125', code: '08125' }, descriptor, events: [], silent: true,
+test('P6 08125 危险处境：起始构筑时选择 2 点创伤并取得 3 经验，只结算一次', async () => {
+  const world = await loadEoteWorld()
+  const state = createHubGame(world, { seats: 1, seed: 'first-deck-trauma' })
+  const submit = command => playMove(world, state, command, 0)
+  for (const action of ['hubSetLeader', 'hubSelectScenario']) {
+    const command = legalFor(world, state, 0).find(move => move.action === action)
+    if (command) submit(command)
+    settleChoices(world, state)
+  }
+  submit({ action: 'hubGoSetup' })
+  settleChoices(world, state)
+  submit(legalFor(world, state, 0).find(move => move.action === 'hubSelectInvestigator' && move.code === '08001'))
+  settleChoices(world, state)
+  submit(legalFor(world, state, 0).find(move => move.action === 'hubAutoDeck'))
+  settleChoices(world, state)
+  const starting = state.campaign.investigators[0]
+  const xp = starting.xp
+  const trauma = { ...state.campaign.trauma[0] }
+  const codes = starting.deck.filter(code => {
+    const card = ALL_CARDS[code]
+    return !card.signatureFor && !String(card.subtype || '').toLowerCase().includes('weakness')
   })
-  runTest(state, resolveSetup, pickOption(/2 点肉体创伤/))
-  const inv = state.investigators[0]
-  assert.equal(state.campaign.trauma[0].physical, 2, '承受 2 点肉体创伤')
-  assert.equal(inv.scenarioXpBonus || 0, 3, '取得 3 点额外经验')
-  assert.ok((state.campaign.records?.inTheThickOfItPurchased || []).includes(inv.code), '购买记录写入战役记录集合')
-  // 跨场不重复结算。
-  runTest(state, resolveSetup)
-  assert.equal(state.campaign.trauma[0].physical, 2, '第二次 setup 不重复创伤')
-  assert.equal(inv.scenarioXpBonus || 0, 3, '第二次 setup 不重复经验')
+  codes.push('08125')
+  for (let index = 0; index < 2; index++) {
+    submit({ action: 'hubSetDeck', codes })
+    assert.equal(Boolean(state.pendingChoice?.options.some(option => option.id === '1')), index === 0)
+    settleChoices(world, state, pending => pending.options.some(option => option.id === '1') ? '1' : null)
+    assert.equal(state.campaign.investigators[0].xp, xp + 3)
+    assert.equal(state.campaign.trauma[0].physical, trauma.physical + 1)
+    assert.equal(state.campaign.trauma[0].mental, trauma.mental + 1)
+  }
 })
 
 // ---------------------------------------------------------------------------
@@ -639,14 +647,18 @@ function revealWeakness(state, code) {
   return state.investigators[0].threat.find(card => card.code === code) || null
 }
 
-function lockAfterAction(state, code) {
-  runTest(state, draft => reactWindowProbe(draft, {
-    when: 'actionResolvedAtLocation', seat: 0, location: draft.investigators[0].location,
-  }))
-  const inv = state.investigators[0]
-  assert.equal((state.effects || []).some(effect => effect.sourceCode === code && effect.duration === 'endOfTurn'), true,
-    `${code} 写入回合末到期的锁定效果`)
-  return inv
+function assertActionsLocked(state, triggering, blocked, allowed) {
+  for (const command of [triggering, ...blocked, allowed]) {
+    assert.equal(validateMove(state, 0, command), null, `限制生效前：${JSON.stringify(command)}`)
+  }
+  move(state, triggering)
+  settle(state)
+  for (const command of blocked) {
+    assert.match(validateMove(state, 0, command), /本回合不能执行该类型的行动/)
+    assert.equal(legalMoves(state).some(option => option.action === command.action
+      && (command.assetId == null || option.assetId === command.assetId)), false)
+  }
+  assert.equal(validateMove(state, 0, allowed), null, '仍可执行无关类型的行动')
 }
 
 test('P6 08130 臂伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能攻击/启动', () => {
@@ -666,13 +678,15 @@ test('P6 08130 臂伤 显现入威胁区；如同 1 点伤害被治愈（threatD
   assert.equal(healedInv.discard.includes('08130'), true, '臂伤进入弃牌堆')
   assert.equal(healedInv.damage, invDamageBefore, '调查员自身伤害不受影响')
 
-  // 行动后锁：另一份臂伤在场时，真实 actionResolvedAtLocation 窗口写回合末锁定效果。
   const state = fixture('01001')
-  state.investigators[0].assets = []
-  assert.ok(revealWeakness(state, '08130'), '臂伤进入威胁区')
-  const inv = lockAfterAction(state, '08130')
-  assert.equal(capabilityBlocked(state, inv, 'fight'), true, '本回合不能攻击')
-  assert.equal(capabilityBlocked(state, inv, 'triggerAbilities'), true, '本回合不能启动能力')
+  assert.ok(revealWeakness(state, '08130'))
+  const foe = enemy(state, { health: 20 })
+  const gun = asset(state, '01016', { uses: 2 })
+  const fight = { action: 'fight', enemyId: foe.id }
+  const activate = legalMoves(state).find(command => command.action === 'ability'
+    && command.assetId === gun.id && command.targetId === foe.id)
+  assert.ok(activate)
+  assertActionsLocked(state, fight, [fight, activate], { action: 'resource' })
 })
 
 test('P6 08131 腿伤 显现入威胁区；如同 1 点伤害被治愈（threatDamageSink）；行动后本回合不能移动/撤退/躲避', () => {
@@ -691,10 +705,16 @@ test('P6 08131 腿伤 显现入威胁区；如同 1 点伤害被治愈（threatD
   const state = fixture('01001')
   state.investigators[0].assets = []
   assert.ok(revealWeakness(state, '08131'), '腿伤进入威胁区')
-  const inv = lockAfterAction(state, '08131')
-  assert.equal(capabilityBlocked(state, inv, 'move'), true)
-  assert.equal(capabilityBlocked(state, inv, 'resign'), true)
-  assert.equal(capabilityBlocked(state, inv, 'evade'), true)
+  const foe = enemy(state, { health: 20 })
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  const hall = { id: 'leg-injury-hall', name: '走廊', connections: [here.id], revealed: true, clues: 0, shroud: 1 }
+  here.connections.push(hall.id)
+  state.locations.push(hall)
+  const evade = { action: 'evade', enemyId: foe.id }
+  const travel = legalMoves(state).find(command => command.action === 'move')
+  assert.ok(travel)
+  assertActionsLocked(state, evade, [travel], { action: 'resource' })
+  assert.deepEqual(state.investigators[0].prohibitedActions.kinds, ['move', 'resign', 'evade'])
 })
 
 test('P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（threatHorrorSink）', () => {
@@ -704,10 +724,10 @@ test('P6 08132 惊慌 显现入威胁区；可如同 1 点恐惧被治愈（thre
   assert.ok(card, '惊慌进入威胁区')
   assert.equal(card.counters, 1, '1 点恐惧计数器')
   assert.equal(registeredEntry('08132').threatHorrorSink, true)
-  // 行动后锁：本回合不能打出/获得资源/交战。
-  const inv2 = lockAfterAction(state, '08132')
-  assert.equal(capabilityBlocked(state, inv2, 'play'), true)
-  assert.equal(capabilityBlocked(state, inv2, 'gainResources'), true)
+  state.investigators[0].hand = ['01088']
+  const resource = { action: 'resource' }
+  assertActionsLocked(state, resource, [resource, { action: 'play', cardId: '01088' }], { action: 'draw' })
+  assert.deepEqual(state.investigators[0].prohibitedActions.kinds, ['play', 'resource', 'engage'])
   // 治疗自己 1 点恐惧时改为治愈本卡（可选），治满后弃掉。
   state.investigators[0].horror = 1
   runTest(state, draft => {
@@ -723,10 +743,11 @@ test('P6 08133 麻木 显现入威胁区；可如同 1 点恐惧被治愈；行�
   state.investigators[0].assets = []
   const card = revealWeakness(state, '08133')
   assert.ok(card, '麻木进入威胁区')
-  const inv = lockAfterAction(state, '08133')
-  assert.equal(capabilityBlocked(state, inv, 'parley'), true)
-  assert.equal(capabilityBlocked(state, inv, 'draw'), true)
-  assert.equal(capabilityBlocked(state, inv, 'investigate'), true)
+  state.investigators[0].deck.push('01088')
+  state.locations.find(location => location.id === state.investigators[0].location).clues = 2
+  const draw = { action: 'draw' }
+  assertActionsLocked(state, draw, [draw, { action: 'investigate' }], { action: 'resource' })
+  assert.deepEqual(state.investigators[0].prohibitedActions.kinds, ['parley', 'draw', 'investigate'])
 })
 
 // ---------------------------------------------------------------------------

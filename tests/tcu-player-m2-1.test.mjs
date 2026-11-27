@@ -15,7 +15,7 @@ import { fixture, move, asset, enemy, settle, use, decisionSeat, legalMoves, val
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry, descriptorsInEntry } from '../src/engine/ability.js'
 import {
-  actionPreview, applyHarm, commitIcons, descriptorUsable, discardRandomFromHand, drawCards, enemyAttack,
+  actionKind, actionPreview, applyHarm, commitIcons, descriptorUsable, discardRandomFromHand, drawCards, enemyAttack,
   enterOpeningHandCards, executeDescriptor, getMaxHealth, getMaxSanity, getStat, performTest, scenarioRuntime,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -139,7 +139,9 @@ test('TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现
   const resourcesBefore = state.investigators[0].resources
   state.investigators[0].hand = ['05020']
   // 「谈判」不引发借机攻击：打出预览里不应列出已交战敌人的借机攻击。
-  const preview = actionPreview(state, 0, { action: 'play', cardId: '05020' })
+  const play = { action: 'play', cardId: '05020' }
+  assert.equal(actionKind(state, state.investigators[0], play), 'parley')
+  const preview = actionPreview(state, 0, play)
   assert.deepEqual(preview.opportunityAttacks, [], '谈判事件不引发借机攻击')
   move(state, { action: 'play', cardId: '05020' })
   resolveChoices(state, pending => {
@@ -740,6 +742,7 @@ test('TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移
 
 test('TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害，成功获得 X 资源', () => {
   const state = fixture('01001')
+  const play = { action: 'play', cardId: '05037' }
   asset(state, '01020') // 砍刀：[[道具]]，占用 1 个手部槽位，印刷费用 3
   const target = enemy(state, { fight: 2, health: 10, engagedSeat: null })
   state.investigators[0].hand = ['05037']
@@ -748,6 +751,7 @@ test('TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害�
   move(state, { action: 'play', cardId: '05037' })
   resolveChoices(state)
   const inv = state.investigators[0]
+  assert.equal(actionKind(state, inv, play), 'fight')
   assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 2, '基础 1 + 卡面 +1 伤害')
   assert.equal(inv.resources, resourcesBefore + 3 - 0, '成功且弃掉场上支援：获得 X=印刷费用 3 资源')
   assert.equal(inv.assets.some(item => item.code === '01020'), false, '额外费用：弃掉道具支援')

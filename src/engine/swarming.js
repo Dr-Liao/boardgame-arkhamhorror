@@ -68,7 +68,7 @@ export function swarmingXFromState(state, kind, seat = null) {
     return table.reduce((max, value) => Math.max(max, value ?? 0), 0)
   }
   if (kind === 'scenarioDamage') {
-    return Math.max(0, Number(state?.scenarioFlags?.referenceDamage) || 0)
+    return Math.max(0, Number(state?.markerCounts?.reference ?? state?.scenarioFlags?.referenceDamage) || 0)
   }
   return null
 }

@@ -1,3 +1,6 @@
+import { attachmentTextBlanked } from './attachment-rules.js'
+import { duringMovementWithoutEngagement, movementPreventsEngagement } from './enemy-entry.js'
+import { effectSourceIsPlayer } from './effect-provenance.js'
 import { enemyBody, enemyIsPart, setEnemyPosition } from './enemy-parts.js'
 
 // 移动与位置（调查员移动 / 敌人移动 / 距离）从 engine.js 拆出的模块（Phase 6 · 6d-21）。
@@ -12,20 +15,41 @@ import { hunterRouteCandidates } from './enemy-routes.js'
 import { quickEventView, registeredEntries } from './ability.js'
 import { vehicleOf } from './vehicles.js'
 import { checkAirAfterMove } from './flood.js'
-import { enemyIsImmobile } from './enemy-keyword-movement.js'
+import { enemyIsImmobile, enemyIsMassive } from './enemy-keyword-movement.js'
 import { investigatorConnections } from './location-connections.js'
-import { groupClueTotal, payGroupClueCost } from './group-cost.js'
+import { locationGroupClueCost, payGroupClueCost } from './group-cost.js'
+import { leaveLocationActionCost } from './location-attachments.js'
 import { swarmGroup } from './swarm.js'
 import { applyLocationDefenses, blockKeywordMove } from './location-defenses.js'
 import { withEffectSource } from './effect-provenance.js'
 import { recordRegulatedAction } from './action-history.js'
 import { hasWindowListener } from './window-listeners.js'
 
+function relocatedEnemy(state, enemy) {
+  const body = enemyBody(state, enemy)
+  return body?.hostId ? state.enemies.find(item => item.id === body.hostId) || body : body
+}
+
+function enemyRelocationError(state, enemy, destination) {
+  if (!enemy || enemy.enemyLocation || enemy.bindMonster || !destination || enemy.location === destination) return 'invalid'
+  const location = state.locations.find(item => item.id === destination)
+  if (!location || !enemyCanEnterLocation(state, enemy, destination)) return 'invalid'
+  if (enemyIsImmobile(state, enemy)) return 'immobile'
+  if (location.barricade && !enemy.elite) return 'invalid'
+  return null
+}
+
+export function canRelocateEnemy(state, target, destination) {
+  const enemy = relocatedEnemy(state, target)
+  return state.enemies.includes(enemy) && !enemyRelocationError(state, enemy, destination)
+}
+
 export function createMovement(deps) {
   const {
     advanceAct,
     aliveInvestigators,
     applyDamage,
+    applyHarm,
     applyHorror,
     applyPenalty,
     autoEngageAt,
@@ -181,8 +205,11 @@ function doDetachLocationAttachment(state, seat, move, events) {
   const loc = state.locations.find(item => item.id === move.locationId)
   const attachment = loc?.attachments?.[move.attachmentIndex]
   if (!inv || !loc || !attachment) return
-  if (attachment.ownerSeat != null && attachment.ownerSeat !== seat) return
+  if (inv.location !== loc.id) return
+  const shared = attachment.hostedPlayerAsset && registeredEntry(attachment.code)?.assetRule?.sharedLocationDetach
+  if (!shared && attachment.ownerSeat != null && attachment.ownerSeat !== seat) return
   payActionCost(state, inv, 'action', events)
+  if (shared) return deps.abilityApi(state, events).claimHostedAsset(seat, 'location', loc.id, attachment.id)
   loc.attachments.splice(move.attachmentIndex, 1)
   const owner = state.investigators[attachment.ownerSeat ?? seat] || inv
   state.instanceCounter = (state.instanceCounter || 0) + 1
@@ -195,6 +222,7 @@ function doDetachLocationAttachment(state, seat, move, events) {
 
 function doMove(state, seat, locationId, events) {
   const inv = state.investigators[seat]
+  if (!state._actionPaid && inv.actionsLeft < 1 + leaveLocationActionCost(state, inv)) return
   payActionCost(state, inv, 'move', events)
   if (!locationExists(state, locationId) && (state.scenario.setAsideLocations || []).includes(locationId)) {
     placeLocation(state, locationId, events, seat)
@@ -238,13 +266,19 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
   if (entryError) { info(state, events, entryError); return }
   const from = locName(state, inv.location)
   const prevLoc = state.locations.find((l) => l.id === inv.location)
+  const leaveCost = options.reason === 'move' && state._actionPaid ? 0 : leaveLocationActionCost(state, inv, prevLoc)
+  if (leaveCost > (inv.actionsLeft || 0)) return
   const companions = state.enemies.filter(enemy => enemy.engagedSeat === seat).map(enemy => enemy.id)
-  const enter = () => {
+  const enterLocation = () => {
   if (prevLoc && prevLoc.barricade) {
     discardBarricades(state, prevLoc)
     info(state, events, `🚧 「${prevLoc.name}」上的屏障因调查员离开而被弃掉。`)
   }
   inv.location = locationId
+  for (const enemy of state.enemies.filter(item => item.attachedToAssetId
+    && inv.assets.some(asset => asset.id === item.attachedToAssetId))) {
+    setEnemyPosition(state, enemy, locationId)
+  }
   recordRegulatedAction(state, inv, 'move', registeredEntry)
   checkAirAfterMove(state, seat)
   const enteredLocation = state.locations.find(location => location.id === locationId)
@@ -279,11 +313,11 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
     }
   }
   const alreadyRevealed = state.locations.find(l => l.id === locationId)?.revealed
-  revealLocation(state, locationId, events, seat)
+  revealLocation(state, locationId, events, seat, { from: prevLoc?.id, ignoreForced: options.ignoreLocationForced === true })
   // 2026-10-25 第六轮修复 05036：进入地点后、自动交战前开反应窗口（05236 钉鞋等）。
   const engageCandidates = state.enemies.filter(enemy => enemy.location === locationId
-    && !enemyIsPart(enemy) && !enemy.defeated && !enemy.engagedSeat && !enemy.massive)
-  {
+    && !enemyIsPart(enemy) && !enemy.defeated && enemy.engagedSeat == null && !enemyIsMassive(state, enemy))
+  if (!movementPreventsEngagement(state, seat)) {
     reactionWindow(state, 'moveBeforeEngage', {
       when: 'moveBeforeEngage', seat: inv.seat, location: locationId,
       enemy: engageCandidates[0], enemies: engageCandidates.map(enemy => enemy.id),
@@ -292,6 +326,14 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
   }
   autoEngageAt(state, locationId, events)
   const loc = state.locations.find((l) => l.id === locationId)
+  for (const location of [prevLoc, loc]) {
+    for (const source of (location?.attachments || []).slice()) {
+      if (!location.attachments.includes(source) || attachmentTextBlanked(state, source)) continue
+      registeredEntry(source.originalCode || source.code)?.treacheryRule?.onInvestigatorMove?.({
+        state, inv, source, location, from: prevLoc, to: loc, api: scenarioRuntime(state, events),
+      })
+    }
+  }
   scenarioBehavior(state).locationEntered?.(state, inv, loc, scenarioRuntime(state, events), companions)
   // 第 55 轮：地点卡自己的「进入时」自定义效果（02132/02134 等）；与剧本钩子同序。
   locationRuleOf(loc)?.onEnter?.effect?.(state, loc, scenarioRuntime(state, events), inv)
@@ -329,10 +371,14 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
     advanceAct(state, events)
   }
   }
+  const enter = () => options.preventEnemyEngagement
+    ? duringMovementWithoutEngagement(state, seat, enterLocation)
+    : enterLocation()
   const moveAfterCosts = () => {
   // 2026-10-25 本循环修复 05254：beforeMove 第 5 参携带位移来源 { reason: 'move' | 'effect' }，
   // 使「下一次移动行动额外花费」只对移动行动生效、效果位移不加价。
   const destination = state.locations.find(loc => loc.id === locationId)
+  if (leaveCost) inv.actionsLeft -= leaveCost
   if (scenarioBehavior(state).beforeMove?.(state, inv, destination, scenarioRuntime(state, events),
     { reason: options.reason === 'move' ? 'move' : 'effect' }) === false) return
   // beforeEnter 与 entryError 同属未揭示面：揭示后不再收费，忽略未揭示面文字的效果同样跳过。
@@ -341,17 +387,43 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
   if (unrevealedText) {
     locationRuleOf(destination)?.beforeEnter?.(state, destination, inv, scenarioRuntime(state, events))
   }
-  // P7 TDC 11623 古代祭坛：进入地点的共同线索费用（在移动前、离开旧地点时由同地点调查员共同支付）。
-  const entryCost = locationRuleOf(destination)?.entryCost
-  if (entryCost?.kind === 'groupClues') {
-    const needed = entryCost.perInvestigator * state.numInvestigators
-    if (groupClueTotal(state, inv, () => true, 'here') < needed) {
-      info(state, events, `🔎 进入「${destination?.name || locationId}」需要同地点调查员共同支付 ${needed} 个线索；当前不足，移动取消。`)
-      return
-    }
-    payGroupClueCost(state, inv, needed, spec => requestChoice(state, spec), () => true, 'here')
-    info(state, events, `🔎 同地点调查员共同支付 ${needed} 个线索，进入「${destination?.name || locationId}」。`)
+  const api = scenarioRuntime(state, events)
+  const alternative = locationRuleOf(destination)?.enterMirageCost
+  if (alternative) {
+    const canShuffle = api.mechanics.tekeli.size() >= alternative.tekeli
+    const canPayAction = inv.actionsLeft >= alternative.actions
+    const options = [
+      ...(canShuffle ? [{ id: 'tekeli', label: '洗入忒咳哩-哩' }] : []),
+      ...(canPayAction ? [{ id: 'action', label: '支付额外行动' }] : []),
+    ]
+    if (!options.length) return
+    const choice = options.length === 1 ? options[0].id : requestChoice(state, {
+      kind: 'effect', seat, source: destination.originalCode || destination.code,
+      prompt: '选择进入地点的额外费用', options,
+    })
+    if (choice === 'tekeli' ? !api.mechanics.tekeli.shuffleIn(seat, alternative.tekeli)
+      : !api.spendAdditionalAction(seat)) return
   }
+  if (options.reason === 'move' || effectSourceIsPlayer(state)) {
+    for (const location of [prevLoc, destination]) {
+      for (const source of (location?.attachments || []).slice()) {
+        const code = source.originalCode || source.code
+        const rule = registeredEntry(code)?.flags?.moveEntryTest
+        if (!rule || attachmentTextBlanked(state, source)) continue
+        const result = performTest(state, seat, rule.skill, rule.difficulty, {
+          source: { type: 'treachery', code, label: '移动额外费用' },
+        })
+        if (result.success) continue
+        if (rule.discardOnFail) api.discardAttachment(source)
+        applyHarm(state, inv, rule.damage || 0, rule.horror || 0, events)
+        if (rule.cancelMove || inv.defeated || inv.resigned) return
+      }
+    }
+  }
+  const groupCost = scenarioBehavior(state).ignoreLocationRevealText?.(state, inv, destination) === true
+    ? null : locationGroupClueCost(state, destination)
+  if (groupCost && !payGroupClueCost(state, inv, groupCost.count, spec => requestChoice(state, spec),
+    other => api.canSpendClues(other.seat), groupCost.scope)) return
   // 离开地点的检定由地点卡条目声明（locationRule.onLeave.test）；P7 TDC 11576 起，
   // 附属于地点的遭遇卡也可用 treacheryRule.onLeave 声明同一窗口（结算后可选弃置该附属）。
   const hostAttachment = (prevLoc?.attachments || []).find(attachment =>
@@ -370,7 +442,24 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
       prompt: '选择离开地点的检定技能。',
       options: skills.map(item => ({ id: item, label: item })),
     }) : skills[0]
-    performTest(state, seat, skill, leaveRule.test.difficulty, { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
+    let autoSuccess = false
+    const autoCost = leaveRule.test.autoSucceedCost
+    if (autoCost?.clues) {
+      for (const payer of aliveInvestigators(state)) {
+        const nearby = payer.location === prevLoc.id || (autoCost.sameOrAdjacent && investigatorConnections(state, payer.location).includes(prevLoc.id))
+        if (!nearby || payer.clues < autoCost.clues) continue
+        const answer = requestChoice(state, {
+          kind: 'payment', source: prevLoc.originalCode || prevLoc.code, seat: payer.seat,
+          prompt: `是否花费 ${autoCost.clues} 个线索，让这次离开地点的检定自动成功？`,
+          options: [{ id: 'skip', label: '跳过' }, { id: 'pay', label: '支付线索' }],
+        })
+        if (answer !== 'pay') continue
+        scenarioRuntime(state, events).spendClues(payer.seat, autoCost.clues)
+        autoSuccess = true
+        break
+      }
+    }
+    performTest(state, seat, skill, leaveRule.test.difficulty, { ...(autoSuccess ? { autoSuccess } : {}), source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: r => {
         // 附属于地点的诡计：无论成功失败，结算后按声明弃置（11576 饥饿的墙壁）。
         if (leaveRule.discardOnResolve !== false && hostAttachment) {
           const index = (prevLoc.attachments || []).indexOf(hostAttachment)
@@ -393,8 +482,7 @@ function relocateInvestigatorCore(state, seat, locationId, events, message = nul
     const leaveTest = scenarioBehavior(state).locationLeaveTest?.(state, inv, prevLoc, locationId)
     if (leaveTest) performTest(state, seat, leaveTest.skill, leaveTest.difficulty,
       { source: { label: '离开地点', name: prevLoc.name, code: prevLoc.originalCode || prevLoc.code }, resolve: result => {
-        if (result.success) enter()
-        else scenarioBehavior(state).locationLeaveFailed?.(state, inv, prevLoc, scenarioRuntime(state, events))
+        if (result.success || scenarioBehavior(state).locationLeaveFailed?.(state, inv, prevLoc, scenarioRuntime(state, events)) === true) enter()
       } })
     else enter()
   }
@@ -510,8 +598,7 @@ function relocateInvestigator(state, seat, locationId, events, message = null, o
 }
 
 function relocateEnemy(state, enemy, destination, events, options = {}) {
-  enemy = enemyBody(state, enemy)
-  if (enemy?.hostId) enemy = state.enemies.find(item => item.id === enemy.hostId) || enemy
+  enemy = relocatedEnemy(state, enemy)
   if (!enemy || enemy.enemyLocation || enemy.bindMonster || !destination) return
   if (state.phase === 'enemy' && !options.routeSelected && (!options.cause || options.cause==='hunter') && !registeredEntry(enemy.originalCode || enemy.code)?.movesThroughVoid) {
     const lures = (state.playerLocationAttachments || []).filter(a => registeredEntry(a.code)?.locationLure)
@@ -532,14 +619,11 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
         seat: state.campaign.leadSeat ?? 0, prompt: '选择敌人朝诱饵移动的最短路线。', options: routes.map(id => ({ id, label: locName(state, id) })) })
     }
   }
-  if (enemy.location === destination || !locationExists(state, destination)) return
-  if (!enemyCanEnterLocation(state, enemy, destination)) return
-  // 「不能移动，也不能被移动」（04337 无形之子）：任何移动来源都被拦住。
-  if (enemyIsImmobile(state, enemy)) {
-    info(state, events, `⛔ 「${enemy.name}」不能移动，也不能被移动。`)
+  const error = enemyRelocationError(state, enemy, destination)
+  if (error) {
+    if (error === 'immobile') info(state, events, `⛔ 「${enemy.name}」不能移动，也不能被移动。`)
     return
   }
-  if (!enemy.elite && state.locations.find(loc => loc.id === destination)?.barricade) return
   const defenseRule = state.scenario?.mechanics?.defenses ? registeredEntry(enemy.originalCode || enemy.code)?.enemyRule : null
   const ignoredDefenses = defenseRule?.ignoreDefenses || []
   if (blockKeywordMove(state, enemy, destination, options.cause, ignoredDefenses)) return { moved: false, blockedBy: 'barrier' }
@@ -559,7 +643,7 @@ function relocateEnemy(state, enemy, destination, events, options = {}) {
     if (!state.enemies.includes(enemy)) return result
   }
   processPlayerEnemyEntry(state, enemy, events)
-  scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events))
+  scenarioBehavior(state).enemyMoved?.(state, enemy, previous, scenarioRuntime(state, events), result)
   const handEntryReaction = aliveInvestigators(state).some(inv => inv.location === destination && inv.hand.some(code =>
     quickEventView(code)?.trigger.includes('enemyEnteredLocation')
     || registeredEntry(code)?.abilities.some(ability => ability.fromHand && ability.trigger.includes('enemyEnteredLocation'))))

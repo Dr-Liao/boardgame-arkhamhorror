@@ -28,6 +28,7 @@
 //     并把翻译检定做成地点行动（在报告登记为近似）。
 //   · 古代祭坛的「进入前东侧前厅调查员共同花费 4[per_investigator] 线索」缺额外进入费用原语，
 //     只实现「胜利区符文 <3 不能进入」的移动拦截（原语请求已登记）。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
 import { setEnemyKeywords } from '../../../../../src/engine/enemy-keyword-movement.js'
@@ -1036,7 +1037,7 @@ export function enemyAttackResolved(state, enemy, inv, api = {}) {
   if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
   else {
     inv.discard ||= []
-    inv.discard.push(hand.shift())
+    inv.discard.push(spliceHand(inv, 0, 1)[0])
   }
   info(api, `扭曲栈桥：${inv.name} 被敌人攻击后弃掉 1 张手牌。`)
   return true
@@ -1377,7 +1378,7 @@ export const events = Object.freeze({
       const random = randomOf(api)
       const index = Math.floor(random() * inv.hand.length)
       inv.discard ||= []
-      inv.discard.push(inv.hand.splice(index, 1)[0])
+      inv.discard.push(spliceHand(inv, index, 1)[0])
     }
     info(api, '宇宙预兆：受到 1 点直接恐惧并随机弃 1 张手牌。')
     return true

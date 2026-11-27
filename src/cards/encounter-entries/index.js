@@ -743,10 +743,7 @@ import e05264 from './theCircleUndone/unionAndDisillusion/05264.js'
 import e05264b from './theCircleUndone/unionAndDisillusion/05264b.js'
 import e05265 from './theCircleUndone/unionAndDisillusion/05265.js'
 import e05265b from './theCircleUndone/unionAndDisillusion/05265b.js'
-import e05266 from './theCircleUndone/unionAndDisillusion/05266.js'
 import e05267 from './theCircleUndone/unionAndDisillusion/05267.js'
-import e05268 from './theCircleUndone/unionAndDisillusion/05268.js'
-import e05269 from './theCircleUndone/unionAndDisillusion/05269.js'
 import e05270 from './theCircleUndone/unionAndDisillusion/05270.js'
 import e05271 from './theCircleUndone/unionAndDisillusion/05271.js'
 import e05272 from './theCircleUndone/unionAndDisillusion/05272.js'
@@ -1357,11 +1354,9 @@ import e08702 from './edgeOfTheEarth/_shared/left_behind/08702.js'
 import e08730 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08730.js'
 import e08731 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08731.js'
 import e08732 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08732.js'
-import e08733 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08733.js'
 import e08734 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08734.js'
 import e08735 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08735.js'
 import e08736 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08736.js'
-import e08737 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08737.js'
 import e08738 from './edgeOfTheEarth/_shared/memorials_of_the_lost/08738.js'
 import e08706 from './edgeOfTheEarth/_shared/miasma/08706.js'
 import e08707 from './edgeOfTheEarth/_shared/miasma/08707.js'
@@ -2781,6 +2776,10 @@ import e87054 from './machinationsThroughTime/machinationsThroughTime/87054.js'
 import e87055 from './machinationsThroughTime/machinationsThroughTime/87055.js'
 import e87056 from './machinationsThroughTime/machinationsThroughTime/87056.js'
 import e87057 from './machinationsThroughTime/machinationsThroughTime/87057.js'
+import e04299 from './theForgottenAge/theDepthsOfYoth/04299.js'
+import e10704 from './theFeastOfHemlockVale/_shared/the_vale/10704.js'
+import e10569 from './theFeastOfHemlockVale/theLostSister/10569.js'
+import e10549 from './theFeastOfHemlockVale/theSilentHeath/10549.js'
 
 export const NON_PLAYER_ENTRY_LIST = [
   ewolfManDrew,
@@ -3523,10 +3522,7 @@ export const NON_PLAYER_ENTRY_LIST = [
   e05264b,
   e05265,
   e05265b,
-  e05266,
   e05267,
-  e05268,
-  e05269,
   e05270,
   e05271,
   e05272,
@@ -4137,11 +4133,9 @@ export const NON_PLAYER_ENTRY_LIST = [
   e08730,
   e08731,
   e08732,
-  e08733,
   e08734,
   e08735,
   e08736,
-  e08737,
   e08738,
   e08706,
   e08707,
@@ -5561,6 +5555,10 @@ export const NON_PLAYER_ENTRY_LIST = [
   e87055,
   e87056,
   e87057,
+  e04299,
+  e10704,
+  e10569,
+  e10549,
 ]
 
 registerNonPlayerEntries(NON_PLAYER_ENTRY_LIST)

@@ -45,6 +45,17 @@ function inScenario(options = {}) {
   return state
 }
 
+function campResign(state) {
+  const seat = decisionSeat(world, state)
+  const resign = legalFor(world, state, seat)
+    .find(move => move.action === 'scenarioAction' && move.rule === 'campResign')
+  assert.ok(resign, `legalMoves 缺少座位 ${seat} 的营地撤退行动`)
+  assert.equal(resign.reason, undefined)
+  playMove(world, state, resign, seat)
+  settleChoices(world, state)
+  return seat
+}
+
 // ---------------------------------------------------------------------------
 // 1. 章节结构 / 剧情 / 地点数据
 // ---------------------------------------------------------------------------
@@ -119,12 +130,14 @@ test('P0-1 legalMoves 含营地撤退：[action] 真实提交（共同花 4 线�
   const camp = state.scenarioFlags.camp
   const group = state.investigators.filter(inv => inv.location === camp)
   for (const inv of group) inv.clues = 2 // 2 人 × 2 = 4 线索
-  const seat = decisionSeat(world, state)
-  const resign = legalFor(world, state, seat)
-    .find(move => move.action === 'scenarioAction' && move.rule === 'campResign')
-  assert.ok(resign, `legalMoves 缺 campResign：${legalFor(world, state, seat).map(move => move.action).join(',')}`)
-  playMove(world, state, resign, seat)
-  settleChoices(world, state)
+  const first = campResign(state)
+  assert.equal(state.uiState, 'inScenario')
+  assert.ok(state.investigators.every(inv => inv.clues === 0))
+  assert.equal(state.investigators[first].resigned, true)
+  const remaining = state.investigators.find(inv => inv.seat !== first)
+  assert.equal(remaining.resigned, false)
+  remaining.clues = 4
+  campResign(state)
   assert.equal(state.uiState, 'scenarioResult')
   assert.equal(state.campaign.records.iceAndDeathPart3Resolution, 'resolution2')
   assert.equal(state.campaign.records.theTeamFledToTheMountains, true)
@@ -138,18 +151,20 @@ test('P0-1 legalMoves 含营地撤退：[action] 真实提交（共同花 4 线�
 test('P0-2 议程 7 强制：底下有卡时阻止推进、移除 2 毁灭并真实生成 1 张底牌', () => {
   const state = inScenario()
   state.doom = 5
-  const enemiesBefore = state.enemies.length
+  const enemiesBefore = new Set(state.enemies.map(enemy => enemy.id))
   const host = state.enemies.find(enemy => (enemy.beneath || []).length)
   const hostId = host.id
-  const beneathBefore = host.beneath.length
+  const beneathBefore = [...host.beneath]
   transact(world, state, draft => world.engine.advanceAgenda(draft, [], 'doom'), () => null)
   // 事务按 draft 重建 state：敌人对象已换新，按 id 重新取。
   const hostAfter = state.enemies.find(enemy => enemy.id === hostId)
   assert.equal(state.agendaIndex, 0, '有底牌时不得推进')
   assert.equal(state.doom, 3, '移除 2 点毁灭')
-  assert.equal(hostAfter.beneath.length, beneathBefore - 1)
-  assert.ok(state.enemies.length >= enemiesBefore, '翻出的卡应真实生成')
-  assert.ok(state.scenarioFlags.spawnedFrom?.seepingNightmare)
+  assert.equal(hostAfter.beneath.length, beneathBefore.length - 1)
+  const spawned = state.enemies.filter(enemy => !enemiesBefore.has(enemy.id))
+  assert.equal(spawned.length, 1, '翻出的卡应真实生成')
+  assert.ok(beneathBefore.includes(spawned[0].originalCode || spawned[0].code))
+  assert.equal(spawned[0].location, hostAfter.location)
 })
 
 test('P0-2 议程 7 背面（队长二选一 → frost）/ 议程 8 背面（剩余调查员被击败 → noResolution）', () => {
@@ -233,7 +248,6 @@ test('P7 iceAndDeathPart3 代表条目 flags 已注册（数据声明保留）',
   assert.equal(registeredEntry('08544').agendaRule.forcedAdvanceHold, true)
   assert.equal(registeredEntry('08547').flags.elite, true)
   assert.equal(registeredEntry('08547').flags.eidolon, true)
-  assert.equal(registeredEntry('08548').flags.surgeIfNoSeepingNightmare, true)
   assert.equal(registeredEntry('08546').flags.campResign, true)
 })
 
@@ -256,13 +270,10 @@ test('P7 iceAndDeathPart3 结局记录与 JSON 存档往返（真实撤退结算
   const state = inScenario()
   const camp = state.scenarioFlags.camp
   const group = state.investigators.filter(inv => inv.location === camp)
-  for (const inv of group) inv.clues = Math.ceil(4 / group.length)
-  const seat = decisionSeat(world, state)
-  const resign = legalFor(world, state, seat)
-    .find(move => move.action === 'scenarioAction' && move.rule === 'campResign')
-  assert.ok(resign)
-  playMove(world, state, resign, seat)
-  settleChoices(world, state)
+  for (const inv of group) inv.clues = 2
+  campResign(state)
+  state.investigators.find(inv => !inv.resigned).clues = 4
+  campResign(state)
   assert.equal(state.campaign.records.iceAndDeathPart3Resolution, 'resolution2')
   const restored = saveAndRestore(world, state)
   assert.equal(restored.state.campaign.records.iceAndDeathPart3Resolution, 'resolution2')

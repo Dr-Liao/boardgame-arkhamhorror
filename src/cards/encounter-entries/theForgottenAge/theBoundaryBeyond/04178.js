@@ -6,10 +6,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { teamOnce, discoverAt } from '../../_shared.js'
-
-// 「团队每轮一次」是否已用完：与 _shared.teamOnce 的 tag 口径一致（scope 'round'）。
-const roundUsed = (state, key) => Boolean(state.scenarioFlags?.teamOnce?.[`${key}:${state.round}:r`])
+import { canDiscardEntireHand, teamOnce, teamOnceUsed } from '../../_shared.js'
 
 export default {
   code: '04178', scope: 'location',
@@ -17,15 +14,14 @@ export default {
     ancientAction: {
       label: '🃏 弃掉你所有手牌：发现本地点的 2 个线索（团队每轮一次）',
       available(state, inv) {
-        if (roundUsed(state, '04178clue')) return false
-        return (inv.hand || []).length >= 3
+        if (teamOnceUsed(state, '04178clue', 'round')) return false
+        return (inv.hand || []).length >= 3 && canDiscardEntireHand(inv)
       },
       perform(state, inv, api, location) {
-        if (!teamOnce(state, '04178clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
-        if ((inv.hand || []).length < 3) return false
-        inv.discard.push(...inv.hand)
-        inv.hand = []
-        discoverAt(state, api, inv, location, 2)
+        if (teamOnceUsed(state, '04178clue', 'round')) return false
+        if ((inv.hand || []).length < 3 || !api.discardEntireHand(inv.seat)) return false
+        teamOnce(state, api, '04178clue', 'round')
+        api.discoverClue(inv.seat, 2, location.id)
         return true
       },
     },

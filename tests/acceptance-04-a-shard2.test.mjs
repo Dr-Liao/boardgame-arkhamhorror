@@ -6,6 +6,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
+import { reactionFixture, reactionOptions } from './acceptance-04-a-shard2-reactions.mjs'
 import * as shaModule from '../content/campaigns/theForgottenAge/scenarios/shatteredAeons/index.js'
 import * as tbbModule from '../content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/index.js'
 import * as tcoaModule from '../content/campaigns/theForgottenAge/scenarios/theCityOfArchives/index.js'
@@ -89,7 +92,13 @@ function makeApi(state, options = {}) {
   const rec = name => (calls[name] ||= [])
   const testResults = options.testResults ? [...options.testResults] : []
   const choices = options.choices ? [...options.choices] : []
+  const runtime = scenarioRuntime(state, [])
   const base = {
+    takeFromVictory: runtime.takeFromVictory,
+    takeEncounterDiscard: runtime.takeEncounterDiscard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    setEnemyDamageTaken: runtime.setEnemyDamageTaken,
+    setScenarioFlag: runtime.setScenarioFlag,
     calls,
     info(text) { rec('info').push(String(text)) },
     random() { return options.random ?? 0.5 },
@@ -309,7 +318,7 @@ test('04316 垂摆之线：无形之子在场时联结点放 2 毁灭，在胜�
   entry04316.agendaRule.onReveal(state, { id: 'agenda2', code: '04316' }, api, hooks)
   assert.equal(state.victoryDisplay.length, 0)
   assert.ok(state.encounterDeck.includes('04337'))
-  assert.ok(api.calls.shuffleEncounterDeck.length >= 1)
+  assert.deepEqual(state.encounterDeck, ['04337'])
 })
 
 test('04317 断了的线：翻面直接进入结局 4（时间之布被拆解）', () => {
@@ -323,9 +332,10 @@ test('04319 搜寻兄弟会：背面把破碎地点与弃牌堆巫术洗入探�
   const state = baseState(shaModule)
   state.locations = [locationInstance(state, 'aPocketInTime', '04330')]
   state.investigators[0].location = 'aPocketInTime'
+  state.investigators.push(makeInvestigator(1, 'aPocketInTime'))
   state.scenarioFlags = { foundHexFromDiscard: [] }
   state.campaign.records = { theRelicIsMissing: true }
-  state.encounterDiscard = ['04339']
+  state.encounterDiscard = ['04339', '04339', '01169']
   state.explorationDeck = []
   const api = makeApi(state)
   const hooks = {
@@ -343,9 +353,9 @@ test('04319 搜寻兄弟会：背面把破碎地点与弃牌堆巫术洗入探�
   entry04319.actRule.onReveal(state, { id: 'act2', code: '04319' }, api, hooks)
   assert.ok(state.explorationDeck.includes('ruinsOfNewYork'))
   assert.ok(state.explorationDeck.includes('mu'))
-  assert.ok(state.explorationDeck.includes('04339'))
-  assert.equal(state.encounterDiscard.length, 0)
-  assert.deepEqual(state.scenarioFlags.foundHexFromDiscard, ['04339'])
+  assert.equal(state.explorationDeck.filter(code => code === '04339').length, 2, '同印刷号的两张巫术分别移入')
+  assert.deepEqual(state.encounterDiscard, ['01169'], '跳过最上面的非巫术卡')
+  assert.deepEqual(state.scenarioFlags.foundHexFromDiscard, ['04339', '04339'])
   assert.equal(state.relicOfAges.code, '04343')
   assert.equal(state.relicOfAges.location, 'aPocketInTime')
 })
@@ -656,7 +666,6 @@ test('04345 再次进入遗迹：翻面把时间石室洗入探索牌库，本�
   const api = makeApi(state)
   tbtModule.behavior.actReveal(state, act, api)
   assert.ok(state.explorationDeck.includes('chamberOfTime'))
-  assert.equal(state.scenarioFlags.chamberOfTimeInDeck, true)
   assert.equal(state.scenarioZones.setAsideLocations.length, 0)
   assert.equal(state.victoryDisplay[0].code, '04345')
   assert.equal(state.victoryDisplay[0].vengeance, 2)
@@ -1217,3 +1226,38 @@ test('04263 囚禁意识：意志(0)检定后无论成败把手牌弃到修正�
   tcoaModule.behavior.resolveEncounter(state, inv, { code: '04263', originalCode: '04263' }, api)
   assert.deepEqual(api.calls.discardChosen, [[0, 2, '04263']])
 })
+
+for (const [code, option] of Object.entries(reactionOptions)) {
+  test(`${code} 可选反应：只向应答者开放，放弃与发动均可继续结算`, () => {
+    const fixture = reactionFixture(code, 1)
+    const { state } = fixture
+    const answer = optionId => fixture.answer({ action: 'choose', choiceId: state.pendingChoice.id, optionId })
+
+    fixture.trigger()
+    assert.equal(state.pendingChoice.seat, 1)
+    assert.equal(state.pendingChoice.source, code)
+    assert.equal(state.pendingChoice.canSkip, true)
+    assert.equal(viewState(state, 0).pendingChoice?.options?.length || 0, 0)
+    const observer = viewState(state, 1)
+    assert.deepEqual(observer.pendingChoice.options.map(choice => choice.id), [option, 'skip'])
+    assert.deepEqual(observer.legalMoves.filter(move => move.action === 'choose').map(move => move.optionId), [option, 'skip'])
+    answer('skip')
+    assert.equal(state.pendingChoice, null)
+    assert.deepEqual(state.investigators.map(inv => [inv.clues, inv.hand.length]), [[0, 0], [0, 0], [0, 0]])
+
+    if (code === '04256') state.round += 1
+    fixture.trigger()
+    assert.equal(state.pendingChoice?.source, code)
+    const restored = JSON.parse(JSON.stringify(state))
+    Object.assign(state, restored)
+    answer(option)
+    if (code === '04256') {
+      assert.deepEqual(state.investigators.map(inv => inv.hand.length), [1, 1, 0], '只给同地的调查员抽牌')
+    } else {
+      assert.deepEqual(state.investigators.map(inv => inv.clues), [0, 1, 0])
+      assert.equal(state.locations.find(loc => loc.id === fixture.locationId).clues, 2)
+    }
+    fixture.trigger()
+    assert.equal(state.pendingChoice, null, '已发动的同阶段反应不会再次出现')
+  })
+}

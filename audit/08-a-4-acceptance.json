@@ -3,7 +3,7 @@
   "unit": "08-a-4",
   "profile": {
     "id": "eote-campaign-a-2026-11",
-    "scope": "地球边缘 08 段 eoec 战役卡（08501–08545）45 条目录记录。15 条通过五维验收；19 条失败（含 12 张 api.test 签名错误）+11 条 pending 暂不切换。",
+    "scope": "地球边缘 08 段 eoec 战役卡（08501–08545）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 45,
-    "verified": 15,
-    "unverified": 30,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 235
+    "testsPassed": 232
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
-      "sha256": "9b52211cb9e62aadc7c1d57e61097838bb508cafd83c90e0d155ce9f0612d4f3"
+      "sha256": "93697853023aaac0f943f6c192d74ccbd99b15ec9229f1140a18a1e00fdeae51"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart1.test.mjs",
@@ -33,19 +33,15 @@
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart2.test.mjs",
-      "sha256": "e9a90ead7dd290572388e9203e290fbecff68bc03ed0ea1dcda90997bfc8a21f"
+      "sha256": "cffea4c6acc6ef2ca0556f1826b3b7a600ca9e4d076002fdc8a0798987da93ec"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart3.test.mjs",
-      "sha256": "9195a3d38ff0f21a47325c978b01eefbb5e9b199547f8cb6425f1bde3c94829b"
+      "sha256": "b2e96bdd7498739c0171d3ee2abb8c68284c611d9ed89e518cec991f622a3fee"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
-      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
-      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+      "sha256": "92c6bf729a67340ce191066ab6b8fe1fd3be2e7cf1f45e3f47bef9f0f501c182"
     },
     {
       "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
@@ -81,25 +77,45 @@
       "code": "08501",
       "name": "亡命冰原",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 混乱标记表实际由章节 chaos.js + behavior.afterTest 实现（骷髅/ cultist/ tablet 数值与失败后果均实测一致），但条目 flags.tokenMeanings/shelterToken/tekeliliOnFail 无任何读点，属「声明了没人读」的冗余元数据。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08501 亡命冰原：骷髅=庇护值一半（困难全值），cultist/tablet 失败后果与引擎读点一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart1.test.mjs",
+          "test": "P7 iceAndDeathPart1 章节清单：development、08501、13 地点、3 议程 + 1 幕、遭遇组"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart2.test.mjs",
+          "test": "P7 iceAndDeathPart2 章节清单：development、08501、13 地点、3 议程 + 1 幕、lostInTheNight"
+        }
+      ]
     },
     {
       "code": "08502",
       "name": "坠机点",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "坠机点搜寻行动 api.test(…, {source, resolve}) 第四参应为回调函数（引擎签名 src/engine/scenario-runtime.js:859）；真实使用抛 TypeError: options.resolve is not a function，搜寻无法结算、无法记录「备用零件」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08502 坠机点：真实搜寻检定失败可重试，成功记录备用零件后关闭动作"
+        }
+      ]
     },
     {
       "code": "08503",
       "name": "冰冻海岸",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「如果遭遇卡附属到冰冻海岸，得到 +2 隐藏」：条目仅声明 locationRule.shroudWhenAttached=2，全仓无读点；实测 attachEncounterToLocation 后 shroud 仍为印刷 2。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08503 冰冻海岸：附属遭遇牌时实际调查难度增加 2，移开后恢复"
+        }
+      ]
     },
     {
       "code": "08504",
@@ -129,9 +145,13 @@
       "code": "08506",
       "name": "辽阔雪地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 加 1 frost 已实测生效；额外 3 线索调 api.discoverClue(seat,3,locationId)（签名正确），但离线夹具在未进入的 08506 上结算后线索仍为 0（线索池不在夹具），无法确认真实发现路径，需真机/浏览器复核。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08506 辽阔雪地：选反应加寒霜并额外发现 3 线索，换调查员后团队仍限一次"
+        }
+      ]
     },
     {
       "code": "08507",
@@ -149,9 +169,13 @@
       "code": "08508",
       "name": "岩石峭壁",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「一张诡计附属到岩石峭壁时该诡计获得涌动（每阶段一次）」：仅声明 flags.surgeOnAttachedTreachery，无引擎读点；实测附属后附着物未获得 surge。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08508 岩石峭壁：真实显现附属诡计后额外抽遭遇，每阶段限一次"
+        }
+      ]
     },
     {
       "code": "08509",
@@ -169,9 +193,13 @@
       "code": "08510",
       "name": "破冰船登陆点",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "破冰船登陆点谈判行动 api.test 签名错误（同 08502），真实使用崩溃，无法记录「小型收音机」/移除 frost。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08510 地点行动：以印刷技能和难度检定，成功后记录对应补给并关闭行动"
+        }
+      ]
     },
     {
       "code": "08511",
@@ -189,33 +217,49 @@
       "code": "08512",
       "name": "屏障营地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "屏障营地谈判行动 api.test 签名错误，真实使用崩溃，无法记录「炸药」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08512 地点行动：以印刷技能和难度检定，成功后记录对应补给并关闭行动"
+        }
+      ]
     },
     {
       "code": "08513",
       "name": "莱克营地遗址",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "莱克营地遗址挖掘行动 api.test 签名错误，真实使用崩溃，无法记录「木制雪橇」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08513 地点行动：以印刷技能和难度检定，成功后记录对应补给并关闭行动"
+        }
+      ]
     },
     {
       "code": "08514",
       "name": "水晶洞穴",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "水晶洞穴攀爬行动 api.test 签名错误，真实使用崩溃，无法记录「瘴气水晶」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08514 地点行动：以印刷技能和难度检定，成功后记录对应补给并关闭行动"
+        }
+      ]
     },
     {
       "code": "08515",
       "name": "疾行谬物",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同一印刷强制实现了两次：条目 forced trigger enemyDefeated（08515.js:10-19）与章节 behavior.enemyDefeated（iceAndDeathPart1/behavior.js:350-360）各洗入 1 张；实测击败 1 只后忒咳哩-哩牌库 16→14、击败者牌库 0→2（应 1 张）。另「不能洗入时它攻击你」以固定 1 伤害+1 恐惧近似，未走真实攻击/可取消管线，引用的 primitive-requests/p7-08515.json 不存在。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08515 疾行谬物：真实攻击击败后只洗入 1 张；堆空时开启可取消的敌人攻击"
+        }
+      ]
     },
     {
       "code": "08516",
@@ -233,49 +277,73 @@
       "code": "08517",
       "name": "零能见度",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "①回合结束敏捷(2) 检定 api.test 签名错误→真实使用崩溃；②印刷「离开有诡计附属地点的额外费用 1 行动」只声明 flags.moveSurchargeFromTreacheryLocation=1，无读点，实际移动仍只花 1 行动。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08517 零能见度：真实遭遇进入威胁区，离开附属地点多花 1 行动，回合末检定成功弃掉"
+        }
+      ]
     },
     {
       "code": "08518",
       "name": "冷遇",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 背面生成疾行谬物与洗入遭遇牌库已在真实引擎路径生效；但条目 agendaRule.locationEntered 字段无读点（behavior.locationEntered 按 agendaIndex<=2 硬编码），属声明未接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08518 冷遇：背面在队长地点生成疾行谬物，其余同名与冰中生物洗入遭遇牌库"
+        }
+      ]
     },
     {
       "code": "08519",
       "name": "深入白雪",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 背面把星之恐怖生成在已揭示最高庇护地点已实测生效；agendaRule.locationEntered 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08519 深入白雪：背面把星之恐怖生成在已揭示且庇护值最高的地点"
+        }
+      ]
     },
     {
       "code": "08520",
       "name": "没时间了",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 背面每人洗入忒咳哩-哩并全员撤退已实测生效；agendaRule.locationEntered 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08520 没时间了：背面每人洗入 1 张忒咳哩-哩、全员撤退"
+        }
+      ]
     },
     {
       "code": "08521",
       "name": "寻找扎营点",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 撤退行动/幕目标已实测生效（legalMoves 出现 campResign、actObjectiveMet 达成）；但条目 actRule.objective/action 无读点，behavior 按规则硬编码。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08521 寻找扎营点：同处无线索地点出现撤退行动，撤退后推进结局 1"
+        }
+      ]
     },
     {
       "code": "08522",
       "name": "星之恐怖",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] +3/人生命、重整时不能发现线索/撤退已实测生效；但条目 enemyScript.healthPerInvestigator/hunter/massive/whileReady 无读点（behavior 按卡号常量实现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08522 星之恐怖：引擎按调查员数加生命；重整时不能在其地点撤退或发现线索"
+        }
+      ]
     },
     {
       "code": "08523",
@@ -317,17 +385,25 @@
       "code": "08526",
       "name": "失踪队员",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] [fast] 付线索抽底下卡与营地撤退均已实测生效；但 actRule.objective/freeAction/action 无读点（behavior 硬编码 drawUnderLocation/campResign）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08526 失踪队员：[fast] 付线索抽地点底下卡；[action] 在营地撤退"
+        }
+      ]
     },
     {
       "code": "08527",
       "name": "死路",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "剧情效果「从混乱袋移除 1 个 frost」：behavior.resolveStory 调 api.removeChaosToken?.('frost')，但 scenarioRuntime 未提供 removeChaosToken（只在能力面 api-misc:801），可选链静默 no-op；实测结算后 frost 计数不变。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08527 removeFrost：结算剧情效果并把本卡加入胜利区"
+        }
+      ]
     },
     {
       "code": "08528",
@@ -357,9 +433,13 @@
       "code": "08530",
       "name": "消失的足迹",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08527：移除 frost 的 api 在剧情 runtime 上不可用，效果未执行。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08530 removeFrost：结算剧情效果并把本卡加入胜利区"
+        }
+      ]
     },
     {
       "code": "08531",
@@ -413,89 +493,137 @@
       "code": "08535",
       "name": "威廉·戴尔教授",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "①印刷「从你的手中选择并弃掉最多 2 张卡牌」：实现只问张数后按 inv.hand[0] 连续弃牌，玩家不能选择弃哪张；②印刷「将相等数量资源放在其身上」：实现不写敌人资源、改以 scenarioFlags['possessed:<id>'] 记账，桌面不可见（阈值逻辑可达、加入胜利区可用）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08535 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08536",
       "name": "丹佛斯",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「抽取忒咳哩-哩牌库顶最多 2 张」：实现 api.drawCards(inv.seat, drawn) 抽的是调查员牌库而非忒咳哩-哩牌库（引擎有 api.mechanics.tekeli.draw()）；另资源以 scenarioFlags 记账不落在敌人卡上。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08536 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08537",
       "name": "伊里亚·阿什瓦克",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伊里亚谈判（敏捷(2)）api.test 签名错误→真实使用崩溃，谈判进度无法累积。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08537 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08538",
       "name": "玛拉·辛哈医生",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "辛哈医生谈判（意志(2)）api.test 签名错误→真实使用崩溃。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08538 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08539",
       "name": "艾弗里·克莱普尔",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "①印刷「检定 [willpower] 或 [intellect](5)」二选一：实现只有 willpower，无选择分支；②api.test 签名错误→真实使用崩溃。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08539 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08540",
       "name": "詹姆斯·“曲奇”·弗雷德里克斯",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "曲奇谈判（战斗(2)+反击）api.test 签名错误→真实使用崩溃（反击关键词本身由遭遇定义提供）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08540 曲奇：谈判检定失败，在真实攻击窗口受到一次攻击且不增加救援资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08540 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08541",
       "name": "艾米·肯斯勒博士",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "肯斯勒博士谈判（智力(2)）api.test 签名错误→真实使用崩溃。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08541 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08542",
       "name": "罗尔德·埃尔斯沃思",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "①印刷「检定 [combat] 或 [agility](5)」二选一：实现只有 combat；②api.test 签名错误→真实使用崩溃。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08542 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08543",
       "name": "高田弘子",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "interaction",
-      "reason": "[pending] 花费最多 3 资源放到高田弘子上的谈判可累积进度并加入胜利区；但资源不落在敌人卡上（改 scenarioFlags 记账），桌面不可见；同批伙伴 enemyScript.negotiation/partner/rescueThresholdPerInvestigator/crossOutOnDefeat 字段无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08543 被附身队员：生产谈判把进度资源放在敌人上，达到人数阈值时加入胜利区"
+        }
+      ]
     },
     {
       "code": "08544",
       "name": "邪灵现身",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 阻止密谋推进、移除 2 毁灭并翻出底下卡已实测生效（behavior 读 agendaRule.forcedAdvanceHold/removeDoomOnHold/spawnFromBeneath）；但 flags.seepingNightmareAdvance 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08544 邪灵现身：达到毁灭阈值时阻止推进，减少 2 毁灭并实际生成翻出的敌人"
+        }
+      ]
     },
     {
       "code": "08545",
       "name": "冰雪深处",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 背面击败剩余调查员并各承受 1 点肉体创伤已实测生效；但 flags.deeperIce 无读点（背面由 behavior 按卡号常量实现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard4.test.mjs",
+          "test": "08545 冰雪深处：通过真实议程推进结算击败与 1 点肉体创伤"
+        }
+      ]
     }
   ]
 }

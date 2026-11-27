@@ -6,7 +6,7 @@
 //   目标 - 如果阿特拉克·纳克亚被击败，推进。背面：（→R1）
 // 接线（章节 behavior）：actions 同幕 2；phaseBegan('mythos') 读 mythosSpin（幕 3 旋转敌人本身）；
 //   checkObjectives 读 enemyDefeatedFlag='atlachNachaDefeated'（06346 的 onDefeated 写该场景标记）；
-//   actLeftPlay 读 advance.finish 调 api.finish('resolution1')。
+//   actLeftPlay 读 advance.finishFinale 结算 R1 并按战役记录继续。
 export default {
   code: '06339',
   scope: 'act',
@@ -15,6 +15,6 @@ export default {
     actions: { rule: 'spendClueDamageAncientOne', clueCost: 1, damage: 3, trait: 'Ancient One' },
     mythosSpin: true,
     objective: { kind: 'enemyDefeatedFlag', flag: 'atlachNachaDefeated' },
-    advance: { finish: 'resolution1' },
+    advance: { finishFinale: true },
   },
 }

@@ -14,9 +14,8 @@
 //     因此本条目的「动态巡逻目标」在敌人阶段开始窗口（turn.js#enemyPhase 的 enemyPhaseBegins）自行
 //     计算「最近且有隐匿迷你卡、且该地点没有结社代表的」地点，再用 api.stepToward + api.moveEnemy 走一步；
 //   · 隐匿迷你卡读数走 api.mechanics.tsk.concealed.miniCards()（只读投影，未揭露不泄露身份）；
-//   · 击败后的「查看已揭示面」= api.privateInfo（私有信息，不向全桌投影）；
-//   · 「重整时该地点的隐匿迷你卡不能被玩家卡牌效果揭露」需要揭露（Expose）读点，
-//     引擎当前没有该读点，见 artifacts/migration/tsk/primitive-requests/09720.json。
+//   · 击败后的「查看已揭示面」通过 markKnown 和 privateInfo，仅向该调查员显示；
+//   · blocksPlayerCardExposeHereWhileReady 由揭露入口处理玩家卡效果。
 import { entryDistance } from '../../../_shared.js'
 
 const CODE = '09720'
@@ -33,6 +32,7 @@ function patrolCandidates(state) {
 
 export default {
   code: CODE, scope: 'enemy', implemented: true,
+  enemyRule: { blocksPlayerCardExposeHereWhileReady: true },
   abilities: [{
     kind: 'forced', trigger: 'enemyPhaseBegins', silent: true,
     label: '巡逻：向最近的有隐匿迷你卡牌且无结社代表的地点移动一步',
@@ -68,11 +68,9 @@ export default {
         options: cards.map((card, index) => ({ id: card.id, label: `隐匿迷你卡 ${index + 1}（${card.locationId}）` })),
       }))
       if (!chosen) return
-      api.privateInfo(inv.seat, `🔍 结社代表让你看清了一张隐匿迷你卡：${chosen.decoy ? '诱饵' : `真身 ${chosen.kind}`}。`)
+      const card = api.mechanics.tsk.concealed.markKnown(chosen.id, [inv.seat])
+      const identity = card.decoy ? '诱饵' : card.code ? api.cardName(card.code) : card.kind
+      api.privateInfo(inv.seat, `🔍 结社代表让你看清了一张隐匿迷你卡：${identity}。`)
     },
   }],
-  note: 'approximation: 巡逻改用 enemyPhaseBegins 动态算点（引擎 patrol 原语只支持 named/trait 目标）。'
-    + '缺读点：「重整时本地点的隐匿迷你卡不能被玩家卡牌效果揭露」需要揭露（Expose）读点；'
-    + '「查看已揭示面」只写私有信息日志（tsk-concealed 的 known 标记没有写入口）。'
-    + '请求见 primitive-requests/09720.json。',
 }

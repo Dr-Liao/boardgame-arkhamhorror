@@ -3,7 +3,7 @@
   "unit": "10-a-2",
   "profile": {
     "id": "fhv-player-b-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10034–10068）35 条目录记录。26 条通过五维验收；9 条近似/缺口暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10034–10068）35 条目录记录。35 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,23 +17,27 @@
   },
   "summary": {
     "total": 35,
-    "verified": 26,
-    "unverified": 9,
+    "verified": 35,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 156
+    "testsPassed": 165
   },
   "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+      "sha256": "7a9c2635b1437039867a4f9b9977a2d256c649c7ef8b8211e4e745b043cd9e0b"
+    },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
       "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
-      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+      "sha256": "d4390558f2bea5d47e8029b2fa82a723ed504ccce56044e68d24f46f8467b3e2"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
-      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+      "sha256": "6e90c1501abee25fab0fc12e06f731497154fa32f9b5abf3ff4a1b65eaba8e44"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
@@ -45,7 +49,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
-      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+      "sha256": "b3770acc4326921f2827c424761c8e18365a60782a529f8ec133c4dbbca98528"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
@@ -101,17 +105,37 @@
       "code": "10035",
       "name": "瓦卢西亚之瞳",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「[fast] 检索绑定卡并把幽嘶之刃与瓦卢西亚之瞳**交换**（移动所有充能）」未实现为就地交换：实现让刀入场后把瞳 returnAssetToHand（瞳回到手牌，可再次打出/再次触发入场与交换），而绑定卡离场应放在一边（场外），且交换不应重新走打出/入场流程。充能迁移正确，但交换语义与绑定卡去向不符（条目 simplified+note，primitive-requests/10035.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10035 applies the round bonus only against the chosen enemy, even after a bonded swap"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10035/10036 swap from the bonded zone and transfer only the outgoing Eyes charges"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10035 瓦卢西亚之瞳：谈判放置充能并按指定敌人与行动修正本轮检定；快速交换到幽嘶之刃"
+        }
+      ]
     },
     {
       "code": "10036",
       "name": "幽嘶之刃",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「[fast] 检索绑定卡并把瓦卢西亚之瞳与幽嘶之刃交换（弃掉所有充能）」要求绑定卡就地交换；实现要求瞳**已在手牌**才可交换（`if (!(inv.hand||[]).includes(EYES)) return`），绑定卡通常在场外集合而非手牌，因此该能力在正常状态下不可用；同时刀返回手牌而非场外（simplified+note，primitive-requests/10036.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10035/10036 swap from the bonded zone and transfer only the outgoing Eyes charges"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
+          "test": "P6 10036 幽嘶之刃：花费 1-3 充能攻击，每点 +2 技能值 / +1 伤害，可用意志代替战斗"
+        }
+      ]
     },
     {
       "code": "10037",
@@ -141,9 +165,17 @@
       "code": "10039",
       "name": "转瞬为神",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面反应「结算该调查员的 [elder_sign] 效果（在所有其它已揭示标记之外）」应完整结算旧印能力（含文字效果）；实现只把 investigator.elderSign 的**数值修正**并入本次检定，旧印附带的文字效果（抽牌/治疗/发现线索等，多数调查员旧印都有）完全不结算（simplified+note，primitive-requests/10039.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10039 resolves the other investigator’s complete Elder Sign effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10039 转瞬为神：花费 1 祝愿并横置结算旧印数值，祝愿用尽后放在场外"
+        }
+      ]
     },
     {
       "code": "10040",
@@ -185,9 +217,17 @@
       "code": "10043",
       "name": "鼠面具",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「在你**揭示一个地点**或把一个新地点放入场后补满 1 个贡品」的『揭示地点』触发未实现：条目只挂 locationPlaced（新地点入场），已存在但未揭示地点的揭示（locationRevealed）不补贡品；条目 note 自认缺描述子窗口读点（primitive-requests/10043.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10043 recharges when the controller reveals an existing location"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
+          "test": "P6 10043 鼠面具：[[面具]]上限 1；新地点入场补满 1 贡品；[fast] 花 1 贡品本次检定 +2"
+        }
+      ]
     },
     {
       "code": "10044",
@@ -273,9 +313,21 @@
       "code": "10050",
       "name": "原型惊变",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「所附属敌人获得：庞大、不能移动；[reaction] 你躲避此敌人后，在其地点发现 1 线索（每轮一次）」三条全部未实现：实现只完成「智力替代的躲避 + 成功后把原型惊变附属到非精英敌人」，没有给敌人加 massive、没有禁止移动的写点、附属卡也不是能力窗口来源（玩家卡附敌不在 descriptorSources 敌人分支）。full-scan 亦标 high/D1。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10050 attaches on the first successful evade, anchors the enemy and discovers one clue"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10050 原型惊变：可用[智力]代替[敏捷]躲避，成功后附属到非精英敌人并留在场上"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10050 原型惊变：检定失败时不附属，事件进入弃牌堆"
+        }
+      ]
     },
     {
       "code": "10051",
@@ -325,9 +377,21 @@
       "code": "10054",
       "name": "精准调配",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面唯一能力「所附属支援横置后横置精准调配：重整该支援」对大多数宿主不可触发：当前 HEAD 引擎只在旧式 ability-exec cost.exhaust 与 api.exhaust 派发 assetExhausted 窗口；描述子 cost.exhaust（ability-rules.js#payAbilityCost 只写 source.exhausted）不派发，而多数支援的 [action] 横置费用是描述子写法，因此这些宿主横置后精准调配无提示（full-scan high/D2；条目 note 与 primitive-requests/10054.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10054 readies a host exhausted as the cost of its own action"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10054 精准调配：所附属支援横置后，横置自身并重整该支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
+          "test": "P6 10054 精准调配：附属到[[工具]]支援，事件留在场上"
+        }
+      ]
     },
     {
       "code": "10055",
@@ -401,9 +465,17 @@
       "code": "10059",
       "name": "饥饿霉菌",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面取消条件用「该调查员所在地点的**隐藏值**（有效值）」与成长数比较；实现用 location.shroud + shroudMod 直接计算，地点附属/章节钩子给的**有效隐藏值**不参与，因此在隐藏值被修正的场景下取消触发判定会错（条目 simplified+note，primitive-requests/10059.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10059 sees a shroud of one while the Skeleton Key is attached"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10059 饥饿霉菌 检索绑定卡每轮一次；隐藏值不大于生长数时取消非弱点诡计并清空生长"
+        }
+      ]
     },
     {
       "code": "10060",
@@ -445,9 +517,17 @@
       "code": "10063",
       "name": "“咪咪”比安卡",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "敌人弱点面「强制 - 离场时洗入你的牌库」只实现了「被击败」路径（enemyWeakness.shuffleIntoDeckOnDefeat）；被弃置/移出游戏/放逐等其它离场路径没有敌人离场窗口，不会洗回牌库（simplified+note，primitive-requests/10063.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10063 shuffles into its bearer’s deck when removed without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10063 “咪咪”比安卡 欠款时花 X 资源谈判加入胜利区；无欠款不可谈判"
+        }
+      ]
     },
     {
       "code": "10064",
@@ -465,9 +545,17 @@
       "code": "10065",
       "name": "不列颠斗牛犬左轮手枪",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面反应「你与敌人谈判时技能检定失败后：把手牌中的不列颠斗牛犬左轮手枪放置入场」的触发判定不完整：skillTestFail 窗口 context 不带 actionKind，实现只能读 state.skillTest.actionKind==='parley'；由 played 描述子 countsAs:'parley' 发起的谈判检定（如 09052 存在之谜）不写该字段，反应不会触发（simplified+note，primitive-requests/10065.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard2.test.mjs",
+          "test": "FHV 10065 puts the Bulldog into play after a failed parley event against an enemy"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-5.test.mjs",
+          "test": "P6 10065 不列颠斗牛犬左轮手枪 花 1 子弹用[敏捷]攻击 +1 伤害；谈判失败后从手牌入场"
+        }
+      ]
     },
     {
       "code": "10066",

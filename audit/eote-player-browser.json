@@ -10,61 +10,61 @@
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 desktop 事件卡真实打出",
       "status": "passed",
-      "durationMs": 1564
+      "durationMs": 3861
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 desktop 弱点显现与结算",
       "status": "passed",
-      "durationMs": 3237
+      "durationMs": 2945
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 desktop 技能卡投入检定",
       "status": "passed",
-      "durationMs": 1710
+      "durationMs": 2279
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 desktop 构筑池开放：EotE 可构筑卡在大厅玩家池",
       "status": "passed",
-      "durationMs": 841
+      "durationMs": 2839
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 desktop 资产卡装备与发动",
       "status": "passed",
-      "durationMs": 6943
+      "durationMs": 9913
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 mobile 事件卡真实打出",
       "status": "passed",
-      "durationMs": 1034
+      "durationMs": 3192
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 mobile 弱点显现与结算",
       "status": "passed",
-      "durationMs": 3031
+      "durationMs": 2987
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 mobile 技能卡投入检定",
       "status": "passed",
-      "durationMs": 1471
+      "durationMs": 2163
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 mobile 构筑池开放：EotE 可构筑卡在大厅玩家池",
       "status": "passed",
-      "durationMs": 598
+      "durationMs": 1653
     },
     {
       "file": "tests/eote-player.browser.mjs",
       "title": "P6 mobile 资产卡装备与发动",
       "status": "passed",
-      "durationMs": 6791
+      "durationMs": 7807
     }
   ],
   "screenshots": [

@@ -2,7 +2,6 @@
 // 玩家侧 24 张（12081–12104）：批次 3 只有 5 条聚合测试、无任何标题含卡号用例，
 // 本文件为每张补一条真实执行断言；12089–12096、12097/12100/12101 是重印别名号，
 // 断言运行时别名解析到 canonical 条目并执行其钩子。
-// 战役侧 16 张（12105–12120）：无条目/无别名/无 content 引用，逐卡断言缺失证据（预期失败）。
 // 主进程合并时需登记 tests/suites.mjs / tests/node-suite.mjs。
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -10,11 +9,9 @@ import fs from 'node:fs'
 
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry } from '../src/engine/ability.js'
-import '../src/engine/engine.js'
+import { asset, enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 import { canonicalCode } from '../src/integration/arkhamdb.js'
 import { reprintAliasesFor } from '../src/cards/entries/_reprint-aliases.js'
-
-const CAMPAIGN_CODES = ['12105', '12106', '12107', '12108', '12109', '12110', '12111', '12112', '12113', '12114', '12115', '12116', '12117', '12118', '12119', '12120']
 
 function makeState() {
   const inv = {
@@ -118,16 +115,30 @@ test('12085 切肉刀：剩余神智≤3 时 +3 战斗，付 1 恐惧换 +1 伤�
   assert.deepEqual(api.calls.healHorror, [[0, 1]])
 })
 
-test('12086 破瓶子：+1 战斗，选择牺牲时伤害 +1 且成功才弃置（已披露近似）', () => {
-  const state = makeState()
-  state.enemies.push({ id: 'e2', code: '01021', location: 'here' })
-  const api = makeApi(state, { choices: ['discard'] })
-  const entry = registeredEntry('12086')
-  assert.match(entry.note, /approximation/)
-  entry.abilities[0].resolve({ state, inv: state.investigators[0], target: { entity: state.enemies[0] }, api })
-  assert.equal(api.calls.fight[0][2].combatBonus, 1)
-  assert.equal(api.calls.fight[0][2].damageBonus, 1)
-  assert.equal(typeof api.calls.fight[0][2].onSuccess, 'function')
+test('12086 破瓶子：实际攻击成功后才选择是否弃置发动的那张牌以增加伤害', () => {
+  for (const [face, discard] of [['0', true], ['0', false], ['autofail', false]]) {
+    const state = fixture()
+    const first = asset(state, '12086')
+    const used = asset(state, '12086')
+    const target = enemy(state)
+    state.chaosBag = [face]
+    const fight = legalMoves(state).find(command => command.assetId === used.id && command.targetId === target.id)
+    assert.ok(fight)
+    move(state, fight)
+    assert.equal(state.pendingChoice?.kind, 'commit')
+    let offered = 0
+    settle(state, choice => {
+      if (choice.source !== '12086' || choice.kind !== 'reaction') return null
+      offered++
+      return discard ? 'discard' : 'skip'
+    })
+    assert.equal(offered, face === '0' ? 1 : 0)
+    assert.equal(state.enemies.find(card => card.id === target.id).damageTaken, face === 'autofail' ? 0 : discard ? 2 : 1)
+    const inv = state.investigators[0]
+    assert.ok(inv.assets.some(card => card.id === first.id))
+    assert.equal(inv.assets.some(card => card.id === used.id), !discard)
+    assert.equal(inv.discard.includes('12086'), discard)
+  }
 })
 
 test('12087 软呢帽：无能力文本，行为由卡面数据（1 生命/1 神智）与通用承伤规则承担', () => {
@@ -236,17 +247,3 @@ test('12104 受伤：每回合第一次移动强制 1 伤害，两个行动弃�
   forced.resolve({ inv: state.investigators[0], api })
   assert.deepEqual(api.calls.damage, [[0, 1]])
 })
-
-// ---------------------------------------------------------------- 12105–12120 战役侧
-for (const code of CAMPAIGN_CODES) {
-  test(`${code} 战役侧：无条目/无别名/无 content 引用（实现失败证据）`, () => {
-    assert.equal(registeredEntry(code), null, '不应有行为条目')
-    assert.equal(canonicalCode(code), code, '不是重印别名（无 canonical 映射）')
-    const files = []
-    const walk = dir => { for (const entry of fs.readdirSync(dir, { withFileTypes: true })) { const path = dir + '/' + entry.name; if (entry.isDirectory()) walk(path); else if (entry.name.endsWith('.js')) files.push(path) } }
-    walk('src'); walk('content')
-    const hits = files.filter(file => fs.readFileSync(file, 'utf8').includes("'" + code + "'") || fs.readFileSync(file, 'utf8').includes('"' + code + '"'))
-    const behaviorHits = hits.filter(file => !file.endsWith('cards-data.js') && !file.includes('acceptance'))
-    assert.deepEqual(behaviorHits, [], '除 cards-data 外不应有任何实现/内容引用')
-  })
-}

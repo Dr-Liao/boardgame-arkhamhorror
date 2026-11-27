@@ -242,7 +242,7 @@ function sealedSymbolCount(state, symbol) {
 
 // 第 116 轮：幕/密谋条目通过这个 hooks 对象编排本章实现（洗牌、放在一边、胜利区、常量），
 // 条目只决定「什么时候做什么」，实现只有一份。
-function aeonsHooks(state, api) {
+function aeonsHooks(state) {
   return {
     flags: () => flagsFor(state),
     records: () => recordsFor(state),
@@ -250,7 +250,6 @@ function aeonsHooks(state, api) {
     byId: id => byId(state, id),
     removeFromSetAside: code => removeFromSetAside(state, code),
     removeSetAsideLocation: id => removeSetAsideLocation(state, id),
-    shuffleInPlace: () => shuffleInPlace(state, api),
     addToVictory: (card, extra) => addToVictory(state, card, extra),
     relicControlledBy: () => relicControlledBy(state),
     shatteredLocations: () => [...SHATTERED_LOCATIONS],
@@ -974,7 +973,7 @@ export const behavior = {
     const code = original(act)
     // 第 116 轮：04318–04320 的背面效果在幕条目（条目通过 hooks 编排本章实现）。
     const entry = actRuleFor(code)?.onReveal
-    if (entry) { entry(state, act, api, aeonsHooks(state, api)); return }
+    if (entry) { entry(state, act, api, aeonsHooks(state)); return }
     if (code === MEND_THE_SHATTER) {
       if (String(relicVersion(state)) === RELIC_REPOSSESS_THE_PAST) { api.finish('r5'); return }
       api.finish('r1')
@@ -989,7 +988,7 @@ export const behavior = {
     const code = original(agenda)
     // 第 116 轮：04315–04317 的背面效果在密谋条目。
     const entry = agendaRuleFor(code)?.onReveal
-    if (entry) { entry(state, agenda, api, aeonsHooks(state, api)); return }
+    if (entry) { entry(state, agenda, api, aeonsHooks(state)); return }
     throw new Error(`未知破碎永世密谋：${code}`)
   },
 

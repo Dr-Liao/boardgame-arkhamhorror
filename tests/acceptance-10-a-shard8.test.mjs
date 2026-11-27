@@ -12,9 +12,12 @@ import { pathToFileURL } from 'node:url'
 
 import '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { hunterStep, scenarioRuntime } from '../src/engine/engine.js'
 import { entryFlags, assetRuleFor, enemyRuleFor } from '../src/cards/card-rules.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { attachLocationCard } from '../src/engine/location-attachments.js'
 import { placeLocationDefense, applyLocationDefenses } from '../src/engine/location-defenses.js'
+import { asset, enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 import * as twDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/definition.js'
 import * as tw from '../content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/behavior.js'
 import * as twChaos from '../content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/chaos.js'
@@ -197,15 +200,23 @@ test('10616 蘑菇园：非黑暗时帷幕 +2；揭示后 intellect(X) 失败被
   assert.equal(argsOf(api, 'test')[0][1], 'intellect')
 })
 
-test('10617 月光空地：揭示后 willpower(X) 失败生成攻击最高追击敌人；印刷「田野互连」无读点（缺口）', () => {
+test('10617 月光空地：揭示检定意志 X，敌人移动时可从其他地点直达空地', () => {
   const state = twState({ locations: [clone(twDef.LOCATIONS.moonlitClearing)] })
   tw.setDarknessLevel(state, 2)
   const api = makeApi({ test: failTest, info: () => true })
   assert.equal(tw.resolveLocationReveal(state, state.locations[0], api, 0), true)
   assert.equal(argsOf(api, 'test')[0][1], 'willpower')
-  // 缺口：本卡印刷「敌人移动时每个田野地点视为互连」需要 behavior.enemyConnections，
-  // 但苦痛之影章节没有该读点（条目 note 自述「未接线子句」）。
-  assert.equal(tw.enemyConnections, undefined, '缺口：没有田野互连读点')
+  const live = lanternTable()
+  const clearing = live.locations.find(location => location.id === 'moonlitClearing')
+  const origin = live.locations.find(location => location.id !== clearing.id)
+  origin.connections = []
+  clearing.connections = []
+  clearing.revealed = true
+  live.investigators[0].location = clearing.id
+  const hunter = enemy(live, { hunter: true, engagedSeat: null, location: origin.id })
+  assert.equal(hunterStep(live, hunter), clearing.id)
+  assert.ok(!legalMoves(live, 0).some(candidate => candidate.action === 'move'
+    && candidate.locationId === origin.id && !candidate.reason))
 })
 
 test('10618 扭曲小路：帷幕 = 黑暗等级；查看相邻地点做成每回合一次免费行动（披露近似）', () => {
@@ -320,41 +331,125 @@ test('10607b 类熊混种：+2 生命/人；幕 2 期间将被击败 → 治愈�
   assert.equal(state.victoryDisplay.length, 0, '不进胜利区')
 })
 
-// —— 山谷提灯四张面（10610a/b、10611a/b）＝ 结构审查：离场强制与主动能力缺读点 ------------
-test('10610a 山谷提灯（有福祉·点燃）：失黑暗与提灯翻面已实现，但「离场改为翻面放最近」「揭示森林忽略强制」无读点（缺口）', () => {
-  assert.match(String(ALL_CARDS['10610a'].text), /would leave play|leaves play|离场/i)
-  const state = twState()
-  tw.setDarknessLevel(state, 2)
-  tw.placeLantern(state, makeApi({ info: () => true }))
-  assert.equal(tw.isDarkLocation(state, state.locations[0]), false, '提灯所在地点/连接地点失去[[黑暗]]')
-  assert.equal(tw.assetLeftPlay, undefined, '缺口：提灯离场强制没有 assetLeftPlay 读点')
-  assert.equal(tw.lanternGuardedReveal, undefined, '缺口：揭示森林忽略强制的反应没有读点')
+function lanternTable(withBoon = true, count = 1) {
+  const state = fixture('01001', count)
+  state.scenario = structuredClone(twDef.scenario)
+  state.campaign.id = 'theFeastOfHemlockVale'
+  state.campaign.records.theInvestigatorsLostThePath = !withBoon
+  const from = { ...clone(twDef.LOCATIONS.glimmeringWoods), revealed: true, connections: ['moonlitClearing'] }
+  const destination = { ...clone(twDef.LOCATIONS.moonlitClearing), revealed: false, connections: [from.id] }
+  state.locations = [from, destination]
+  for (const inv of state.investigators) inv.location = from.id
+  tw.placeLantern(state)
+  return state
+}
+
+const liveLantern = state => state.storyAssets.find(card => card.id === tw.lanternRecord(state).id)
+const removeLantern = state => scenarioRuntime(state, []).removeStoryAsset(liveLantern(state).id)
+
+test('10610a 希望信标：在移动时横置取消树林揭示强制，离场改为熄灭并放在最近地点', () => {
+  const state = lanternTable()
+  assert.equal(liveLantern(state).code, '10610a')
+  assert.equal(tw.isDarkLocation(state, state.locations[0]), false)
+  move(state, { action: 'move', locationId: 'moonlitClearing' })
+  let reacted = false
+  settle(state, choice => {
+    if (choice.source !== liveLantern(state).id || !choice.options.some(option => option.id === 'exhaust')) return null
+    reacted = true
+    return 'exhaust'
+  })
+  assert.equal(reacted, true)
+  assert.equal(liveLantern(state).exhausted, true)
+  assert.equal(state.investigators[0].location, 'moonlitClearing')
+  assert.ok(!state.lastTestResult)
+  removeLantern(state)
+  const placed = liveLantern(state)
+  assert.equal(placed.code, '10610b')
+  assert.equal(placed.controllerSeat, null)
+  assert.equal(placed.location, 'moonlitClearing')
 })
 
-test('10610b 山谷提灯（有福祉·熄灭）：[action] 控制提灯并翻面 + 离场强制均无读点（缺口）', () => {
-  assert.match(String(ALL_CARDS['10610b'].text), /Take control|控制/i)
-  const state = twState()
-  tw.placeLantern(state, makeApi({ info: () => true }))
-  const actionsText = JSON.stringify(tw.actions(state, state.investigators[0]))
-  assert.equal(/lantern/i.test(actionsText), false, '缺口：actions 没有「控制提灯并翻面」行动')
-  assert.equal(tw.assetLeftPlay, undefined, '缺口：离场改为放最近地点无读点')
+test('10610b 光明静熄（有福祉）：离场保持熄灭，同地调查员花一个行动控制并点燃', () => {
+  const state = lanternTable()
+  const here = state.investigators[0].location
+  removeLantern(state)
+  removeLantern(state)
+  assert.equal(liveLantern(state).code, '10610b')
+  assert.equal(liveLantern(state).location, here)
+  const recover = legalMoves(state, 0).find(candidate => candidate.rule === 'twistedHollowRecoverLantern')
+  assert.ok(recover)
+  move(state, recover)
+  settle(state)
+  assert.equal(liveLantern(state).code, '10610a')
+  assert.equal(liveLantern(state).controllerSeat, 0)
+  assert.equal(state.investigators[0].actionsLeft, 19)
 })
 
-test('10611a 山谷提灯（无福祉·点燃）：[action] 横置提灯查看连接地点并移动 + 离场强制无读点（缺口）', () => {
-  const state = twState()
-  tw.placeLantern(state, makeApi({ info: () => true }))
-  const actionsText = JSON.stringify(tw.actions(state, state.investigators[0]))
-  assert.equal(/exhaust.*lantern|lantern.*(peek|look)/i.test(actionsText), false, '缺口：没有横置提灯查看相邻地点并移动的行动')
-  assert.equal(tw.assetLeftPlay, undefined, '缺口：离场改为翻面放最近地点无读点')
+test('10611a 希望微薄：查看连接地点已揭示面并移动，跳过该森林的揭示强制', () => {
+  const state = lanternTable(false)
+  assert.equal(liveLantern(state).code, '10611a')
+  assert.equal(tw.isDarkLocation(state, state.locations[0]), false)
+  assert.equal(tw.isDarkLocation(state, state.locations[1]), true)
+  const peek = legalMoves(state, 0).find(candidate => candidate.rule === 'twistedHollowLanternPeek')
+  assert.ok(peek)
+  move(state, peek)
+  let sawPeek = false
+  settle(state, choice => {
+    if (choice.source === 'peekLocation') sawPeek = true
+    return choice.options.find(option => option.id === 'move')?.id
+  })
+  assert.equal(sawPeek, true)
+  assert.equal(liveLantern(state).exhausted, true)
+  assert.equal(state.investigators[0].location, 'moonlitClearing')
+  assert.ok(!state.lastTestResult)
+  removeLantern(state)
+  assert.equal(liveLantern(state).code, '10611b')
+  assert.equal(liveLantern(state).controllerSeat, null)
 })
 
-test('10611b 山谷提灯（无福祉·熄灭）：[fast] 控制提灯并翻面 + 离场强制均无读点（缺口）', () => {
-  assert.match(String(ALL_CARDS['10611b'].text), /control|控制/i)
-  const state = twState()
-  tw.placeLantern(state, makeApi({ info: () => true }))
-  const actionsText = JSON.stringify(tw.actions(state, state.investigators[0]))
-  assert.equal(/lantern/i.test(actionsText), false, '缺口：没有控制提灯并翻面的行动')
-  assert.equal(tw.assetLeftPlay, undefined, '缺口：离场强制无读点')
+test('10611a 希望微薄：同地队友可横置提灯查看地点，选择留下', () => {
+  const state = lanternTable(false, 2)
+  liveLantern(state).controllerSeat = 1
+  tw.lanternRecord(state).controllerSeat = 1
+  const startingLocation = state.investigators[0].location
+  const peek = legalMoves(state, 0).find(candidate => candidate.rule === 'twistedHollowLanternPeek')
+  assert.ok(peek)
+  move(state, peek)
+  settle(state)
+  assert.equal(liveLantern(state).exhausted, true)
+  assert.equal(liveLantern(state).controllerSeat, 1)
+  assert.equal(state.investigators[0].location, startingLocation)
+  assert.equal(state.locations.find(location => location.id === 'moonlitClearing').revealed, false)
+})
+
+test('10611a 希望微薄：在重整阶段重新竖置', () => {
+  const state = lanternTable(false)
+  const peek = legalMoves(state, 0).find(candidate => candidate.rule === 'twistedHollowLanternPeek')
+  move(state, peek)
+  settle(state)
+  assert.equal(liveLantern(state).exhausted, true)
+  state.encounterDeck = []
+  state.encounterDiscard = []
+  move(state, { action: 'endTurn' })
+  settle(state)
+  assert.equal(state.round, 2)
+  assert.equal(liveLantern(state).exhausted, false)
+  assert.equal(tw.lanternRecord(state).exhausted, false)
+})
+
+test('10611b 光明静熄（无福祉）：同地点在玩家窗口免费控制并点燃', () => {
+  const state = lanternTable(false)
+  removeLantern(state)
+  removeLantern(state)
+  assert.equal(liveLantern(state).code, '10611b')
+  const here = state.locations.find(location => location.id === state.investigators[0].location)
+  here.clues = 1
+  move(state, { action: 'investigate' })
+  settle(state, choice => choice.kind === 'playerWindow'
+    ? choice.options.find(option => option.id.startsWith('scenario-fast:twistedHollowRecoverLantern:'))?.id : null)
+  assert.equal(liveLantern(state).code, '10611a')
+  assert.equal(liveLantern(state).controllerSeat, 0)
+  assert.equal(state.investigators[0].actionsLeft, 19)
 })
 
 // ===== the_longest_night（19 张） =========================================================
@@ -392,16 +487,14 @@ test('10629 最长一夜：[fast] 花 1 线索放工事；[action] 撤退（场�
   assert.equal(ln.checkObjectives(state, api), false, '目标「活过今夜」不自动推进')
 })
 
-test('10630 农庄：不可有工事（已实现）；印刷「不能有玩家卡牌附属」无读点（缺口）', () => {
+test('10630 农庄：拦截陷阱、诱饵和玩家卡附属', () => {
   const definition = lnDef.LOCATIONS[lnDef.FARMHOUSE_ID]
   assert.equal(definition.noLocationDefenses, true, '陷阱/诱饵被 noLocationDefenses 拦截（引擎读点）')
   const state = lnState()
   assert.equal(placeLocationDefense(state, 'trap', lnDef.FARMHOUSE_ID), false, '农庄不能放陷阱')
-  // 缺口：印刷「Farmhouse cannot have player cards attached」——engine 不读 cannotHaveAttachments。
-  assert.equal(definition.cannotHaveAttachments, true)
-  assert.equal(typeof placeLocationDefense, 'function')
-  const engineReadsAttachments = fs.readFileSync('src/engine/location-defenses.js', 'utf8').includes('cannotHaveAttachments')
-  assert.equal(engineReadsAttachments, false, '缺口：引擎没有读取农庄的玩家卡牌附属限制')
+  assert.equal(placeLocationDefense(state, 'decoy', lnDef.FARMHOUSE_ID), false, '农庄不能放诱饵')
+  assert.equal(attachLocationCard(state, lnDef.FARMHOUSE_ID, { code: '02026', scope: 'player' }), null)
+  assert.ok(attachLocationCard(state, lnDef.FARMHOUSE_ID, { code: '10743' }), '遭遇卡仍可附属')
 })
 
 test('10631 牛奶房：放置工事时改放相邻地点；[action] 抽一张 Fire! 另一张洗入遭遇牌库', () => {
@@ -534,7 +627,7 @@ test('10641 病俘：敌军阶段重整未交战敌人攻击病俘（恐惧算�
   assert.equal(typeof resolution.resolution, 'string', '结局结算返回结果对象')
 })
 
-test('10642 埃阿斯：[action] 控制他已实现；印刷「不触发趁乱攻击」「横置移动两次/到任意田野」无读点（缺口）', () => {
+test('10642 埃阿斯：谷仓处可控制埃阿斯，每轮第一个行动免借机攻击', () => {
   assert.equal(lnDef.AJAX_CODE, '10642')
   const state = lnState()
   state.locations.push({ ...clone(lnDef.LOCATIONS.barn) })
@@ -542,11 +635,73 @@ test('10642 埃阿斯：[action] 控制他已实现；印刷「不触发趁乱�
   state.investigators[0].location = 'barn'
   const moves = ln.actions(state, state.investigators[0])
   assert.ok(moves.some(move => move.rule === 'theLongestNightTakeAjax'), '控制埃阿斯行动可用')
-  assert.equal(called(makeApi({}), 'ajaxMove'), false)
-  // 缺口：条目 note 自述「不触发趁乱攻击/双倍移动」只保留在 flags（引擎没有通用读点）。
-  assert.equal(entries['10642'].flags?.firstActionNoOpportunity, true)
-  const behaviorText = fs.readFileSync('content/campaigns/theFeastOfHemlockVale/scenarios/theLongestNight/behavior.js', 'utf8')
-  assert.equal(/firstActionNoOpportunity|moveAbility/.test(behaviorText), false, '缺口：无对应行为读点')
+  const table = fixture()
+  asset(table, '10642')
+  enemy(table, { damage: 1, horror: 0 })
+  for (const expected of [0, 1]) {
+    move(table, { action: 'resource' })
+    settle(table)
+    assert.equal(table.investigators[0].damage, expected)
+  }
+  table.round += 1
+  move(table, { action: 'resource' })
+  settle(table)
+  assert.equal(table.investigators[0].damage, 1)
+})
+
+test('10642 埃阿斯：控制谷仓中的原实例，保留伤害且不会重复产生副本', () => {
+  const state = fixture()
+  state.scenario = structuredClone(lnDef.scenario)
+  state.campaign.id = 'theFeastOfHemlockVale'
+  const barn = { ...clone(lnDef.LOCATIONS.barn), revealed: true }
+  state.locations = [barn]
+  state.investigators[0].location = barn.id
+  state.storyAssets = [{
+    id: 'ajax', code: '10642', originalCode: '10642',
+    location: barn.id, controllerSeat: null, damage: 1,
+  }]
+  const claim = () => legalMoves(state, 0).find(candidate => candidate.rule === 'theLongestNightTakeAjax')
+  assert.ok(claim())
+  move(state, claim())
+  settle(state)
+  const controlled = state.investigators[0].assets.find(card => card.id === 'ajax')
+  assert.equal(controlled?.damage, 1)
+  assert.ok(!state.storyAssets.some(card => card.id === 'ajax'))
+  assert.equal(claim(), undefined)
+})
+
+test('10642 埃阿斯：同地队友可接过控制权，移动能力只由控制者发动', () => {
+  const state = fixture('01001', 2)
+  const ajax = asset(state, '10642', { damage: 1 }, 1)
+  const offered = legalMoves(state, 0).filter(candidate => candidate.action === 'ability' && candidate.assetId === ajax.id)
+  assert.equal(offered.length, 1)
+  assert.equal(offered[0].abilityIndex, 1)
+  move(state, offered[0])
+  settle(state)
+  assert.equal(state.investigators[0].assets.find(card => card.id === ajax.id)?.damage, 1)
+  assert.ok(!state.investigators[1].assets.some(card => card.id === ajax.id))
+})
+
+test('10642 埃阿斯：一个行动横置，选择连接路线走两步或直达任意田野', () => {
+  for (const mode of ['near', 'field']) {
+    const state = fixture()
+    const inv = state.investigators[0]
+    const ajax = asset(state, '10642')
+    const here = state.locations.find(location => location.id === inv.location)
+    here.connections = ['path']
+    state.locations.push(
+      { id: 'path', name: '通道', revealed: true, connections: [here.id, 'bend'], clues: 0, shroud: 1 },
+      { id: 'bend', name: '转角', revealed: true, connections: ['path'], clues: 0, shroud: 1 },
+      { id: 'field', name: '田野', revealed: true, traits: ['Field'], connections: [], clues: 0, shroud: 1 },
+    )
+    const action = legalMoves(state, 0).find(candidate => candidate.action === 'ability' && candidate.assetId === ajax.id)
+    assert.ok(action)
+    move(state, action)
+    settle(state, choice => ['bend', mode].find(id => choice.options.some(option => option.id === id)))
+    assert.equal(state.investigators[0].location, mode === 'near' ? 'bend' : 'field')
+    assert.equal(state.investigators[0].assets.find(card => card.id === ajax.id).exhausted, true)
+    assert.equal(state.investigators[0].actionsLeft, 19)
+  }
 })
 
 test('10643 类熊混种（饥饿憎恶）：+3 生命/人；忽略屏障；田野互连；生成西面；胜利 2', () => {

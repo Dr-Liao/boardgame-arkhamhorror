@@ -13,7 +13,7 @@ export default {
     const cultists = state.enemies.filter(enemy => hasTrait(enemy, 'Cultist'))
     if (!cultists.length) {
       api.horror(inv.seat, 1)
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     const scored = cultists.map(enemy => ({ enemy, steps: entryDistance(state, inv.location, enemy.location) }))
@@ -28,7 +28,7 @@ export default {
       })
       target = tied[Number(answer)] || target
     }
-    if (target) target.doom = (target.doom || 0) + 1
+    if (target) api.doomOn(target, 1)
     // X = 该敌人在结算时的攻击值：走 enemyFightValue 才能算上毁灭修正与场景修正
     // （例如 04140「伊塔卡的猎物」在无线索地点 +1 攻击），而不是只算基础 fight+毁灭。
     const fightValue = target

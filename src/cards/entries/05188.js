@@ -9,20 +9,8 @@
 //
 // 05188 秘密卷轴（探求者）：[行动]花 1 秘密并横置：看任意牌库底 3 张，可弃 1、可拿 1，其余放顶或底。
 //
-// 实现备注：引擎的 lookAt 只支持牌库顶；牌库底没有通用原语，这里用单卡 resolve 的窄口径
-// 直接读写牌库数组（顺序确定、随机性为零、选择全部走 requestChoice，因此可重放）。
-// 遭遇牌库没有「所有者手牌」，按规则该分支不提供「加入手牌」选项。
-
-const aliveInvestigators = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
-
-function zoneOptions(state) {
-  const zones = aliveInvestigators(state).map(owner => ({
-    id: `seat:${owner.seat}`, kind: 'investigator', seat: owner.seat,
-    label: `${owner.name} 的牌库`, pile: owner.deck,
-  }))
-  zones.push({ id: 'encounter', kind: 'encounter', seat: null, label: '遭遇牌库', pile: state.encounterDeck })
-  return zones.filter(zone => Array.isArray(zone.pile) && zone.pile.length)
-}
+// 遭遇牌库的卡没有调查员所有者。
+import { chooseDeckToInspect, placeInspectedDeckCard, takeInspectedDeckCard } from './_shared.js'
 
 export default {
   code: '05188',
@@ -34,21 +22,15 @@ export default {
       label: '横置并花 1 秘密：查看任意牌库底 3 张，可弃 1、可拿 1，其余放顶或底',
       cost: { exhaust: true, uses: 1 },
       resolve: ({ state, inv, api }) => {
-        const zones = zoneOptions(state)
-        if (!zones.length) { api.info('没有可以查看的牌库。'); return }
-        const zoneId = zones.length === 1 ? zones[0].id : api.choice({
-          kind: 'deck', source: '05188', seat: inv.seat,
-          prompt: '选择要查看牌库底 3 张的牌库。', options: zones.map(zone => ({ id: zone.id, label: zone.label })),
-        })
-        const zone = zones.find(item => item.id === zoneId) || zones[0]
-        const count = Math.min(3, zone.pile.length)
-        const looked = zone.pile.slice(0, count) // 牌库底在上：数组第 0 位是牌库底
-        if (!looked.length) { api.info('所选牌库是空的。'); return }
-        // 先把看过的牌从牌库底摘出来，之后按玩家选择放回/拿走。
-        for (const code of looked) {
-          const index = zone.pile.indexOf(code)
-          if (index >= 0) zone.pile.splice(index, 1)
+        const zone = chooseDeckToInspect(state, inv, api, '05188', '选择要查看牌库底 3 张的牌库。')
+        if (!zone) { api.info('没有可以查看的牌库。'); return }
+        const looked = []
+        const count = Math.min(3, zone.cards.length)
+        for (let index = 0; index < count; index++) {
+          const card = takeInspectedDeckCard(api, zone, 'bottom')
+          if (card) looked.push(card)
         }
+        if (!looked.length) return
         api.info(`👁 ${inv.name} 查看「${zone.label}」底部的 ${looked.length} 张：` +
           looked.map(code => api.cardName(code)).join('、'))
 
@@ -68,15 +50,14 @@ export default {
         // 1) 可以弃掉其中 1 张。
         const discarded = pickOne('你可以弃掉其中 1 张卡牌。')
         if (discarded != null) {
-          if (zone.kind === 'encounter') api.discardEncounterCards?.(discarded)
-          else api.putInDiscard?.(zone.seat, discarded)
+          placeInspectedDeckCard(api, zone, discarded, 'discard')
           api.info(`🃏 弃掉「${api.cardName(discarded)}」。`)
         }
         // 2) 可以将其中的 1 张加入其所有者手牌（遭遇牌库没有所有者，不提供该选项）。
-        if (zone.kind === 'investigator') {
+        if (zone.seat != null) {
           const toHand = pickOne('你可以将其中 1 张加入该调查员的手牌。')
           if (toHand != null) {
-            api.putInHand?.(zone.seat, toHand)
+            placeInspectedDeckCard(api, zone, toHand, 'hand')
             api.info(`✋ 「${api.cardName(toHand)}」加入 ${state.investigators[zone.seat].name} 的手牌。`)
           }
         }
@@ -98,8 +79,7 @@ export default {
             prompt: `将「${api.cardName(code)}」放到该牌库的哪一端？`,
             options: [{ id: 'top', label: '牌库顶' }, { id: 'bottom', label: '牌库底' }],
           })
-          if (where === 'bottom') zone.pile.unshift(code)
-          else zone.pile.push(code)
+          placeInspectedDeckCard(api, zone, code, where)
           api.info(`📚 「${api.cardName(code)}」放回「${zone.label}」${where === 'bottom' ? '底' : '顶'}。`)
         }
       },

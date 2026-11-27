@@ -2,7 +2,7 @@
 // Detailed evidence: audit/05-a-3-acceptance.json. Not a promise of all-combination equivalence.
 export const TCU_SHARD3_ACCEPTANCE_PROFILE = {
   "id": "tcu-secret-name-2026-11",
-  "scope": "万象无终 05 段 The Secret Name（tsn，05109–05150）42 条目录记录。39 条通过五维验收；3 条因同句检索规则重复手写暂不切换。",
+  "scope": "万象无终 05 段 The Secret Name（tsn，05109–05150）42 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TCU_SHARD3_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TCU_SHARD3_ACCEPTANCE_SHA256 = '9a59f97a91c4ffe3c477e90b9559baf45acd65108193d85d07dfb3dfd86bc28b'
-const verified = new Set(["05109","05110","05111","05112","05113","05114","05115","05116","05117","05118","05119","05120","05123","05124","05125","05126","05127","05128","05130","05131","05132","05133","05134","05135","05136","05137","05138","05139","05140","05141","05142","05143","05144","05145","05146","05147","05148","05149","05150"])
+export const TCU_SHARD3_ACCEPTANCE_SHA256 = 'fcfcd208723df18e78896bbf06194835d8c202bce9da96a41104c0a2a284b7b1'
+const verified = new Set(["05109","05110","05111","05112","05113","05114","05115","05116","05117","05118","05119","05120","05121","05122","05123","05124","05125","05126","05127","05128","05129","05130","05131","05132","05133","05134","05135","05136","05137","05138","05139","05140","05141","05142","05143","05144","05145","05146","05147","05148","05149","05150"])
 export const tcuShard3CardVerified = code => verified.has(code)

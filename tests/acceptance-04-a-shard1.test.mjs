@@ -21,6 +21,7 @@ import {
   getMaxHealth, investigatorHasTrait, enemyFightValue, enemyEvadeValue, scenarioRuntime, canDiscoverClueAt,
   discoverClueAt, poisonInvestigator,
 } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
 import { locationAttachmentTotal } from '../src/engine/location-attachments.js'
 
 // ---------------------------------------------------------------------------
@@ -120,7 +121,12 @@ function spawnTestEnemy(state, code, location) {
 function testApi(state, overrides = {}) {
   const log = []
   const calls = []
+  const runtime = scenarioRuntime(state, [])
+  const stateApi = ['takeFromSetAside', 'putOnEncounterDeck', 'setScenarioFlag', 'campaignCard', 'spendClues',
+    'changeChaosBag', 'setCampaignRecord', 'setActDeckCards', 'addToExplorationDeck', 'takeExplorationCard',
+    'addStoryToVictory', 'addEnemyToVictory', 'removeEnemyFromGame', 'doomOn', 'addDoom']
   const base = {
+    ...Object.fromEntries(stateApi.map(name => [name, runtime[name]])),
     log,
     calls,
     info: text => log.push(text),
@@ -239,7 +245,29 @@ test('TFA 04070 河流峡谷：每场游戏一次治愈 1 点（水壶 +2）', (
   assert.equal(inv.damage, 0, '治愈 1 点 + 水壶额外 2 点')
   const second = []
   rule.actions({ state, moves: second })
-  assert.equal(second.length, 0, '每场游戏仅限一次')
+  assert.equal(second[0].used, true, '每场游戏仅限一次，已用状态仍可查看')
+  assert.ok(second[0].reason)
+  assert.equal(rule.performAction(state, inv, { rule: 'healRiverCanyon' }, testApi(state)), false)
+})
+
+test('TFA 04070 河流峡谷：选择座位 2 的同地队友，使用后显示已用', () => {
+  const state = boot('theUntamedWilds', 3)
+  const canyon = place(state, 'riverCanyon')
+  const [actor, distant, teammate] = state.investigators
+  actor.location = teammate.location = canyon.id
+  actor.damage = distant.damage = teammate.damage = 3
+  state.campaign.supplies = { 0: ['canteen'] }
+  const move = legalMoves(state, 0).find(candidate => candidate.rule === 'healRiverCanyon')
+  assert.ok(move)
+  applyMove(state, 0, move)
+  settle(state, pending => {
+    if (pending.source !== 'riverCanyon') return null
+    assert.deepEqual(pending.options.map(option => option.id), ['0', '2'])
+    return '2'
+  })
+  assert.deepEqual(state.investigators.map(inv => inv.damage), [3, 3, 0])
+  assert.equal(legalMoves(state, 0).some(candidate => candidate.rule === 'healRiverCanyon'), false)
+  assert.ok(viewState(state, 0).usedActions.some(action => action.label.includes('河流峡谷')))
 })
 
 test('TFA 04071 索桥：探索前敏捷(2)失败会取消探索并移动到河流峡谷', () => {
@@ -259,7 +287,31 @@ test('TFA 04071 索桥：探索前敏捷(2)失败会取消探索并移动到河�
   assert.equal(rule.beforeExplore(state, inv, api), false, '失败取消探索')
   assert.equal(inv.damage, 2)
   assert.equal(inv.location, canyon.id)
-  assert.equal(rule.beforeExplore(state, inv, testApi(state)), true, '成功允许探索')
+  let resumed = null
+  assert.equal(rule.beforeExplore(state, inv, testApi(state, {
+    resumeExplore: seat => { resumed = seat },
+  })), false, '由检定回调接续原探索')
+  assert.equal(resumed, inv.seat, '成功继续同一次探索')
+})
+
+test('TFA 04071 索桥：检定成功接续探索，失败从牌库找出河流峡谷', () => {
+  for (const token of ['+1', 'autofail']) {
+    const state = boot('theUntamedWilds', 2)
+    const bridge = place(state, 'ropeBridge')
+    state.investigators[0].location = bridge.id
+    state.explorationDeck = ['riverCanyon']
+    state.chaosBag = [token]
+    const explore = legalMoves(state, 0).find(move => move.action === 'explore')
+    assert.ok(explore)
+    applyMove(state, 0, explore)
+    settle(state)
+    const inv = state.investigators[0]
+    assert.equal(inv.location, 'riverCanyon')
+    assert.deepEqual(state.explorationDeck, [])
+    assert.equal(inv.damage, token === 'autofail' ? 2 : 0)
+    assert.equal(inv.actionsLeft, token === 'autofail' ? 0 : 3)
+    assert.equal(Boolean(inv.turnEnded), token === 'autofail')
+  }
 })
 
 test('TFA 04072 万蛇据点：此处蛇族 +1 战斗；已中毒调查/探索后受 1 点伤害', () => {
@@ -951,11 +1003,13 @@ test('TFA 04055 暗起波澜：+1×人数毁灭阈值；推进不移除地点毁
   const second = place(state, 'ancientHall')
   first.doom = 0
   second.doom = 2
-  const api = testApi(state)
-  agendaRuleFor('04055').onReveal(state, state.agendas[0], api)
+  state.scenarioFlags.harbingerDamage = 3
+  agendaRuleFor('04055').onReveal(state, state.agendas[0], scenarioRuntime(state, []))
   const enemy = state.enemies.find(entry => (entry.originalCode || entry.code) === '04062')
   assert.ok(enemy, '生成瓦卢西亚的预示者')
   assert.equal(enemy.location, second.id, '生成在毁灭标记最多的地点')
+  assert.equal(enemy.damageTaken, 3, '重新生成时保留原有伤害')
+  assert.equal(enemy.retaliateWhileExhausted, true)
   assert.equal(state.scenarioZones.setAside.includes('04062'), false, '从「放在一边」取走')
 })
 
@@ -1250,6 +1304,7 @@ test('TFA 04047 埃兹特里的女猎手：线索/击败两分支、胜利区与
   const cluesState = boot('theUntamedWilds')
   cluesState.scenarioFlags.ichtacaSpawned = true
   const ichtaca = spawnTestEnemy(cluesState, '04052', cluesState.investigators[0].location)
+  ichtaca.victory = 1
   ichtaca.clues = cluesState.numInvestigators
   let advanced = 0
   actRuleFor('04047').objectiveCheck(cluesState, cluesState.acts[1], testApi(cluesState, {
@@ -1310,12 +1365,20 @@ test('TFA 04050 探险营地：撤退/检查补给行动可见，地图把 1 张
   settle(state, pending => {
     if (pending.kind === 'deck') {
       // 第一次选择放到底的牌（索引 1），第二次选择其余两张里先放回顶部的。
-      return pending.prompt.includes('底部') ? '1' : '1'
+      return '1'
     }
     return null
   })
   assert.equal(state.explorationDeck[0], '04070', '选中的那张放在探索牌库底')
   assert.equal(state.explorationDeck.at(-1), '04069', '另一张按选择顺序位于牌库顶')
+
+  state.explorationDeck = ['pathOfThorns', 'riverCanyon', '04076', '04076']
+  applyMove(state, 0, legalMoves(state, 0).find(move => move.rule === 'mapSupplies'))
+  settle(state, pending => {
+    if (pending.source === '04050') assert.ok(pending.options.length >= 2)
+    return null
+  })
+  assert.deepEqual(state.explorationDeck, ['04076', 'pathOfThorns', 'riverCanyon', '04076'], '相同卡号的实体各留一张')
 })
 
 test('TFA 04051 亚历山卓·维拉：[[古代]]地点调查 +1 技能，横置抽 2', () => {
@@ -1853,8 +1916,10 @@ test('TFA 04137a 古怪遗物：把玛利亚换成敌人并记为伊塔卡的猎
 test('TFA 04137b 玛利亚·德西瓦（敌人）：生成时成为伊塔卡的猎物；胜利 1', () => {
   const state = boot('threadsOfFate')
   const enemy = spawnTestEnemy(state, '04137b', 'curiositieShoppe')
-  enemyScriptFor('04137b').onSpawn(state, enemy)
+  enemyScriptFor('04137b').onSpawn(state, enemy, scenarioRuntime(state, []))
   assert.ok(state.scenarioFlags.ichtacasPrey.includes(enemy.id))
+  assert.equal(state.scenarioFlags.ichtacasPreyCodes[enemy.id], '04137b')
+  assert.equal(state.scenarioFlags.ichtacasPreyLocations[enemy.id], 'curiositieShoppe')
   assert.equal(enemyRuleFor('04137b').victory, 1)
 })
 

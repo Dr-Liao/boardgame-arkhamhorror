@@ -1,34 +1,60 @@
-// 08706 瘴气折磨（Miasma 的折磨）· 诡计 · miasma
-// 卡面：险境。显现 - 如果你控制伙伴支援，将其横置，并将瘴气折磨附属到该支援。否则获得涌动。
-//   被附属的支援不能重整。强制 - 当你的回合结束时：被附属的支援受到 1 点伤害或 1 点恐惧。
-//   [action]：检定[willpower]或[intellect](3)。成功则弃掉瘴气折磨。
-// 读点：附属走 api.attachCardTo（support 附属）；「不能重整/回合结束伤害」需要引擎的支援附属强制
-//   读点（primitive-requests/p7-08706.json）。
+// 08706 瘴气折磨 · 横置并附属到受控伙伴，且该支援不能重整。
+import { ALL_CARDS } from '../../../_shared.js'
+
 const CODE = '08706'
 
-function partnerAssets(state, inv) {
-  return (inv.assets || []).filter(asset => (asset.partner === true)
-    || (state.cards?.[asset.code]?.flags?.partner === true))
+function attachedAsset(inv, source) {
+  return inv.assets.find(asset => asset.attachments?.some(attachment => attachment.id === source.id))
 }
 
 export default {
   code: CODE, scope: 'treachery', implemented: true,
-  flags: { peril: true, attachToPartnerAsset: true },
-  encounterResolve(state, inv, card, api) {
-    const partners = partnerAssets(state, inv)
-    if (!partners.length) {
-      api.info('「瘴气折磨」：你没有控制伙伴支援，获得涌动。')
-      return { gainSurge: true }
-    }
-    const target = partners.length === 1 ? partners[0] : partners.find(asset => asset.id === api.choice({
-      kind: 'asset', source: CODE, seat: inv.seat, prompt: '选择要附属「瘴气折磨」的伙伴支援。',
-      options: partners.map(asset => ({ id: asset.id, label: asset.name || asset.code })),
-    })) || partners[0]
-    if (typeof api.exhaust === 'function') api.exhaust(target)
-    api.attachToAsset(inv.seat, target.id, CODE)
-    api.info('🦠 「瘴气折磨」附属到伙伴支援「' + (target.name || target.code) + '」。')
-    return true
+  treacheryRule: {
+    preventsHostReady: true,
+    attachmentAbilities: [{
+      kind: 'action', actionKind: 'activate',
+      label: '意志或智力（3）：成功时弃掉瘴气折磨',
+      resolve: ({ inv, source, api }) => {
+        const skill = api.choice({
+          kind: 'skill', source: CODE, seat: inv.seat, prompt: '选择检定技能。',
+          options: [{ id: 'willpower', label: '意志（3）' }, { id: 'intellect', label: '智力（3）' }],
+        })
+        api.test(inv.seat, skill, 3, {
+          source: { type: 'treachery', code: CODE, ability: true },
+          resolve: result => { if (result.success) api.discardAttachment(source) },
+        })
+      },
+    }],
   },
-  note: '「被附属支援不能重整 / 回合结束受到 1 伤害或恐惧 / 行动摆脱」需要引擎的支援附属强制与行动读点（primitive-requests/p7-08706.json）。',
+  abilities: [{
+    kind: 'forced', trigger: 'turnEnded',
+    label: '伙伴控制者的回合结束：该伙伴受到 1 伤害或 1 恐惧',
+    criteria: ({ state, source, context }) => !!attachedAsset(state.investigators[context.seat], source),
+    resolve: ({ state, source, context, api }) => {
+      const owner = state.investigators[context.seat]
+      const asset = attachedAsset(owner, source)
+      const printed = ALL_CARDS[asset.originalCode || asset.code]
+      const options = []
+      if (asset.health > 0 || printed?.health > 0) options.push({ id: 'damage', label: '受到 1 点伤害' })
+      if (asset.sanity > 0 || printed?.sanity > 0) options.push({ id: 'horror', label: '受到 1 点恐惧' })
+      if (!options.length) return
+      const harm = options.length === 1 ? options[0].id : api.choice({
+        kind: 'effect', source: CODE, seat: owner.seat, prompt: '选择该伙伴承受的伤害或恐惧。', options,
+      })
+      if (harm === 'damage') api.scenario.damageAsset(owner.seat, asset.id, 1)
+      if (harm === 'horror') api.scenario.horrorAsset(owner.seat, asset.id, 1)
+    },
+  }],
+  encounterResolve(state, inv, card, api) {
+    const partners = inv.assets.filter(asset => asset.partner || ALL_CARDS[asset.originalCode || asset.code]?.text?.startsWith('Partner.'))
+    if (!partners.length) return { gainSurge: true }
+    const id = partners.length === 1 ? partners[0].id : api.choice({
+      kind: 'asset', source: CODE, seat: inv.seat, prompt: '选择要横置并附属瘴气折磨的伙伴。',
+      options: partners.map(asset => ({ id: asset.id, label: asset.name || asset.code })),
+    })
+    const target = partners.find(asset => asset.id === id)
+    if (!target) return false
+    api.exhaust(target)
+    return !!api.attachToAsset(inv.seat, target.id, CODE)
+  },
 }
-

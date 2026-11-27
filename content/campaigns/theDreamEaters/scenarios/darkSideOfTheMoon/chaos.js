@@ -19,9 +19,10 @@ export function dsmChaosToken(state, inv, token, api) {
     case 'skull':
       return hard ? -alarm : -Math.ceil(alarm / 2)
     case 'cultist':
-      return null // 无修正；后续在 afterTest 结算。
+      return { delta: 0, drawAnother: true }
     case 'tablet':
       return hard ? -2 : -1
+    case 'elderthing':
     case 'elder_thing':
       return hard ? 0 : 1
     default:
@@ -50,7 +51,7 @@ export function dsmChaosAfterTest(state, inv, result, api) {
     api.counters.add(inv.seat, ALARM, 1)
     api.info?.(`🌙 [tablet]：${inv.name} 检定失败，警报等级 +1（当前 ${api.counters.get(inv.seat, ALARM)}）。`)
   }
-  if (result.success && has('elder_thing') && result.source?.label === '躲避' && result.source?.enemyId) {
+  if (result.success && (has('elderthing') || has('elder_thing')) && result.source?.label === '躲避' && result.source?.enemyId) {
     const enemy = (state.enemies || []).find(candidate => String(candidate.id) === String(result.source.enemyId))
     if (enemy) {
       api.damageEnemy?.(enemy.id, 2, inv.seat, '06206-elderthing')

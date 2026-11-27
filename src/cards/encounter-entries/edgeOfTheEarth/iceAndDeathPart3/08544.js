@@ -15,5 +15,4 @@ export default {
     removeDoomOnHold: 2,
     spawnFromBeneath: 1,
   },
-  flags: { seepingNightmareAdvance: true },
 }

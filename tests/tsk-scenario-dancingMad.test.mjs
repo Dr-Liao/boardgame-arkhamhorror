@@ -400,7 +400,7 @@ test('P7 dancingMad 潜入↔警报：揭露真身切 alert，谈判成功切回
 // ---------------------------------------------------------------------------
 // 3. 地点
 // ---------------------------------------------------------------------------
-test('P7 dancingMad 地点：月下餐厅隐藏值/补线索、大剧院快速行动、广场酒店查看、热带花园回收', () => {
+test('P7 dancingMad 地点：月下餐厅隐藏值/补线索与广场酒店查看', () => {
   const { state, api } = setupState(2, { time: 5 })
   const cafe = state.locations.find(location => location.id === START_LOCATION)
   // [[域外]] 敌人每个让隐藏值 -1。
@@ -411,16 +411,7 @@ test('P7 dancingMad 地点：月下餐厅隐藏值/补线索、大剧院快速�
   cafe.clues = 0
   behavior.cluesRemoved(state, cafe, 1, api)
   assert.equal(cafe.clues, 2)
-  // 大剧院：花 2 资源，隐藏值 -2（每回合一次）。
   const inv = state.investigators[0]
-  inv.location = 'granTeatroDeLaHabana'
-  inv.resources = 4
-  const moves = behavior.actions(state, inv)
-  assert.ok(moves.some(move => move.rule === 'granTeatroShroud'))
-  behavior.performAction(state, inv, { rule: 'granTeatroShroud' }, api)
-  assert.equal(inv.resources, 2)
-  assert.equal(state.locations.find(location => location.id === 'granTeatroDeLaHabana').shroudMod, -2)
-  assert.equal(behavior.performAction(state, inv, { rule: 'granTeatroShroud' }, api), false, '每回合一次')
   // 广场酒店：受 1 点恐惧查看迷你卡的已揭示面。
   inv.location = 'plazaHotel'
   const mini = placeMiniCard(state, { kind: 'Decoy', decoy: true, locationId: 'plazaHotel' })

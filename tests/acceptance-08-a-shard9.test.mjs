@@ -1,9 +1,7 @@
 // 验收 08-a 分片 9（eoec 08698–08738）逐卡证据补充。
 //
-// 本分片是 EOTE 战役侧共享遭遇/剧情资产：44 张里仅 1 张有标题含卡号的既有用例，
-// 因此本文件为 41 张逐卡提供真实执行断言（直接调用条目声明的钩子 + 最小状态/API；
-// 实现缺失的卡只断言已接线部分，缺失点写入报告）。
-// 主进程合并时需登记进 tests/suites.mjs 与 tests/node-suite.mjs。
+// 覆盖地球边缘共享遭遇、伙伴和纪念物。旧报告的失败项走真实行动、显现和阶段结算。
+
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readdirSync } from 'node:fs'
@@ -11,7 +9,11 @@ import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import { ALL_CARDS } from '../src/cards/cards-data.js'
-import { registerCardAbilities, registeredEntry, registeredCodes } from '../src/engine/ability.js'
+import { fixture, asset, legalMoves, move, settle, validateMove } from './core-fixture.mjs'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { initializeTekeliDeck, tekeliDeckSize } from '../src/engine/eote-tekeli.js'
+import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const entryRegistry = new Map()
@@ -119,7 +121,53 @@ function makeApi(state, options = {}) {
   })
 }
 
+fixture()
+registerCardAbilities([...entryRegistry.values()].filter(entry => !registeredEntry(entry.code)))
+
 const entryOf = code => entryRegistry.get(code) || registeredEntry(code)
+const owner = state => state.investigators[0]
+const codeOf = card => card.originalCode || card.code
+const locationOf = state => state.locations.find(location => location.id === owner(state).location)
+const attached = (host, code) => host.attachments?.some(card => codeOf(card) === code) ?? false
+const optionWith = pattern => pending => pending.options.find(option => pattern.test(String(option.label || '')))?.id
+
+function run(state, resolve, choose = () => null) {
+  const execute = draft => resolve(scenarioRuntime(draft, []), draft)
+  resolveTransaction(state, 0, { action: 'eoteSharedAcceptance' }, execute)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 120)
+    const pending = state.pendingChoice
+    const optionId = choose(pending) ?? pending.options.find(option => ['done', 'skip'].includes(option.id))?.id
+      ?? pending.options[0]?.id
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId }, execute)
+  }
+}
+
+function reveal(state, code, choose) {
+  run(state, runtime => runtime.drawEncounter(0, { code, from: 'search' }), choose)
+}
+
+function spawn(state, code, location = owner(state).location) {
+  run(state, runtime => runtime.spawn(code, location))
+  const enemy = state.enemies.find(candidate => codeOf(candidate) === code)
+  assert.ok(enemy, code)
+  return enemy
+}
+
+function connect(state) {
+  const here = locationOf(state)
+  const near = { id: 'acceptance-near', name: '相连地点', revealed: true, clues: 0, shroud: 1, connections: [here.id] }
+  here.connections.push(near.id)
+  state.locations.push(near)
+  return near.id
+}
+
+function use(state, source, pick = () => true, choose) {
+  const command = legalMoves(state).find(option => option.assetId === source.id && option.action === 'ability' && pick(option))
+  assert.ok(command, codeOf(source))
+  move(state, command)
+  settle(state, choose)
+}
 
 function buildStateWithEnemies(mods = {}) {
   const state = makeState()
@@ -135,69 +183,117 @@ test('08698 冰缝：敏捷(3)检定，本次每揭示 1 个 frost 受 1 伤，�
   assert.deepEqual(api.calls.damage, [[0, 2], [0, 2]])
 })
 
-test('08699 穿越冰雪：附属到最近的无附属地点；进出额外敏捷(2)检定读点缺失（部分实现）', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  const result = entryOf('08699').encounterResolve(state, state.investigators[0], {}, api)
-  assert.equal(result.placed, true)
-  assert.deepEqual(api.calls.attachToLocation, ['here'])
-  assert.equal(entryOf('08699').flags.moveEntryTest.skill, 'agility')
+test('08699 穿越冰雪：移动额外敏捷 2 检定，失败停在原位并弃掉附属', () => {
+  const state = fixture()
+  const start = owner(state).location
+  const destination = connect(state)
+  reveal(state, '08699')
+  assert.ok(attached(locationOf(state), '08699'))
+  state.chaosBag = ['autofail']
+  move(state, { action: 'move', locationId: destination })
+  settle(state)
+  assert.equal(state.lastTestResult?.difficulty, 2)
+  assert.equal(state.lastTestResult?.skill, 'agility')
+  assert.equal(owner(state).location, start)
+  assert.equal(owner(state).damage, 1)
+  assert.equal(owner(state).horror, 1)
+  assert.equal(attached(locationOf(state), '08699'), false)
+  assert.ok(state.encounterDiscard.includes('08699'))
 })
+
 
 // ------------------------------------------------------------------ 敌人 08700–08701
-test('08700 迷失的研究员：入场 1 毁灭；被击败毁灭留在地点；谈判把毁灭翻为线索', () => {
-  const state = buildStateWithEnemies(s => { s.enemies.push({ id: 'e1', code: '08700', originalCode: '08700', location: 'here', doom: 1 }) })
-  const api = makeApi(state, { choices: ['willpower'] })
-  const entry = entryOf('08700')
-  assert.equal(entry.enemySpawnRule.doomOnSpawn, 1)
-  const parley = entry.abilities.find(a => a.actionKind === 'parley')
-  parley.resolve({ state, inv: state.investigators[0], source: state.enemies[0], api })
-  assert.equal(state.enemies[0].doom, 0)
-  assert.equal(state.investigators[0].clues, 2)
-  const defeated = entry.abilities.find(a => a.trigger?.includes('enemyDefeated'))
-  state.enemies[0].doom = 1
-  defeated.resolve({ state, inv: state.investigators[0], source: state.enemies[0], context: { enemy: state.enemies[0] }, api })
-  assert.equal(api.calls.scenarioDoomOn.length, 1)
+test('08700 迷失的研究员：入场带毁灭，谈判翻为线索，击败时将毁灭留在地点', () => {
+  const state = fixture()
+  owner(state).willpower = 6
+  const researcher = spawn(state, '08700')
+  assert.equal(researcher.doom, 1)
+  const start = owner(state).clues
+  const parley = legalMoves(state).find(command => command.action === 'entityAbility' && command.entityId === researcher.id)
+  assert.ok(parley)
+  move(state, parley)
+  settle(state, pending => pending.options.some(option => option.id === 'willpower') ? 'willpower' : null)
+  assert.equal(owner(state).clues, start + 1)
+  assert.ok(!state.enemies.some(enemy => enemy.id === researcher.id))
+  const second = spawn(state, '08700')
+  run(state, (runtime, draft) => {
+    const enemy = draft.enemies.find(card => card.id === second.id)
+    runtime.damageEnemy(enemy.id, 99, 0)
+  })
+  assert.equal(locationOf(state).doom, 1)
 })
 
-test('08701 狂乱的探险家：入场 1 毁灭；成功躲避且超 2 点把毁灭翻为线索', () => {
-  const state = buildStateWithEnemies(s => { s.enemies.push({ id: 'e2', code: '08701', originalCode: '08701', location: 'here', doom: 1 }) })
-  const api = makeApi(state)
-  const entry = entryOf('08701')
-  const reaction = entry.abilities.find(a => a.trigger?.includes('evadeSuccess'))
-  assert.equal(reaction.criteria({ source: state.enemies[0], context: { enemy: state.enemies[0], successBy: 2 } }), true)
-  reaction.resolve({ source: state.enemies[0], context: { seat: 0, enemy: state.enemies[0] }, api })
-  assert.equal(state.enemies[0].doom, 0)
-  assert.deepEqual(api.calls.gainClues, [[0, 1]])
+
+test('08701 狂乱的探险家：入场带毁灭，成功躲避达到 2 点可翻为线索', () => {
+  const state = fixture()
+  const explorer = spawn(state, '08701')
+  assert.equal(explorer.doom, 1)
+  move(state, { action: 'engage', enemyId: explorer.id })
+  settle(state)
+  owner(state).agility = 9
+  const start = owner(state).clues
+  move(state, { action: 'evade', enemyId: explorer.id })
+  settle(state, optionWith(/狂乱的探险家|成功躲避且超过难度/))
+  assert.equal(owner(state).clues, start + 1)
+  assert.ok(!state.enemies.some(enemy => enemy.id === explorer.id))
 })
+
 
 // ------------------------------------------------------------------ 08702–08705
-test('08702 身陷疯狂：附属最近[[附身]]敌人并放 1 毁灭；难度 +1 读点缺失（部分实现）', () => {
-  const state = buildStateWithEnemies(s => { s.enemies.push({ id: 'pos', code: '08700', originalCode: '08700', name: '附身敌人', location: 'near', doom: 0, traits: ['Possessed'] }) })
-  const api = makeApi(state)
-  entryOf('08702').encounterResolve(state, state.investigators[0], {}, api)
-  assert.deepEqual(api.calls.attachEncounterToEnemy, [['08702', 'pos']])
-  assert.deepEqual(api.calls.doomOn, [['pos', 1]])
-  assert.equal(entryOf('08702').flags.difficultyBonus, 1)
+test('08702 身陷疯狂：附属附身敌人并增加攻击、躲避和谈判的检定难度', () => {
+  const state = fixture()
+  const researcher = spawn(state, '08700')
+  reveal(state, '08702')
+  const enemy = state.enemies.find(card => card.id === researcher.id)
+  assert.ok(attached(enemy, '08702'))
+  assert.equal(enemy.doom, 2)
+  owner(state).combat = 0
+  move(state, { action: 'engage', enemyId: enemy.id })
+  settle(state)
+  move(state, { action: 'fight', enemyId: enemy.id })
+  settle(state)
+  assert.equal(state.lastTestResult.difficulty, enemy.fight + 1)
+  owner(state).agility = 8
+  move(state, { action: 'evade', enemyId: enemy.id })
+  settle(state)
+  assert.equal(state.lastTestResult.difficulty, enemy.evade + 1)
+  owner(state).willpower = 8
+  const parley = legalMoves(state).find(command => command.action === 'entityAbility' && command.entityId === enemy.id)
+  assert.ok(parley)
+  move(state, parley)
+  settle(state, pending => pending.options.some(option => option.id === 'willpower') ? 'willpower' : null)
+  assert.equal(state.lastTestResult.difficulty, 4)
 })
 
-test('08703 渎神幻象：洗 1 张忒咳哩-哩入牌库并进入威胁区；弱点双倍结算读点缺失（部分实现）', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  const result = entryOf('08703').encounterResolve(state, state.investigators[0], {}, api)
-  assert.equal(result, true)
-  assert.deepEqual(api.calls.threat, [[0, '08703']])
-  assert.equal(entryOf('08703').flags.tekeliliDoubleResolution, true)
+
+test('08703 渎神幻象：把忒咳哩-哩洗入牌库并令该弱点结算两次', () => {
+  const state = fixture()
+  initializeTekeliDeck(state, { cards: ['08726'], copies: [1] })
+  reveal(state, '08703')
+  assert.ok(owner(state).threat.some(card => codeOf(card) === '08703'))
+  assert.equal(tekeliDeckSize(state), 0)
+  assert.ok(owner(state).deck.includes('08726'))
+  owner(state).deck = ['01088', '08726']
+  const pool = owner(state).resources
+  move(state, { action: 'draw' })
+  settle(state)
+  assert.equal(owner(state).resources, pool - 4)
+  assert.equal(tekeliDeckSize(state), 1)
 })
 
-test('08704 窥看不可说之事：抽 1 张忒咳哩-哩并洗入任意调查员牌库；弱点立即结算读点缺失（部分实现）', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  entryOf('08704').encounterResolve(state, state.investigators[0], {}, api)
-  assert.equal(entryOf('08704').flags.peril, true)
-  assert.equal(entryOf('08704').flags.drawTekeliliAndResolveThenShuffle, true)
-  assert.equal(api.calls.choice, undefined)
+
+test('08704 窥看不可说之事：先结算忒咳哩-哩，再洗进选定调查员牌库', () => {
+  const state = fixture('01001', 2)
+  initializeTekeliDeck(state, { cards: ['08726'], copies: [1] })
+  const pool = owner(state).resources
+  const otherPool = state.investigators[1].resources
+  reveal(state, '08704', pending => pending.source === '08704' ? '1' : null)
+  assert.equal(owner(state).resources, pool - 2)
+  assert.equal(state.investigators[1].resources, otherPool)
+  assert.ok(state.investigators[1].deck.includes('08726'))
+  assert.equal(tekeliDeckSize(state), 0)
 })
+
 
 test('08705 噩梦烟气：二选一——失去 2 行动，或把 2 张忒咳哩-哩洗入牌库', () => {
   const state = makeState()
@@ -211,30 +307,62 @@ test('08705 噩梦烟气：二选一——失去 2 行动，或把 2 张忒咳�
 })
 
 // ------------------------------------------------------------------ 08706–08707
-test('08706 瘴气折磨：附属伙伴并横置；不能重整/回合结束伤害读点缺失（部分实现）', () => {
-  const state = makeState()
-  state.investigators[0].assets.push({ id: 'partner1', code: '08714', partner: true, exhausted: false })
-  const api = makeApi(state)
-  entryOf('08706').encounterResolve(state, state.investigators[0], {}, api)
-  assert.deepEqual(api.calls.attachToAsset, [[0, 'partner1', '08706']])
-  assert.equal(entryOf('08706').flags.attachToPartnerAsset, true)
+test('08706 瘴气折磨：横置伙伴，在回合末伤害伙伴并阻止重整', () => {
+  const state = fixture()
+  const partner = asset(state, '08716', { partner: true })
+  reveal(state, '08706')
+  const current = () => owner(state).assets.find(card => card.id === partner.id)
+  assert.ok(attached(current(), '08706'))
+  assert.equal(current().exhausted, true)
+  move(state, { action: 'endTurn' })
+  settle(state, pending => pending.source === '08706' ? 'damage' : null)
+  assert.equal(current().damage, 1)
+  assert.equal(current().exhausted, true)
+
+  owner(state).willpower = 8
+  const infection = current().attachments.find(card => codeOf(card) === '08706')
+  const clear = legalMoves(state).find(command => command.action === 'entityAbility' && command.entityId === infection.id)
+  assert.ok(clear)
+  move(state, clear)
+  settle(state, pending => pending.source === '08706' ? 'willpower' : null)
+  assert.equal(state.lastTestResult.difficulty, 3)
+  assert.equal(attached(current(), '08706'), false)
+  assert.ok(state.encounterDiscard.includes('08706'))
 })
 
-test('08707 朦胧瘴气：附属到所在地点；回合结束直接恐惧与轮末弃卡读点缺失（部分实现）', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  const result = entryOf('08707').encounterResolve(state, state.investigators[0], {}, api)
-  assert.equal(result.placed, true)
-  assert.deepEqual(api.calls.attachToLocation, ['here'])
-  assert.equal(entryOf('08707').flags.discardAtRoundEnd, true)
+
+test('08707 朦胧瘴气：回合结束给调查员和支援各 1 直接恐惧，轮末弃除自身', () => {
+  const state = fixture()
+  const ally = asset(state, '08716', { partner: true })
+  reveal(state, '08707')
+  assert.ok(attached(locationOf(state), '08707'))
+  move(state, { action: 'endTurn' })
+  settle(state)
+  assert.equal(owner(state).horror, 1)
+  assert.equal(owner(state).assets.find(card => card.id === ally.id).horror, 1)
+  assert.equal(attached(locationOf(state), '08707'), false)
+  assert.ok(state.encounterDiscard.includes('08707'))
 })
+
 
 // ------------------------------------------------------------------ 08708–08711
-test('08708 巨型白化企鹅：冷漠来自卡面数据；进出地点额外 1 行动读点缺失（部分实现）', () => {
-  const card = ALL_CARDS['08708']
-  assert.equal((card.text || '').includes('Aloof'), true)
-  assert.equal(entryOf('08708').flags.moveSurchargeAtEnemyLocation, 1)
+test('08708 巨型白化企鹅：冷漠，进入或离开企鹅所在地额外花费 1 行动', () => {
+  const state = fixture()
+  const start = owner(state).location
+  const destination = connect(state)
+  const penguin = spawn(state, '08708', destination)
+  assert.equal(penguin.engagedSeat, null)
+  for (const locationId of [destination, start]) {
+    owner(state).actionsLeft = 1
+    assert.notEqual(validateMove(state, 0, { action: 'move', locationId }), null)
+    owner(state).actionsLeft = 2
+    move(state, { action: 'move', locationId })
+    settle(state)
+    assert.equal(owner(state).actionsLeft, 0)
+    assert.equal(owner(state).location, locationId)
+  }
 })
+
 
 test('08709 呜啊！呜啊！呜啊！：离你最远的企鹅移动到你处或放 1 毁灭', () => {
   const state = buildStateWithEnemies(s => { s.enemies.push({ id: 'p1', code: '08708', originalCode: '08708', location: 'near', defeated: false }) })
@@ -243,14 +371,25 @@ test('08709 呜啊！呜啊！呜啊！：离你最远的企鹅移动到你处�
   assert.deepEqual(api.calls.doomOn, [['p1', 1]])
 })
 
-test('08710 失落的修格斯：交战后抽 1 张忒咳哩-哩；抽牌后按弱点结算读点缺失（部分实现）', () => {
-  const state = buildStateWithEnemies(s => { s.enemies.push({ id: 's1', code: '08710', originalCode: '08710', location: 'here' }) })
-  const api = makeApi(state)
-  const entry = entryOf('08710')
-  const ability = entry.abilities[0]
-  ability.resolve({ state, inv: state.investigators[0], source: state.enemies[0], context: { enemy: state.enemies[0], seat: 0 }, api })
-  assert.equal(api.calls.info.length >= 1, true)
+test('08710 失落的修格斯：交战立即结算弱点并还到底，空牌库时改为攻击', () => {
+  const state = fixture()
+  initializeTekeliDeck(state, { cards: ['08724'], copies: [1] })
+  const shoggoth = spawn(state, '08710')
+  move(state, { action: 'engage', enemyId: shoggoth.id })
+  settle(state)
+  assert.equal(state.enemies.find(card => card.id === shoggoth.id).engagedSeat, 0)
+  assert.equal(owner(state).damage, 1)
+  assert.equal(tekeliDeckSize(state), 1)
+
+  const empty = fixture()
+  assert.equal(tekeliDeckSize(empty), 0)
+  const attacking = spawn(empty, '08710')
+  move(empty, { action: 'engage', enemyId: attacking.id })
+  settle(empty)
+  assert.equal(owner(empty).damage, attacking.damage)
+  assert.equal(owner(empty).horror, attacking.horror)
 })
+
 
 test('08711 狂暴的修格斯：+2/人生命；敌军阶段结束本地调查员与非修格斯敌人各 2 伤', () => {
   const state = buildStateWithEnemies(s => {
@@ -269,14 +408,22 @@ test('08711 狂暴的修格斯：+2/人生命；敌军阶段结束本地调查�
 })
 
 // ------------------------------------------------------------------ 08712–08713
-test('08712 极地幻景：附属最近有线索地点；发现线索后弃手牌与弃卡读点缺失（部分实现）', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  const result = entryOf('08712').encounterResolve(state, state.investigators[0], {}, api)
-  assert.equal(result.placed, true)
-  assert.deepEqual(api.calls.attachToLocation, ['here'])
-  assert.equal(entryOf('08712').flags.clueDiscoveryDiscardNonWeakness, true)
+test('08712 极地幻景：调查附属地点并发现线索后，仅弃掉非弱点手牌并弃除幻景', () => {
+  const state = fixture()
+  owner(state).intellect = 8
+  owner(state).hand = ['01088', '01016', '08130']
+  locationOf(state).clues = 2
+  reveal(state, '08712')
+  assert.ok(attached(locationOf(state), '08712'))
+  move(state, { action: 'investigate' })
+  settle(state)
+  assert.deepEqual(owner(state).hand, ['08130'])
+  assert.ok(owner(state).discard.includes('01088'))
+  assert.ok(owner(state).discard.includes('01016'))
+  assert.equal(attached(locationOf(state), '08712'), false)
+  assert.ok(state.encounterDiscard.includes('08712'))
 })
+
 
 test('08713 黑暗极光：意志(3)，本次每揭示 1 个 frost 受 1 恐，失败再受 2 恐', () => {
   const state = makeState()
@@ -295,12 +442,20 @@ test('08714 威廉·戴尔教授：花 1 秘密横置治愈同地点调查员 2 
   assert.deepEqual(api.calls.healHorror, [[0, 2]])
 })
 
-test('08715 丹佛斯：伙伴数据与 5 秘密已声明；结算忒咳哩-哩后抽 2 读点缺失（部分实现）', () => {
-  const entry = entryOf('08715')
-  assert.equal(entry.flags.partner, true)
-  assert.equal(entry.uses, 5)
-  assert.equal((entry.abilities || []).length, 0)
+test('08715 丹佛斯：真实结算忒咳哩-哩后横置并花秘密让结算者抽两张', () => {
+  const state = fixture()
+  const partner = asset(state, '08715')
+  owner(state).deck = ['01016', '01088', '08726']
+  const pool = owner(state).resources
+  move(state, { action: 'draw' })
+  settle(state, optionWith(/丹佛斯/))
+  const current = owner(state).assets.find(card => card.id === partner.id)
+  assert.equal(current.exhausted, true)
+  assert.equal(current.uses, 4)
+  assert.equal(owner(state).resources, pool - 2)
+  assert.deepEqual(owner(state).hand, ['01088', '01016'])
 })
+
 
 test('08716 伊里亚·阿什瓦克：花 1 秘密横置，以基础 5 敏捷躲避并可移动', () => {
   const state = makeState(s => { s.enemies.push({ id: 'e3', code: '08708', originalCode: '08708', location: 'here', evade: 3 }) })
@@ -334,14 +489,25 @@ test('08718 艾弗里·克莱普尔：察觉 frost 时花补给取消并改揭�
   assert.equal(api.calls.revealChaosTokens.length, 1)
 })
 
-test('08719 “曲奇”·弗雷德里克斯：枪械攻击基础 5；本轮不能攻击读点缺失（部分实现）', () => {
-  const entry = entryOf('08719')
-  const ability = entry.abilities[0]
-  assert.equal(ability.actionKind, 'fight')
-  assert.equal(ability.cost.uses, 1)
-  assert.equal(entry.uses, 3)
-  assert.equal(entry.usesType, 'ammo')
+test('08719 “曲奇”·弗雷德里克斯：实际攻击以基础战斗 5，非精英本轮无法借机攻击', () => {
+  const state = fixture()
+  const partner = asset(state, '08719')
+  const enemy = spawn(state, '08701')
+  move(state, { action: 'engage', enemyId: enemy.id })
+  settle(state)
+  use(state, partner, command => command.targetId === enemy.id)
+  assert.equal(state.lastTestResult.baseValue, 5)
+  const ready = state.enemies.find(card => card.id === enemy.id)
+  assert.equal(ready.damageTaken, 1)
+  assert.equal(owner(state).assets.find(card => card.id === partner.id).uses, 2)
+  assert.equal(ready.engagedSeat, 0)
+  assert.equal(ready.attackProtection[0], state.round)
+  move(state, { action: 'resource' })
+  settle(state)
+  assert.equal(owner(state).damage, 0)
+  assert.equal(owner(state).horror, 0)
 })
+
 
 test('08720 艾米·肯斯勒博士：基础 5 智力调查成功后查看顶牌并可弃掉', () => {
   const state = makeState()
@@ -355,12 +521,26 @@ test('08720 艾米·肯斯勒博士：基础 5 智力调查成功后查看顶牌
   assert.deepEqual(api.calls.discardEncounterCard, ['08723'])
 })
 
-test('08721 罗尔德·埃尔斯沃思：伙伴与 5 补给已声明；文本空白能力读点缺失（部分实现）', () => {
-  const entry = entryOf('08721')
-  assert.equal(entry.flags.partner, true)
-  assert.equal(entry.uses, 5)
-  assert.equal((entry.abilities || []).length, 0)
+test('08721 罗尔德·埃尔斯沃思：横置花补给，令选定地点附属在本回合失效', () => {
+  const state = fixture()
+  const destination = connect(state)
+  const partner = asset(state, '08721')
+  reveal(state, '08699')
+  use(state, partner)
+  const source = owner(state).assets.find(card => card.id === partner.id)
+  assert.equal(source.uses, 4)
+  assert.equal(source.exhausted, true)
+  const start = locationOf(state)
+  assert.equal(start.attachments.find(card => codeOf(card) === '08699').textBlankTurn, state.turnSerial)
+  state.chaosBag = ['autofail']
+  move(state, { action: 'move', locationId: destination })
+  settle(state)
+  assert.equal(owner(state).location, destination)
+  assert.equal(owner(state).damage, 0)
+  assert.equal(owner(state).horror, 0)
+  assert.ok(attached(state.locations.find(location => location.id === start.id), '08699'))
 })
+
 
 test('08722 高田弘子：横置把最多 3 资源移入调查员资源池', () => {
   const state = makeState()
@@ -387,27 +567,33 @@ for (const [code, kind, amount] of [['08723', 'horror', 1], ['08724', 'damage', 
   })
 }
 
-test('08727 忒咳哩-哩：自己回合失去 1 行动已实现；非自己回合的下回合行动丢失读点缺失（部分实现）', () => {
-  const state = makeState()
-  state.currentSeat = 0
-  const api = makeApi(state)
-  const weakness = entryOf('08727').abilities[0]
-  weakness.resolve({ state, inv: state.investigators[0], api })
-  assert.deepEqual(api.calls.loseActions, [[0, 1]])
-  const state2 = makeState()
-  state2.currentSeat = 1
-  const api2 = makeApi(state2)
-  weakness.resolve({ state: state2, inv: state2.investigators[0], api: api2 })
-  assert.equal(api2.calls.loseActions, undefined)
+test('08727 忒咳哩-哩：当前自己回合或下一自己回合失去 1 行动', () => {
+  const state = fixture()
+  owner(state).deck = ['08727']
+  const actions = owner(state).actionsLeft
+  move(state, { action: 'draw' })
+  settle(state)
+  assert.equal(owner(state).actionsLeft, actions - 2)
+
+  const later = fixture()
+  owner(later).deck = ['01088', '08727']
+  move(later, { action: 'endTurn' })
+  settle(later)
+  assert.equal(owner(later).actionsLeft, 2, '重整阶段抽弱点让下一个回合的行动从 3 降到 2')
 })
 
-test('08728 忒咳哩-哩：把 1 个线索放到所在地点', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  entryOf('08728').abilities[0].resolve({ state, inv: state.investigators[0], api })
-  assert.equal(state.locations[0].clues, 2)
-  assert.deepEqual(api.calls.returnClueToLocation, [[0, 1]])
+
+test('08728 忒咳哩-哩：真实抽取的弱点把调查员的 1 个线索移到所在地', () => {
+  const state = fixture()
+  owner(state).clues = 1
+  owner(state).deck = ['08728']
+  const before = locationOf(state).clues
+  move(state, { action: 'draw' })
+  settle(state)
+  assert.equal(locationOf(state).clues, before + 1)
+  assert.equal(owner(state).clues, 0)
 })
+
 
 test('08729 忒咳哩-哩：弃掉 1 张受控支援后回牌库底', () => {
   const state = makeState()
@@ -431,26 +617,48 @@ test('08730 克莱普尔的皮草：察觉 frost 时受伤 1 点取消并改揭�
   assert.equal(context.replacementToken, '0')
 })
 
-test('08731 爱伦·坡作品集：3 充能已声明；检索忒咳哩-哩回剧本牌库读点缺失（部分实现）', () => {
-  const entry = entryOf('08731')
-  assert.equal(entry.uses, 3)
-  assert.equal(entry.usesType, 'charges')
-  assert.equal((entry.abilities || []).length, 0)
+test('08731 爱伦·坡作品集：支付行动和充能，将顶 6 张中的忒咳哩-哩归还并抽一张', () => {
+  const state = fixture()
+  initializeTekeliDeck(state, { cards: ['08723'], copies: [1] })
+  const book = asset(state, '08731')
+  owner(state).deck = ['01027', '01088', '01016', '01020', '08724', '01022', '01010']
+  use(state, book)
+  const current = owner(state).assets.find(card => card.id === book.id)
+  assert.equal(current.uses, 2)
+  assert.equal(owner(state).hand.length, 1)
+  assert.equal(tekeliDeckSize(state), 2)
+  assert.ok(!owner(state).deck.includes('08724'))
 })
 
-test('08732 曲奇的特制 .32：2 子弹、快速、+1 伤害；目标入参需引擎 target（见报告 ctx 缺陷）', () => {
-  const entry = entryOf('08732')
-  const ability = entry.abilities[0]
-  assert.equal(entry.uses, 2)
-  assert.equal(entry.fast, true)
-  assert.equal(ability.actionKind, 'fight')
-  assert.equal(ability.cost.uses, 1)
+
+test('08732 曲奇的特制 .32：真实枪击基础战斗 5，消耗一枚子弹且造成 2 伤害', () => {
+  const state = fixture()
+  const gun = asset(state, '08732')
+  const enemy = spawn(state, '08701')
+  use(state, gun, command => command.targetId === enemy.id,
+    pending => pending.source === '08732' ? 'base5' : null)
+  assert.equal(state.lastTestResult.baseValue, 5)
+  assert.equal(state.enemies.some(card => card.id === enemy.id), false)
+  assert.ok(state.encounterDiscard.includes('08701'))
+  assert.equal(owner(state).assets.find(card => card.id === gun.id).uses, 1)
 })
 
-test('08733 戴尔的素描：卡面数据与快速事件标记已声明；player played 生命周期条目缺失（部分实现）', () => {
-  const entry = entryOf('08733')
-  assert.equal(entry.flags.eventCard, true)
-  assert.equal(entry.fast ?? true, true)
+
+test('08733 戴尔的素描：场景快速事件抽 3 张牌', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['08733']
+  state.campaign.investigators[0].deck.push('08733')
+  state.investigators[0].deck = ['01088', '01016', '01020', '01022']
+  state.investigators[0].actionsLeft = 0
+  const play = legalMoves(state).find(command => command.action === 'play' && command.cardId === '08733')
+  assert.ok(play)
+  move(state, play)
+  settle(state)
+  const inv = state.investigators[0]
+  assert.deepEqual(inv.hand, ['01022', '01020', '01016'])
+  assert.deepEqual(inv.deck, ['01088'])
+  assert.ok(inv.discard.includes('08733'))
+  assert.equal(inv.actionsLeft, 0)
 })
 
 test('08734 埃尔斯沃思的靴子：本地最后一个线索被发现后横置移动或弃卡移动', () => {
@@ -483,9 +691,24 @@ test('08736 辛哈的医药箱：花 1 补给横置治愈同地点调查员 1 �
   assert.deepEqual(api.calls.healDamage, [[0, 1]])
 })
 
-test('08737 高田的物品：快速事件数据已声明；player played 生命周期条目缺失（部分实现）', () => {
-  const entry = entryOf('08737')
-  assert.equal(entry.flags.eventCard, true)
+test('08737 高田的物品：快速获得 3 资源并抽 1 张牌，然后移出本场游戏', () => {
+  const state = fixture()
+  state.investigators[0].hand = ['08737']
+  state.campaign.investigators[0].deck.push('08737')
+  state.investigators[0].deck = ['01016', '01088']
+  state.investigators[0].resources = 0
+  state.investigators[0].actionsLeft = 0
+  const play = legalMoves(state).find(command => command.action === 'play' && command.cardId === '08737')
+  assert.ok(play)
+  move(state, play)
+  settle(state)
+  const inv = state.investigators[0]
+  assert.equal(inv.resources, 3)
+  assert.deepEqual(inv.hand, ['01088'])
+  assert.deepEqual(inv.deck, ['01016'])
+  assert.equal(inv.actionsLeft, 0)
+  assert.equal(inv.discard.includes('08737'), false)
+  assert.ok(state.removedFromGame.includes('08737'))
 })
 
 test('08738 安雨：横置选择移动 / 本轮下次检定 +2 / 基础 4 敏捷躲避', () => {

@@ -53,7 +53,7 @@ export function sanguineShadowsChaosToken(state, inv, token) {
   if (!entry) return null
   const targets = referenceTargets(state)
   if (token === 'skull') return { delta: 0 - targets - (isHardSide(state) ? 1 : 0) }
-  if (token === 'tablet') return { delta: entry.delta, cancelCommitted: true, rider: 'cancelCommitted' }
+  if (token === 'tablet') return { delta: entry.delta, cancelCommitted: 'all', rider: 'cancelCommitted' }
   return { delta: entry.delta, rider: entry.rider }
 }
 

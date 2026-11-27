@@ -2,10 +2,11 @@
 import { preloadChaosTokens, showChaosToken } from './chaos-token.js'
 import { createCombatSound } from './combat-sound.js'
 import { attackChoreography, blastChoreography } from './attack-fx.js'
-import { directDamageChoreography } from './direct-damage-fx.js'
+import { CARD_DAMAGE_SOUNDS, directDamageChoreography } from './direct-damage-fx.js'
 import { enemyAttackChoreography } from './enemy-attack-fx.js'
 import { setRulesText } from './card-text.js'
 import { skillSymbols } from './skill-presentation.js'
+import { CARD_AUDIO_FILES, CARD_OUTCOME_SOUNDS, revealSound } from './card-audio.js'
 import { t } from './i18n.js'
 const ROOT = '/mods/arkhamhorror/'
 const TABLE_FEEDBACK_MS = 650
@@ -17,18 +18,37 @@ const SOUNDS = { select: 'click_003', draw: 'card-slide', encounter: 'encounter-
   directImpact: 'direct-impact', directBite: 'direct-bite', directGlass: 'direct-glass', directArcane: 'direct-arcane',
   p1Energy:'p1-energy',p1ArcaneSlash:'p1-arcane-slash',p1Flame:'p1-flame',p1ArrowHit:'p1-arrow-hit',
   p1Bow:'p1-bow',p1Acid:'p1-acid',p1Flare:'p1-flare',p1Cord:'p1-cord',p1Resonance:'p1-resonance',p1Void:'p1-void',p1Book:'p1-book',
-  enemyGrowl:'enemy-growl',enemyClaw:'enemy-claw',enemyHeavy:'enemy-heavy',enemyFear:'enemy-fear',enemyGhost:'enemy-ghost',enemySwarm:'enemy-swarm',enemyWing:'enemy-wing' }
+  enemyGrowl:'enemy-growl',enemyClaw:'enemy-claw',enemyHeavy:'enemy-heavy',enemyFear:'enemy-fear',enemyGhost:'enemy-ghost',enemySwarm:'enemy-swarm',enemyWing:'enemy-wing',
+  cardDamageImpact:'card-damage-impact.mp3', cardDamageSlash:'card-damage-slash.mp3', cardDamageCreature:'card-damage-creature.mp3',
+  cardDamageArcane:'card-damage-arcane.mp3', cardDamageDrain:'card-damage-drain.mp3', cardDamageBlast:'card-damage-blast.mp3',
+  cardDamageBacklash:'card-damage-backlash.mp3', cardDamageShot:'card-damage-shot.mp3', cardDamageSplash:'card-damage-splash.mp3',
+  ...CARD_AUDIO_FILES }
 const VOLUMES = { select: .16, gunshot: .22, bladeSlash: .4, bladeHit: .4, lightningZap: .35, dynamiteBlast: .55,
   enemyGrowl:.3,enemyClaw:.3,enemyHeavy:.3,enemyFear:.25,enemyGhost:.25,enemySwarm:.3,enemyWing:.3,
   directImpact: .35, directBite: .4, directGlass: .3, directArcane: .3,
   p1Flame:.3,p1Energy:.25,p1Void:.25,p1Resonance:.25,p1Acid:.35,p1Flare:.3,p1ArrowHit:.35 }
 // 技能/阶段表只存词典 key，演出渲染时再 t()（模块顶层不调用 t()）。
 const PHASES = { enemy: ['table.phase.enemy', '[combat]', 'table.phase.enemy.cinematic'], upkeep: ['table.phase.upkeep', '[resource]', 'table.phase.upkeep.cinematic'], mythos: ['table.phase.mythos', '[doom]', 'table.phase.mythos.cinematic'], investigation: ['table.phase.investigation', '[intellect]', 'table.phase.investigation.cinematic'] }
+function combineHarmSounds(previous, next) {
+  if (previous?.kind !== 'cardOutcome' || previous.effects?.length !== 1 || next.effects?.length !== 1) return false
+  const [first] = previous.effects, [second] = next.effects
+  if (!['injury', 'fright'].includes(first.sound) || !['injury', 'fright'].includes(second.sound) || first.sound === second.sound) return false
+  if (!first.targets?.length || first.targets.length !== second.targets?.length
+      || first.targets.some((target, index) => target.seat !== second.targets[index].seat)) return false
+  previous.eventSeq = next.eventSeq
+  previous.effects = [{ sound: 'injuryAndFear', targets: first.targets.map((target, index) => {
+    const other = second.targets[index]
+    return { seat: target.seat, damage: target.damage + other.damage, horror: target.horror + other.horror,
+      selfDamage: target.selfDamage + other.selfDamage, selfHorror: target.selfHorror + other.selfHorror }
+  }) }]
+  return true
+}
+
 export function publicSequence(events) {
   const cues = []
   for (const event of events) {
     const cue = event.type === 'presentation' ? event : event.presentation
-    if (!cue || !['test', 'chaos', 'play', 'attack', 'enemyHarm', 'blast', 'directDamage', 'phase', 'automatic', 'story', 'location', 'weakness', 'checkpoint'].includes(cue.kind)) continue
+    if (!cue || !['test', 'chaos', 'play', 'attack', 'enemyHarm', 'blast', 'directDamage', 'phase', 'automatic', 'story', 'location', 'weakness', 'cardOutcome', 'checkpoint'].includes(cue.kind)) continue
     const presented = event.seq == null ? cue : { ...cue, eventSeq: event.seq }
     // Consecutive accepted area-damage placements form one explosion. A real
     // checkpoint/other scene ends the group, so choice resumes never replay a
@@ -37,6 +57,7 @@ export function publicSequence(events) {
       const previous = cues.at(-1)
       if (previous?.kind === 'directDamage' && previous.style === cue.style
         && previous.code === cue.code && previous.assetId === cue.assetId
+        && previous.sourceEnemyId === cue.sourceEnemyId && previous.audio === cue.audio
         && previous.location === cue.location && previous.seat === cue.seat) {
         for(const target of cue.targets) {
           const existing=cue.style==='flamethrower'&&previous.targets.find(t=>t.enemyId===target.enemyId)
@@ -46,7 +67,11 @@ export function publicSequence(events) {
         continue
       }
     }
-    if (cue.kind === 'automatic') {
+    const last = cues.at(-1)
+    if (cue.kind === 'cardOutcome' && combineHarmSounds(last?.steps?.at(-1) || last, presented)) continue
+    if (cue.kind === 'cardOutcome' && last?.kind === 'phase') {
+      last.steps.push({ ...presented })
+    } else if (cue.kind === 'automatic') {
       let group = cues.at(-1)
       if (group?.kind !== 'phase' || group.phase !== cue.phase) {
         group = { kind: 'phase', phase: cue.phase, round: cue.round, steps: [] }; cues.push(group)
@@ -123,6 +148,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   let anchors = new Map(), queue = [], unlocked = false
   let presentedPlays = []
   let presentedHarm = []
+  const heardOutcomes = new Map(), revealedDraws = []
   let blocking = false, cancelScene = null, feedbackFrame = 0
   let latest = null, displayed = null
   let skipNextSync = false
@@ -141,6 +167,18 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     for (const [name, value] of Object.entries(theme.style || {})) el.style.setProperty(name, value)
   }
   const interaction = key => [...document.querySelectorAll('.ah-table [data-interaction]')].find(el => el.dataset.interaction === key)
+  const enemyCard = id => {
+    if (!id) return null
+    const cards = [...document.querySelectorAll('.ah-table [data-interaction^="enemy:"]')]
+      .filter(el => el.dataset.interaction === `enemy:${id}`)
+    return cards.find(el => el.closest('.ah-engagement-cards')) || cards[0]
+  }
+  const investigatorCard = seat => Number.isInteger(seat)
+    ? [...document.querySelectorAll('.ah-map-investigator')].find(el => Number(el.dataset.seat) === seat)
+      || interaction(`investigator:${seat}`)
+    : null
+  const damageTarget = target => target.enemyId ? enemyCard(target.enemyId)
+    : (target.assetId ? interaction(`asset:${target.assetId}`) : null) || investigatorCard(target.seat)
   const maskArrivals = changes => {
     for (const c of changes.filter(c=>c.kind==='draw')) {
       const key=`hand:${c.seat}:${c.handIndex}`
@@ -180,16 +218,54 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   const combatSound = createCombatSound()
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches
   const save = () => { try { localStorage.setItem('arkham-presentation', JSON.stringify(prefs)) } catch { /* optional */ } }
-  const sound = kind => {
-    if (!prefs.sound || !unlocked || !SOUNDS[kind]) return
+  const audioSample = kind => {
+    if (!Object.hasOwn(SOUNDS, kind)) return null
     let sample = audio.get(kind)
     if (!sample) { sample = new Audio(ROOT + 'audio/' + SOUNDS[kind] + (SOUNDS[kind].includes('.') ? '' : '.ogg')); sample.preload = 'auto'; audio.set(kind, sample) }
-    const voice = sample.cloneNode(); voice.volume = VOLUMES[kind] ?? .3
+    return sample
+  }
+  const sound = (kind, fallback = null) => {
+    if (!prefs.sound || !unlocked) return
+    const voice = audioSample(kind)?.cloneNode()
+    if (!voice) return
+    voice.volume = VOLUMES[kind] ?? .3
     activeAudio.add(voice)
-    voice.onended = voice.onerror = () => activeAudio.delete(voice)
-    voice.play().catch(() => activeAudio.delete(voice))
+    voice.onended = () => activeAudio.delete(voice)
+    const unavailable = () => { if (activeAudio.delete(voice) && fallback) sound(fallback) }
+    voice.onerror = unavailable
+    voice.play().catch(error => {
+      if (voice.error || error.name === 'NotSupportedError') unavailable()
+      else activeAudio.delete(voice)
+    })
   }
   const stopAudio = () => { for (const voice of activeAudio) voice.pause(); activeAudio.clear(); combatSound.stop() }
+  const cover = (field, seat, amount = 1) => {
+    if (!(amount > 0)) return
+    const key = `${field}:${seat}`
+    heardOutcomes.set(key, (heardOutcomes.get(key) || 0) + amount)
+  }
+  const playCardOutcome = cue => {
+    const sounds = new Set()
+    for (const effect of cue.effects || []) {
+      if (Object.hasOwn(CARD_OUTCOME_SOUNDS, effect.sound)) sounds.add(CARD_OUTCOME_SOUNDS[effect.sound])
+      if (effect.sound === 'loseResource') cover('resources', effect.seat, effect.amount)
+      if (effect.sound === 'move' && effect.seat != null) cover('move', effect.seat)
+      for (const target of effect.targets || []) {
+        cover('damage', target.seat, target.selfDamage || 0)
+        cover('horror', target.seat, target.selfHorror || 0)
+      }
+    }
+    for (const sample of sounds) sound(sample)
+    applyStep(cue)
+  }
+  const playDrawSound = change => {
+    const definition = latest?.state.cards?.[change.code]
+    const index = revealedDraws.findIndex(draw => draw.seat === change.seat &&
+      ((draw.code && (draw.code === change.code || draw.code === definition?.originalCode))
+        || (!draw.code && draw.weakness && ['weakness', 'basicweakness'].includes(definition?.subtype))))
+    if (index >= 0) revealedDraws.splice(index, 1)
+    else sound('draw')
+  }
   const unlock = event => {
     if (!event.target.closest?.('.ah-table')) return
     unlocked = true
@@ -230,6 +306,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     stopFeedback()
     cancelScene?.(); cancelScene = null; block(false)
     epoch++; queue = []; presentedPlays = []; presentedHarm = []; running = false; stopAudio(); cancelAnimationFrame(frame)
+    heardOutcomes.clear(); revealedDraws.length = 0
     for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
     for(const transit of cardTransits) { const target=transitTarget(transit);if(target)target.style.visibility='' }
     maskedCards.clear();cardTransits=[]
@@ -247,16 +324,17 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   const node = (tag, cls, text) => { const el = document.createElement(tag); el.className = cls; if (text != null) el.textContent = text; return el }
   const combat = async c => {
     const generation=epoch, incoming=c.direction==='incoming'||c.effect==='attack', miss=c.success===false
-    const enemyNodes=[...document.querySelectorAll('.ah-table [data-interaction]')].filter(el=>el.dataset.interaction===`enemy:${c.enemyId}`)
-    const enemy=enemyNodes.find(el=>el.closest('.ah-engagement-cards'))||enemyNodes[0]
-    const investigator=[...document.querySelectorAll('.ah-map-investigator')].find(el=>Number(el.dataset.seat)===c.seat)
-      || interaction(`investigator:${c.seat}`)
-    const source=incoming?enemy:interaction(`asset:${c.assetId}`)||investigator
-    const target=incoming?(interaction(`asset:${c.targetAssetId}`)||investigator):enemy
+    const direct=c.kind==='directDamage'
+    const enemy=enemyCard(c.enemyId), investigator=investigatorCard(c.seat)
+    const source=direct ? enemyCard(c.sourceEnemyId) || interaction(`asset:${c.assetId}`) || investigatorCard(c.sourceSeat ?? c.seat)
+      : incoming?enemy:interaction(`asset:${c.assetId}`)||investigator
+    const target=direct ? damageTarget(c.damageTarget) : incoming?(interaction(`asset:${c.targetAssetId}`)||investigator):enemy
     const fallback=[...document.querySelectorAll('.ah-map-node')].find(el=>el.dataset.locationId===c.location)
-    const a=c.sourceBounds||rect(source)||(incoming&&c.sourceKind==='global'?{x:innerWidth/2-40,y:90,width:80,height:80}:null)||rect(fallback)||(c.presentationStage==='harm'?rect(target):null),b=rect(target)||rect(fallback)
+    const a=c.sourceBounds||rect(source)||(incoming&&c.sourceKind==='global'?{x:innerWidth/2-40,y:90,width:80,height:80}:null)||rect(fallback)||(direct||c.presentationStage==='harm'?rect(target):null),b=rect(target)||rect(fallback)
     if(!a||!b)return
-    const start=center(a),end=center(b),dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy)||1
+    const start=center(a),end=center(b)
+    if (direct && Math.hypot(end.x-start.x,end.y-start.y) < 8) start.y -= 22
+    const dx=end.x-start.x,dy=end.y-start.y,length=Math.hypot(dx,dy)||1
     const secondaryTargets=(c.enemyIds||[]).filter(id=>id!==c.enemyId).map(id=>{
       const nodes=[...document.querySelectorAll('.ah-table [data-interaction]')].filter(el=>el.dataset.interaction===`enemy:${id}`)
       return nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]
@@ -264,15 +342,15 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     const damageText=c.horror?t('table.combat.damageHorror',{damage:c.damage||0,horror:c.horror}):t('table.combat.damage',{damage:c.damage||0})
     const label=c.presentationStage==='threat'?t('table.combat.threat'):miss?t('table.combat.miss'):incoming?damageText:(c.defeated?t('table.combat.hitDefeated',{damage:c.damage||0}):t('table.combat.hit',{damage:c.damage||0}))
     const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
-    const direct=c.kind==='directDamage'
     const fx=node('div','ah-combat-fx'+(incoming?' is-incoming':'')+(miss?' is-miss':'')+(direct?' ah-direct-fx is-direct-'+c.style:''))
     fx.dataset.direction=incoming?'incoming':'outgoing';fx.dataset.enemyId=c.enemyId;fx.setAttribute('role','status')
+    if (c.damageTarget?.assetId) fx.dataset.targetAssetId = c.damageTarget.assetId
     const targetName=c.targetAssetId?displayed?.state.investigators.flatMap(inv=>inv.assets||[]).find(asset=>asset.id===c.targetAssetId)?.name||who:who
     const caption=node('div','ah-combat-caption',c.presentationStage==='harm'?t('table.combat.harmCaption',{who:targetName,label}):direct?t('table.direct.caption',{source:c.sourceName||who,target:c.name||t('table.enemy'),damage:c.damage}):incoming?t('table.combat.incomingCaption',{who,enemy:c.name||t('table.enemy'),label}):t('table.combat.outgoingCaption',{who,enemy:c.name||t('table.enemy'),label}))
     const captionMargin=Math.min(380,innerWidth-28)/2+14
     Object.assign(caption.style,{left:Math.max(captionMargin,Math.min(innerWidth-captionMargin,end.x))+'px',top:Math.max(85,Math.min(innerHeight-100,b.y-54))+'px'})
     const geometry={node,start,end,box:b,length,angle:Math.atan2(dy,dx),ux:dx/length,uy:dy/length,miss,secondaryTargets,damage:c.damage}
-    const plan=direct?directDamageChoreography(c.style,geometry):incoming&&c.presentationStage?enemyAttackChoreography(c,geometry):attackChoreography(incoming?'default':c.attackStyle,geometry)
+    const plan=direct?directDamageChoreography(c.style,geometry,c.audio):incoming&&c.presentationStage?enemyAttackChoreography(c,geometry):attackChoreography(incoming?'default':c.attackStyle,geometry)
     if(c.presentationStage)fx.dataset.stage=c.presentationStage
     if(c.enemyFamily)fx.dataset.enemyFamily=c.enemyFamily
     if(c.enemyVariant)fx.dataset.enemyVariant=c.enemyVariant
@@ -280,7 +358,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     if(plan.family){fx.classList.add('ah-themed-fx');fx.dataset.family=plan.family}
     fx.dataset.style=plan.style
     fx.append(...plan.elements,caption);ensureLayer().append(fx)
-    const cue=({sample,synth})=>{if(!prefs.sound||!unlocked)return;if(sample)sound(sample);else combatSound.play(synth)}
+    const cue=audio=>{if(!audio||!prefs.sound||!unlocked)return;if(audio.sample)sound(audio.sample);else combatSound.play(audio.synth)}
     const animations=[],timers=new Set()
     let stopped=false
     const pause=ms=>new Promise(resolve=>{const timer=setTimeout(()=>{timers.delete(timer);resolve()},prefs.fast?ms*.35:ms);timers.add(timer);timerResolvers.push(resolve)})
@@ -307,18 +385,17 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   const blast = async c => {
     const generation=epoch
     const location=[...document.querySelectorAll('.ah-map-node')].find(el=>el.dataset.locationId===c.location)
-    const enemyNode=id=>{const nodes=[...document.querySelectorAll('.ah-table [data-interaction]')].filter(el=>el.dataset.interaction===`enemy:${id}`);return nodes.find(el=>el.closest('.ah-engagement-cards'))||nodes[0]}
-    const seatNode=seat=>[...document.querySelectorAll('.ah-map-investigator')].find(el=>Number(el.dataset.seat)===seat)
-    const targets=[...(c.enemyIds||[]).map(enemyNode),...(c.seats||[]).map(seatNode)].filter(Boolean).map(el=>[el,center(rect(el))])
+    const nodes=c.targets ? c.targets.map(damageTarget) : [...(c.enemyIds||[]).map(enemyCard),...(c.seats||[]).map(investigatorCard)]
+    const targets=[...new Set(nodes.filter(Boolean))].map(el=>[el,center(rect(el))])
     const area=rect(location)||rect(targets[0]?.[0])
     if(!area)return
-    const thrower=rect(seatNode(c.seat))||rect(interaction(`investigator:${c.seat}`))||area
+    const thrower=rect(enemyCard(c.sourceEnemyId))||rect(interaction(`asset:${c.assetId}`))||rect(investigatorCard(c.seat))||area
     const who=displayed?.state.investigators.find(inv=>inv.seat===c.seat)?.name||t('table.investigator')
     const plan=blastChoreography({node,from:center(thrower),center:center(area),radius:Math.max(area.width,area.height)/2,targets})
     const fx=node('div','ah-combat-fx ah-blast-fx');fx.dataset.fx=c.fx||'blast';fx.setAttribute('role','status')
     const caption=node('div','ah-combat-caption',c.targets?t('table.direct.areaCaption',{source:c.sourceName,targets:c.targets.map(target=>`${target.name} −${target.damage}`).join(' / ')}):t('table.blast.caption',{who,name:c.name||t('table.location'),damage:c.damage||0}))
     const numbers=(c.targets||[]).map(target=>{
-      const el=target.enemyId?enemyNode(target.enemyId):seatNode(target.seat),at=rect(el)
+      const at=rect(damageTarget(target))||area
       if(!at)return null
       const number=node('div','ah-direct-number',`−${target.damage}`)
       Object.assign(number.style,{left:center(at).x+'px',top:center(at).y+'px'})
@@ -339,11 +416,11 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     const stop=()=>{stopped=true;for(const animation of animations)animation.cancel();for(const timer of timers)clearTimeout(timer);for(const resolve of resolvers)resolve()}
     cancelScene=stop
     try {
-      cue(plan.throwSound)
+      if(c.audio!=='cardDamage')cue(plan.throwSound)
       await Promise.all(plan.throw.map(step=>motion(...step)))
       if(stopped||generation!==epoch)return
       fx.classList.add('is-impact')
-      cue(plan.blastSound)
+      cue(c.audio==='cardDamage'?{sample:CARD_DAMAGE_SOUNDS.blast}:plan.blastSound)
       const viewport=document.querySelector('.ah-map-viewport')
       await Promise.all([...plan.blast.map(step=>motion(...step)),
         ...numbers.map(el=>motion(el,[{translate:'-50% -30%',opacity:0},{translate:'-50% -70%',opacity:1,offset:.2},{translate:'-50% -140%',opacity:0}],850)),
@@ -549,12 +626,14 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       displayed = { ...displayed, state: { ...displayed.state, phase: change.phase, round: change.round || displayed.state.round } }
       onChange()
     }
-    if (!weakness) sound(story || change.phase === 'mythos' ? 'agenda' : change.phase === 'enemy' ? 'damage' : 'reveal')
+    if (!weakness && !change.steps?.every(step => step.effect === 'privateEncounter')) {
+      sound(story || change.phase === 'mythos' ? 'agenda' : change.phase === 'enemy' ? 'damage' : 'reveal')
+    }
     let timer, settle, stopped = false, advanceRequested = false
     const release = () => { clearTimeout(timer); const done = settle; settle = null; done?.() }
     cancelScene = () => { stopped = true; release() }
     next.onclick = () => { if (settle) release(); else advanceRequested = true }
-    skip.onclick = () => { queue = []; stopped = true; release() }
+    skip.onclick = () => { queue = []; stopped = true; stopAudio(); release() }
     const previousFocus = document.activeElement
     if (story) next.focus({ preventScroll: true })
     el.onkeydown = event => {
@@ -571,9 +650,13 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       timer = setTimeout(release, prefs.fast ? duration * .35 : duration)
     })
     const steps = story ? [{ text: change.text || t('table.cinematic.storyFallback') }] : weakness ? [change] : change.steps?.length ? change.steps : [{ text: phase[2] }]
+    for (const step of steps) {
+      if (step.effect === 'privateEncounter' || weakness) revealedDraws.push({ seat: step.seat, code: step.code, weakness })
+    }
     try {
       for (let index = 0; index < steps.length && !stopped; index++) {
         const step = steps[index], encounter = step.effect === 'encounter', revealCard = encounter || weakness
+        if (step.kind === 'cardOutcome') { playCardOutcome(step); continue }
         stepArt.replaceChildren()
         stepArt.classList.toggle('is-encounter', encounter)
         stepArt.classList.toggle('is-weakness', weakness)
@@ -606,7 +689,15 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
           const back = node('img', weakness ? 'ah-weakness-reveal-back' : 'ah-encounter-reveal-back')
           back.src = ROOT + (weakness ? 'img/backs/back_player.webp' : 'img/backs/back_encounter.webp')
           back.alt = t(weakness ? 'table.cinematic.weaknessBack' : 'table.cinematic.encounterBack')
-          stepArt.append(back); sound('draw')
+          const sample = revealSound(step, weakness)
+          if (prefs.sound && unlocked) audioSample(sample)
+          stepArt.append(back)
+          if (step.surgeDraw) {
+            sound('card-surge')
+            await new Promise(resolve => setTimeout(resolve, prefs.fast ? 60 : 120))
+          }
+          if (stopped || generation !== epoch) break
+          sound('draw')
           const viewer = latest?.mySeat ?? latest?.observerSeat ?? 0
           const deck = encounter ? document.querySelector('.ah-encounter-deck img')
             : viewer === step.seat ? document.querySelector('.ah-dock-deck .ah-deck-back') : null
@@ -616,7 +707,8 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
             { transform: 'translate(0,0) scale(1) rotate(0)', opacity: 1 }], 650)
           if (!stopped) {
             await animate(stepArt, [{ transform: 'rotateY(0)' }, { transform: 'rotateY(90deg)' }], 220)
-            back.remove(); sound('encounter')
+            if (stopped || generation !== epoch) break
+            back.remove(); sound(sample, sample === 'encounter' ? null : 'encounter')
             await animate(stepArt, [{ transform: 'rotateY(-90deg)' }, { transform: 'rotateY(0)' }], 250)
           }
         }
@@ -628,7 +720,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
         if (!stopped && generation === epoch) {
           const draws=step.tableState ? presentationChanges(displayed.state,{...displayed.state,...step.tableState}).filter(c=>c.kind==='draw') : []
           applyStep(step);maskArrivals(draws)
-          for(const draw of draws) { sound('draw');await drawCard(draw) }
+          for(const draw of draws) { playDrawSound(draw);await drawCard(draw) }
           if(cardTransits.length)await finishCards()
         }
       }
@@ -728,11 +820,13 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
   const play = async item => {
     const { change: c, before, after, background } = item
     ensureLayer().dataset.lastKind = c.kind
+    if (c.kind === 'cardOutcome') { playCardOutcome(c); return }
     if (c.kind === 'directDamage') {
       applyStep(c)
-      if(c.style==='blast') await blast({...c,fx:'grenade',enemyIds:c.targets.filter(t=>t.enemyId).map(t=>t.enemyId),seats:c.targets.filter(t=>t.seat!=null).map(t=>t.seat)})
-      else for(const target of c.targets) await combat({...c,...target,name:target.name,damage:target.damage,
-        sourceBounds:before.get('asset:'+c.assetId)||before.get('card:'+c.code)})
+      presentedHarm = c.targets.filter(target => Number.isInteger(target.seat) && !target.assetId)
+      if(c.style==='blast') await blast({...c,fx:c.audio==='cardDamage'?'card-damage':'grenade'})
+      else for(const target of c.targets) await combat({...c,enemyId:target.enemyId,damageTarget:target,
+        name:target.name,damage:target.damage,sourceBounds:before.get('asset:'+c.assetId)||before.get('card:'+c.code)})
       return
     }
     if (c.kind === 'enemyHarm') {
@@ -751,8 +845,9 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       const shown = presentedPlays; presentedPlays = []
       const changes = presentationChanges(displayed?.state, c.tableState || latest?.state).filter(change => {
         if (change.kind === 'damage' && change.delta > 0) {
-          const placed = presentedHarm.find(target=>target.seat===change.seat)
-          change.delta = Math.max(0,change.delta-(placed?.[change.field]||0))
+          const placed = presentedHarm.reduce((amount, target) => amount
+            + (target.seat===change.seat ? target[change.field]||0 : 0), 0)
+          change.delta = Math.max(0,change.delta-placed)
           return change.delta > 0
         }
         if (change.kind !== 'play') return true
@@ -813,8 +908,16 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
       await new Promise(resolve=>setTimeout(resolve,2600));el.remove();return
     }
     if (c.kind === 'test' || c.kind === 'agenda') return banner(c)
-    sound(c.kind === 'commit' ? 'play' : c.kind === 'resource' ? 'clue' : c.kind)
-    if (c.kind === 'draw') return drawCard(c, background ? QUICK_TABLE_FEEDBACK_MS : TABLE_FEEDBACK_MS, background)
+    const field = c.kind === 'move' ? 'move' : c.kind === 'resource' && c.delta > 0 ? null : c.field
+    const coverageKey = `${field}:${c.seat}`
+    const heard = heardOutcomes.get(coverageKey) || 0
+    const amount = c.kind === 'move' ? 1 : Math.abs(c.delta || 0)
+    if (heard && amount) heardOutcomes.set(coverageKey, Math.max(0, heard - amount))
+    if (c.kind === 'draw') {
+      playDrawSound(c)
+      return drawCard(c, background ? QUICK_TABLE_FEEDBACK_MS : TABLE_FEEDBACK_MS, background)
+    }
+    if (!amount || heard < amount) sound(c.kind === 'commit' ? 'play' : c.kind === 'resource' ? 'clue' : c.kind)
     if (c.kind === 'play' || c.kind === 'commit') return playCard(c)
     if (reduced()) return
     if (c.kind === 'move') return fly(c, before.get('inv:' + c.seat) || before.get('loc:' + c.from), after.get('inv:' + c.seat) || after.get('loc:' + c.to), '◈')
@@ -843,6 +946,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
     } }
     finally { if (generation === epoch) {
       running = false; displayed = latest; block(false); onChange()
+      heardOutcomes.clear(); revealedDraws.length = 0
       for(const key of maskedCards) { const el=interaction(key);if(el)el.style.visibility='' }
       maskedCards.clear()
       // A skip or a legacy event stream can end without a checkpoint.
@@ -876,8 +980,7 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
           displayed = session
           return session
         }
-        if (sameRevision) {
-          lastSeq = Math.max(lastSeq, seq)
+        if (sameRevision && seq <= lastSeq) {
           if (queue.length || running) {
             displayed = { ...displayed, state: { ...displayed.state, revision: session.state.revision, pendingChoice: null, skillTest: null, legalMoves: [] } }
             return displayed
@@ -897,8 +1000,13 @@ export function createTablePresentation({ art: renderArt, onChange = () => {}, t
         // has no map, cards or act data for the scenario's queued animations.
         const enteringScenario = last && last.uiState !== 'inScenario' && session.state.uiState === 'inScenario'
         if (enteringScenario) displayed = session
-        if (last && session.state.revision > last.revision) {
-          const events = (session.events || []).filter(e => e.seq > lastSeq)
+        if (last && (session.state.revision > last.revision || sameRevision)) {
+          const seen = new Set()
+          const events = (session.events || []).filter(e => {
+            if (!(e.seq > lastSeq) || seen.has(e.seq)) return false
+            seen.add(e.seq)
+            return true
+          })
           const changes=presentationChanges(last, session.state, events)
           // State-only updates use the same handoff as explicit checkpoints,
           // so new hand cards cannot appear before their draw finishes.

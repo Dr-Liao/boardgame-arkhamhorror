@@ -32,16 +32,20 @@ function resolve(el) {
 
 // Hold Alt over any card picture to see it enlarged beside its rules text.
 // Alt alone never triggers browser actions while a card is under the pointer.
-export function installCardZoom(h) {
+export function installCardZoom(h, onCardZoom = () => {}) {
   if (installed || typeof document === 'undefined') return
   installed = true
   let pointer = null, target = null, zoom = null, sequence = 0
   const hide = () => {
+    if (target?.owner.dataset.timedEnemyView) onCardZoom(null)
     sequence++; zoom?.remove(); zoom = null; target = null
     document.body.classList.remove('ah-card-zoom-active')
   }
 
-  const describe = (panel, card, linked, face, fallbackName) => {
+  const warning = owner => owner.dataset.timedEnemySeconds ? h('p', { className: 'ah-carddetail-view-warning' },
+    t('game.detail.timedView', { seconds: owner.dataset.timedEnemySeconds })) : null
+
+  const describe = (panel, card, linked, face, fallbackName, owner) => {
     // cardFaceText 负责背面关联面与卡背占位文本；名称/文本再统一走 cardDisplay*（§8.7 第二步）。
     const text = cardFaceText(card, linked, face)
     const traits = cardDisplayTraits(text).join(' · ')
@@ -51,6 +55,7 @@ export function installCardZoom(h) {
     const flavor = cardDisplayFlavor(text)
     const subname = cardDisplaySubname(text)
     panel.replaceChildren(...[
+      warning(owner),
       h('h3', {}, cardDisplayName(text) || fallbackName),
       subname ? h('small', { className: 'ah-card-zoom-subname' }, subname) : null,
       meta ? h('small', { className: 'ah-card-zoom-meta' }, meta) : null,
@@ -74,7 +79,7 @@ export function installCardZoom(h) {
     const name = found.name || t('detail.type.card')
     const landscape = source?.classList.contains('ah-table-art-landscape')
     const art = tableArt(h, code, name, { face, landscape, thumbnail: false })
-    const panel = h('div', { className: 'ah-card-zoom-text' }, h('h3', {}, name), h('p', { className: 'ah-card-zoom-loading' }, t('card.zoom.loading')))
+    const panel = h('div', { className: 'ah-card-zoom-text' }, warning(found.owner), h('h3', {}, name), h('p', { className: 'ah-card-zoom-loading' }, t('card.zoom.loading')))
     zoom = h('div', { className: 'ah-card-zoom' + (landscape ? ' is-landscape' : ''), role: 'tooltip', 'data-zoom-for': code, 'data-zoom-face': face },
       h('div', { className: 'ah-card-zoom-art' }, art), panel)
     const fit = () => {
@@ -85,11 +90,12 @@ export function installCardZoom(h) {
     zoom.addEventListener('load', fit, true)
     document.body.append(zoom)
     document.body.classList.add('ah-card-zoom-active')
+    if (found.owner.dataset.timedEnemyView) onCardZoom(found.owner.dataset.timedEnemyView)
     fit()
     const ticket = ++sequence
     getCardPresentation(code).then(entry => {
       if (ticket !== sequence || !entry?.card) throw new Error()
-      describe(panel, entry.card, entry.linkedCard, face, name)
+      describe(panel, entry.card, entry.linkedCard, face, name, found.owner)
       if (LANDSCAPE_TYPES.includes(entry.card.type)) zoom.classList.add('is-landscape')
       fit()
     }).catch(() => {
@@ -102,7 +108,8 @@ export function installCardZoom(h) {
     const next = altKey ? resolve(el) : null
     if (next?.owner === target?.owner && next?.code === target?.code) return
     // A host re-render swaps the node under a still pointer; keep the open zoom.
-    if (next && target && !target.owner.isConnected && next.code === target.code && next.face === target.face) { target = next; position(); return }
+    if (next && target && !target.owner.isConnected && next.code === target.code && next.face === target.face
+      && next.owner.dataset.timedEnemyView === target.owner.dataset.timedEnemyView) { target = next; position(); return }
     hide()
     if (next) show(next)
   }

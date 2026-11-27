@@ -75,7 +75,7 @@ function occupyRots(state, codes) {
   viaApi(state, (api, draft) => {
     codes.forEach((code, index) => {
       const foe = draft.enemies.find(card => card.id === occupied[index].id)
-      api.attachPlayerCardToAsset(code, foe, { ownerSeat: 0 })
+      assert.ok(api.bonded.attachToEnemy(0, code, foe))
     })
   })
 }
@@ -103,7 +103,7 @@ test('P6 10079 摄魂抓魄：开局自身查找并附属 3 张不同[[技巧]]�
     }
     return null
   })
-  const attached = (assetById(s, bewitching.id).attachments || []).map(card => card.code)
+  const attached = s.scenarioFlags.mechanics.beneath[0][bewitching.id]
   assert.deepEqual([...attached].sort(), [...picked].sort(), '开局附属 3 张不同的[[技巧]]卡牌')
   assert.equal(s.investigators[0].deck.length, before - 3, '附属的牌离开牌库')
 
@@ -118,30 +118,29 @@ test('P6 10079 摄魂抓魄：开局自身查找并附属 3 张不同[[技巧]]�
   })
   assert.equal(assetById(s, bewitching.id).exhausted, true, '横置摄魂抓魄')
   assert.ok(s.investigators[0].hand.includes('10010'), '抽回 1 张附属卡牌')
-  assert.equal((assetById(s, bewitching.id).attachments || []).length, 2, '附属区少 1 张')
+  assert.equal(s.scenarioFlags.mechanics.beneath[0][bewitching.id].length, 2, '附属区少 1 张')
 })
 
 test('P6 10079 摄魂抓魄：交战反应也可查找牌库顶 9 张的同名卡牌并抽取', () => {
   const s = fixture('01001')
   const bewitching = asset(s, '10079')
-  viaApi(s, (api, draft) => {
-    const host = draft.investigators[0].assets.find(card => card.code === '10079')
-    api.attachPlayerCardToAsset('10010', host, { ownerSeat: 0 })
-    api.attachPlayerCardToAsset('10026', host, { ownerSeat: 0 })
+  s.investigators[0].deck = ['01088', '01088', '10010', '10010', '10026']
+  viaApi(s, api => {
+    api.commitOrigins.store(0, bewitching.id, '10010', { from: 'deck' })
+    api.commitOrigins.store(0, bewitching.id, '10026', { from: 'deck' })
   })
-  s.investigators[0].deck = ['01088', '01088', '10010']
   const foe = enemy(s, { engagedSeat: null, fight: 1, evade: 1, health: 10 })
   move(s, { action: 'engage', enemyId: foe.id })
   settle(s, pending => {
     const ids = pending.options.map(option => option.id)
     if (ids.includes('trigger')) return 'trigger'
     if (ids.includes('search')) return 'search'
-    if (ids.includes('10010')) return '10010'
+    if (pending.kind === 'search') return pending.options.find(option => option.cardCode === '10010')?.id
     return null
   })
   assert.ok(s.investigators[0].hand.includes('10010'), '抽出牌库顶 9 张里的同名卡')
   assert.equal(s.investigators[0].deck.includes('10010'), false, '抽出的牌离开牌库')
-  assert.equal((assetById(s, bewitching.id).attachments || []).length, 2, '附属区不变')
+  assert.equal(s.scenarioFlags.mechanics.beneath[0][bewitching.id].length, 2, '附属区不变')
 })
 
 // ---------------------------------------------------------------------------
@@ -216,7 +215,7 @@ test('P6 10082 假证：谈判检定难度 = 疑点数，成功发现线索，�
   assert.equal(s.lastTestResult.difficulty, 1, '1 个疑点 → 难度 1')
   assert.equal(inv(s).clues, before.clues + 1, '成功发现 1 个线索')
   assert.equal(locationOf(s).clues, before.locationClues - 1)
-  assert.equal(assetById(s, credentials.id).uses, 2, 'successBy 1 < 2 → 放置 1 个疑点')
+  assert.equal(assetById(s, credentials.id).useTokens.suspicion, 2, 'successBy 1 < 2 → 放置 1 个疑点')
 })
 
 test('P6 10082 假证：检定失败时假证返回手牌', () => {
@@ -288,10 +287,12 @@ test('P6 10085 卡纳玛戈斯之杖：横置选任意地点非精英敌人，�
   const far = link(s, inv(s).location, 'm27-rod-target')
   const foe = enemy(s, { location: far, engagedSeat: null, fight: 1, evade: 1, health: 6 })
   s.chaosBag = ['curse', '0', '0', '0', '0']
+  const deckBefore = [...inv(s).deck]
   fire(s, '10085', descriptors('10085', 'free')[0], { source: rod })
   assert.equal(assetById(s, rod.id).exhausted, true, '横置卡纳玛戈斯之杖')
   const attachments = enemyById(s, foe.id).attachments || []
   assert.equal(attachments.length, 1, '揭示[诅咒]后附属 1 张[[腐烂]]')
+  assert.deepEqual(inv(s).deck, deckBefore, '绑定检索没有洗牌')
   assert.ok(['10086', '10087', '10088', '10089', '10090'].includes(attachments[0].code))
   assert.equal(s.chaosBag.filter(token => token === 'curse').length, 1, '非检定揭示的[诅咒]标记放回混乱袋')
 
@@ -308,18 +309,20 @@ test('P6 10085 卡纳玛戈斯之杖：横置选任意地点非精英敌人，�
 // 10086 深渊腐烂
 // ---------------------------------------------------------------------------
 test('P6 10086 深渊腐烂：经杖附属后，所附属的敌人不能攻击', () => {
-  const s = fixture('01001')
+  const s = fixture('01001', 2)
   const rod = asset(s, '10085')
   occupyRots(s, ['10087', '10088', '10089', '10090'])
   const foe = enemy(s, { engagedSeat: 0, fight: 1, evade: 1, health: 6, damage: 2, horror: 2 })
   rodAttach(s, rod, foe)
   assert.ok((enemyById(s, foe.id).attachments || []).some(card => card.code === '10086'), '随机找到的唯一[[腐烂]]是深渊腐烂')
-  const before = { damage: inv(s).damage, horror: inv(s).horror }
-  const attacked = enemyAttack(s, enemyById(s, foe.id), inv(s), [])
+  assert.equal(scenarioRuntime(s, []).discardAsset(0, rod.id), '10085')
+  const victim = s.investigators[1]
+  const before = { damage: victim.damage, horror: victim.horror }
+  const attacked = enemyAttack(s, enemyById(s, foe.id), victim, [])
   settle(s)
   assert.equal(attacked, false, '攻击被取消')
-  assert.equal(inv(s).damage, before.damage, '没有受到伤害')
-  assert.equal(inv(s).horror, before.horror, '没有受到恐惧')
+  assert.equal(s.investigators[1].damage, before.damage, '没有受到伤害')
+  assert.equal(s.investigators[1].horror, before.horror, '没有受到恐惧')
 })
 
 // ---------------------------------------------------------------------------

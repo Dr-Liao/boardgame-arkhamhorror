@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { actRuleFor, locationRuleFor, entryFlags } from '../../../../../src/cards/card-rules.js'
@@ -384,7 +385,7 @@ export const behavior = {
       const index = Number(api.choose({
         kind: 'discard', source: code, seat: inv.seat, prompt: '选择弃掉一张手牌。', options,
       }))
-      const discarded = inv.hand.splice(index, 1)[0]
+      const discarded = spliceHand(inv, index, 1)[0]
       inv.discard.push(discarded)
       inv.resources += ALL_CARDS[discarded]?.icons?.willpower || 0
       state.scenarioFlags[perRoundKey] = state.round

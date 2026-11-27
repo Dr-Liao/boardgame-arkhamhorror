@@ -8,7 +8,7 @@ export const META = {
     "playerCards": 1683,
     "weaknesses": 147
   },
-  "resourceVersion": "a6720acba81a81cae4b13f73a5eb1615ebd2e5c9d429442a1197264c322dbe21",
+  "resourceVersion": "6b408f2d9b5367cbf0502cb15857a4467a92797de54a3104e4c37cb5b90ac067",
   "schemaVersion": 2,
   "source": "参考资源/ArkhamHorror-main/frontend/public/cards_en.json",
   "sources": [
@@ -2525,6 +2525,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "10035": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -2545,7 +2546,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -2597,6 +2598,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "10036": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -2612,7 +2614,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -2792,6 +2794,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "10039": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -2807,7 +2810,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -3048,6 +3051,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10043": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -3062,7 +3066,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -3480,6 +3484,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10050": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -3494,7 +3499,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -3723,6 +3728,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "10054": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -3737,7 +3743,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -4029,6 +4035,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "10059": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -4049,7 +4056,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -4302,6 +4309,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10063": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -4324,7 +4332,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "evade": 3,
     "exceptional": false,
     "exile": false,
@@ -4432,6 +4440,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10065": {
+    "acceptanceProfile": "fhv-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -4446,7 +4455,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -4751,6 +4760,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10070": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -4765,7 +4775,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -4870,6 +4880,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10072": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -4884,7 +4895,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -5044,6 +5055,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10075": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5057,7 +5069,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -5286,6 +5298,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10079": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5299,7 +5312,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Rogue",
@@ -5458,6 +5471,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "10082": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5472,7 +5486,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -5642,6 +5656,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10085": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5678,7 +5693,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -5730,6 +5745,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10086": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5745,7 +5761,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -5787,6 +5803,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10086"
   },
   "10087": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5802,7 +5819,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -5844,6 +5861,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10087"
   },
   "10088": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5859,7 +5877,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -5901,6 +5919,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10088"
   },
   "10089": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5916,7 +5935,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -5958,6 +5977,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10089"
   },
   "10090": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -5973,7 +5993,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6077,6 +6097,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10092": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6091,7 +6112,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6143,6 +6164,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10093": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6157,7 +6179,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6202,6 +6224,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10094": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6216,7 +6239,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6317,6 +6340,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10096": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6330,7 +6354,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6439,6 +6463,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10098": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6475,7 +6500,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6527,6 +6552,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10099": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6541,7 +6567,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6585,6 +6611,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10100": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6599,7 +6626,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6642,6 +6669,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10101": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6656,7 +6684,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6757,6 +6785,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10103": {
+    "acceptanceProfile": "fhv-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6771,7 +6800,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6816,6 +6845,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "10104": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6830,7 +6860,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6884,6 +6914,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "10105": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6908,7 +6939,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -6956,6 +6987,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "10106": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -6971,7 +7003,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -7011,6 +7043,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10106"
   },
   "10107": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7026,7 +7059,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -7124,6 +7157,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10109": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7137,7 +7171,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7178,6 +7212,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10110": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7192,7 +7227,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7306,6 +7341,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10112": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7320,7 +7356,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7596,6 +7632,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10117": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7610,7 +7647,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7661,6 +7698,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "10118": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7674,7 +7712,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7847,6 +7885,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10121": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7861,7 +7900,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -7972,6 +8011,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10123": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -7986,7 +8026,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -8148,6 +8188,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "10126": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8162,7 +8203,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -8325,6 +8366,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10129": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8339,7 +8381,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8439,6 +8481,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "10131": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8453,7 +8496,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8497,6 +8540,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "10132": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8510,7 +8554,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8553,6 +8597,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "10133": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8573,7 +8618,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8619,6 +8664,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "10134": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8634,7 +8680,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8679,6 +8725,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10134"
   },
   "10135": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8692,7 +8739,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8735,6 +8782,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10135"
   },
   "10136": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8748,7 +8796,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8791,6 +8839,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10136"
   },
   "10137": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8804,7 +8853,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -8849,6 +8898,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10137"
   },
   "10138": {
+    "acceptanceProfile": "fhv-player-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -8862,7 +8912,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -9005,6 +9055,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10502"
   },
   "10503": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "A wooden beam buckes with a sharp crack, coming down on your skull. The impact of the blow nearly knocks you out. Further tremors rock the cave from deeper within the mine.",
     "backFlavorZh": "一根木质横梁吱嘎一声正砸在你头上。这一下差点把你砸昏过去。矿井深外的岩穴也是一阵震颤。",
@@ -9021,7 +9072,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "written_in_rock",
     "encounterName": "Written in Rock",
     "encounterPosition": 3,
@@ -9060,6 +9111,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10503"
   },
   "10504": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "The tunnel collapses behind the mine cart to expose a cavern filled with glowing violet crystals. The cart crashes into a boulder to send you flying headlong into the dark. As more tremors rock the tunnel, you scramble to keep ahead of the cave-in, terrified of what might happen if you are trapped here. As you sprint past a rotten, slack-jawed corpse, you almost gag from the stench, then trip on a fallen rock and hit your head.\nYou wake up hours later, head pounding, and wonder in a daze until you catch the scent of fresh air and follow it out of the mine.",
     "backFlavorZh": "矿车后的隧道一路垮塌，露出了一个岩穴，里面全是发光的紫水晶。矿车撞上巨石，把你一头甩进了黑暗。隧道里颤动不止，你手脚并用，在洞穴之间向前，害怕自己要是困在这里，不知道会发生什么。你跃过一具腐败的尸体，它的下巴都已经松垮。看到这幅景象，你差点吐了，随即被一块石头绊倒，摔到了脑袋。\n你醒来后已经过了好几个小时，脑子里嗡嗡的。你在眩晕中游荡向前，最后终于捕捉到一丝新鲜的空气，跟着它走出了矿井。",
@@ -9076,7 +9128,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 14,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "written_in_rock",
     "encounterName": "Written in Rock",
     "encounterPosition": 4,
@@ -9283,6 +9335,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10507"
   },
   "10508": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "The lantern in the shed is lit. Who was here before you?",
     "backFlavorZh": "里面的灯亮着。之前是谁来了？",
@@ -9298,7 +9351,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "written_in_rock",
     "encounterName": "Written in Rock",
     "encounterPosition": 8,
@@ -9997,6 +10050,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10521"
   },
   "10522": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -10011,7 +10065,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "written_in_rock",
     "encounterName": "Written in Rock",
     "encounterPosition": 36,
@@ -11300,6 +11354,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10544": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -11313,7 +11368,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 22,
@@ -11470,6 +11525,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10546"
   },
   "10547": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -11484,7 +11540,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 30,
@@ -11535,6 +11591,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "10548": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -11549,7 +11606,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 31,
@@ -11600,6 +11657,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10548"
   },
   "10549": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -11613,7 +11671,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_silent_heath",
     "encounterName": "The Silent Heath",
     "encounterPosition": 1,
@@ -11761,6 +11819,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10551"
   },
   "10552": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "A swarm of insects descends upon you, blocking any escape. One of them darts forward with almost mechanical efficiency, burying a proboscis in your torso. Sharp pain spasms through your body, followed by numbness. The milky white insect retracts a black proboscis dripping blue fluid as your vision begins to swim. Passing out is a mercy.\nYou come to hours later, covered in salt, in a dry chamber underground. Head pounding, you stagger out of the warrens into the arid heath. The wound in your side oozes a filmy blue poison, but it doesn't seem to be fatal...",
     "backFlavorZh": "虫群蜂拥而来，挡住你所有的退路。其中一个带着机械般的精准将口器扎进你的身体。刺痛遍布你的全身，接着是一阵麻木。乳白色的昆虫抽回黑色的口器，上面还滴着蓝色的液体，而你的意识已经开始涣散。昏厥也是一种仁慈。\n你几个小时后醒来，发现自己身处干燥的地下厅室，被埋在盐里。你头昏脑胀，拖着步子离开这“免子洞”，来到外面干燥的荒野。你的伤口一侧渗出薄膜似的蓝色毒物，但看起来死不了人……",
@@ -11777,7 +11836,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_silent_heath",
     "encounterName": "The Silent Heath",
     "encounterPosition": 4,
@@ -12222,6 +12281,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10559"
   },
   "10560": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -12235,7 +12295,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_silent_heath",
     "encounterName": "The Silent Heath",
     "encounterPosition": 12,
@@ -12765,6 +12825,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "10569": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -12778,7 +12839,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 1,
@@ -13091,6 +13152,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10574"
   },
   "10575": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The fishing village of Akwan sits quietly in a rocky bay on the northern shores of Hemlock Isle. A few people mill around on the village's boardwalks.",
     "backFlavorZh": "阿克望这个小渔村静静地坐落在毒堇岛北边岩石嶙峋的海岸。有几个人在村庄的步道上游荡。",
@@ -13106,7 +13168,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 7,
@@ -13210,6 +13272,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10576"
   },
   "10577": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "After more aeons of descent I saw some side passages or burrows leading from unknown recesses of blackness to this shaft of nighted mystery\n - H.P. Lovecraft, \"The Festival\"",
     "backFlavorZh": "下行许久之后，我发现岔路和地洞从未知的黢黑阴暗之处通向这座阴森神秘的深井。H.P.洛夫克拉夫特，《魔节》",
@@ -13226,7 +13289,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 10,
@@ -13268,6 +13331,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10577"
   },
   "10578": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "After more aeons of descent I saw some side passages or burrows leading from unknown recesses of blackness to this shaft of nighted mystery\n - H.P. Lovecraft, \"The Festival\"",
     "backFlavorZh": "下行许久之后，我发现岔路和地洞从未知的黢黑阴暗之处通向这座阴森神秘的深井。H.P.洛夫克拉夫特，《魔节》",
@@ -13284,7 +13348,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 11,
@@ -13387,6 +13451,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10579"
   },
   "10580": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "After more aeons of descent I saw some side passages or burrows leading from unknown recesses of blackness to this shaft of nighted mystery\n - H.P. Lovecraft, \"The Festival\"",
     "backFlavorZh": "下行许久之后，我发现岔路和地洞从未知的黢黑阴暗之处通向这座阴森神秘的深井。H.P.洛夫克拉夫特，《魔节》",
@@ -13403,7 +13468,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 13,
@@ -13447,6 +13512,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10580"
   },
   "10581": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "After more aeons of descent I saw some side passages or burrows leading from unknown recesses of blackness to this shaft of nighted mystery\n - H.P. Lovecraft, \"The Festival\"",
     "backFlavorZh": "下行许久之后，我发现岔路和地洞从未知的黢黑阴暗之处通向这座阴森神秘的深井。H.P.洛夫克拉夫特，《魔节》",
@@ -13463,7 +13529,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 14,
@@ -13570,6 +13636,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "10585": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -13583,7 +13650,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 20,
@@ -13630,6 +13697,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10585"
   },
   "10586": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -13642,7 +13710,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 23,
@@ -13683,6 +13751,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10586"
   },
   "10587": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -13695,7 +13764,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 26,
@@ -13956,6 +14025,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10591"
   },
   "10592": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "Strange Anatomy",
@@ -13970,7 +14040,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_thing_in_the_depths",
     "encounterName": "The Thing in the Depths",
     "encounterPosition": 5,
@@ -14009,6 +14079,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10592"
   },
   "10600": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -14022,7 +14093,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_thing_in_the_depths",
     "encounterName": "The Thing in the Depths",
     "encounterPosition": 16,
@@ -14843,6 +14914,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10616"
   },
   "10617": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The trees grew too thickly, and their trunks were too big for any healthy New England wood. There was too much silence in the dim alleys between them, and the floor was too soft with the dank moss and mattings of infinite years of decay.\n - H. P. Lovecraft, \"The Colour Out of Space\"",
     "backFlavorZh": "这里的树木太过茂密，树干太过巨大，一点也不像新英格兰健康的木材。树木之间的小径铺满了柔软潮湿的苔藓，纠缠着经年累月的腐化物，实在是太安静了。H.P.洛夫克拉夫特，《星之彩》",
@@ -14859,7 +14931,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_twisted_hollow",
     "encounterName": "The Twisted Hollow",
     "encounterPosition": 16,
@@ -15592,6 +15664,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10629"
   },
   "10630": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The aspect of the whole farm was shocking - greyish withered grass and leaves on the ground, vines falling in brittle wreckage from archaic walls and gables.\n - H.P. Lovecraft, \"The Colour Out of Space\"",
     "backFlavorZh": "整个农场的情形令人震惊——地上落着灰色的枯草败叶，古老的墙壁和屋脊上的藤蔓变成了脆弱的残片。H.P.洛夫克拉夫特，《星之彩》",
@@ -15607,7 +15680,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_longest_night",
     "encounterName": "The Longest Night",
     "encounterPosition": 5,
@@ -16309,6 +16382,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10641"
   },
   "10642": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -16323,7 +16397,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_longest_night",
     "encounterName": "The Longest Night",
     "encounterPosition": 17,
@@ -16726,6 +16800,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10651"
   },
   "10652": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "You feel whispers in your head, speaking an alien language of clicks and whirs and strange, lilting music. It sounds familiar. A vague shape emerges from the roiling mist and reaches out to you. As you feel your mind begin to empty, you can't help but laugh. What was it that you forgot, exactly? It must not matter.",
     "backFlavorZh": "你感到脑子里有什么在低语，说着一种咔哒呼啦的古怪语言，还伴有诡异抑扬的乐声。但听起来又是那么熟悉。翻滚的云雾中显出一个身影向你而来。你的意识开始涣散，你忍不住大笑，你究竟忘了什么？那也不重要了。",
@@ -16742,7 +16817,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 2,
@@ -16781,6 +16856,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10652"
   },
   "10653": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "Vapors rise from the ground, coalescing into harsh, corporeal shapes. A jagged, crystalline form juts out of the ground as you stumble forward in a daze. The longer you breathe the poisonous gas around you, the weaker you feel. Your life and vigor are being drained away.",
     "backFlavorZh": "毒液从地上升腾，汇聚骇人的形体。你看到眼前出现了一个参差的晶状形体，一阵眩晕，向前栽倒。你呼吸着身边的毒气，觉得自己越来越虚弱。你的生命和勇气都被抽走了。",
@@ -16797,7 +16873,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 3,
@@ -16836,6 +16912,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10653"
   },
   "10654": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "The rippling air stops, then churns into myriad faces, shapes, and forms. You struggle to breathe as the air is sucked out of your lungs and drawn into a pillar of light. The brilliance ascends into the night sky like a falling star in reverse, reducing everything around you to dust. Trees wither and desiccate, and fleeing wildlife are turned to bone and ash. Your body sublimates, rising into the blinding brilliance along with everything else on Hemlock Isle.\nYou have learned your place in infinity.",
     "backFlavorZh": "起伏的空气停住了，化为千万个面庞、身影、形体。你肺里的空气都被抽走，你竭力呼吸，却发现自己被抽到了光柱里。光辉升入夜空，如同逆向的流星，将你周围的一切都化为尘土。树木枯萎消散，逃跑的野生动物都变成了骸骨和灰烬。你的身体已经升华，和毒堇岛上万事万物一起，升入了夺目的明光。\n你终于知道了自己在永恒中的位置。",
@@ -16852,7 +16929,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 4,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 4,
@@ -16891,6 +16968,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10654"
   },
   "10655": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "As you come to your senses, you look up at the starry sky and blood-red moon high up above. You may be able to find a path back up to the surface.",
     "backFlavorZh": "你恢复了知觉，抬头看到了高高的星空和血月。也许你还能找到回地面的路。",
@@ -16906,7 +16984,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 5,
@@ -16945,6 +17023,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10655"
   },
   "10656": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "Dr. Marquez points up to a precarious shelf of ascending rock that leads back up to the surface. With a clear path out of the shining chamber, you must consider what to do next.",
     "backFlavorZh": "马奎兹博士指着险峻的岩坡，那里就通往地面。这条路显然就能离开发光的洞穴，但你必须思考下一步行动。",
@@ -16960,7 +17039,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 6,
@@ -16999,6 +17078,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10656"
   },
   "10657": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "You stand next to Dr. Marquez at the base of a mound of desiccated bodies. Above, the Abyss flickers in the still, cold air. A hazy humanoid shape reaches toward you as the brilliance flares again, blindingly bright. \"It's no good. We need to disrupt it. Feed it something it can't 'digest,'\" Dr. Marquez says soberly. She hands you her satchel filled with survey notes and samples. \"I want you to have this.\" You ask why. \"Someone needs to tell Dr. Armitage the story of this...\" her eyes narrow, staring up at the flickering iridescence. \"...this colour out of space.\"",
     "backFlavorZh": "你站在马奎兹博士身边，脚下脱水的尸体已经堆成了山丘。深渊依然在你们头顶的寒风中闪烁。光辉勃发炫目，朦胧的人形身影朝你而来。“这可不妙。我们得阻止它。喂它点不能‘消化’的东西。”马奎兹博士严肃地说道。她交给你一个小包，里面装满了勘察笔记和样本：“我希望你拿着这个。”你问她为何。“得有人告诉阿米蒂奇教授这里的事情……”她眯起眼睛凝视闪烁的虹光，“……这里的星之彩。”",
@@ -17015,7 +17095,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 7,
@@ -17054,6 +17134,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10657"
   },
   "10658": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "\"Get in the truck!\" A resident waves a crowd of dazed locals onto the vehicle. The remaining survivors pile into trucks and weather-beaten bikes and drive down the winding southern road. As you pass the dilapidated harbor, a pillar of pure light shoots up from the village center followed by an oily, viscous cloud. The train of survivors have just taken refuge in the southern lighthouse when a shockwave of hot air tears across the island with a hurricane force.",
     "backFlavorZh": "“快上车！”车上的居民朝一群晕头转向的当地人招手。剩下的幸存者蜂拥向卡车和风吹雨打的自行车，一路向南边蜿蜒的道路而去。你经过废弃的港口时，村子中央射出纯粹的光柱，周围环绕着黏糊油腻的云雾。幸存者一行刚刚躲进南方的灯塔，一阵热浪就以飓风般的力量席卷了整座岛屿。",
@@ -17070,7 +17151,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 8,
@@ -17109,6 +17190,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10658"
   },
   "10659": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavor": "Fireworks shoot up into the sky as Hemlock Vale is consumed in the blaze. The whizzing lights and loud crackles almost distract from the devastating inferno as it devours the landscape. Poms of red, yellow, and blue fireworks launch into the air to explode in the night sky.\nYou and Dr. Marquez join the few remaining survivors on a trek to the island's southern reach to take refuge in a crumbling lighthouse. As you watch the inferno from a smudged window, a thread of thin, gray light shoots up from the village center, then winks out. A small, phosphorescent light plummets back into the blaze like a fallen star.",
     "backFlavorZh": "焰火射入空中，毒堇谷被烈烙吞没。毁灭的大火吞噬了乡野，但更夺目的还是飞旋的亮光和巨大的爆裂。红、黄、蓝三色的焰火砰砰地直插云霄，在夜空中炸响。\n你和马奎兹博士跟剩下寥寥无几的幸存者一起，躲在了南边海岸一座摇摇晃晃的灯塔里。你透过烟熏火燎的窗子，看到烈焰包围的村子中央有一条细细的灰光射出，随即消散。一点小小的磷光跌入烈火，像一颗坠星。",
@@ -17124,7 +17206,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 9,
@@ -17218,6 +17300,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10660"
   },
   "10661": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "agility": -2,
     "availability": "strict",
     "backFlavorZh": "",
@@ -17232,7 +17315,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 11,
@@ -17521,6 +17604,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10669"
   },
   "10670": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -17534,7 +17618,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 23,
@@ -19378,6 +19462,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10703"
   },
   "10704": {
+    "acceptanceProfile": "fhv-campaign-f2-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -19391,7 +19476,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_vale",
     "encounterName": "The Vale",
     "encounterPosition": 1,
@@ -19810,6 +19895,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10718"
   },
   "10719": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavor": "After more aeons of descent I saw some side passages or burrows leading from unknown recesses of blackness to this shaft of nighted mystery.\n - H. P. Lovecraft, \"The Festival\"",
     "backFlavorZh": "下行许久之后，我发现岔路和地洞从未知的黢黑阴暗之处通向这座阴森神秘的深井。H.P.洛夫克拉夫特，《魔节》",
@@ -19826,7 +19912,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "horrors_in_the_rock",
     "encounterName": "Horrors in the Rock",
     "encounterPosition": 5,
@@ -19933,6 +20019,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10720"
   },
   "10721": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -19946,7 +20033,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "horrors_in_the_rock",
     "encounterName": "Horrors in the Rock",
     "encounterPosition": 7,
@@ -20108,6 +20195,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10723"
   },
   "10724": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20121,7 +20209,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_the_colour",
     "encounterName": "Agents of the Colour",
     "encounterPosition": 1,
@@ -20280,6 +20368,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10726"
   },
   "10727": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20292,7 +20381,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "transfiguration",
     "encounterName": "Transfiguration",
     "encounterPosition": 3,
@@ -20559,6 +20648,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10731"
   },
   "10732": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20572,7 +20662,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_forest",
     "encounterName": "The Forest",
     "encounterPosition": 1,
@@ -20685,6 +20775,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10733"
   },
   "10734": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20698,7 +20789,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_forest",
     "encounterName": "The Forest",
     "encounterPosition": 5,
@@ -20804,6 +20895,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10735"
   },
   "10736": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20816,7 +20908,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_forest",
     "encounterName": "The Forest",
     "encounterPosition": 8,
@@ -20976,6 +21068,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10738"
   },
   "10739": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -20989,7 +21082,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "myconids",
     "encounterName": "Myconids",
     "encounterPosition": 3,
@@ -21041,6 +21134,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10739"
   },
   "10740": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -21053,7 +21147,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "myconids",
     "encounterName": "Myconids",
     "encounterPosition": 4,
@@ -21096,6 +21190,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10740"
   },
   "10741": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -21108,7 +21203,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "mutations",
     "encounterName": "Mutations",
     "encounterPosition": 1,
@@ -21206,6 +21301,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10742"
   },
   "10743": {
+    "acceptanceProfile": "fhv-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -21218,7 +21314,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fire",
     "encounterName": "Fire!",
     "encounterPosition": 1,
@@ -22110,6 +22206,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11009"
   },
   "11010": {
+    "acceptanceProfile": "tdc-player-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -22123,7 +22220,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -28697,6 +28794,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "11115": {
+    "acceptanceProfile": "tdc-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -28711,7 +28809,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -29380,6 +29478,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "11125": {
+    "acceptanceProfile": "tdc-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -29393,7 +29492,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -29816,6 +29915,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11503"
   },
   "11504": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -29830,7 +29930,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "one_last_job",
     "encounterName": "One Last Job",
     "encounterPosition": 4,
@@ -29872,6 +29972,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11504"
   },
   "11505": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -29886,7 +29987,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "one_last_job",
     "encounterName": "One Last Job",
     "encounterPosition": 5,
@@ -31164,6 +31265,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11526"
   },
   "11527": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The path is both perilous and breathtaking in equal measure. A brilliant green glow emanates from below, illuminating schools of fish and deep sea creatures.",
     "backFlavorZh": "这条道路同样险恶，也同样令人叹为观止。明亮的绿光从下方散发，照亮了成群的鱼类和深海生物。",
@@ -31180,7 +31282,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_western_wall",
     "encounterName": "The Western Wall",
     "encounterPosition": 13,
@@ -31224,6 +31326,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11527"
   },
   "11528": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The path is both perilous and breathtaking in equal measure. A brilliant green glow emanates from below, illuminating schools of fish and deep sea creatures.",
     "backFlavorZh": "这条道路同样险恶，也同样令人叹为观止。明亮的绿光从下方散发，照亮了成群的鱼类和深海生物。",
@@ -31240,7 +31343,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_western_wall",
     "encounterName": "The Western Wall",
     "encounterPosition": 14,
@@ -31467,6 +31570,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11531"
   },
   "11532": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -31480,7 +31584,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_western_wall",
     "encounterName": "The Western Wall",
     "encounterPosition": 18,
@@ -32536,6 +32640,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11549"
   },
   "11550": {
+    "acceptanceProfile": "tdc-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -32548,7 +32653,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_drowned_quarter",
     "encounterName": "The Drowned Quarter",
     "encounterPosition": 17,
@@ -32657,6 +32762,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11551"
   },
   "11552": {
+    "acceptanceProfile": "tdc-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -32669,7 +32775,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_drowned_quarter",
     "encounterName": "The Drowned Quarter",
     "encounterPosition": 21,
@@ -33508,6 +33614,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11566"
   },
   "11567": {
+    "acceptanceProfile": "tdc-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -33521,7 +33628,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_apiary",
     "encounterName": "The Apiary",
     "encounterPosition": 15,
@@ -33807,6 +33914,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "11572": {
+    "acceptanceProfile": "tdc-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavor": "A rhythmic thud reverberates through the walls of the chamber like a heartbeat.",
     "backFlavorZh": "有节奏的闷响如同心跳般在腔室的墙壁中回荡。",
@@ -33822,7 +33930,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_apiary",
     "encounterName": "The Apiary",
     "encounterPosition": 20,
@@ -38206,6 +38314,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11650"
   },
   "11651": {
+    "acceptanceProfile": "tdc-campaign-d-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The sprawling skyline is as beautiful as it is terrifying.",
     "backFlavorZh": "广阔天际线既美丽又可怖。",
@@ -38223,7 +38332,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "obsidian_canyons",
     "encounterName": "Obsidian Canyons",
     "encounterPosition": 13,
@@ -38267,6 +38376,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11651"
   },
   "11652": {
+    "acceptanceProfile": "tdc-campaign-d-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The sprawling skyline is as beautiful as it is terrifying.",
     "backFlavorZh": "广阔天际线既美丽又可怖。",
@@ -38284,7 +38394,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "obsidian_canyons",
     "encounterName": "Obsidian Canyons",
     "encounterPosition": 14,
@@ -40457,6 +40567,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11690"
   },
   "11692": {
+    "acceptanceProfile": "tdc-campaign-e-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Wrecked trains are scattered and askew on the tracks like a child's toys. A handful of factory workers emerge, dazed and frightened, to look up at the hulking form destroying their home.",
     "backFlavorZh": "残破火车如同孩童的玩具，散乱歪斜地横在铁轨上。少数工厂工人走出来，茫然又恐惧地仰望摧毁家园的庞大身影。",
@@ -40472,7 +40583,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 6,
@@ -40517,6 +40628,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11692"
   },
   "11693": {
+    "acceptanceProfile": "tdc-campaign-e-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The rising fog lends the once-bustling streets an eerie calm. Behind closed doors, citizens lie in unnatural slumber, oblivious to the destruction unfolding outside.",
     "backFlavorZh": "上升的雾气赋予曾经繁忙的街道诡异宁静。紧闭的门后，市民陷入非自然沉睡，对外界的毁灭毫无所觉。",
@@ -40532,7 +40644,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 7,
@@ -40578,6 +40690,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11693"
   },
   "11694": {
+    "acceptanceProfile": "tdc-campaign-e-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Easttown is filled with the sound of hungry flames and the cries of the injured and the dying.",
     "backFlavorZh": "东镇充斥饥饿火焰的声音，以及受伤者和垂死者的哭喊。",
@@ -40593,7 +40706,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 8,
@@ -40638,6 +40751,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11694"
   },
   "11695": {
+    "acceptanceProfile": "tdc-campaign-e-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Dark water invades every corner of the prestigious institution, drowning out decades of research and ruining countless precious tomes.",
     "backFlavorZh": "黑水侵入这座名校的每个角落，淹没数十年的研究，毁掉无数珍贵书籍。",
@@ -40653,7 +40767,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 9,
@@ -40698,6 +40812,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11695"
   },
   "11696": {
+    "acceptanceProfile": "tdc-campaign-e-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The docks along the river have been completely swept away. Only flooded warehouses and abandoned shops remain.",
     "backFlavorZh": "河边码头已被完全冲走。只剩下淹没的仓库与废弃商店。",
@@ -40713,7 +40828,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 10,
@@ -40760,6 +40875,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11696"
   },
   "11697": {
+    "acceptanceProfile": "tdc-campaign-f-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The raging fires threaten the hundreds of ailing patients in St. Mary's eastern ward. The few brave nurses and doctors who have not succumbed to the strange sleeping sickness work through the night to keep their patients safe.",
     "backFlavorZh": "熊熊烈火威胁着圣玛丽医院东侧病区数百名病患。少数未屈服于奇异沉睡病的勇敢护士和医生彻夜工作，守护病人安全。",
@@ -40775,7 +40891,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 11,
@@ -40820,6 +40936,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11697"
   },
   "11698": {
+    "acceptanceProfile": "tdc-campaign-f-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The neighborhood's dense infrastructure makes it an easy target. Burning buildings cast flickering shadows on the flooded streets.",
     "backFlavorZh": "街区密集的基础设施使其成为轻易的目标。燃烧建筑在淹没街道上投下闪烁的阴影。",
@@ -40835,7 +40952,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 12,
@@ -41452,6 +41569,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11708"
   },
   "11709": {
+    "acceptanceProfile": "tdc-campaign-f-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -41464,7 +41582,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_doom_of_arkham_part_2",
     "encounterName": "The Doom of Arkham Part II",
     "encounterPosition": 27,
@@ -43738,6 +43856,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/11750"
   },
   "11751": {
+    "acceptanceProfile": "tdc-campaign-g-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -43751,7 +43870,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "alien_machinery",
     "encounterName": "Alien Machinery",
     "encounterPosition": 1,
@@ -47657,6 +47776,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "12052": {
+    "acceptanceProfile": "core2026-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -47671,7 +47791,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -48495,6 +48615,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "12066": {
+    "acceptanceProfile": "core2026-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -48509,7 +48630,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -48611,6 +48732,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "12068": {
+    "acceptanceProfile": "core2026-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -48625,7 +48747,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -49690,6 +49812,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "12086": {
+    "acceptanceProfile": "core2026-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -49704,7 +49827,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -54273,6 +54396,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/12165"
   },
   "12166": {
+    "acceptanceProfile": "core2026-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -54286,7 +54410,8 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "duplicateOfCode": "02090",
+    "effectStatus": "verified",
     "encounterCode": "whippoorwills_ch2",
     "encounterName": "Whippoorwills",
     "encounterPosition": 1,
@@ -54332,6 +54457,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/12166"
   },
   "12167": {
+    "acceptanceProfile": "core2026-campaign-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -54344,7 +54470,8 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "duplicateOfCode": "02091",
+    "effectStatus": "verified",
     "encounterCode": "whippoorwills_ch2",
     "encounterName": "Whippoorwills",
     "encounterPosition": 4,
@@ -162210,6 +162337,10 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
+    "duplicatedBy": [
+      "05266",
+      "12166"
+    ],
     "effectStatus": "verified",
     "encounterCode": "whippoorwills",
     "encounterName": "Whippoorwills",
@@ -162269,6 +162400,10 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
+    "duplicatedBy": [
+      "05268",
+      "12167"
+    ],
     "effectStatus": "verified",
     "encounterCode": "whippoorwills",
     "encounterName": "Whippoorwills",
@@ -169814,6 +169949,9 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
+    "duplicatedBy": [
+      "05269"
+    ],
     "effectStatus": "verified",
     "encounterCode": "blood_on_the_altar",
     "encounterName": "Blood on the Altar",
@@ -201800,6 +201938,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04043"
   },
   "04044": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "After hours of exploration and futile attempts to map out the wilds, you're convinced something is watching your progress, stalking your every move. The shapes of large serpentine creatures slither in the brush all around you. You try to back away, but the creatures have you completely surrounded, hissing at you from all sides. Suddenly, several shapes emerge from the brush: human-sized creatures with the bodies of serpents and arms wielding spears and jagged knives. The creatures are savage, attacking you fiercely. Somehow, you manage to flee to safety, though the sensation that you are being watched remains. Although you survive the encounter, you are confronted with a stark reality: this place is home to creatures beyond your understanding.",
     "backFlavorZh": "你花了几个小时想摸清地形，但最终徒劳无功，你相信有某些东西在盯着你，步步紧跟。庞大的蛇形生物在你周围的灌木丛中蜿蜓而行。你试图后退，但它们将你团团围住，朝你嘶嘶作声。突然出现了几个身影：全是足有一人高的蛇身人，挥舞着长矛和齿刃刀，粗暴野蛮，朝你猛攻。不知何故你竟成功逃脱，但你仍觉得自己受到监视。尽管你这次性命无虞，但残酷的事实摆在你面前：此地就是那群怪物的家园。",
@@ -201816,7 +201955,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 2,
@@ -201855,6 +201994,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04044"
   },
   "04045": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "You find yourself in an endless loop, traversing the same path through the jungle over and over again. No matter which direction you walk, the result is the same. It has been hours, perhaps even days. Meanwhile, you can hear the serpent creatures hissing in the trees, mocking you from afar. Out of food and exhausted from lack of sleep, you collapse against a half-rotted tree. Your vision becomes hazy.",
     "backFlavorZh": "你发现自己陷入了无尽的循环之中，一遍又一遍，不断重复地走到丛林中的同一条道路上。不管你朝着哪个方向走，结果都一样。你已经走了不知道多少个小时，甚至可能已经走了好几天。与此同时，你能听到树木之间有蛇形的生物在发出嘶嘶声，从远处嘲笑你。你的干粮早已吃完，而且由于缺少睡眠而筋疲力竭，坐倒在地，靠着一棵半身腐烂的树。你的眼前逐渐模糊。",
@@ -201871,7 +202011,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 9,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 3,
@@ -201910,6 +202050,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04045"
   },
   "04046": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "As you explore the dense jungle, you are suddenly confronted by several natives. At first glance, they appear to be warriors of an Aztec city-state: perhaps even the one you seek. But how could they have survived undiscovered for this long?\nEven with Alejandro's notes, you are barely able to translate what the warriors say, only that they call you \"intruder\" and implore you to leave the jungle at once. You try to explain that you are searching for the \"Eztli,\" which causes them to murmur and debate among themselves. Finally, one of them speaks to you in rudimentary Spanish. \"Ichtaca will know what to do with you, intruder.\" He blows on a decorated clay ocarina, producing a shrill note that echoes throughout the jungle. The warriors depart as suddenly as they arrived.",
     "backFlavorZh": "在你探索这片茂密的丛林时，你面前突然出现几个土著居民。第一眼看上去，他们像是某个阿兹特克城邦的战士：可能正是你所寻找的那个城邦。但他们怎能存活这么久，且不被发现？\n即便是对照着亚历山卓的笔记，你也很难翻译出这些战士们所说的话，只听懂了他们将你叫作“入侵者”，请你马上离开丛林。你试图解释你在寻找“埃兹特里”，他们一听这话窃窃私语，纷纷议论。最后，他们之中的一人以基础的西班牙语对你说道：“伊塔卡知道怎么处置你，入侵者。”他吹响一支纹样精致的黏土陶笛，发出一声尖锐的响声，回声在整个丛林中回荡。战士突然退去，与他们到来时一样突然。",
@@ -201926,7 +202067,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 4,
@@ -201965,6 +202106,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04046"
   },
   "04047": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backName": "Ichtaca's Response",
@@ -201979,7 +202121,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 5,
@@ -202130,6 +202272,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04049"
   },
   "04050": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The camp is abuzz with both excitement and dread. Some members of the expedition are setting up additional canvas tents for supplies, while others are huddled around an incomplete map of the northern edge of the rainforest.",
     "backFlavorZh": "营地里议论着惊险与可怖的话题。探险队的一些成员多搭了几个帆布帐篷来存放补给品，而其他人则挤成一团，围在一张描绘森林北边的未完成的地图旁。",
@@ -202145,7 +202288,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "wilds",
     "encounterName": "The Untamed Wilds",
     "encounterPosition": 8,
@@ -202434,6 +202577,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04054"
   },
   "04055": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Just then, a sound thrums in the walls of the temple, a dull humming similar to that of a generator. Grooves in the walls and the ceiling flicker and start to glow. It is as though the temple is alive, and it senses your presence. The strange statues and carvings you've seen, coupled with the dim glow and the power coursing through the walls, makes it clear that this temple isn't Aztec in origin. In fact, it appears to be from an even older, more ancient civilization altogether. You feel as though you are an intruder in a world you cannot begin to understand. Confirming your worst fears, a loud hiss and rattling echoes throughout the temple. Whatever you just woke up, it's not happy to see you.",
     "backFlavorZh": "就在那时，一阵声音在神庙的墙上击打回荡，像是发电机一般的沉闷嗡嗡声。墙壁和天花板上的凹槽一闪一闪，开始发光。神庙仿佛有着生命，能够感知你的存在。你眼前的古怪雕像和雕刻，加上暗淡的光芒和墙壁流通的能量，都清楚地显示出这座神庙的起源不是阿兹特克。实际上，它似乎源自更遥远、更古老的文明。你感觉自己就像是闯入了一个无法理解的世界中。你最坏的预想应验了，一声响亮的嘶嘶声响起，在整座神庙激起了咯咯作响的回声。不管你吵醒的是何方神圣，它并不乐于见到你。",
@@ -202450,7 +202594,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "eztli",
     "encounterName": "The Doom of Eztli",
     "encounterPosition": 2,
@@ -202545,6 +202689,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04056"
   },
   "04057": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The ruins are far more vast than even Alejandro had anticipated. Carvings in the walls and hieroglyphs etched into stone altars suggest the existence of a central chamber underground. Perhaps a hidden passageway will show you the way to this chamber - the very heart of the temple ruins.",
     "backFlavorZh": "遗迹远比亚历山卓预想的更为宽阔。墙壁上的纹饰和刻在石台上的象形文字显示，地下存在一个中央石室。可能有秘密通道能够到那个石室去——这座神庙遗迹的中心地带。",
@@ -202561,7 +202706,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "eztli",
     "encounterName": "The Doom of Eztli",
     "encounterPosition": 4,
@@ -203316,6 +203461,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04069"
   },
   "04070": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -203329,7 +203475,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "rainforest",
     "encounterName": "Rainforest",
     "encounterPosition": 2,
@@ -203372,6 +203518,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04070"
   },
   "04071": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -203385,7 +203532,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "rainforest",
     "encounterName": "Rainforest",
     "encounterPosition": 3,
@@ -204577,6 +204724,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04091"
   },
   "04092": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204589,7 +204737,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ruins",
     "encounterName": "Forgotten Ruins",
     "encounterPosition": 1,
@@ -204633,6 +204781,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04092"
   },
   "04093": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204645,7 +204794,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ruins",
     "encounterName": "Forgotten Ruins",
     "encounterPosition": 3,
@@ -204802,6 +204951,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04095"
   },
   "04096": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -204814,7 +204964,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "pnakotic_brotherhood",
     "encounterName": "Pnakotic Brotherhood",
     "encounterPosition": 3,
@@ -206445,6 +206595,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04122"
   },
   "04122b": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -206458,7 +206609,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "threads_of_fate",
     "encounterName": "Threads of Fate",
     "encounterPosition": 10,
@@ -207123,6 +207274,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04130a"
   },
   "04130b": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -207136,7 +207288,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "threads_of_fate",
     "encounterName": "Threads of Fate",
     "encounterPosition": 18,
@@ -207688,6 +207840,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04137a"
   },
   "04137b": {
+    "acceptanceProfile": "tfa-deluxe-threads-of-fate-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -207701,7 +207854,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "threads_of_fate",
     "encounterName": "Threads of Fate",
     "encounterPosition": 25,
@@ -209286,6 +209439,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04164"
   },
   "04165": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "In the distance, light seeps through a wide crack in the ground. As you approach it, you realize the chasm is not natural at all. Below, you see the sky, as if you were peering into a reflection of the clouds above. Wisps of grey smoke emerge from the chasm, giving off a familiar bittersweet scent. You step through and resist the urge to vomit as the world spins upside-down. When you open your eyes again, you are in another place. Not somewhere, but some<u>when</u>.",
     "backFlavorZh": "在远方，地面一道颇宽的裂缝中漏出光芒。你到达那儿的时候，发现这个裂口根本就不是自然形成的。在裂口下方，你看见了天空，仿佛你正盯着上方云朵的倒影。裂口中冒出一缕缕灰烟，发出一阵熟悉的半苦半甜的气味。整个世界天旋地转，你步入裂口，同时压抑着想要呕吐的冲动。当你再次睁开双眼，你发现自己身在陌生的地方，地点不变，但时代变了。",
@@ -209301,7 +209455,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 5,
@@ -209810,6 +209964,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04173"
   },
   "04174": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -209823,7 +209978,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 14,
@@ -209867,6 +210022,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04174"
   },
   "04175": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -209880,7 +210036,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 15,
@@ -210040,6 +210196,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04177"
   },
   "04178": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -210053,7 +210210,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 18,
@@ -210097,6 +210254,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04178"
   },
   "04179": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -210110,7 +210268,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 19,
@@ -210696,6 +210854,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04188"
   },
   "04189": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -210708,7 +210867,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 30,
@@ -210749,6 +210908,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04189"
   },
   "04190": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -210761,7 +210921,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_boundary_beyond",
     "encounterName": "The Boundary Beyond",
     "encounterPosition": 33,
@@ -212335,6 +212495,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04214"
   },
   "04215": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -212347,7 +212508,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "heart_of_the_elders",
     "encounterName": "Heart of the Elders",
     "encounterPosition": 3,
@@ -212388,6 +212549,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04215"
   },
   "04216": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -212400,7 +212562,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "heart_of_the_elders",
     "encounterName": "Heart of the Elders",
     "encounterPosition": 6,
@@ -212621,6 +212783,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "04220": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -212634,7 +212797,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "pillars_of_judgment",
     "encounterName": "Pillars of Judgment",
     "encounterPosition": 9,
@@ -212737,6 +212900,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04221"
   },
   "04222": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -212750,7 +212914,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "knyan",
     "encounterName": "K'n-yan",
     "encounterPosition": 5,
@@ -212914,6 +213078,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "04225": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -212927,7 +213092,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "knyan",
     "encounterName": "K'n-yan",
     "encounterPosition": 8,
@@ -214759,6 +214924,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "04256": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -214771,7 +214937,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_city_of_archives",
     "encounterName": "The City of Archives",
     "encounterPosition": 23,
@@ -215054,6 +215220,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04260"
   },
   "04261": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -215066,7 +215233,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_city_of_archives",
     "encounterName": "The City of Archives",
     "encounterPosition": 34,
@@ -216114,6 +216281,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04278"
   },
   "04279": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavor": "You pass through a cracked earthen clearing that once might have been a plaza. Standing half-collapsed in the center of the plaza are the remains of a stone fountain, dry as a bone. At the very bottom of the fountain's basin is a glob of black syrupy ooze.",
     "backFlavorZh": "你经过一片带有裂缝的泥地，这里曾经可能是个广场。在这广场中央，伫立着坍塌了一半的石制喷泉，如今已干涸得只剩骨架。在喷泉池最底部是一团糖浆似的黑色液体。",
@@ -216130,7 +216298,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 3,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 3,
@@ -216225,6 +216393,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04280"
   },
   "04281": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The shrill noise of hundreds of snake rattles suddenly erupts throughout the cavern. You have crossed into territory that humanity was never meant to enter. The earsplitting alarm pierces your eardrums and causes your ears to bleed. Your senses are overwhelmed, and you cover your ears in vain. You cannot hear your own thoughts. Finally the warning ends, and you are left with the uncontrollable urge to flee. However, you know that if you fled now, your actions would endanger all of humanity. Bravely - or perhaps foolishly - you press onward.",
     "backFlavorZh": "突然间数百条蛇发出了刺耳响声，响彻整个洞穴。你们已经进入了人类从来无意进入的领域。震耳欲聋的警报声穿刺着你们的耳膜，使你们耳朵流出鲜血。你们的一切感官都被淹没，徒劳地捂住耳朵。你们听不见自己的所思所想。警报声终于结束，你们不由自主地想要逃离此地。但是，你们知道如果现在离开，你们的举动会使全人类陷入险境。你们勇敢地，或者说愚蠢地继续前行。",
@@ -216241,7 +216410,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 4,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 5,
@@ -216280,6 +216449,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04281"
   },
   "04282": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backName": "Yig Emerges",
@@ -216295,7 +216465,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 6,
@@ -216334,6 +216504,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04282"
   },
   "04283": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Nothing can stop the denizens of Yoth. They emerge from hidden places all around you, hissing their foul curses. The caves are plunged into chaos as the serpents close in.",
     "backFlavorZh": "没人能阻止嘶嘶的住民。它们从你四面八方的隐秘处现身，嘶嘶地发出粗鄙的诅咒。随着蛇群逼近，洞穴内陷入混乱。",
@@ -216350,7 +216521,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 7,
@@ -216927,6 +217098,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04292"
   },
   "04293": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -216940,7 +217112,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 17,
@@ -217297,6 +217469,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "04299": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -217309,7 +217482,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 25,
@@ -217460,6 +217633,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04301"
   },
   "04302": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -217472,7 +217646,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 34,
@@ -217512,6 +217686,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04302"
   },
   "04303": {
+    "acceptanceProfile": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -217526,7 +217701,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_depths_of_yoth",
     "encounterName": "The Depths of Yoth",
     "encounterPosition": 36,
@@ -218280,6 +218455,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04315"
   },
   "04316": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The electrical currents coursing through the machinery of the Nexus begin to malfunction, sending a shower of sparks into the air. The portal ring overheats. Threads of ethereal light within the portal begin to snap.",
     "backFlavorZh": "联结点机械内的电流开始出现故障，迸发出一束火花，射向空中。门的环体过热了。门内由缥缈的光芒交织而成的线开始断裂。",
@@ -218296,7 +218472,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shattered_aeons",
     "encounterName": "Shattered Aeons",
     "encounterPosition": 3,
@@ -218391,6 +218567,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04317"
   },
   "04318": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Each time you step through the Nexus, you get one step closer to your ultimate destination - a place that exists outside the boundaries of time and space...",
     "backFlavorZh": "你在联结点每迈出一步，离最终目的地也就更近一步——那个存在于时间和空间的界限以外的地方……",
@@ -218407,7 +218584,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shattered_aeons",
     "encounterName": "Shattered Aeons",
     "encounterPosition": 5,
@@ -218446,6 +218623,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04318"
   },
   "04319": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "What you see before you is truly staggering. Throughout these halls are hundreds of windows into places both ancient and futuristic: once-grand civilizations that came before even the earliest records of known history, and more still that have yet to be realized. The psychological weight of this discovery is almost more than your mind can bear. Humans are not the masters or caretakers of the Earth. They are merely a footnote in a much longer history - a history which is about to be revised.",
     "backFlavorZh": "你眼前的景象实在叫人震惊。在这些大厅里，布满了数以百计的窗户，通向古代和未来风格的各个地方：在最早的历史记录之前便已存在的、曾经辉煌的诸多文明，还有许多现今未被发现的文明。这一发现给精神层面带来重荷，远超你意识所能承受的范围。人类并非地球的主人，也不是暂时的看守人。人类不过是漫长历史的区区一行脚注罢了，而这历史将被改写。",
@@ -218461,7 +218639,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shattered_aeons",
     "encounterName": "Shattered Aeons",
     "encounterPosition": 6,
@@ -220064,6 +220242,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04344"
   },
   "04345": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "You pass by carvings in the walls and hieroglyphs etched into stone altars. The location of the relic's vault is already locked deep in your memory.",
     "backFlavorZh": "你经过墙壁上雕刻的纹饰，还有刻在石台上的象形文字。这个存放着遗物的秘库位置，早已封存在你记忆的深处。",
@@ -220080,7 +220259,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "turn_back_time",
     "encounterName": "Turn Back Time",
     "encounterPosition": 2,
@@ -220119,6 +220298,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/04345"
   },
   "04346": {
+    "acceptanceProfile": "tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The relic hums with power and throbs in your hands. Energy from the device seeps into the corridors of the ruins, and the structure of the temple shifts. However, this does not matter to you. Escaping with the relic is no longer your goal. You skillfully work the hidden components of the device once more, manipulating the very fabric of time in the environment around you. Determined to stop all of this from having ever occurred, you turn the clock back once more.",
     "backFlavorZh": "这件遗物在你的手中搏动着，它内部的能量发出嗡嗡的低鸣。从这件设备中漏出的能量流进了遗迹内的廊道中，神庙的构造骤然生变。但是，这并未影响你。你的目标不再是带着遗物逃出此地。你再次熟练地操作这件设备的隐藏配件，操纵着周围环境中的时间构成。你决心要阻止这一切的发生，于是你再次让时光倒流。",
@@ -220135,7 +220315,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "turn_back_time",
     "encounterName": "Turn Back Time",
     "encounterPosition": 3,
@@ -221843,6 +222023,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05019"
   },
   "05020": {
+    "acceptanceProfile": "tcu-deluxe-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -221857,7 +222038,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -222843,6 +223024,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "05037": {
+    "acceptanceProfile": "tcu-deluxe-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -222857,7 +223039,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -223935,6 +224117,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05055"
   },
   "05055b": {
+    "acceptanceProfile": "tcu-deluxe-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -223948,7 +224131,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_witching_hour",
     "encounterName": "The Witching Hour",
     "encounterPosition": 6,
@@ -227858,6 +228041,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05120"
   },
   "05121": {
+    "acceptanceProfile": "tcu-secret-name-2026-11",
     "availability": "catalog-only",
     "backFlavor": "As you explore the old, dilapidated house, the telltale scratching and scurrying in the walls become louder and more frequent. Every now and again a fanged, furry creature darts across the wooden floor, scampering in and out of ratholes in the walls. You wonder if this house is more rat than wood.",
     "backFlavorZh": "你在探索这幢又破又旧的老房子时，墙壁内不时的沙沙声和快步的爬行声愈发响亮、愈发频密。长有尖牙、毛茸茸的生物时不时窜过木地板，从墙上的老鼠洞跳进跳出。你感觉这幢房子与其说是木屋，不如说是老鼠屋。",
@@ -227874,7 +228058,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 4,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_secret_name",
     "encounterName": "The Secret Name",
     "encounterPosition": 2,
@@ -227913,6 +228097,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05121"
   },
   "05122": {
+    "acceptanceProfile": "tcu-secret-name-2026-11",
     "availability": "catalog-only",
     "backFlavor": "A dizzying violet light emerges from the crevices of the ramshackle house, behind cracks in the wooden paneling and underneath the floor, bathing you from every angle. An inhuman squeal mocks you as a figure emerges from the witch light. Only a hint of humanity remains in her crooked and broken form. The crone cackles with a nightmarish timbre, her voice echoing and resounding from the realm beyond.",
     "backFlavorZh": "这幢房子摇摇欲坠，令人目眩的紫光从各处空隙、木质幕墙和地板的裂缝后方射入，从各个角度笼罩了你。一道残忍的尖啸声嘲笑着你，一道人影从巫术光芒里应声出现。她歪曲破碎的鬼魂只剩一丝人形。这老大婆梦魇般的嗓音咯咯笑着，在彼端的国度回响。",
@@ -227929,7 +228114,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_secret_name",
     "encounterName": "The Secret Name",
     "encounterPosition": 3,
@@ -228306,6 +228491,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05128"
   },
   "05129": {
+    "acceptanceProfile": "tcu-secret-name-2026-11",
     "availability": "catalog-only",
     "backFlavor": "There are no markings or clues which would inform as to who this room once belonged to - only the stench of mold and the sound of rats scampering on the other side.",
     "backFlavorZh": "没有迹象和线索能够证明这个房间曾经的主人是谁——只有发霉的恶臭和老鼠在另一边跑动的声音。",
@@ -228322,7 +228508,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_secret_name",
     "encounterName": "The Secret Name",
     "encounterPosition": 10,
@@ -233042,6 +233228,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05188": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -233056,7 +233243,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -233103,6 +233290,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05189": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -233117,7 +233305,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -233419,6 +233607,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05194": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -233433,7 +233622,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -233484,6 +233673,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05195": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -233498,7 +233688,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -233549,6 +233739,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05196": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -233563,7 +233754,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": true,
     "factionName": "Neutral",
@@ -235240,6 +235431,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05222"
   },
   "05223": {
+    "acceptanceProfile": "tcu-greater-good-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -235252,7 +235444,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "for_the_greater_good",
     "encounterName": "For the Greater Good",
     "encounterPosition": 29,
@@ -235990,6 +236182,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "05236": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -236004,7 +236197,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": true,
     "factionName": "Survivor",
@@ -236052,6 +236245,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "05237": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -236066,7 +236260,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": true,
     "factionName": "Survivor",
@@ -237993,6 +238187,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "05266": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238006,7 +238201,8 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "duplicateOfCode": "02090",
+    "effectStatus": "verified",
     "encounterCode": "union_and_disillusion",
     "encounterName": "Union and Disillusion",
     "encounterPosition": 29,
@@ -238113,6 +238309,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05267"
   },
   "05268": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238125,7 +238322,8 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "duplicateOfCode": "02091",
+    "effectStatus": "verified",
     "encounterCode": "union_and_disillusion",
     "encounterName": "Union and Disillusion",
     "encounterPosition": 34,
@@ -238167,6 +238365,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05268"
   },
   "05269": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238179,7 +238378,8 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "duplicateOfCode": "02221",
+    "effectStatus": "verified",
     "encounterCode": "union_and_disillusion",
     "encounterName": "Union and Disillusion",
     "encounterPosition": 36,
@@ -238220,6 +238420,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05269"
   },
   "05270": {
+    "acceptanceProfile": "tcu-union-disillusion-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238232,7 +238433,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "union_and_disillusion",
     "encounterName": "Union and Disillusion",
     "encounterPosition": 38,
@@ -238507,6 +238708,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "05275": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238521,7 +238723,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -238734,6 +238936,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "05279": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -238748,7 +238951,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -239141,6 +239344,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05285"
   },
   "05286a": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -239154,7 +239358,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "music_of_the_damned",
     "encounterName": "Music of the Damned",
     "encounterPosition": 1,
@@ -239318,6 +239522,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05287"
   },
   "05288a": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -239331,7 +239536,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "secrets_of_the_universe",
     "encounterName": "Secrets of the Universe",
     "encounterPosition": 1,
@@ -239725,6 +239930,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05293"
   },
   "05294": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavor": "If you didn’t know any better, you would think Southside was a ghost town. All of the residents have retreated into their homes and locked their doors. The only light you see seems to be coming from the Catholic church to the south.",
     "backFlavorZh": "要是不知道，你会以为南区是个鬼城。所有的居民都躲在家里，紧锁家门。你能看到的唯一一盏灯火，似乎来自南边的天主教堂。",
@@ -239740,7 +239946,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_the_clutches_of_chaos",
     "encounterName": "In the Clutches of Chaos",
     "encounterPosition": 7,
@@ -239784,6 +239990,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05294"
   },
   "05295": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavor": "If you didn’t know any better, you would think Southside was a ghost town. All of the residents have retreated into their homes and locked their doors. The only light you see seems to be coming from the Catholic church to the south.",
     "backFlavorZh": "要是不知道，你会以为南区是个鬼城。所有的居民都躲在家里，紧锁家门。你能看到的唯一一盏灯火，似乎来自南边的天主教堂。",
@@ -239799,7 +240006,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_the_clutches_of_chaos",
     "encounterName": "In the Clutches of Chaos",
     "encounterPosition": 8,
@@ -240135,6 +240342,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05300"
   },
   "05301": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The commercial center of Arkham, the Merchant District is usually bustling at all hours. But tonight, the dockhands and sailors have vanished, leaving you with a sense of unease. The mist over the dark waters of the Miskatonic River seems to take unnatural shapes as you watch from afar.",
     "backFlavorZh": "商人区是阿卡姆的商业中心，通常一整天都热热闹闹的。但是今晚，码头工人和水手都不见了，这让你感到不安。远远望去，米斯卡塔尼克河漆黑的水面上笼罩着一重雾，似乎形成了一些不自然的形状。",
@@ -240150,7 +240358,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_the_clutches_of_chaos",
     "encounterName": "In the Clutches of Chaos",
     "encounterPosition": 14,
@@ -240251,6 +240459,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/05302"
   },
   "05303": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavor": "As you approach the manor of the Lodge once more, you find it dark and empty. It seems that its members are still laying low, at least for the time being.",
     "backFlavorZh": "再次来到秘社庄园，你发现里面一片漆黑，空无一人。秘社的人似乎仍在低调行事，至少目前如此。",
@@ -240266,7 +240475,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "music_of_the_damned",
     "encounterName": "Music of the Damned",
     "encounterPosition": 4,
@@ -240310,6 +240519,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "05304": {
+    "acceptanceProfile": "tcu-clutches-of-chaos-2026-11",
     "availability": "catalog-only",
     "backFlavor": "As you approach Hangman’s Hill once more, you find it devoid of any activity - from the living or otherwise. It seems the coven has left this place behind, at least for the time being.",
     "backFlavorZh": "当你再次接近绞刑者山丘，你发现这里没有任何痕迹——不论是活物还是别的什么。看来女巫集会已经离开了这个地方，至少目前如此。",
@@ -240325,7 +240535,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "secrets_of_the_universe",
     "encounterName": "Secrets of the Universe",
     "encounterPosition": 3,
@@ -241383,6 +241593,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "05322": {
+    "acceptanceProfile": "tcu-before-the-black-throne-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -241397,7 +241608,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -245929,6 +246140,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06045"
   },
   "06046": {
+    "acceptanceProfile": "tde-beyond-gates-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"On this landing, there was a huge gate that spanned the width of the rocky platform. Gold-bronze and glimmering, the gate reached skyward and appeared to go on forever, disappearing into a roiling darkness above that reminded me of storm clouds.\" - Jennifer Brozek, <u>To Fight the Black Wind</u>",
     "backFlavorZh": "“在这个平台上，有着一道巨大的门扉，宽度横跨这整个岩石平面。这道门呈现金青铜色，熠熠生辉，朝着天空延伸开去，似乎永无尽头，消失在上方的、让我联想到暴雨云的混沌黑暗中。”珍妮弗·布罗泽克，《对抗黑风》",
@@ -245944,7 +246156,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_gates_of_sleep",
     "encounterName": "Beyond the Gates of Sleep",
     "encounterPosition": 8,
@@ -246048,6 +246260,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06047"
   },
   "06048": {
+    "acceptanceProfile": "tde-beyond-gates-a-2026-11",
     "availability": "strict",
     "backFlavor": "Eventually, the steps give way to loamy soil. Coiling up the bottom few steps is a bed of glowing fungi whose shapes defy natural convention.",
     "backFlavorZh": "最后，台阶为沃土所代替。最后几级台阶盘伏着菌床，上面长满了发光的蘑菇，它们的形状与自然界常见的蘑菇不同。",
@@ -246063,7 +246276,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_gates_of_sleep",
     "encounterName": "Beyond the Gates of Sleep",
     "encounterPosition": 10,
@@ -246107,6 +246320,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06048"
   },
   "06049": {
+    "acceptanceProfile": "tde-beyond-gates-a-2026-11",
     "availability": "strict",
     "backFlavor": "From the base of the steps, a peaceful dirt path winds through the dense forest. Many dozens of eyes watch you with curiosity from the tangled woods surrounding the path.",
     "backFlavorZh": "一条宁静的土路从阶梯底下蜿蜒穿过茂密的森林。在道路两旁纠结缠绕的森林中，许多双眼睛正在好奇地盯着你。",
@@ -246122,7 +246336,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_gates_of_sleep",
     "encounterName": "Beyond the Gates of Sleep",
     "encounterPosition": 11,
@@ -246347,6 +246561,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06053": {
+    "acceptanceProfile": "tde-beyond-gates-a-2026-11",
     "availability": "strict",
     "backFlavor": "Drawn deeper into the lush forest, you stray from the path...",
     "backFlavorZh": "你在这片茂密的森林继续深入，偏离了道路……",
@@ -246362,7 +246577,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_gates_of_sleep",
     "encounterName": "Beyond the Gates of Sleep",
     "encounterPosition": 15,
@@ -247232,6 +247447,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06065"
   },
   "06066": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavor": "The infestation has claimed the hospital in its entirety. Not a single room has been left untouched. You race through its halls, searching desperately for a way out, and find only web-covered walls, victims wrapped in silken cocoons, and dead hospital staff hanging from the ceiling.",
     "backFlavorZh": "蛛群占领了整个医院。没有一间病房幸免于难。你跑遍了医院的各个房间，拼命寻找出路，却只发现了布满蛛网的墙壁、裹在丝茧里的人们，以及挂在天花板上的医护人员户体。",
@@ -247248,7 +247464,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 8,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "waking_nightmare",
     "encounterName": "Waking Nightmare",
     "encounterPosition": 4,
@@ -248118,6 +248334,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06080"
   },
   "06081": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -248131,7 +248348,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "waking_nightmare",
     "encounterName": "Waking Nightmare",
     "encounterPosition": 19,
@@ -248471,6 +248688,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06087": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -248483,7 +248701,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_nyarlathotep",
     "encounterName": "Agents of Nyarlathotep",
     "encounterPosition": 2,
@@ -248525,6 +248743,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06087"
   },
   "06088": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -248537,7 +248756,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_nyarlathotep",
     "encounterName": "Agents of Nyarlathotep",
     "encounterPosition": 3,
@@ -248579,6 +248798,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06088"
   },
   "06089": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -248591,7 +248811,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_nyarlathotep",
     "encounterName": "Agents of Nyarlathotep",
     "encounterPosition": 4,
@@ -249082,6 +249302,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06097"
   },
   "06098": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -249094,7 +249315,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "merging_realities",
     "encounterName": "Merging Realities",
     "encounterPosition": 1,
@@ -249135,6 +249356,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06098"
   },
   "06099": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -249147,7 +249369,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "merging_realities",
     "encounterName": "Merging Realities",
     "encounterPosition": 3,
@@ -249657,6 +249879,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06107"
   },
   "06108": {
+    "acceptanceProfile": "tde-beyond-gates-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -249670,7 +249893,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "zoogs",
     "encounterName": "Zoogs",
     "encounterPosition": 5,
@@ -250365,6 +250588,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06119"
   },
   "06120": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "Months have passed since you first set forth from Ulthar. Along the way, you have seen many fabulous places and met many strange and interesting people. Some have been helpful, giving you sage advice or pointing you in the right direction. Most, however, have regarded you with suspicion and wariness. Perhaps it is because you are a dreamer from the outside world, or perhaps it is because you are foolish and accursed enough to seek the forbidden places of the Dreamlands.\nBut it is the Corsairs who truly frighten you. Throughout your travels, you spot them pursuing you time and time again. \"Men of Leng,\" the inhabitants of the Dreamlands call them: satyr-like creatures with hooves instead of feet and great curved horns protruding from their foreheads. They sail on long, black galleys with black sails. You know not why they hunt for you relentlessly, and you are not keen to find out.",
     "backFlavorZh": "距离你第一次从乌撒之城出发，已经过了好几个月。一路上，你见到了许多惊人的地方，遇上许多有趣的怪人。一些人帮助了你，给了你一些明智的建议，或是指引你正确的方向。但绝大多数人只是怀疑而警惕地盯着你。或许这是因为你是来自外界的入梦者，又或许是因为你愚蠢又该死，竟想去寻找幻梦境的禁忌之地。\n但真正使你担惊受怕的是那些海盗。在你旅程的每时每刻，你都能发现它们在紧追着你，一次又一次。船上的生物被幻梦境的住民称为“冷原人”，他们貌如萨蒂尔，双脚为蹄，巨大而卷曲的角从前额伸出。他们驶着长长的、带有黑帆的黑船。你不知道他们为什么不停地追猎着你，你此时也不想深究。",
@@ -250381,7 +250605,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 2,
@@ -250420,6 +250644,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06120"
   },
   "06121": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "You have evaded the Corsairs for weeks since their pursuit began. Each time they appear, you are able to slip through their grasp, but the noose grows tighter and tighter with each escape. Even so, you persist in the hope you can find Kadath before your luck runs out.\nHowever, even with all of the information you have uncovered, Kadath eludes you still, and the Corsairs are hot on your trail. You try to make your way to safety, but you have underestimated the lengths these creatures will go to in order to capture you. They have cut off all of your escape routes and have taken away all of your safe havens. There is nowhere left for you to run. Like pack hunters, they surround you...",
     "backFlavorZh": "从几周之前开始，你便一直在躲避海盗的追捕。每当他们出现，你总能从他们手中逃脱，但随着你每次逃脱，他们的包围圈都更加地收紧。尽管如此，你还是祈望自己能在运气用尽之前找到卡达斯。\n但是，即使你掌握了这么多信息，你依然无法找到卡达斯，而海盗依然对你究追不舍。你试图逃到安全的地方去，但你没想到，那群海盗为了抓住你竟然追到这么远。他们封锁了你所有的出路，使你无法到达海港寻求庇护。你已无处可逃。他们就像集体猎的动物一样，将你包围……",
@@ -250436,7 +250661,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 9,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 3,
@@ -250475,6 +250700,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06121"
   },
   "06122": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "You find a captain willing to grant you passage to the remote regions of the Dreamlands, wherein you may find signs from the gods to point you in the direction of Kadath.",
     "backFlavorZh": "你找到一位船长愿意带你前往幻梦境的偏远地带，你或许能因此找到一些神迹，来指引你卡达斯所在的方位。",
@@ -250491,7 +250717,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 4,
@@ -250530,6 +250756,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06122"
   },
   "06123": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "As you board your ship once again, you find the crew loading barrels of trade goods: furs, ore, exotic spices, and the like. \"We'll make a killing with these back on the mainland,\" the captain says, clapping your shoulder. \"Hope you found what you were looking for, too. Where do you want to head next?\"",
     "backFlavorZh": "你再次登上了你的船只，发现船员正在搬运装着货物的木桶上船，里面装有毛皮、矿石、异国香料等等。“等我们回到大陆就能大赚一笔。”船长拍着你的肩膀这么说道，“但愿你也能找到你要的东西。接下来，你要去哪儿？”",
@@ -250545,7 +250772,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 5,
@@ -250584,6 +250811,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06123"
   },
   "06124": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "Your options in this region exhausted, you make your way back to your ship. The captain orders the crew to get ready to leave port. \"Wasn't sure if you'd be back in time, but here you are,\" the captain says with a grin. \"Well? Where to?\"",
     "backFlavorZh": "你在这个地方能做的事都尝试过了，于是你回到船上。船长命令船员准备离港。“之前还不知道你能不能准时回来，你终于来了。”船长咧嘴一笑，“那么，你要去哪儿？”",
@@ -250599,7 +250827,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 6,
@@ -250638,6 +250866,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06124"
   },
   "06125": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "You finally return to your ship, ready to leave this accursed land behind. \"Let's not tarry in this godsforsaken place any longer,\" the captain says, barking orders to his crew. \"Ilek-Vad may be a jewel, but the lands beyond are frought with danger. Pick a heading. Any heading. Just so long as it is far away from here.\"",
     "backFlavorZh": "你终于回到了船上，离开这片被诅咒的土地。“别在这个倒霉地方待着了。”船长对船员发号施令道，“伊莱克-瓦达或许是个好地方，但更远的地方充满了危险。挑个方向开船吧，任何方向都可以，只要能赶紧离开这儿。”",
@@ -250653,7 +250882,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 7,
@@ -250692,6 +250921,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06125"
   },
   "06126": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavor": "Your ship's crew grumbles in protest when you announce your intention to leave. \"Can you blame them?\" the captain leans in and says quietly as the crew prepares for the voyage. \"They would stay in port here forever if they could. But alas, the sea calls. So, where are we headed next?\"",
     "backFlavorZh": "当你说要离开这里时，船员们都在嘟囔着表示不愿离开。“这你怪不了他们。”船员准备出航时，船长侧身靠近你，轻声说道。“要是可以，他们愿意永远留在这个港口。唉，但是大海在召唤。那我们下一站去哪？”",
@@ -250707,7 +250937,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 8,
@@ -250808,6 +251038,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06127"
   },
   "06127b": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -250820,7 +251051,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 9,
@@ -250919,6 +251150,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06128"
   },
   "06128b": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -250931,7 +251163,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 10,
@@ -251032,6 +251264,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06129"
   },
   "06129b": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251044,7 +251277,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 11,
@@ -251147,6 +251380,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06130"
   },
   "06130b": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251159,7 +251393,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 12,
@@ -251196,6 +251430,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06130b"
   },
   "06131": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251209,7 +251444,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 13,
@@ -251260,6 +251495,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06131b": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251272,7 +251508,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 13,
@@ -251309,6 +251545,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06131b"
   },
   "06132": {
+    "acceptanceProfile": "tde-search-for-kadath-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251322,7 +251559,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 14,
@@ -251488,6 +251725,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06133b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251500,7 +251738,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 15,
@@ -251598,6 +251836,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06134"
   },
   "06134b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251610,7 +251849,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 16,
@@ -251709,6 +251948,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06135"
   },
   "06135b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251721,7 +251961,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 17,
@@ -251823,6 +252063,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06136b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251835,7 +252076,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 18,
@@ -251934,6 +252175,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06137b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -251946,7 +252188,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 19,
@@ -252048,6 +252290,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06138b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252060,7 +252303,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 20,
@@ -252162,6 +252405,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06139b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252174,7 +252418,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 21,
@@ -252276,6 +252520,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06140b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252288,7 +252533,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 22,
@@ -252387,6 +252632,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06141"
   },
   "06141b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252399,7 +252645,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 23,
@@ -252499,6 +252745,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06142b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252511,7 +252758,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 24,
@@ -252610,6 +252857,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "06143b": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252622,7 +252870,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 25,
@@ -252659,6 +252907,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06143b"
   },
   "06144": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252671,7 +252920,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 26,
@@ -252717,6 +252966,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06144"
   },
   "06145": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252730,7 +252980,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 27,
@@ -252904,6 +253154,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06148": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252917,7 +253168,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 30,
@@ -252965,6 +253216,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06149": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -252978,7 +253230,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 31,
@@ -253025,6 +253277,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06149"
   },
   "06150": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -253038,7 +253291,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 34,
@@ -253207,6 +253460,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06152"
   },
   "06153": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -253219,7 +253473,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 40,
@@ -253260,6 +253514,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06153"
   },
   "06154": {
+    "acceptanceProfile": "tde-search-for-kadath-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -253272,7 +253527,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_search_for_kadath",
     "encounterName": "The Search for Kadath",
     "encounterPosition": 42,
@@ -254363,6 +254618,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06171"
   },
   "06172": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavor": "The tomb opens into a staircase that stretches deep underground before disappearing into darkness.",
     "backFlavorZh": "墓穴通向一条楼梯，一直延伸到地下深处，尽头消失在黑暗中。",
@@ -254378,7 +254634,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 5,
@@ -254472,6 +254728,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06173"
   },
   "06174": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavor": "\"Looking toward the giant willow in the centre of the cemetery, whose trunk has nearly engulfed an ancient, illegible slab, I had made a fantastic remark about the spectral and unmentionable nourishment which the colossal roots must be sucking in from that hoary, charnel earth...”\n - H. P. Lovecraft, \"The Unnamable\"",
     "backFlavorZh": "“我望着墓地中央的一棵巨大的柳树，它的树干几乎陷在一块古老的、字迹模糊的石板上，我曾经说过一句荒唐的话，说那巨大的树根一定是在这片久远的、安葬死者的土地上，吸收幽灵的、难以言说的养分……”H.P.洛夫克拉夫特，《不可名状之物》",
@@ -254487,7 +254744,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 7,
@@ -255267,6 +255524,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06187"
   },
   "06188": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavor": "\"So worn and narrow were the steps, and so greasy with the ooze of inner earth, that the climber never quite knew when to expect a breathless fall and hurtling down to the ultimate pits...\"\n - H. P. Lovecraft, <u>The Dream-Quest of Unknown Kadath</u>",
     "backFlavorZh": "“这些台阶破旧而狭窄，还因为地里渗出的液体而变得油滑，导致走在楼梯上的人根本不知道自己何时会突然摔倒，跌入无底的深坑……”H.P.洛夫克拉夫特，《梦寻秘境卡达斯》",
@@ -255282,7 +255540,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 21,
@@ -255447,6 +255705,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06190"
   },
   "06191": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -255459,7 +255718,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 27,
@@ -255500,6 +255759,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06191"
   },
   "06192": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -255512,7 +255772,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 29,
@@ -255553,6 +255813,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06192"
   },
   "06193": {
+    "acceptanceProfile": "tde-thousand-shapes-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -255565,7 +255826,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "a_thousand_shapes_of_horror",
     "encounterName": "A Thousand Shapes of Horror",
     "encounterPosition": 31,
@@ -256125,6 +256386,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "06203": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -256139,7 +256401,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -256298,6 +256560,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "06206": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "月之暗面",
@@ -256311,7 +256574,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 1,
@@ -256515,6 +256778,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06209"
   },
   "06210": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavor": "After hours of weaving around leprous stone towers and searching high and low, you finally spot a group of shackled captives being led single file from the docks to who knows where. Luckily, they are guarded by only two of the foul Corsairs. You create a distraction loud enough to separate the pair, then sneak by in order to free the captives.",
     "backFlavorZh": "经过几小时在布满鳞片的石塔周围到处寻找，你终于在码头上看到一群戴着镣铐的俘虏，他们排成一队，不知道要被带到什么地方去。还好，只有两个邪恶的海盗负责看守。你利用声响引开他们的注意力，然后偷偷溜过去解救俘虏。",
@@ -256531,7 +256795,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 5,
@@ -256626,6 +256890,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06211"
   },
   "06212": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavor": "The lake of black ichor below the surface of the Moon is miles wide and bubbles with warm, noxious pockets of gas. Most of the lake bed is completely solid, and it seems for a moment that Randolph's plan is a dead end after all. Then, you take a final step, and your foot is caught by... nothing. Before you can react, you are yanked under the surface. You try to shout a warning to your companions, but your words are swallowed by the black core, along with the rest of your body. Your lungs barely have air. You struggle not to scream as you are carried by a fierce undertow. When you finally emerge, you are in another chamber just like the one you came from, only you can see a shaft of light piercing through the grey crust above you. Moments later, the rest of your party emerges. \"Did we make it?\" Virgil asks. \"Why, I thought that was the end, for sure. This will make for an exciting chapter!\"",
     "backFlavorZh": "月球表面以下的黑水湖有几英里宽，里面充满了温热的有毒气体。绝大部分的湖床完全都是固态，有那么一瞬间，你觉得伦道夫的计划走进了死胡同。随后，你踏下一步，接着你的脚接触到的是……虚无。你还没反应过来，就被猛地拉到了湖面下方。你试图大喊，提醒你的同伴，但你的声音彷佛和你的身体一起，被这黑暗月核吞没。你肺部的空气几乎被完全挤出。一股猛烈的底流把你卷走，你拼命忍着不发出尖叫。当你终于浮出水面，你发现自己所在的地方和你来时的一样，除了能看到一束光刺穿上方的地壳。过了一会，你的其他同伴也出来了。“我们成功了吗？”维吉尔问，“啊？我还以为一切都结束了呢。这一段写出来肯定十分刺激！”",
@@ -256641,7 +256906,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 7,
@@ -256844,6 +257109,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06214b"
   },
   "06215": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavor": "\"There presently rose ahead the jagged hills of a leprous-looking coast, and Carter saw the thick unpleasant grey towers of a city. The way they leaned and bent, the manner in which they were clustered, and the fact that they had no windows at all, was very disturbing to the prisoner...\" - H. P. Lovecraft, <u>The Dream-Quest of Unknown Kadath</u>",
     "backFlavorZh": "“前方逐渐升起了一片嶙峋的海岸，上面有着高低参差的群山，卡特看到了一座城市，那里有着令人不安的灰色高塔。它们倾斜而弯曲，林立丛聚，每座塔上都没有窗户，这让即将被关押的囚徒感到十分不安……”H.P.洛夫克拉夫特，《梦寻秘境卡达斯》",
@@ -256859,7 +257125,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 10,
@@ -257556,6 +257822,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "06227": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -257569,7 +257836,7 @@ export const ALL_CARDS = {
     "damage": 3,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 22,
@@ -257902,6 +258169,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06232"
   },
   "06233": {
+    "acceptanceProfile": "tde-dark-side-of-the-moon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -257915,7 +258183,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dark_side_of_the_moon",
     "encounterName": "Dark Side of the Moon",
     "encounterPosition": 37,
@@ -258990,6 +259258,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06250"
   },
   "06251": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavor": "Randolph gives a shout of recognition as the ghoul approaches. He and the creature shake hands and converse for a short while, after which he introduces you. \"This is the ghoul I spoke to you about. He is an old friend of mine, and he has offered to guide us through the Underworld. He has some dire news, however...\" Randolph goes on to explain: strange happenings have been occurring within the Underworld. He tells of dark forces spreading throughout the vale below the Plain of the Ghouls, of vile weavers that crawl along the cavern walls, and of a terrible howling cry that penetrates throughout the realm. All of it, he says, emanates from one place: an ocean of pitch in the realm's deepest layer.",
     "backFlavorZh": "那食尸鬼走近时，伦道夫认出了它，叫了一声。他和那食尸鬼握了握手，聊了一会儿，然后把它介绍给你：“这是我之前跟你说过的食尸鬼。它是我的老朋友，它答应做我们在地下世界的向导了。但它带来了一些可怕的消息……”伦道夫继续说明：地下世界里发生了许多异象。它说，有黑暗力量正通过食尸鬼平原下方的山谷扩散，阴险的织网者正沿着洞穴墙壁爬行，还有可怕的嚎叫声穿透这整个地下世界。他说，所有这些异象都源于一个地方：地下世界最深处的漆黑之海。",
@@ -259005,7 +259274,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "point_of_no_return",
     "encounterName": "Point of No Return",
     "encounterPosition": 5,
@@ -260588,6 +260857,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06268": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -260600,7 +260870,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "point_of_no_return",
     "encounterName": "Point of No Return",
     "encounterPosition": 22,
@@ -260696,6 +260966,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06269"
   },
   "06270": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -260708,7 +260979,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "point_of_no_return",
     "encounterName": "Point of No Return",
     "encounterPosition": 26,
@@ -260813,6 +261084,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06272": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -260825,7 +261097,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "terror_of_the_vale",
     "encounterName": "Terror of the Vale",
     "encounterPosition": 2,
@@ -260866,6 +261138,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06272"
   },
   "06273": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -260879,7 +261152,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "descent_into_the_pitch",
     "encounterName": "Descent into the Pitch",
     "encounterPosition": 1,
@@ -260926,6 +261199,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06273"
   },
   "06274": {
+    "acceptanceProfile": "tde-point-of-no-return-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -260938,7 +261212,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "descent_into_the_pitch",
     "encounterName": "Descent into the Pitch",
     "encounterPosition": 3,
@@ -261683,6 +261957,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "06286": {
+    "acceptanceProfile": "tde-where-the-gods-dwell-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "神居之所",
@@ -261696,7 +261971,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "where_the_gods_dwell",
     "encounterName": "Where the Gods Dwell",
     "encounterPosition": 1,
@@ -261844,6 +262119,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06288"
   },
   "06289": {
+    "acceptanceProfile": "tde-where-the-gods-dwell-2026-11",
     "availability": "strict",
     "backFlavor": "Enough playing with you. I will have what is owed to me.\nYou think you can simply venture into this land of dreams with no consequence? With impunity? With no spilt blood?\nWho are you to partake of such fantasy? To intrude on the dreams of others like a parasite? To devour these dreams like they are yours to enjoy? Out with you! I shall rend your mind from your skull as one skins a cat. Look, see: I am cracking open your skull, and pouring out your <u>you</u>. And now, I am filling it with <u>me</u>. You are no longer. Did you really think there would be any other result? Out with you, now. Begone.",
     "backFlavorZh": "我跟你玩够了。我会拿走属于我的东西。\n你以为你能轻易走进幻梦境，而不用承受任何后果吗？不受惩罚？毫发无损？\n你凭什么抱有这样的幻想？以为自己能像寄生虫一样侵入别人的梦境，能把这些梦境当作是自己的一样，将它们吞噬？滚出去！我会撕开你的脑壳，掏出你的脑子，就像剥下一只猫的皮一样。看好了，我正要破开你的脑壳，把“你”抽出来，然后，把“我”放到里面去。你将不复存在。你真的以为结果会不一样吗？现在就给我滚出去。",
@@ -261860,7 +262136,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "where_the_gods_dwell",
     "encounterName": "Where the Gods Dwell",
     "encounterPosition": 4,
@@ -263206,6 +263482,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "06312": {
+    "acceptanceProfile": "tde-where-the-gods-dwell-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -263219,7 +263496,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "where_the_gods_dwell",
     "encounterName": "Where the Gods Dwell",
     "encounterPosition": 27,
@@ -263265,6 +263542,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "06313": {
+    "acceptanceProfile": "tde-where-the-gods-dwell-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -263278,7 +263556,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "where_the_gods_dwell",
     "encounterName": "Where the Gods Dwell",
     "encounterPosition": 28,
@@ -263547,6 +263825,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06317"
   },
   "06318": {
+    "acceptanceProfile": "tde-where-the-gods-dwell-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -263559,7 +263838,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "where_the_gods_dwell",
     "encounterName": "Where the Gods Dwell",
     "encounterPosition": 35,
@@ -264496,6 +264775,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06333"
   },
   "06334": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavor": "There is no air in this interdimensional space. Even in the bleak pits of the Underworld, you sensed cold wind coiling through the depths or warm, noxious gas rising from the Sea of Pitch. But here, there is nothing: no air, no atmosphere, no life whatsoever, save for you and the spiders whose work nears completion.\nJust as you are contemplating how anything can exist at all in this awful world between worlds, you hear a sound like the stretching and tearing of fabric. Then a rush of billowing air erupts all around you, filling the vastness of the realm like dust in a vacuum. This wind must be coming from somewhere, and that can only mean one thing: Worlds are starting to merge.",
     "backFlavorZh": "这个跨次元的空间里没有任何空气。即便是在地下世界那荒凉的坑洞里，你也能感觉到深渊处盘旋的冷风，或是漆黑之海升腾的暖热毒气。但在这里，这里什么都没有：没有一丝空气，除了你和那些即将完成桥梁的蜘蛛之外，没有任何生命。\n正当你思考事物究竟是如何在诸界之中的可怕此间存在之时，你听到了一道声音，像是织物被拉扯和撕裂的声音。然后从你周围涌来了一股气流，空气就像被吸入真空中的灰尘一样，充满了这个宽阔的空间。这风一定是从什么地方吹来的，这意味着：两个世界正开始融合。",
@@ -264512,7 +264792,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 2,
@@ -264551,6 +264831,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06334"
   },
   "06335": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavor": "A light flashes in the distance, beyond strands of ethereal webbing: an explosion thousands of light-years away. Radiant light ripples throughout the web-bridge. The silken threads reflect the luminescence of a shattered nebula. A brilliant shine burns your pupils. When the glow finally dims, the bridge is resplendent with cosmic energy. It is almost over now. Soon the bridge will connect the two worlds, and there will be nothing left but Atlach-Nacha and its horde.",
     "backFlavorZh": "在蛛丝织成的飘渺丝带以外遥远的地方，闪过一道光芒：那是数千光年以外发生的一场爆炸。整条蛛网桥梁上闪动着光芒。丝线折射着那破碎星云的光辉。那耀眼的光芒烧灼你的双眼。等到光芒终于变暗一些，桥梁因宇宙的能量而变得光彩灿烂。桥梁快要建成了。很快这道桥梁就会连接两个世界，到时除了阿特拉克·纳克亚和它的蜘蛛大军，一切都不复存在。",
@@ -264567,7 +264848,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 9,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 3,
@@ -264606,6 +264887,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06335"
   },
   "06336": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavor": "There is a sudden rush of air and a snapping sound, like a thousand bones popping into place at once. The webs surrounding you all flicker with untold power, the air currents shifting back and forth to the same steady rhythm. At the far end of the void, the sun's light shines through - a literal light at the end of the tunnel that is Atlach-Nacha's realm. You watch with dread as the spiders infesting this place scurry, one by one, toward the light.",
     "backFlavorZh": "突然，空气急速流动，接着是噼啪声响起，如同成千上万根骨头同时组合归位。你周围的蛛网闪烁着无穷的力量，气流伴随着闪烁的节奏，稳定地来回穿梭着。在这虚空的遥远尽头，射来太阳的光线——光线所能照到的隧道尽头，是阿特拉克·纳克亚的王国。你惊恐地看着无数蜘蛛快步飞跑，一只接一只地朝着那道光奔去。",
@@ -264622,7 +264904,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 11,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 4,
@@ -264661,6 +264943,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06336"
   },
   "06337": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Edge of Dreams",
@@ -264676,7 +264959,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 5,
@@ -264715,6 +264998,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06337"
   },
   "06338": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavor": "Having severed the wretched spider's legs and unraveled the webs it stood on, you hoped that this would send the thing careening into the endless void below. But as it falls, more thin, jagged legs erupt from below its abdomen, and it grips onto a nearby platform, just barely catching itself. The horrible maw, which extends down the length of its worm-like head, wrenches open. From it emerges a screech like a thousand nails on a chalkboard.",
     "backFlavorZh": "你弄断了这只可恨蜘蛛的腿，并且破坏了它身下的蛛网，希望能让它栽进下方无尽的虚空。但当它下坠时，它腹部下方伸出了几根更为纤细的带有锯齿的腿，抓住了旁边的平台，勉强没有掉下去。它张开了可怕的下颌，一直延伸到与它那蠕虫般的头颅等长的位置。它厉声长鸣，就像千千万万根指甲在黑板上抓挠一般令人难受。",
@@ -264730,7 +265014,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 6,
@@ -264769,6 +265053,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06338"
   },
   "06339": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavor": "The creature thrashes about violently as its webbing is ripped apart. The shimmer fades from the bridge's threads. In the distance, the cosmic array of lights winks out of existence, star by star. The spider's pained screech is deafening. You're not sure if it would be possible to kill a creature such as this, but you have done more harm to it in destroying its life's work than you could have ever done with bullets and blades.\nAs the woven threads of spider silk unravel, this realm's many suspended platforms of rock crumble and collapse into the endless aether below. You struggle to find something to stand on or grab hold of. Without the support of the web-bridge, the entire dimension collapses all around you.\nWith a final desperate screech that echoes throughout this world between worlds, Atlach-Nacha plunges into the eternal darkness below. You are quick to follow.",
     "backFlavorZh": "当这头怪物编织的网被撕碎时，它猛烈地扭动着身躯。桥梁的丝线渐渐失去了光芒。远处，宇宙中群星的光点也一点点地熄灭。蜘蛛痛苦的尖叫声震耳欲聋。你不知道这样的怪物究竟能否被杀死，但你摧毁它的毕生心血，所造成的伤害无疑更甚于你给它留下的弹孔和刀伤。\n随着蛛丝纺成的丝线解开，这里悬浮的岩石平台也开始破碎，掉入下方无尽的虚空。你拼命寻找支撑点。没有了蛛网桥梁，你周围的这整个次元都会坍塌。\n随着这异界之间的空间里响起阿特拉克·纳克亚最后一声绝望的尖叫，它坠向下方永恒的黑暗之中。你很快就会随它而去。",
@@ -264784,7 +265069,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 7,
@@ -265628,6 +265913,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/06352"
   },
   "06353": {
+    "acceptanceProfile": "tde-weaver-of-the-cosmos-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -265640,7 +265926,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "weaver_of_the_cosmos",
     "encounterName": "Weaver of the Cosmos",
     "encounterPosition": 33,
@@ -270417,6 +270703,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07074": {
+    "acceptanceProfile": "tic-deluxe-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -270430,7 +270717,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_vanishing_of_elina_harper",
     "encounterName": "The Vanishing of Elina Harper",
     "encounterPosition": 19,
@@ -270475,6 +270762,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07075": {
+    "acceptanceProfile": "tic-deluxe-b-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -270488,7 +270776,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_vanishing_of_elina_harper",
     "encounterName": "The Vanishing of Elina Harper",
     "encounterPosition": 20,
@@ -273657,6 +273945,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07128"
   },
   "07129": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Some of the townsfolk are gathered in front of the old Order of Dagon hall on the north side of town. Their crazed shouts echo through the streets. Based on what Agent Harper has told you, you know that the Order has something to do with these strange happenings... but what?",
     "backFlavorZh": "几个村民聚集在村北边达贡密教老旧的圣堂门前。他们疯狂的叫喊响彻街巷。基于哈珀特工告诉你的信息，你知道密教和这些怪事有关……但究竟是什么关系呢？",
@@ -273672,7 +273961,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 7,
@@ -273716,6 +274005,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07129"
   },
   "07130": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Sawbone Alley is not for the faint of heart, but if you think you know the town's secrets, fortune favors the bold.",
     "backFlavorZh": "心脏脆弱就别到锯骨巷去。不过你若是知道了村子的秘密，要记得幸运总是眷顾胆大的。",
@@ -273731,7 +274021,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 8,
@@ -273774,6 +274064,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07131": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Full of lifelong inhabitants, the slums could be a good place to glean key information about the state of the town.",
     "backFlavorZh": "贫民窟里挤满了人，他们都在这待了一辈子。此处是打听村里关键信息的绝佳之地。",
@@ -273789,7 +274080,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 9,
@@ -273835,6 +274126,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07131"
   },
   "07132": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Decrepit and apparently abandoned, the house is unlocked and oddly inviting.",
     "backFlavorZh": "这座破旧的老屋显然已经荒废，没有上锁，有一种奇怪的吸引力。",
@@ -273850,7 +274142,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 10,
@@ -273894,6 +274186,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07132"
   },
   "07133": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The police must have an idea of what's going on, and it may be worth talking to one of the inmates.",
     "backFlavorZh": "警察肯定知道发生了什么，和牢犯谈谈也可能有用。",
@@ -273909,7 +274202,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 11,
@@ -273954,6 +274247,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07134": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "You're beginning to wonder if anyone from Innsmouth can be trusted...",
     "backFlavorZh": "你不禁开始怀疑印斯茅斯还有没有人值得信任……",
@@ -273969,7 +274263,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 12,
@@ -274013,6 +274307,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07134"
   },
   "07135": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Contrary to its name, the Little Bookshop has a vast collection of books. You might find a valuable tome by perusing its shelves.",
     "backFlavorZh": "和名字不一样的是，小利透书店的书籍收藏其实非常宏大。仔细勘察一番书架，你或许能找到有用的典籍。",
@@ -274029,7 +274324,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 13,
@@ -274071,6 +274366,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07135"
   },
   "07136": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "A crumbling ruin, the bridge nonetheless provides decent cover for your flight through the town.",
     "backFlavorZh": "尽管这座桥已经摇摇欲坠，但无论如何它还是为你溜出村子提供了掩护。",
@@ -274086,7 +274382,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 14,
@@ -274133,6 +274429,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07137": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Someone has barricaded the entrance to the grocery store in the hopes that it might keep out the creatures prowling the streets. It won't. But it's a nice thought.",
     "backFlavorZh": "有人挡住了杂货铺的大门，希望这样能把街上游荡的怪物挡在外面。这丝毫无用。但想法倒是挺美的。",
@@ -274148,7 +274445,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 15,
@@ -274193,6 +274490,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07138": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Even the town's once-bustling harbour is deserted. The angry tide has consumed much of the docks and toppled several ships into the ocean. If this continues much longer, there won't be much of a harbour left at all.",
     "backFlavorZh": "一度熙攘的港口如今也已废弃。狂怒的潮水吞没了港口大半，几艘船在里面危如累卵。要是这继续下去，就再也没有什么港口了。",
@@ -274208,7 +274506,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 16,
@@ -274313,6 +274611,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "07140": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Finding a trustworthy individual to query may open a door, and an out-of-town guest staying at the hotel could provide a vital piece of this puzzle.",
     "backFlavorZh": "找到可信的人询问，或许能打开一扇门；而待在旅社的外乡人可能就会填上至关重要的一片拼图。",
@@ -274328,7 +274627,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 18,
@@ -274372,6 +274671,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07140"
   },
   "07141": {
+    "acceptanceProfile": "tic-in-too-deep-2026-11",
     "availability": "catalog-only",
     "backFlavor": "\"Crossing the bridge and turning toward the roar of the lower falls, I passed close to the Marsh refinery, which seemed oddly free from the noise of industry. This building stood on the steep river bluff near a bridge and an open confluence of streets which I took to be the earliest civic centre...\"\n- H. P. Lovecraft, <i>The Shadow over Innsmouth</i>",
     "backFlavorZh": "“我过了桥，抵达下游的瀑布，紧贴着穿过了马什精炼厂——它异常安静，毫无工厂应有的噪声。这座建筑矗立在陡峭的河岸上，旁边就是桥梁，还有道路汇聚之地。我觉得那就是最早的村镇中心……”H. P. 洛夫克拉夫特，《印斯茅斯之影》",
@@ -274388,7 +274688,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "in_too_deep",
     "encounterName": "In Too Deep",
     "encounterPosition": 19,
@@ -275903,6 +276203,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07165"
   },
   "07165b": {
+    "acceptanceProfile": "tic-devil-reef-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -275916,7 +276217,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "devil_reef",
     "encounterName": "Devil Reef",
     "encounterPosition": 3,
@@ -277348,6 +277649,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07184"
   },
   "07185": {
+    "acceptanceProfile": "tic-devil-reef-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -277360,7 +277662,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "devil_reef",
     "encounterName": "Devil Reef",
     "encounterPosition": 30,
@@ -277565,6 +277867,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07188"
   },
   "07189": {
+    "acceptanceProfile": "tic-horror-in-high-gear-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -277579,7 +277882,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Guardian",
@@ -282863,6 +283166,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "07267": {
+    "acceptanceProfile": "tic-lair-of-dagon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -282877,7 +283181,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -283229,6 +283533,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "07273": {
+    "acceptanceProfile": "tic-lair-of-dagon-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -283243,7 +283548,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -283618,6 +283923,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07279"
   },
   "07280": {
+    "acceptanceProfile": "tic-lair-of-dagon-2026-11",
     "availability": "catalog-only",
     "backFlavor": "Each of the Order's chambers are devoted to an aspect of their grand scheme - the secret that lies at the foundation of the Order, the poison that dwells in the roots of Innsmouth - but whatever that secret is, it is just beyond your grasp. At least, until the moment you discover the truth behind the building itself: It is nothing but a cover for the Order's true headquarters. As you unlock the pathway that leads into the cavernous depths beneath the building, you wonder what secrets could possibly dwell below...",
     "backFlavorZh": "密教里面每个房间都是他们宏大阴谋的一部分——那根植于密教之基的秘密，那印斯茅斯根源的毒药——但无论这秘密是什么，都已经超出了你的认知。但至少此刻你发现了这栋建筑背后的秘密：它不过是密教真正总部的掩护。你打开通往楼下巨穴深处的门，想知道这下面还会栖身着什么样的秘密……",
@@ -283633,7 +283939,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lair_of_dagon",
     "encounterName": "The Lair of Dagon",
     "encounterPosition": 7,
@@ -283672,6 +283978,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07280"
   },
   "07281": {
+    "acceptanceProfile": "tic-lair-of-dagon-2026-11",
     "availability": "catalog-only",
     "backFlavor": "The more you explore the caverns, the more alien and inhuman the architecture becomes. Soon, it feels like you have crossed the threshold of another world entirely. It is reminiscent of the ruins you saw beneath Devil Reef, but those depths are miles from here... right? Or is this network of caves so vast, it spans the entirety of Innsmouth?\nSoon you come upon a grand set of doors in the center of the web of gilded corridors. Many other paths stem from this hall, but it is this door - and the strange, heavy breathing that thrums throughout the walls and the floor - that calls to you...",
     "backFlavorZh": "你在洞穴中探索得越深，里面的构造就越奇异，非人。很快，你就觉得自己仿佛已经穿越门扉，完全到了另一个世界。这让你想到魔鬼礁石下的废墟，但彼处深渊应该离这里有数英里远……不是吗？还是这片网络如此广大，以至于延伸遍布整个印斯茅斯？\n很快，你就在鎏金走廊组成的网络中央遇上了一大串门。从这厅堂延伸出许多通路，但这门——还有墙中嗡嗡传来的沉重呼吸，还有这地面——都在呼唤着你……",
@@ -283687,7 +283994,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lair_of_dagon",
     "encounterName": "The Lair of Dagon",
     "encounterPosition": 8,
@@ -283726,6 +284033,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07281"
   },
   "07282": {
+    "acceptanceProfile": "tic-lair-of-dagon-2026-11",
     "availability": "catalog-only",
     "backFlavor": "A sudden stillness permeates the chamber. The only sound you hear is the gentle rippling of the reflecting pool inside the cult's hidden lair, and the pounding of your own heart in your chest as you struggle to understand what you have seen. Whatever ritual the Order was performing has been disrupted by your hand, but Agent Dawson does not look relieved. \"Okay. Okay. Right,\" he says through choked breaths. His hands shake as he lowers his weapon. \"Come on, quickly. We have another task to perform.\" Another task? You have no idea what Dawson is talking about. He notices your confusion and shakes his head. \"No time to explain. Follow me.\" Then a fuzzy darkness overtakes your memories...",
     "backFlavorZh": "洞穴里突然一阵寂静。唯一的声响就是密教隐藏洞穴中倒影池里的水滴轻语，还有你自己的猛烈心跳——因为你正极力理解自己究竟看到了什么。密教执行的仪式已由你亲手破坏，但道森特工看上去并未放松。“好了。好了。这样。”他在咳嗽间挤出几个字来，他摆摆手，放低了武器。“来吧，快点。我们还有别的任务。”\n别的任务？你可不知道道森在说什么。他注意到你的困惑，摇了摇头。“没时间解释了。跟我来。”然后一阵模糊的黑暗占据了你的记忆…",
@@ -283741,7 +284049,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lair_of_dagon",
     "encounterName": "The Lair of Dagon",
     "encounterPosition": 9,
@@ -285792,6 +286100,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/07314"
   },
   "07315": {
+    "acceptanceProfile": "tic-into-the-maelstrom-2026-11",
     "availability": "catalog-only",
     "backFlavor": "A maelstrom of currents tugs at your flesh as you cross through the gateway. When you emerge on the other side, you are no longer in the simple tidal caverns beneath Devil Reef, but inside a vast city within the depths: a city of otherworldly, alien architecture and, surprisingly, riches beyond your wildest imagination.",
     "backFlavorZh": "你穿越门扉的时候，激流的漩涡撕扯你的血肉。你到达彼端的时候，眼前不再是魔鬼礁石下普通的潮水通道，而是深海的一座大城：里面全是诡奇怪异的建筑，其中惊人的财富也远超你最狂野的想象。",
@@ -285807,7 +286116,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "into_the_maelstrom",
     "encounterName": "Into the Maelstrom",
     "encounterPosition": 5,
@@ -288022,6 +288331,7 @@ export const ALL_CARDS = {
     "willpower": 1
   },
   "08008": {
+    "acceptanceProfile": "eote-player-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -288036,7 +288346,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -290518,6 +290828,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08043": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -290532,7 +290843,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -290579,6 +290890,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08044": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -290593,7 +290905,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -290705,6 +291017,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08046": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -290718,7 +291031,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -290877,6 +291190,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08049": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -290891,7 +291205,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -290994,6 +291308,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08051": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291008,7 +291323,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -291050,6 +291365,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08052": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291063,7 +291379,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -291228,6 +291544,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08055": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291242,7 +291559,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -291281,6 +291598,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08056": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291295,7 +291613,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -291341,6 +291659,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08057": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291358,7 +291677,7 @@ export const ALL_CARDS = {
     "duplicatedBy": [
       "60379"
     ],
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Rogue",
@@ -291651,6 +291970,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08062": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291665,7 +291985,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -291770,6 +292090,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08064": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291784,7 +292105,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -291825,6 +292146,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08065": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291838,7 +292160,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -291880,6 +292202,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08066": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -291894,7 +292217,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -292061,6 +292384,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08069": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -292075,7 +292399,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -292594,6 +292918,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08078": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -292607,7 +292932,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -292649,6 +292974,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08079": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -292663,7 +292989,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -292771,6 +293097,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08081": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -292785,7 +293112,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -292957,6 +293284,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08084": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -292971,7 +293299,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "seeker",
@@ -293017,6 +293345,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08085": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -293031,7 +293360,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "seeker",
@@ -293146,6 +293475,7 @@ export const ALL_CARDS = {
     "xp": 5
   },
   "08087": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -293160,7 +293490,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -293203,6 +293533,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08088": {
+    "acceptanceProfile": "eote-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -293217,7 +293548,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -293267,6 +293598,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08089": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -293281,7 +293613,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -293792,6 +294124,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08097": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -293806,7 +294139,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -294236,6 +294569,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08104": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -294250,7 +294584,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "survivor",
@@ -294366,6 +294700,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "08106": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -294380,7 +294715,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "survivor",
@@ -294743,6 +295078,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08112": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -294757,7 +295093,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "survivor",
@@ -294801,6 +295137,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "08113": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -294815,7 +295152,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": true,
     "faction2": "survivor",
@@ -295245,6 +295582,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "08120": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295259,7 +295597,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "mystic",
@@ -295302,6 +295640,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08121": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295316,7 +295655,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "seeker",
@@ -295359,6 +295698,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08122": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295373,7 +295713,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -295416,6 +295756,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08123": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295430,7 +295771,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -295473,6 +295814,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08124": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295487,7 +295829,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "faction2": "rogue",
@@ -295530,6 +295872,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "08125": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295543,7 +295886,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -295829,6 +296172,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "08130": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295842,7 +296186,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -295881,6 +296225,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08130"
   },
   "08131": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295894,7 +296239,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -295933,6 +296278,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08131"
   },
   "08132": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295946,7 +296292,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -295985,6 +296331,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08132"
   },
   "08133": {
+    "acceptanceProfile": "eote-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -295998,7 +296345,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -296037,6 +296384,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08133"
   },
   "08501": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -296050,7 +296398,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 1,
@@ -296086,6 +296434,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08501"
   },
   "08502": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"It was risky business sailing over the antarctic in a single aëroplane without any line of bases...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“靠一架飞机穿越南极，沿途没有任何营地，这风险非常大……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296101,7 +296450,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 2,
@@ -296139,6 +296488,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08502"
   },
   "08503": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"There now stretched off to the east the low, white line of the great ice barrier...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“巨大冰障那低矮的白线现在向东延伸开去……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296154,7 +296504,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 3,
@@ -296313,6 +296663,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08505"
   },
   "08506": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"...on the lofty ice barrier in the background, myriads of grotesque penguins squawked and flapped their fins...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……在后面高高的冰障上，无数奇奇怪怪的企鹅尖叫着拍打着它们的鳍……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296328,7 +296679,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 6,
@@ -296432,6 +296783,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08507"
   },
   "08508": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"...rising perpendicularly to a height of 200 feet like the rocky cliffs of Quebec, and marking the end of southward navigation.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……垂直升到200英尺的高度，就像魁北克的岩石峭壁一样，而这也标志着这次向南航行的终点。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296447,7 +296799,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 8,
@@ -296551,6 +296903,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08509"
   },
   "08510": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"...we effected a difficult landing on Ross Island shortly after midnight on the morning of the 9th...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……9日凌晨，刚过午夜不久，我们艰难地登上了罗斯岛……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296566,7 +296919,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 10,
@@ -296670,6 +297023,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08511"
   },
   "08512": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"Our camp on the frozen shore below the volcano's slope was only a provisional one; headquarters being kept aboard the <i>Arkham</i>.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“我们在火山脚下冰冻的海岸上的营地只是临时的；总部依然在阿卡姆号上。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296685,7 +297039,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 12,
@@ -296729,6 +297083,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08512"
   },
   "08513": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"It is only with vast hesitancy and repugnance that I let my mind go back to Lake's camp and what we really found there...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“让我重新回忆起莱克营地以及在那儿发现的东西，令我极为犹豫、抵触万分……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296744,7 +297099,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 13,
@@ -296788,6 +297143,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08513"
   },
   "08514": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"Parts, especially upper parts, seem to be of lighter-coloured rock than any visible strata on slopes proper, hence an evidently crystalline origin.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“有些部分，尤其是靠上的部分，似乎是由颜色较浅的岩石构成的，比斜坡本身更浅一些，因此很明显它原先是晶状的。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -296803,7 +297159,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 14,
@@ -296847,6 +297203,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08514"
   },
   "08515": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -296860,7 +297217,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 15,
@@ -296961,6 +297318,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08516"
   },
   "08517": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -296973,7 +297331,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "ice_and_death",
     "encounterName": "Ice and Death",
     "encounterPosition": 20,
@@ -297014,6 +297372,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08517"
   },
   "08518": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "\"Hold on! Come see this!\" one of the other team members shouts as you trudge ahead through the snow. You turn back and examine what they have found - a second set of tracks in the snow, but smaller, misshapen. Almost impossibly so.\n\"What in the hell could have made these tracks?\" one of your party asks. You stand dumbfounded. Very little wildlife exists out here in the frozen wastes. And these tracks match nothing you've ever seen before. Nothing you can even imagine.\nYou don't have to question what could make such tracks for long. A shape emerges from the erupting snow, twisted and deformed, like a splotch of ink spilled upon the canvas of reality. It makes a strange, almost familiar cry that is eaten by the howling wind: \"-li! -li!\" Then, with terrifying speed, it rushes toward you.",
     "backFlavorZh": "“等一下！来看下这个！”当你在雪地中艰难前行时，另一名队员喊道。你返回看看他们发现了什么——雪地上有另一组脚印，但是更小，而且是畸形的。这几乎不可能。\n“到底是什么鬼东西留下了这些脚印？”团队中的一人问道。你目瞪口呆地站着。在这片冰冻荒原上，几乎没有野生动物存在。而且你从没见过有什么动物是这种脚印。你甚至无法想像这是什么生物。\n但很快你就不用纠结这是什么东西的脚印了。 一道身影从喷发的雪中出现，扭曲变形，就像泼洒在现实画布上的墨点。 它发出一种奇怪的、有些熟悉的叫声，但被呼啸的狂风吞没了：“——哩！——哩！”然后，它以惊人的速度向你冲来。",
@@ -297030,7 +297389,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 4,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_crash",
     "encounterName": "The Crash",
     "encounterPosition": 1,
@@ -297069,6 +297428,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08518"
   },
   "08519": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "These things, these manifestations, they're not beasts or even alien creatures like those Dyer and Danforth encountered in their last expedition. You're not even sure they are entities at all. They have no shape, consisting of an almost proto-plasmic substance that seeps back into the ice when harmed or whenever you escape their clutches. Given the persistence of these entities and the inclement, deadly conditions of Antarctica, you know you won't survive the night without finding shelter.\nJust as you are pondering what your next move should be, the ice beneath you rumbles with tremendous force, letting out a terrifying groan. \"An earthquake?\" one of your party asks over the raucous noise.\n\"No, that's impossible,\" another replies. You share a dreadful glance. Could it be one of those...things?",
     "backFlavorZh": "这些东西，这些存在，它们不是野兽，甚至也不像戴尔和丹佛斯上次探险中遭遇的外星生物。你甚至不确定它们是不是实体。它们没有形状，由几乎像原生质一样的物质组成，当受到伤害或你逃脱它们的控制时，就会重新渗入冰雪之中。考虑到这些实体的存在，以及南极严酷致命的环境，你明白，如果找不到庇护所，你将无法熬过夜晚。\n就在你思考下一步该怎么做的时候，你脚下的冰面开始剧烈震动，轰隆隆的巨响，发出可怕的呻吟。“地震？”团队中有人沙哑着嗓子问。\n“不，这不可能。”另一人回答。你的眼神也充满畏惧。会不会也是那种……东西？",
@@ -297085,7 +297445,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_crash",
     "encounterName": "The Crash",
     "encounterPosition": 2,
@@ -297124,6 +297484,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08519"
   },
   "08520": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "You can go on no longer. It's not ideal, but you'll have to make do with the shelter you've found. You only hope that it's enough to keep your party from freezing... or worse.",
     "backFlavorZh": "你无法再继续了。虽然不是很理想，但你只能将就着使用你找到的庇护地了。你只希望这里足够让你的团队避免冻死……或更糟的情况。",
@@ -297140,7 +297501,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_crash",
     "encounterName": "The Crash",
     "encounterPosition": 3,
@@ -297179,6 +297540,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08520"
   },
   "08521": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "Exhausted and terrified by your ordeal, you decide this is as good a place as any to make camp for the night. Perhaps tomorrow you can salvage some kind of academic value out of this hellish journey, but for now such things seem trivial. Survival is the only thing on your mind.",
     "backFlavorZh": "你经历苦难，现在筋疲力尽、惊恐不已。你决定这里是扎营过夜的好地方。也许明天你能从这地狱般的旅程中挖掘一些学术价值，但现在这些事情根本微不足道。你满脑子只想着活下去。",
@@ -297194,7 +297556,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_crash",
     "encounterName": "The Crash",
     "encounterPosition": 4,
@@ -297233,6 +297595,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08521"
   },
   "08522": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -297246,7 +297609,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_crash",
     "encounterName": "The Crash",
     "encounterPosition": 5,
@@ -297465,6 +297828,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08525"
   },
   "08526": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "With night coming to a close, the storm approaches faster and faster. Soon, the weather will be too deadly for your search to continue. If anyone is still out there, you doubt they'll survive - and neither will you if you remain unsheltered any longer. You return to your camp, your heart heavy with guilt and and your mind addled by that foul noise that festers within.",
     "backFlavorZh": "随着夜晚临近结束，风暴接近得越来越迅速了。很快，天气就会变得非常恶劣，你们将无法继续搜寻。如果还有人在外面，你怀疑他们是否还能活下来——当然，如果你也继续待在庇护所外面，那你也是一样的下场。你返回营地，你的心被沉重的罪恶感压迫着，而你的思想被你身体里那不断滋长的污秽声音所腐化。",
@@ -297480,7 +297844,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 4,
@@ -297519,6 +297883,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08526"
   },
   "08527": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -297531,7 +297896,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 5,
@@ -297671,6 +298036,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08530": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -297683,7 +298049,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 8,
@@ -297925,6 +298291,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "08535": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -297938,7 +298305,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 13,
@@ -297989,6 +298356,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08536": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298002,7 +298370,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 14,
@@ -298053,6 +298421,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08537": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298066,7 +298435,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 15,
@@ -298117,6 +298486,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08538": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298130,7 +298500,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 16,
@@ -298181,6 +298551,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08539": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298194,7 +298565,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 17,
@@ -298245,6 +298616,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08540": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298258,7 +298630,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 18,
@@ -298309,6 +298681,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08541": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298322,7 +298695,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 19,
@@ -298373,6 +298746,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08542": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298386,7 +298760,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 20,
@@ -298437,6 +298811,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08543": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298450,7 +298825,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "lost_in_the_night",
     "encounterName": "Lost in the Night",
     "encounterPosition": 21,
@@ -298501,6 +298876,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08544": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "This place is not what it seems. You feel as though you have trespassed somewhere ancient and terrible, and now its wrath is erupting all around you.",
     "backFlavorZh": "这地方并非表里如一。你感觉好像你侵入了一个古老而可怕的地方，现在它的愤怒正在你周围爆发。",
@@ -298517,7 +298893,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 2,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "seeping_nightmares",
     "encounterName": "Seeping Nightmares",
     "encounterPosition": 1,
@@ -298556,6 +298932,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08544"
   },
   "08545": {
+    "acceptanceProfile": "eote-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "Your only warning is a thin web of cracks that tears through the ice before your feet, and then a sudden explosion of mist and ink-like miasma erupts around you. The force slams you to the ground. You crawl desperately along the freezing-cold ice as the miasma reaches for you. An incomprehensible sound, like the rushing of a furious whirlwind, fills your ears. Then a thunderous crack, and you are falling - no, sliding - down along the ice toward the freezing cold waters below.\nIt is a wonder you are even still conscious. You summon all of your strength and cling to the ice shelf just before you plummet below. You finally haul yourself back over the edge, casting a panicked glance at the horizon, but there is no sign of any miasma or mist. The crack in the ice shelf extends for hundreds of feet in front of you, separating you from your pursuers. Somehow, you've unwittingly escaped...although you won't be forgetting that near-death experience anytime soon.",
     "backFlavorZh": "你唯一的警告就是你脚前的冰面上出现了薄薄一层裂缝，然后你周围突然爆发出雾气和墨般的瘴气。这股力量将你击倒在地。你绝望地在冰冷的冰面上爬行，瘴气向你袭来。一种难以理解的声音像一阵狂暴的旋风一样，震耳欲聋。然后是一声雷鸣般的巨响，你就掉下去了——不，是沿着冰面滑向下面冰冷的海水。\n你还有意识简直是个奇迹。就在你掉下去之前，你鼓起所有的力量抓住了冰架。你终于爬上边缘，惊慌失措地瞥了一眼地平线，但没有任何瘴气或薄雾的迹象。冰架上的裂缝在你面前延伸数百英尺，将你与追捕者分开。你不知不觉地就逃了出来……尽管那次濒死体验你很长时间都忘不了。",
@@ -298572,7 +298949,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "seeping_nightmares",
     "encounterName": "Seeping Nightmares",
     "encounterPosition": 2,
@@ -298611,6 +298988,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08545"
   },
   "08546": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "The Last Breath",
@@ -298625,7 +299003,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "seeping_nightmares",
     "encounterName": "Seeping Nightmares",
     "encounterPosition": 3,
@@ -298664,6 +299042,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08546"
   },
   "08547": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298677,7 +299056,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "seeping_nightmares",
     "encounterName": "Seeping Nightmares",
     "encounterPosition": 4,
@@ -298726,6 +299105,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08547"
   },
   "08548": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -298738,7 +299118,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "seeping_nightmares",
     "encounterName": "Seeping Nightmares",
     "encounterPosition": 8,
@@ -298829,6 +299209,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08549"
   },
   "08550": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Bit by bit, your consciousness fades. You are lost in the ever-expanding weave of memories, your senses drowning in a deluge of thought and emotion. A jumbled cage of fear, doubt, and horror.\nWhen you finally awaken, only seconds have passed.",
     "backFlavorZh": "你的意识正在一点一点地消失。你迷失在不断膨胀的记忆交织之中，你的感官淹没在思想和情感的洪流之中。一个混杂着恐惧、怀疑和恐怖的囚笼。\n当你最终醒来时，时间却只过了几秒钟。",
@@ -298845,7 +299226,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 15,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 2,
@@ -298884,6 +299265,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08550"
   },
   "08551": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Again, your consciousness fades. You tumble through everlasting moments, empathy tugging your emotions in every direction at once. It is an ocean of bottomless thought, deep and dark and tenebrous.\nWhen you finally awaken, once again only seconds have passed.",
     "backFlavorZh": "你的意识又一次开始消失。你在接连不断的场景之间辗转翻腾，情感与它们共鸣，被同时扯向四面八方。这里是有着无底思想的海洋，深邃、黑暗、阴沉。\n当你最终醒来时，时间还是只过了几秒钟。",
@@ -298900,7 +299282,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 13,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 3,
@@ -298939,6 +299321,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08551"
   },
   "08552": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Your consciousness is dismantled, this time violently. It is as though your capacity to feel, to think, has been ripped to shreds by the incomprehensible depth of this awful prison. Infinite leagues apart, your every molecule struggles to remain you as your mind is usurped.\nWhen you finally awaken, a full day has passed.",
     "backFlavorZh": "你的意识被摧毁了，这次非常粗暴。就好像你的感觉和思考能力，已经被这可怕的监狱那不可理解的深度撕成了碎片。你的思想被篡夺时，你的每一个分子即便各自相隔千里，却仍在努力保持着你自己。\n当你终于醒来时，已经过去了整整一天。",
@@ -298955,7 +299338,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 11,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 4,
@@ -299269,6 +299652,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08556b"
   },
   "08557": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "伊里亚和他的同伴安雨沿着营地的外围走来，进入了你的视线。“你去哪儿了？”高田说着，也出现在你眼前。“独自一人外出是相当愚蠢的。”辛哈医生也加入了责备的行列。\n“放松。我可不是独自一人。”伊里亚回答道，他戴着手套的手轻轻地抚摸着安雨的脖子。\n医师翻了个白眼离开了，但高田抱着双臂，依然留在那里。“在我们出发之前还有很多事情要做，你知道的吧。”她说。\n伊里亚叹了口气，点了点头。“我知道。只是……有点焦虑。这地方有点……”他声音越来越小。\n高田点头。“是的。我也感觉到了。”",
     "backNameZh": "",
@@ -299282,7 +299666,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 9,
@@ -299376,6 +299760,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08557b"
   },
   "08558": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299389,7 +299774,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 10,
@@ -299483,6 +299868,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08558b"
   },
   "08559": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299496,7 +299882,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 11,
@@ -299590,6 +299976,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08559b"
   },
   "08560": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299603,7 +299990,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 12,
@@ -299697,6 +300084,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08560b"
   },
   "08561": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299710,7 +300098,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 13,
@@ -299804,6 +300192,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08561b"
   },
   "08562": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299817,7 +300206,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 14,
@@ -299911,6 +300300,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08562b"
   },
   "08563": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -299924,7 +300314,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 15,
@@ -300018,6 +300408,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08563b"
   },
   "08564": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300031,7 +300422,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 16,
@@ -300125,6 +300516,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08564b"
   },
   "08565": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300138,7 +300530,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 17,
@@ -300232,6 +300624,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08565b"
   },
   "08566": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300245,7 +300638,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 18,
@@ -300340,6 +300733,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08567": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300353,7 +300747,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 19,
@@ -300448,6 +300842,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08568": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300461,7 +300856,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 20,
@@ -300556,6 +300951,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08569": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300569,7 +300965,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 21,
@@ -300664,6 +301060,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08570": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300677,7 +301074,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 22,
@@ -300772,6 +301169,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08571": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300785,7 +301183,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 23,
@@ -300880,6 +301278,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08572": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -300893,7 +301292,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 24,
@@ -300988,6 +301387,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08573": {
+    "acceptanceProfile": "eote-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301001,7 +301401,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 25,
@@ -301096,6 +301496,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08574": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301109,7 +301510,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 26,
@@ -301204,6 +301605,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "08575": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301217,7 +301619,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 27,
@@ -301319,6 +301721,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08576": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301332,7 +301735,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 28,
@@ -301434,6 +301837,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08577": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301447,7 +301851,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 29,
@@ -301549,6 +301953,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08578": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301562,7 +301967,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 30,
@@ -301664,6 +302069,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08579": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301677,7 +302083,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 31,
@@ -301779,6 +302185,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08580": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301792,7 +302199,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 32,
@@ -301894,6 +302301,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08581": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -301907,7 +302315,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 33,
@@ -302009,6 +302417,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08582": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302022,7 +302431,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 34,
@@ -302124,6 +302533,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08583": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302137,7 +302547,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 35,
@@ -302239,6 +302649,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08584": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302252,7 +302663,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 36,
@@ -302299,6 +302710,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08584"
   },
   "08585": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302311,7 +302723,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 39,
@@ -302354,6 +302766,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08585"
   },
   "08586": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302366,7 +302779,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 42,
@@ -302407,6 +302820,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08586"
   },
   "08587": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302420,7 +302834,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 45,
@@ -302469,6 +302883,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08587"
   },
   "08588": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302482,7 +302897,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 46,
@@ -302531,6 +302946,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08588"
   },
   "08589": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302544,7 +302960,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 47,
@@ -302593,6 +303009,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08589"
   },
   "08590": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302606,7 +303023,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 48,
@@ -302655,6 +303072,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08590"
   },
   "08591": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302668,7 +303086,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 49,
@@ -302717,6 +303135,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08591"
   },
   "08592": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302730,7 +303149,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 50,
@@ -302781,6 +303200,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08592"
   },
   "08593": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302794,7 +303214,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 51,
@@ -302843,6 +303263,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08593"
   },
   "08594": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302856,7 +303277,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 52,
@@ -302907,6 +303328,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08594"
   },
   "08595": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302920,7 +303342,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fatal_mirage",
     "encounterName": "Fatal Mirage",
     "encounterPosition": 53,
@@ -302969,6 +303391,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08595"
   },
   "08596": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -302982,7 +303405,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "to_the_forbidden_peaks",
     "encounterName": "To the Forbidden Peaks",
     "encounterPosition": 1,
@@ -303549,6 +303972,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08606": {
+    "acceptanceProfile": "eote-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "\"The touch of evil mystery in these barrier mountains, and in the beckoning sea of opalescent sky glimpsed betwixt their summits, was a highly subtle and attenuated matter...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这山岳屏障，以及它们之间呼唤众人的乳白色云海，能瞥见一丝暗藏其中，极其细微的邪恶神秘……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -303565,7 +303989,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "to_the_forbidden_peaks",
     "encounterName": "To the Forbidden Peaks",
     "encounterPosition": 11,
@@ -304770,6 +305194,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08626"
   },
   "08627": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
@@ -304785,7 +305210,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 7,
@@ -304824,6 +305249,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08627"
   },
   "08628": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
@@ -304839,7 +305265,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 8,
@@ -304878,6 +305304,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08628"
   },
   "08629": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The path, now clear, leads into a labyrinth of dark, treacherous tunnels. For good or ill, your rigorous journey is coming to an end. Taking a deep breath, you gather your courage and delve into the depths of the mountain.",
     "backFlavorZh": "已经探明的前路通向迷宫般黑暗而危险的隧道。无论好坏，你的艰难旅程即将结束。你深呼吸，鼓起勇气，一头钻进山脉深处。",
@@ -304893,7 +305320,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 9,
@@ -304932,6 +305359,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08629"
   },
   "08630": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"...our study of the decadent sculptures brought about a change in our immediate objective. This of course had to do with the chiselled avenues to the black inner world, of whose existence we had not known before....\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“……我们对堕落雕画的研究使我们的当前目标发生了变化。这当然与开凿的通往黑暗内部世界的通道有关，而我们以前并不知道它的存在……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -304947,7 +305375,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 10,
@@ -304990,6 +305418,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08631": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -305006,7 +305435,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 11,
@@ -305167,6 +305596,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08633"
   },
   "08634": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -305183,7 +305613,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 16,
@@ -305345,6 +305775,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08636"
   },
   "08637": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -305361,7 +305792,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 20,
@@ -305523,6 +305954,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08639"
   },
   "08640": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Yet now the sway of reason seemed irrefutably shaken, for this Cyclopean maze of squared, curved, and angled blocks had features which cut off all comfortable refuge. It was, very clearly, the blasphemous city of the mirage in stark, objective, and ineluctable reality.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“但现在这令人信服的理由似乎已无可辩驳地动摇了，因为这个由方形、弧形和有棱角的石块组成的巨大迷宫拥有的特征把一切舒适的退路都切断了。很明显，幻景中那座亵渎之城是赤裸裸的、客观的、无可逃避的现实。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -305539,7 +305971,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 25,
@@ -305646,6 +306078,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08642": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -305659,7 +306092,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 28,
@@ -305706,6 +306139,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08642"
   },
   "08643": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -305719,7 +306153,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 31,
@@ -305874,6 +306308,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08645"
   },
   "08646": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -305887,7 +306322,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 40,
@@ -305929,6 +306364,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08646"
   },
   "08647": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -305942,7 +306378,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "city_of_the_elder_things",
     "encounterName": "City of the Elder Things",
     "encounterPosition": 44,
@@ -306034,6 +306470,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08648"
   },
   "08649": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "-the black pit - the carven rim - the proto-shoggoths - the windowless solids with five dimensions - the nameless cylinder - the elder pharos - the primal white jelly - the wings - the eyes in darkness - the moon-ladder - the original - the eternal - the undying-",
     "backFlavorZh": "——黑色深坑——洞穴边——原初修格斯——没有窗户的五维实体——无名圆柱——古老灯塔——原始白色胶状物——翅膀——黑暗中的眼睛——登月梯——起源——永恒——不朽——",
@@ -306049,7 +306486,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_heart_of_madness",
     "encounterName": "The Heart of Madness",
     "encounterPosition": 2,
@@ -306151,6 +306588,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08650"
   },
   "08651": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -306167,7 +306605,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_heart_of_madness",
     "encounterName": "The Heart of Madness",
     "encounterPosition": 4,
@@ -306209,6 +306647,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08651"
   },
   "08652": {
+    "acceptanceProfile": "eote-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "\"Other apertures were undoubtedly connected with bygone mechanical facilities - heating, lighting, and the like - of a sort suggested in many of the carvings. Ceilings tended to be plain, but had sometimes been inlaid with green soapstone or other tiles, mostly fallen now.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“其他的孔洞无疑是与过去的机械设备有关——如供暖、照明等——这在许多雕画中都有所暗示。天花板一般都很平实，但有时也会镶嵌上绿色的皂石或其他瓷砖，而现在大多已经脱落了。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -306225,7 +306664,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_heart_of_madness",
     "encounterName": "The Heart of Madness",
     "encounterPosition": 5,
@@ -306669,6 +307108,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08659"
   },
   "08660": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The seals pulse with dangerous electrostatic energy, filling the icy chambers with bright blue light. You struggle to contain the power within each seal as you move quickly to put them in their proper place.",
     "backFlavorZh": "封印中跳动着危险的静电能量，明亮的蓝色光芒照亮了整个冰冷的房间。你尽力控制所有封印的力量，同时快速移动，想要把它们放在正确的地方。",
@@ -306685,7 +307125,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_great_seal",
     "encounterName": "The Great Seal",
     "encounterPosition": 2,
@@ -306724,6 +307164,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08660"
   },
   "08661": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "Before you can find and place all five seals, a tremendous noise fills the cavernous halls of the facility, and inky, prismatic miasma begins to seep from every inch of the walls and ceiling. Waves of creeping ichor and wafting black mist block every route but the one from which you came. You flee back to the gateway to escape or find another path forward, but by the time you reach the massive door, it is too late.",
     "backFlavorZh": "在你成功找到并放置所有五个封印之前，巨大的噪音响彻洞穴般的大厅，五彩的墨状瘴气开始从墙壁和天花板的每一寸渗透出来。大量蠕动的脓水和飘来的黑雾挡住了每一条路，除了你来的那条。你向大门口逃去，试图逃跑或找到另一条路前进，但当你到达大门时，已经太迟了。",
@@ -306740,7 +307181,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_great_seal",
     "encounterName": "The Great Seal",
     "encounterPosition": 3,
@@ -306779,6 +307220,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08661"
   },
   "08662": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "As soon as you set the seal into place, it locks into the door with an audible click. The energy stored within the seal reaches out, coursing through channels and grooves along the doorway, and lighting the entire chamber with an eerie glow. Perhaps if you can activate and place the remaining four seals, you can put a stop to this madness.",
     "backFlavorZh": "一旦你将封印放对位置，随着咔嗒一声，它就锁在了门上。储存在封印内的能量顺着管道和凹槽延伸，照亮了整个房间，发出一种怪异的光芒。也许如果你能激活并放置剩下的四个封印，你就能阻止这场疯狂。",
@@ -306794,7 +307236,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_great_seal",
     "encounterName": "The Great Seal",
     "encounterPosition": 4,
@@ -307183,6 +307625,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08668"
   },
   "08669": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -307196,7 +307639,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_great_seal",
     "encounterName": "The Great Seal",
     "encounterPosition": 11,
@@ -307243,6 +307686,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08669"
   },
   "08670": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -307255,7 +307699,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_great_seal",
     "encounterName": "The Great Seal",
     "encounterPosition": 13,
@@ -307296,6 +307740,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08670"
   },
   "08671": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "From the nameless depths at the very core of the Earth, the miasma's true form emerges. It is a shapeless thing, a creature of whirling mist and putrid ichor that screams and whispers and crawls and flies. It seeps through the walls and up from the ice; it is everywhere; it is everything.",
     "backFlavorZh": "从地球最核心的无名深渊中，瘴气的真实形态出现了。那是一种无形，由旋转的雾和腐烂脓液构成的生物，它在尖叫、低语、爬行、飞舞。它穿过墙壁，从冰中渗出；它无处不在；它就是一切。",
@@ -307312,7 +307757,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 3,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 1,
@@ -307351,6 +307796,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08671"
   },
   "08672": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "It is too late. You cannot contain the creature that dwells beneath the mountain. All you can hope to do now is escape with your lives.",
     "backFlavorZh": "已经太迟了。你没能控制住在山脉底下的生物。你现在唯一能做事情的就是逃命。",
@@ -307366,7 +307812,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 2,
@@ -307405,6 +307851,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08672"
   },
   "08673": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The facility shakes to its very core. Without the Mist-Pylons powering the structure, the nameless entity that resides within is free - and its days are numbered, as are yours. The mountain groans and trembles, threatening to collapse all around you.",
     "backFlavorZh": "整座设施都在摇晃。没有高塔为建筑供能，居住在里面的无名存在重获自由——但它时日无多，当然你也一样。山脉呻吟着，颤抖着，好像要在你周围倒塌。",
@@ -307420,7 +307867,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 3,
@@ -307459,6 +307906,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08673"
   },
   "08674": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307474,7 +307922,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 4,
@@ -307516,6 +307964,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08674"
   },
   "08675": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307531,7 +307980,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 5,
@@ -307573,6 +308022,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08675"
   },
   "08676": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307588,7 +308038,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 6,
@@ -307630,6 +308080,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08676"
   },
   "08677": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307645,7 +308096,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 7,
@@ -307687,6 +308138,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08677"
   },
   "08678": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"In the whole spectacle there was a persistent, pervasive hint of stupendous secrecy and potential revelation; as if these stark, nightmare spires marked the pylons of a frightful gateway...\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在这整个奇观中，始终遍布着某种暗示，暗示着惊人的秘密和潜在的启示：仿佛这些荒凉的、噩梦般的尖顶标志着一个可怕大门旁的高塔……”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307702,7 +308154,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 8,
@@ -307744,6 +308196,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08678"
   },
   "08679": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -307757,7 +308210,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 9,
@@ -307806,6 +308259,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08679"
   },
   "08680": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -307819,7 +308273,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 24,
@@ -307869,6 +308323,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08681": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "You emerge from the tunnel, daylight blinding you as the sun peeks out from behind the jagged mountaintops in the distance. Behind you, the entity rushes toward the exit. You prepare yourself for the end, the wall of mist, miasma, and madness feeling much like an oncoming train.",
     "backFlavorZh": "你从隧道里出来，阳光从远处锯齿状的山顶后面探出头，使你目眩。在你身后，那存在也猛冲向出口。你做好面对终结的准备，雾墙、瘴气和疯狂感觉就像一列火车迎面而来。",
@@ -307884,7 +308339,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 26,
@@ -307922,6 +308377,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08681"
   },
   "08682": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307937,7 +308393,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 27,
@@ -307979,6 +308435,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08682"
   },
   "08683": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -307994,7 +308451,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 28,
@@ -308036,6 +308493,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08683"
   },
   "08684": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -308051,7 +308509,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 29,
@@ -308093,6 +308551,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08684"
   },
   "08685": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "\"...over our former trail back to the city, along ice-sunken megalithic corridors to the great open circle, and up that archaic spiral ramp in a frenzied automatic plunge for the sane outer air and light of day.\"\n - H. P. Lovecraft, <i>At the Mountains of Madness</i>",
     "backFlavorZh": "“在我们回城路上，沿着被冰淹没的巨石走廊来到那空旷的巨大圆形遗迹，然后沿着古老的螺旋坡道疯狂而机械地往上冲，朝向外面那有着空气和日光的正常世界。”H. P. 洛夫克拉夫特《疯狂山脉》",
@@ -308108,7 +308567,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "stirring_in_the_deep",
     "encounterName": "Stirring in the Deep",
     "encounterPosition": 30,
@@ -308447,6 +308906,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08690"
   },
   "08691": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308459,7 +308919,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "creatures_in_the_ice",
     "encounterName": "Creatures in the Ice",
     "encounterPosition": 6,
@@ -308500,6 +308960,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08691"
   },
   "08692": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308512,7 +308973,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "deadly_weather",
     "encounterName": "Deadly Weather",
     "encounterPosition": 1,
@@ -308553,6 +309014,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08692"
   },
   "08693": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308565,7 +309027,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "deadly_weather",
     "encounterName": "Deadly Weather",
     "encounterPosition": 3,
@@ -308606,6 +309068,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08693"
   },
   "08694": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308618,7 +309081,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "deadly_weather",
     "encounterName": "Deadly Weather",
     "encounterPosition": 5,
@@ -308782,6 +309245,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08696"
   },
   "08697": {
+    "acceptanceProfile": "eote-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308794,7 +309258,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "elder_things",
     "encounterName": "Elder Things",
     "encounterPosition": 5,
@@ -308890,6 +309354,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08698"
   },
   "08699": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -308902,7 +309367,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hazards_of_antarctica",
     "encounterName": "Hazards of Antarctica",
     "encounterPosition": 4,
@@ -309065,6 +309530,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08701"
   },
   "08702": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309077,7 +309543,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "left_behind",
     "encounterName": "Left Behind",
     "encounterPosition": 5,
@@ -309118,6 +309584,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08702"
   },
   "08703": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309130,7 +309597,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "nameless_horrors",
     "encounterName": "Nameless Horrors",
     "encounterPosition": 1,
@@ -309171,6 +309638,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08703"
   },
   "08704": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309183,7 +309651,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "nameless_horrors",
     "encounterName": "Nameless Horrors",
     "encounterPosition": 3,
@@ -309278,6 +309746,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08705"
   },
   "08706": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309290,7 +309759,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "miasma",
     "encounterName": "Miasma",
     "encounterPosition": 1,
@@ -309331,6 +309800,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08706"
   },
   "08707": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309343,7 +309813,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "miasma",
     "encounterName": "Miasma",
     "encounterPosition": 3,
@@ -309386,6 +309856,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08707"
   },
   "08708": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309399,7 +309870,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "penguins",
     "encounterName": "Penguins",
     "encounterPosition": 1,
@@ -309499,6 +309970,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08709"
   },
   "08710": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309512,7 +309984,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shoggoths",
     "encounterName": "Shoggoths",
     "encounterPosition": 1,
@@ -309624,6 +310096,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "08712": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309636,7 +310109,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "silence_and_mystery",
     "encounterName": "Silence and Mystery",
     "encounterPosition": 1,
@@ -309793,6 +310266,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08714"
   },
   "08715": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -309806,7 +310280,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "expedition_team",
     "encounterName": "Expedition Team",
     "encounterPosition": 2,
@@ -310036,6 +310510,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08718"
   },
   "08719": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310049,7 +310524,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "expedition_team",
     "encounterName": "Expedition Team",
     "encounterPosition": 6,
@@ -310159,6 +310634,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08720"
   },
   "08721": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310172,7 +310648,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "expedition_team",
     "encounterName": "Expedition Team",
     "encounterPosition": 8,
@@ -310510,6 +310986,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08726"
   },
   "08727": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310523,7 +311000,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "tekelili",
     "encounterName": "Tekeli-Li",
     "encounterPosition": 11,
@@ -310566,6 +311043,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08727"
   },
   "08728": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310579,7 +311057,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "tekelili",
     "encounterName": "Tekeli-Li",
     "encounterPosition": 13,
@@ -310745,6 +311223,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08730"
   },
   "08731": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310759,7 +311238,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "memorials_of_the_lost",
     "encounterName": "Memorials of the Lost",
     "encounterPosition": 2,
@@ -310809,6 +311288,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08731"
   },
   "08732": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310823,7 +311303,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "memorials_of_the_lost",
     "encounterName": "Memorials of the Lost",
     "encounterPosition": 3,
@@ -310875,6 +311355,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08732"
   },
   "08733": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -310889,7 +311370,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "memorials_of_the_lost",
     "encounterName": "Memorials of the Lost",
     "encounterPosition": 4,
@@ -311123,6 +311604,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/08736"
   },
   "08737": {
+    "acceptanceProfile": "eote-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -311137,7 +311619,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "memorials_of_the_lost",
     "encounterName": "Memorials of the Lost",
     "encounterPosition": 8,
@@ -311364,6 +311846,7 @@ export const ALL_CARDS = {
     "willpower": 2
   },
   "09002": {
+    "acceptanceProfile": "tsk-player-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -311377,7 +311860,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -314597,6 +315080,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09045": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -314611,7 +315095,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -314958,6 +315442,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09051": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -314972,7 +315457,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -315199,6 +315684,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09055": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315213,7 +315699,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -315384,6 +315870,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09058": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315398,7 +315885,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Seeker",
@@ -315537,6 +316024,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09060": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315593,7 +316081,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -315636,6 +316124,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09061": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315691,7 +316180,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -315792,6 +316281,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09063": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315806,7 +316296,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -315917,6 +316407,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09065": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -315931,7 +316422,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316097,6 +316588,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09068": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316111,7 +316603,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316267,6 +316759,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09071": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316281,7 +316774,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316331,6 +316824,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09072": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316345,7 +316839,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316456,6 +316950,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09074": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316470,7 +316965,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316579,6 +317074,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09076": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316593,7 +317089,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Rogue",
@@ -316642,6 +317138,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09077": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316655,7 +317152,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Rogue",
@@ -316754,6 +317251,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09079": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316812,7 +317310,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -316855,6 +317353,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09080": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -316907,7 +317406,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -316953,6 +317452,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09081": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317008,7 +317508,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317301,6 +317801,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09086": {
+    "acceptanceProfile": "tsk-player-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317315,7 +317816,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317358,6 +317859,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09087": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317372,7 +317874,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317413,6 +317915,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09088": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317427,7 +317930,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317532,6 +318035,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09090": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317545,7 +318049,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317588,6 +318092,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09091": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317602,7 +318107,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -317647,6 +318152,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09092": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -317661,7 +318167,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Mystic",
@@ -318074,6 +318580,7 @@ export const ALL_CARDS = {
     "xp": 4
   },
   "09099": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318119,7 +318626,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318167,6 +318674,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09100": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318217,7 +318725,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318537,6 +319045,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09105": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318551,7 +319060,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318595,6 +319104,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09106": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318608,7 +319118,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318650,6 +319160,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09107": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318663,7 +319174,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318763,6 +319274,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09109": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318776,7 +319288,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318817,6 +319329,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09110": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318831,7 +319344,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": true,
     "factionName": "Survivor",
@@ -318872,6 +319385,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09111": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318885,7 +319399,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -318980,6 +319494,7 @@ export const ALL_CARDS = {
     "xp": 1
   },
   "09113": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -318994,7 +319509,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -319110,6 +319625,7 @@ export const ALL_CARDS = {
     "xp": 2
   },
   "09115": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319123,7 +319639,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -319283,6 +319799,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09118": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319296,7 +319813,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -319337,6 +319854,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09119": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319383,7 +319901,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -319435,6 +319953,7 @@ export const ALL_CARDS = {
     "xp": 0
   },
   "09120": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319449,7 +319968,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 2,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -319618,6 +320137,7 @@ export const ALL_CARDS = {
     "xp": 3
   },
   "09123": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319631,7 +320151,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": true,
     "exile": false,
     "factionName": "Neutral",
@@ -319738,6 +320258,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09124"
   },
   "09125": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319752,7 +320273,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -319799,6 +320320,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09125"
   },
   "09126": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319813,7 +320335,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -319860,6 +320382,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09126"
   },
   "09127": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319874,7 +320397,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "evade": 2,
     "exceptional": false,
     "exile": false,
@@ -319927,6 +320450,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09127"
   },
   "09128": {
+    "acceptanceProfile": "tsk-player-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -319941,7 +320465,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Neutral",
@@ -320482,6 +321006,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09509"
   },
   "09510": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavor": "Cold rain pelts the dreary streets in a rhythmic pitter-patter. Despite the hour, the square is bustling with automobiles, carriages, and pedestrians. Somewhere in this crowded city is the man you seek... or are you already too late?",
     "backFlavorZh": "冷雨噼里啪啦地落在沉闷的街上，颇有些节奏。尽管为时已晚，广场上汽车、马车和行人还是熙熙攘攘。你要找的人就藏在拥挤的城市某处……但你还来得及吗？",
@@ -320497,7 +321022,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "riddles_and_rain",
     "encounterName": "Riddles and Rain",
     "encounterPosition": 10,
@@ -320950,6 +321475,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09518": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -320963,7 +321489,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "riddles_and_rain",
     "encounterName": "Riddles and Rain",
     "encounterPosition": 18,
@@ -322151,6 +322677,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09536b"
   },
   "09537": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322164,7 +322691,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 18,
@@ -322219,6 +322746,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09537b": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322232,7 +322760,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 18,
@@ -322283,6 +322811,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09538": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322296,7 +322825,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 19,
@@ -322350,6 +322879,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09539": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322363,7 +322893,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 20,
@@ -322473,6 +323003,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09540"
   },
   "09541": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322486,7 +323017,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 26,
@@ -322536,6 +323067,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09542": {
+    "acceptanceProfile": "tsk-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322548,7 +323080,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 27,
@@ -322645,6 +323177,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09543"
   },
   "09544a": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322657,7 +323190,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 31,
@@ -322703,6 +323236,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09544a"
   },
   "09544b": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322715,7 +323249,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dead_heat",
     "encounterName": "Dead Heat",
     "encounterPosition": 31,
@@ -322757,6 +323291,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09544b"
   },
   "09545": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -322770,7 +323305,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 1,
@@ -322806,6 +323341,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09545"
   },
   "09546": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Hot on the thief's heels, you bust through the door leading to her current target, only to find her already leaving with a piece of the statuette. She gives you a mischievous smirk before escaping through a nearby window.",
     "backFlavorZh": "你紧追不舍，跟着窃贼冲进了大门，里面就是她的下一个目标，却发现她已经拿着一块碎片溜了。她从附近一扇窗逃了，临了还给你留下一个调皮的坏笑。",
@@ -322822,7 +323358,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 2,
@@ -323029,6 +323565,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09549"
   },
   "09550": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Serving as the office of the President of Argentina, the Rose House is also home to several antiques and curios inherited from past leaders. One might be a piece of the Key your quarry seeks.",
     "backFlavorZh": "玫瑰宫是阿根廷的总统府，里面寄存着过去数任留下的奇珍异宝。也许这里就有一片钥匙吸引了你的猎物。",
@@ -323045,7 +323582,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 6,
@@ -323087,6 +323624,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09550"
   },
   "09551": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Overlooking the Plaza de Mayo looms the impressive façade of the Metropolitan Cathedral. In addition to the usual trappings of the church, Bolívar has informed you that it houses many magnificent pieces of art, as well as a mausoleum. It seems a likely target for La Chica Roja.",
     "backFlavorZh": "主教座堂的宏伟立面俯瞰整个五月广场。玻利瓦尔告诉你，这里仿佛一座宏伟的陵墓，除了有教会的华美陈设，更保存了许多艺术珍品，可能是红衣女郎的目标。",
@@ -323103,7 +323641,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 7,
@@ -323145,6 +323683,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09551"
   },
   "09552": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Robbing the dead has long been a crime reserved for only the foulest of thieves, so naturally, Officer Bolívar believes Recoleta Cemetery is on the list of potential targets. Who knows what valuables may be locked with the dead in the cemetery's countless marble vaults and mausoleums?",
     "backFlavorZh": "只有最奸恶的窃贼才会对死者下手，玻利瓦尔警长自然觉得雷科莱塔公墓也会沦为目标。谁知道数不胜数的大理石坟茔中埋藏了多少宝藏？",
@@ -323161,7 +323700,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 8,
@@ -323203,6 +323742,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09552"
   },
   "09553": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "This privately-owned mansion contains many pieces of art that fit the profile of your mark's past robberies. Judging from the ornate architecture, its owners must be important high society types. You're unlikely to be allowed to patrol the area, so you'll have to resort to La Chica Roja's own methods if you plan on watching for her here.",
     "backFlavorZh": "这座私人宅邸藏有许多艺术品，和过去遭窃的地方如出一辙。看这华美的建筑，屋主肯定是上层人士。想必你没法进去探看。要在这儿守株待兔的话，你就得学着红衣女郎的手段了。",
@@ -323218,7 +323758,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 9,
@@ -323260,6 +323800,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09553"
   },
   "09554": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Officer Bolívar has marked this public administrative building as a potential target for La Chica Roja. Steeped in history, the Cabildo de Buenos Aires likely houses artifacts from the city's colonial era. Perhaps one is a piece of the Key she is assembling?",
     "backFlavorZh": "这座市政建筑也被玻利瓦尔警长标作是红衣女郎的目标。回顾历史，布宜诺斯艾利斯市议会可能珍藏了许多殖民地时期的文物。她要组装的钥匙，也许就有一片收在这里？",
@@ -323276,7 +323817,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 10,
@@ -323376,6 +323917,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09555"
   },
   "09556": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "Many prolific figures of opera, including the famed Arturo Toscanini, have laid their mark on this gorgeous opera house - easily one of the best in the world. Bolívar can provide you with tickets to the current showing of <i>Aida</i>, but you're probably going to stand out like a sore thumb.",
     "backFlavorZh": "众多歌剧界的名角——包括大名鼎鼎的阿尔图罗·托斯卡尼尼，都在这座华美的歌剧院留下了自己的印记。要说这里是世界一流，那也不差。玻利瓦尔能给你搞到最近《阿依达》的票，但你肯定会显得格格不入。",
@@ -323391,7 +323933,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 12,
@@ -323502,6 +324044,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09557b": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -323514,7 +324057,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 13,
@@ -323559,6 +324102,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09557b"
   },
   "09558": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -323572,7 +324116,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 14,
@@ -323674,6 +324218,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09559"
   },
   "09560": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -323686,7 +324231,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 18,
@@ -323961,6 +324506,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09564"
   },
   "09565a": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -323973,7 +324519,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 25,
@@ -324019,6 +324565,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09565a"
   },
   "09565b": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -324031,7 +324578,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "sanguine_shadows",
     "encounterName": "Sanguine Shadows",
     "encounterPosition": 25,
@@ -324073,6 +324620,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09565b"
   },
   "09566": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -324086,7 +324634,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 1,
@@ -324122,6 +324670,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09566"
   },
   "09567": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The daylight dims, and you strain your eyes to examine why. A strange, black shape has begun to crawl its way over the outline of the sun. An eclipse? Whatever the cult is up to, you better stop it soon...",
     "backFlavorZh": "日光黯淡，你眯起眼睛想看看是为什么。诡异的黑影缓缓吞没了太阳的轮廓。是日食？无论教派意欲为何，你最好还是快点阻止他们……",
@@ -324138,7 +324687,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 4,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 2,
@@ -324394,6 +324943,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09571"
   },
   "09571b": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -324406,7 +324956,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 6,
@@ -324441,6 +324991,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09571b"
   },
   "09572": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The Galata Bridge spans over the Golden Horn, separating the piers from the rest of the city.",
     "backFlavorZh": "加拉塔大桥横跨金角湾，将码头和城区隔开。",
@@ -324456,7 +325007,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 7,
@@ -324734,6 +325285,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09576"
   },
   "09577": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -324750,7 +325302,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 12,
@@ -324795,6 +325347,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09577"
   },
   "09578": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -324810,7 +325363,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 13,
@@ -324918,6 +325471,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09580": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -324933,7 +325487,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 15,
@@ -324978,6 +325532,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09580"
   },
   "09581": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -324993,7 +325548,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 16,
@@ -325038,6 +325593,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09581"
   },
   "09582": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -325053,7 +325609,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 17,
@@ -325099,6 +325655,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09583": {
+    "acceptanceProfile": "tsk-campaign-b-2026-11",
     "availability": "strict",
     "backFlavor": "The bustling streets of the bazaar's domed interior are dense with stalls and traders selling all manner of goods, from jewelry and clothes to carpets and furniture. Somewhere in this labyrinthine market lies the Key you and your enemies search for... but where?",
     "backFlavorZh": "大巴扎里的拱顶下面的道路熙熙攘攘，热闹非凡，挤满了摊贩，叫卖各种各样的商品，从珠宝、衣服，到地毯、家具，不一而足。你和敌人找寻的钥匙就藏在迷宫般的市场深处……但是究竟在哪儿呢？",
@@ -325115,7 +325672,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dealings_in_the_dark",
     "encounterName": "Dealings in the Dark",
     "encounterPosition": 18,
@@ -325964,6 +326521,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09594"
   },
   "09595": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "\"There's something off about all of this...\" Desi remarks as you patrol the rainy streets of Havana. \"I swear, I keep seeing something following us, but when I look-\" Fate must have a sense of cosmic irony, as the moment Desi turns around, a formless shape not unlike a distortion in reality opens its gaping maw and swallows him whole. You shout his name in terror... but to your surprise, the distortion reshapes itself in his image. The imposter gives you a sinister grin before vanishing into the shadows, taking the real Desi with him.",
     "backFlavorZh": "“这些事有点不对劲……”你们正在哈瓦那的雨街上巡逻，德西突然说道。“我发誓，一直有东西跟着我们，但每次我回头看的时候……”命运可真爱开玩笑，德西刚一回头，现实扭曲般的无形身影就张开巨口，将他整个吞没。你吓破了胆，大叫他的名字……但意外的是，扭曲重塑成了他的样子。赝品留给你一个邪恶的狞笑，就消失在阴影之中，带走了真的德西。",
@@ -325980,7 +326538,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dancing_mad",
     "encounterName": "Dancing Mad",
     "encounterPosition": 5,
@@ -326478,6 +327036,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09603": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "Nobody else seems to notice the presence swirling above the Teatro Nacional, but you've seen it before, in London. And where such creatures roost, the Coterie is sure to be present, as well. Perhaps you should get tickets and see for yourself.",
     "backFlavorZh": "似乎没人注意到国家剧院上面旋转的存在，但你之前见过，就在伦敦。只要这东西出现，结社肯定也在附近。兴许你应该买张票自己进去看看。",
@@ -326493,7 +327052,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dancing_mad",
     "encounterName": "Dancing Mad",
     "encounterPosition": 13,
@@ -326951,6 +327510,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09609"
   },
   "09610": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "The frigid landscape fills you with a kind of numbness. At first, you dismiss the feeling as purely physical, a side effect of the cold. It is only when you stop and consider the feeling itself that it dawns on you: the numbness is a result of some strange influence. You are forgetting small moments. Memories of the surrounding area. It is as though your mind itself is being hunted and fed upon.",
     "backFlavorZh": "严寒冻得你麻木。一开始你只以为这是身体在寒冷之下的反应，打算不予理会。等到停下来的时候，你才发现这股感觉是某种奇怪的力量强加于你的。你开始忘掉一些琐碎的时刻，忘掉周围的区域。就好像有什么东西追猎、吃掉了你的思维。",
@@ -326967,7 +327527,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 7,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 2,
@@ -327006,6 +327566,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09610"
   },
   "09611": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "During your exploration, you stop and look up at the majestic vista of a nearby mountain range. One of the mountains appears strangely damaged, as though a great fist has punched a hole in the mountainside. Although it is covered in a layer of snow, there is something ominous about the deep, empty pit gouged into the side of the rock. You wonder what horrible thing burst out of the heart of the mountain.\nAs you stare at the impossible destruction around you, a faint buzzing in the back of your mind sets you on edge. You have a creeping feeling that you have forgotten something, or someone...",
     "backFlavorZh": "你在探索中驻足查看附近山脉的壮丽奇景。其中一峰看起来有奇怪的缺口，仿佛有一只巨拳在山侧打出一个洞来。尽管盖了一层雪，岩石边挖出的深洞看上去还是让人觉得不祥。你不禁想问，从山脉的心脏中到底会涌出什么可怕的东西。\n就在你凝视周围不可思议的毁灭景象的时候，脑海深处突然传来一阵模糊的嗡嗡声，让你紧张起来。你害怕自己是不是已经忘了什么，忘了谁……",
@@ -327022,7 +327583,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 3,
@@ -327282,6 +327843,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09615a"
   },
   "09615b": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -327295,7 +327857,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 7,
@@ -327446,6 +328008,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09617"
   },
   "09618": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "Fairbanks is the perfect place to replenish your supplies and research routes to the gold mine.",
     "backFlavorZh": "要想补充补给，研究去金矿的线路，那费尔班克斯是绝佳的地点。",
@@ -327461,7 +328024,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 10,
@@ -327619,6 +328182,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09620"
   },
   "09621": {
+    "acceptanceProfile": "tsk-campaign-c-2026-11",
     "availability": "strict",
     "backFlavor": "The bleak splendours of these remote and lonely forests rather overwhelmed him with the sense of his own littleness.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "这些森林遥远孤寂，荒芜又壮观，让他体会到了自己的渺小，这份感觉将他吞没。阿尔杰农·布莱克伍德，《温迪戈》",
@@ -327635,7 +328199,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 13,
@@ -327739,6 +328303,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09622"
   },
   "09623": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "In the draughts of night that poured their silent tide from the depths of the forest, with messages from distant ridges and from lakes just beginning to freeze, there lay already the faint, bleak odors of coming winter.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "夜风带来了森林深处汹涌的沉默，还有消息来自遥远的山脊和刚刚结冰的湖面。这些都是严冬将至之时淡薄的阴冷气息。阿尔杰农·布莱克伍德，《温迪戈》",
@@ -327755,7 +328320,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 15,
@@ -327799,6 +328364,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09624": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "In the draughts of night that poured their silent tide from the depths of the forest, with messages from distant ridges and from lakes just beginning to freeze, there lay already the faint, bleak odors of coming winter.\n - Algernon Blackwood, <i>The Wendigo</i>",
     "backFlavorZh": "夜风带来了森林深处汹涌的沉默，还有消息来自遥远的山脊和刚刚结冰的湖面。这些都是严冬将至之时淡薄的阴冷气息。阿尔杰农·布莱克伍德，《温迪戈》",
@@ -327815,7 +328381,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 16,
@@ -327853,6 +328419,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09624"
   },
   "09625a": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -327866,7 +328433,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 17,
@@ -327979,6 +328546,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09625b"
   },
   "09626": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -327992,7 +328560,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 18,
@@ -328043,6 +328611,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09627": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328056,7 +328625,7 @@ export const ALL_CARDS = {
     "damage": 3,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 19,
@@ -328108,6 +328677,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09628": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328121,7 +328691,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 20,
@@ -328173,6 +328743,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09629": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328186,7 +328757,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 21,
@@ -328237,6 +328808,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09630": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328250,7 +328822,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 22,
@@ -328301,6 +328873,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09631": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328314,7 +328887,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "on_thin_ice",
     "encounterName": "On Thin Ice",
     "encounterPosition": 23,
@@ -328582,6 +329155,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09634b"
   },
   "09635": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -328595,7 +329169,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 1,
@@ -328631,6 +329205,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09635"
   },
   "09636": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "Final Stand",
@@ -328646,7 +329221,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 12,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 2,
@@ -328685,6 +329260,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09636"
   },
   "09637": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The storm rages on. Doors batter and foundations shake. You have tried your damnedest, but the Claret Knight - and thus the last of the Key Locuses preventing you from acquiring your prize - still stands. With the supernatural storm growing more and more potent, and the rest of the Coterie mobilizing for all-out war with one another, you don't think you'll get another chance like this. Perhaps it would be better to retreat and lay low.",
     "backFlavorZh": "风暴咆哮。门砸坏了，地基摇晃。你把自己所有的力气都他妈的用尽了，但暗红骑士——还有剩下的钥匙节点——还在阻止你夺取猎物。反常的风暴愈演愈烈，结社的人正倾巢而出，不留余力。你觉得自己不可能再有这样的机会了。现在是否应该撤退休整？",
@@ -328701,7 +329277,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 14,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 3,
@@ -328740,6 +329316,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09637"
   },
   "09638": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The storm rages on. Doors batter and foundations shake. You have tried your damnedest, but the Beast in a Cowl of Crimson is too dangerous and too agile to pin down. So long as its lair remains undisturbed - and thus the last of the Key Locuses still standing - you cannot reclaim the creature's Key. With the supernatural storm growing more and more potent and the Beast's devotees growing bolder and stronger by the hour, you don't think you'll get another chance like this. Perhaps it would be better to retreat and lay low.",
     "backFlavorZh": "风暴咆哮。门砸坏了，地基摇晃。你把自己所有的力气都他妈的用尽了，但还是拦不住危险又敏捷的深红斗篷的恶兽。只要它的巢穴不受侵扰——剩下的钥匙节点依然有效——你就无法夺回它手中的钥匙。反常的风暴愈演愈烈，每过一刻，恶兽的信徒胆子都越来越大，力量也越来越强。你觉得自己不可能再有这样的机会了。现在是否应该撤退休整？",
@@ -328756,7 +329333,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 14,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 4,
@@ -328795,6 +329372,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09638"
   },
   "09639": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "...But when the storm passes, you still stand, and the Light of Pharos is safe. Your host orders several of his agents to track down the Beast's whereabouts, and you are surprised to find that it has fled the city. \"We're safe,\" one of them says, letting out a held breath. \"We're finally safe.\"",
     "backFlavorZh": "……等到风暴过去，你依然屹立，而法罗斯之光安全了。你的东道主命令手下几个特工去找寻恶兽的所在。意外的是，它已经逃出城去了。“我们安全了。”有个特工松了一直悬着的一口气，“我们终于安全了。”",
@@ -328810,7 +329388,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 5,
@@ -328849,6 +329427,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09639"
   },
   "09640": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "Fallen Stronghold",
@@ -328863,7 +329442,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 6,
@@ -328902,6 +329481,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09640"
   },
   "09641": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "Den of Evil",
@@ -328916,7 +329496,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 7,
@@ -328955,6 +329535,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09641"
   },
   "09642": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The stock exchange building in Alexandria is more than just a place of business, it seems - it is also the Claret Knight's chosen hiding place for the Key you are searching for.",
     "backFlavorZh": "看来亚历山大的证券交易所可不仅仅是做生意的地方——它其实就是暗红骑士为钥匙选择的安放之所，那把你要找到的钥匙。",
@@ -328970,7 +329551,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 8,
@@ -329013,6 +329594,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09642"
   },
   "09643": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "It seems the Coterie has set up shop in Alexandria's stock exchange building. What better place to hide than in plain sight?",
     "backFlavorZh": "看来结社已在亚历山大的证券交易安营扎寨。众目睽睽之下，还有哪能比这里更适合避人耳目？",
@@ -329028,7 +329610,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 9,
@@ -329072,6 +329654,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09644": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The Bourse is the site of Alexandria's stock exchange, cementing the city as a major economic center for Egypt. It is a bustling place during the day, with many carriages and automobiles parked nearby at all hours, and dozens of people entering and exiting.",
     "backFlavorZh": "亚历山大的证券交易所巩固了此城埃及经济中心的地位。白天这里熙熙攘攘，无数马车汽车停在附近，众人进进出出。",
@@ -329087,7 +329670,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 10,
@@ -329130,6 +329713,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09644"
   },
   "09645": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "Established along the coast, the Windsor Palace is one of the finest hotels in the city, serving its elite. If there is anywhere Coterie envoys might be hiding, this is it. According to your intel, it's also the hiding place of one of the Claret Knight's supposed \"loci.\"",
     "backFlavorZh": "建在海边的温莎宫是城里顶尖的酒店，服务精英阶层。要是哪里还能供结社的特使藏身，那就是这儿了。根据你的情报，这里也是暗红骑士藏匿所谓“节点”的地方。",
@@ -329145,7 +329729,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 11,
@@ -329189,6 +329773,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09645"
   },
   "09646": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "Founded just two decades ago, the college is home to many important and well-to-do students. Your intel indicates that one of the Claret Knight's loci might have moved recently - it wouldn't be a surprise to you if this was the chosen site.",
     "backFlavorZh": "这所学院成立已有两秩，培育了许多达官显贵。你的情报显示，暗红骑士近来移动过一个节点——要是他选了这里，那真是毫不意外。",
@@ -329204,7 +329789,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 12,
@@ -329248,6 +329833,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09646"
   },
   "09647": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "One of the most important historical strongholds along the Mediterranean, the Citadel was built on the site of the ancient and famed Lighthouse of Alexandria.",
     "backFlavorZh": "这座城堡名列地中海岸最重要的历史要塞之林。这块地方原本屹立着亚历山大名声卓著的古代灯塔。",
@@ -329263,7 +329849,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 13,
@@ -329305,6 +329891,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09647"
   },
   "09648": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "Waves crash against the road that runs along Alexandria's coast, spilling water into the streets. A hub of activity, many streets intersect with the Corniche along its lengthy route - perhaps the perfect hiding place for a Key Locus?",
     "backFlavorZh": "海浪冲击着亚历山大沿海的道路，海水都溅到了街上。滨海大道奇长无比，与许多街道都有交汇，是活动的中心——兴许这里是钥匙节点绝佳的藏匿地点？",
@@ -329320,7 +329907,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 14,
@@ -329364,6 +329951,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09648"
   },
   "09649": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "This busy, crowded marketplace is known for its twisting streets, bustling shops, and grisly past. You can't help but dart your eyes between the many alleys and hiding places along these narrow streets as you search for the Key Locus tucked away here.",
     "backFlavorZh": "这座拥挤繁忙的市集可谓鼎鼎大名，因为它有着弯曲的街巷、繁忙的店铺和可怕的过往。你寻找这里藏匿的钥匙节点，眼睛不住地瞥过狭窄街道间数不清的小巷和藏匿地。",
@@ -329379,7 +329967,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 15,
@@ -329423,6 +330011,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09649"
   },
   "09650": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "The necropolis is home to several prominent dead, but is also the lair of something far more terrifying.",
     "backFlavorZh": "大墓地中是许多著名古人的长眠之地，也有更为可怕的存在以此为巢。",
@@ -329438,7 +330027,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 16,
@@ -329482,6 +330071,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09651": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "亚历山大地下陵墓",
@@ -329496,7 +330086,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 17,
@@ -329541,6 +330131,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09652": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "Kom el Shoqafa - meaning Mound of Shards - is the site of many tombs, statues and other ancient relics, a conflux of Egyptian, Roman, and Greek influences. It is now partially underwater and closed to the public. Who knows what other secrets lie buried within?",
     "backFlavorZh": "此地本名碎片冢，汇集了埃及、罗马和希腊时代的众多坟墓、雕塑和古代遗物。现在已经半沉入水下，对公众关闭。谁知道里面还埋藏着什么样的秘密？",
@@ -329556,7 +330147,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 18,
@@ -329599,6 +330190,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09652"
   },
   "09653a": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329611,7 +330203,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 19,
@@ -329658,6 +330250,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09653b": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329670,7 +330263,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 19,
@@ -329713,6 +330306,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09654a": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329726,7 +330320,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 23,
@@ -329781,6 +330375,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09654b": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329793,7 +330388,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 23,
@@ -329839,6 +330434,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09654b"
   },
   "09655a": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329852,7 +330448,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 24,
@@ -329906,6 +330502,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09655b": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329919,7 +330516,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 24,
@@ -329970,6 +330567,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09656": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -329983,7 +330581,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 25,
@@ -330031,6 +330629,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09656"
   },
   "09657": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -330044,7 +330643,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 27,
@@ -330091,6 +330690,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09657"
   },
   "09658": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -330103,7 +330703,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "dogs_of_war",
     "encounterName": "Dogs of War",
     "encounterPosition": 29,
@@ -330258,6 +330858,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09659b"
   },
   "09660": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -330271,7 +330872,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shades_of_suffering",
     "encounterName": "Shades of Suffering",
     "encounterPosition": 1,
@@ -330307,6 +330908,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09660"
   },
   "09661": {
+    "acceptanceProfile": "tsk-campaign-d-2026-11",
     "availability": "strict",
     "backFlavor": "Amidst the throng of a busy street, you see the woman with the red parasol flit past a food stall down a narrow back alley. Following her, you step into an alley filled with a hazy, silvery light. A strange feeling comes over you, and your head swims with alien whispers.",
     "backFlavorZh": "你在拥挤的街道中瞧见打着红伞的女子掠过卖食物的小摊，走进狭窄的后巷。你跟了进去，踏入小巷，里面一阵朦胧的银光。你被一阵奇怪的感觉包围，脑子里回荡起异界的低语。",
@@ -330323,7 +330925,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 3,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shades_of_suffering",
     "encounterName": "Shades of Suffering",
     "encounterPosition": 2,
@@ -330759,6 +331361,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09669": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The Selangor Club attracts all the city's wealthiest clientele, but especially caters to the British imperialists that run much of the export business.",
     "backFlavorZh": "雪兰莪俱乐部吸引了全城所有的豪富，但做出口贸易的英帝国主义者尤其喜欢这里。",
@@ -330774,7 +331377,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "shades_of_suffering",
     "encounterName": "Shades of Suffering",
     "encounterPosition": 10,
@@ -332163,6 +332766,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09681"
   },
   "09682": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "Whirlwinds of cosmic dust swirl throughout the alien sky, threads of radiant starlight and tempests of gravity-defying rubble shifting, churning, rearranging. Every inch of this place is a deliberate act of insanity, a premeditated manipulation of your mind, designed to make you lose your sense of self.",
     "backFlavorZh": "异星的天空中刮过洪荒星尘的漩涡。星光辐射条条成线，石砾风暴违背了重力的法则。这一切都在变换、搅动、重组。这里每寸地方都是刻意的疯狂，预谋要操纵你的思想，让你失去自己的感知。",
@@ -332179,7 +332783,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "without_a_trace",
     "encounterName": "Without a Trace",
     "encounterPosition": 2,
@@ -332218,6 +332822,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09682"
   },
   "09683": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "The weight of an infinite, dimensionless universe forces you to your knees. You imagine Taylor's \"layer cake,\" layer upon layer upon layer, worlds upon worlds upon wolrds, and yours is the thinnest of all. You are hurtling through barriers humanity was never meant to cross, and if you remain here any longer, you won't even <i>remember</i> where you came from.",
     "backFlavorZh": "无维无尽的宇宙之重，压得你跪下。你想到泰勒的“多层蛋糕”，一层上面还有一层，世界上面还有世界，而你的却是最薄一层。你穿行于人类绝不该跨越的边界。要是你再待一会儿，甚至都不会记得自己从何而来。",
@@ -332234,7 +332839,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 5,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "without_a_trace",
     "encounterName": "Without a Trace",
     "encounterPosition": 3,
@@ -332273,6 +332878,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09683"
   },
   "09684": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "<span class='tsk-glyphs'>You are</span> nothing; <span class='tsk-glyphs'>timeless,</span> forgotten, <span class='tsk-glyphs'>a figment, a shard of a fractured</span> memory; <span class='tsk-glyphs'>but here, so much more;</span> a promise, <span class='tsk-glyphs'>a signatory, a blood-inked curse in a covenant of tear</span>drops ever <span class='tsk-glyphs'>swimming</span> ever <span class='tsk-glyphs'>falling</span> ever <span class='tsk-glyphs'> drowning in thoughts in memory in</span> time; <span class='tsk-glyphs'>and it, it is the final err, it is the final terror that shall reign; and your thoughts, your memories, they are its and it is you; coin-sides, both and all and nothing at once,</span> all <span class='tsk-glyphs'>at</span> once, <span class='tsk-glyphs'>all at once.</span>",
     "backFlavorZh": "---- 虚无；---- 被遗忘，----- 记忆，---- 承诺，------ 跌落 --- 从来 ---- 永远 ------ 时间；-------- 全部 -- 都，----",
@@ -332289,7 +332895,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "doom": 6,
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "without_a_trace",
     "encounterName": "Without a Trace",
     "encounterPosition": 4,
@@ -332438,6 +333044,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09686"
   },
   "09687": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavor": "You stand at the edge of the platform upon which you arrived in this realm, wondering how to return to your own. There is no sign whatsoever of the ship that fell into the pit below. Perhaps it made its way back. Or perhaps it is still falling. You have no way to know for sure, but very few alternatives. Holding your breath, you look away from the bottomless pit, and take a leap of faith...",
     "backFlavorZh": "你站在刚到这片领域时抵达的平面边缘，还是不知道该怎么返回自己的世界。掉进下方坑洞的船只去了哪里，毫无迹象。也许它已经回头。又或者还在继续下落。你并不确定，但也没什么选择。你屏息不看无底的深渊，纵身信仰之跃……",
@@ -332453,7 +333060,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "without_a_trace",
     "encounterName": "Without a Trace",
     "encounterPosition": 7,
@@ -332550,6 +333157,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09688"
   },
   "09689": {
+    "acceptanceProfile": "tsk-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -332565,7 +333173,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "without_a_trace",
     "encounterName": "Without a Trace",
     "encounterPosition": 9,
@@ -334120,6 +334728,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09715"
   },
   "09716a": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -334133,7 +334742,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "crimson_conspiracy",
     "encounterName": "Crimson Conspiracy",
     "encounterPosition": 1,
@@ -334181,6 +334790,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09716a"
   },
   "09716b": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -334194,7 +334804,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "crimson_conspiracy",
     "encounterName": "Crimson Conspiracy",
     "encounterPosition": 2,
@@ -334242,6 +334852,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09716b"
   },
   "09716c": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -334255,7 +334866,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "crimson_conspiracy",
     "encounterName": "Crimson Conspiracy",
     "encounterPosition": 3,
@@ -334468,6 +335079,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09719"
   },
   "09720": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -334481,7 +335093,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "mysteries_abound",
     "encounterName": "Mysteries Abound",
     "encounterPosition": 1,
@@ -335100,6 +335712,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09728"
   },
   "09729": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -335112,7 +335725,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "scarlet_sorcery",
     "encounterName": "Scarlet Sorcery",
     "encounterPosition": 1,
@@ -335270,6 +335883,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09731"
   },
   "09732": {
+    "acceptanceProfile": "tsk-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -335283,7 +335897,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "outsiders",
     "encounterName": "Outsiders",
     "encounterPosition": 4,
@@ -335617,6 +336231,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09737"
   },
   "09738": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -335629,7 +336244,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_the_outside",
     "encounterName": "Agents of the Outside",
     "encounterPosition": 3,
@@ -335670,6 +336285,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09738"
   },
   "09739": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -335683,7 +336299,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "agents_of_yuggoth",
     "encounterName": "Agents of Yuggoth",
     "encounterPosition": 1,
@@ -336002,6 +336618,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09744"
   },
   "09745": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -336014,7 +336631,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "spreading_corruption",
     "encounterName": "Spreading Corruption",
     "encounterPosition": 3,
@@ -336057,6 +336674,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09745"
   },
   "09746": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -336069,7 +336687,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "spreading_corruption",
     "encounterName": "Spreading Corruption",
     "encounterPosition": 5,
@@ -336112,6 +336730,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09746"
   },
   "09747a": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336127,7 +336746,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 1,
@@ -336169,6 +336788,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747a"
   },
   "09747b": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336184,7 +336804,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 2,
@@ -336226,6 +336846,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747b"
   },
   "09747c": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336241,7 +336862,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 3,
@@ -336283,6 +336904,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09747c"
   },
   "09748a": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336298,7 +336920,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 4,
@@ -336340,6 +336962,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09748a"
   },
   "09748b": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336355,7 +336978,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 5,
@@ -336397,6 +337020,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09748b"
   },
   "09749a": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336412,7 +337036,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 6,
@@ -336455,6 +337079,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09749b": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336470,7 +337095,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 7,
@@ -336513,6 +337138,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09750": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backName": "City of Remnants",
@@ -336528,7 +337154,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": true,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 8,
@@ -336571,6 +337197,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "09751": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -336583,7 +337210,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "beyond_the_beyond",
     "encounterName": "Beyond the Beyond",
     "encounterPosition": 10,
@@ -337083,6 +337710,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09759": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -337096,7 +337724,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "red_coterie",
     "encounterName": "Red Coterie",
     "encounterPosition": 8,
@@ -337280,6 +337908,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "09762": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -337294,7 +337923,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "globetrotting",
     "encounterName": "Globetrotting",
     "encounterPosition": 1,
@@ -337421,6 +338050,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09763"
   },
   "09764": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -337435,7 +338065,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "globetrotting",
     "encounterName": "Globetrotting",
     "encounterPosition": 3,
@@ -337488,6 +338118,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09764"
   },
   "09765": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -337501,7 +338132,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 1,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "globetrotting",
     "encounterName": "Globetrotting",
     "encounterPosition": 4,
@@ -337659,6 +338290,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/09767"
   },
   "09768a": {
+    "acceptanceProfile": "tsk-campaign-g-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -337671,7 +338303,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "globetrotting",
     "encounterName": "Globetrotting",
     "encounterPosition": 13,
@@ -338075,6 +338707,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10005b"
   },
   "10016a": {
+    "acceptanceProfile": "fhv-player-a-2026-11",
     "agility": 4,
     "availability": "strict",
     "backFlavorZh": "",
@@ -338102,7 +338735,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -338146,6 +338779,7 @@ export const ALL_CARDS = {
     "willpower": 3
   },
   "10016b": {
+    "acceptanceProfile": "fhv-player-a-2026-11",
     "agility": 3,
     "availability": "strict",
     "backFlavorZh": "",
@@ -338173,7 +338807,7 @@ export const ALL_CARDS = {
     "dataStatus": "validated",
     "deckLimit": 0,
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "exceptional": false,
     "exile": false,
     "factionName": "Survivor",
@@ -338505,6 +339139,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10524b"
   },
   "10532b": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338518,7 +339153,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 10,
@@ -338569,6 +339204,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10533b": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338582,7 +339218,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 11,
@@ -338633,6 +339269,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10534b": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338646,7 +339283,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 12,
@@ -338697,6 +339334,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10535b": {
+    "acceptanceProfile": "fhv-campaign-a-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338710,7 +339348,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 13,
@@ -338761,6 +339399,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10536b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338774,7 +339413,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 14,
@@ -338824,6 +339463,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10537b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338837,7 +339477,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 15,
@@ -338887,6 +339527,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10538b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338900,7 +339541,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 16,
@@ -338950,6 +339591,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10539b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -338963,7 +339605,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 17,
@@ -339013,6 +339655,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10540b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -339026,7 +339669,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 18,
@@ -339076,6 +339719,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10541b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -339089,7 +339733,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 19,
@@ -339139,6 +339783,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "10542b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -339152,7 +339797,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 20,
@@ -339202,6 +339847,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "10543b": {
+    "acceptanceProfile": "fhv-campaign-b-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -339215,7 +339861,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "hemlock_house",
     "encounterName": "Hemlock House",
     "encounterPosition": 21,
@@ -339333,6 +339979,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "10583b": {
+    "acceptanceProfile": "fhv-campaign-d-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -339346,7 +339993,7 @@ export const ALL_CARDS = {
     "damage": 2,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_lost_sister",
     "encounterName": "The Lost Sister",
     "encounterPosition": 17,
@@ -340459,6 +341106,7 @@ export const ALL_CARDS = {
     "victory": 2
   },
   "10610a": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -340472,7 +341120,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_twisted_hollow",
     "encounterName": "The Twisted Hollow",
     "encounterPosition": 6,
@@ -340527,6 +341175,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10610a"
   },
   "10610b": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -340540,7 +341189,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_twisted_hollow",
     "encounterName": "The Twisted Hollow",
     "encounterPosition": 6,
@@ -340591,6 +341240,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10610b"
   },
   "10611a": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -340604,7 +341254,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_twisted_hollow",
     "encounterName": "The Twisted Hollow",
     "encounterPosition": 7,
@@ -340657,6 +341307,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10611a"
   },
   "10611b": {
+    "acceptanceProfile": "fhv-campaign-e-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -340670,7 +341321,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_twisted_hollow",
     "encounterName": "The Twisted Hollow",
     "encounterPosition": 7,
@@ -341295,6 +341946,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10647c"
   },
   "10661b": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -341307,7 +341959,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 11,
@@ -341416,6 +342068,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10662a"
   },
   "10662b": {
+    "acceptanceProfile": "fhv-campaign-f-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -341429,7 +342082,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "fate_of_the_vale",
     "encounterName": "Fate of the Vale",
     "encounterPosition": 15,
@@ -342039,6 +342692,7 @@ export const ALL_CARDS = {
     "url": "https://arkhamdb.com/card/10690b"
   },
   "10691a": {
+    "acceptanceProfile": "fhv-campaign-f2-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -342053,7 +342707,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "day_of_the_feast",
     "encounterName": "Day of the Feast",
     "encounterPosition": 6,
@@ -342412,6 +343066,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10697b": {
+    "acceptanceProfile": "fhv-campaign-f2-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -342425,7 +343080,7 @@ export const ALL_CARDS = {
     "damage": 0,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "residents",
     "encounterName": "Residents",
     "encounterPosition": 5,
@@ -342665,6 +343320,7 @@ export const ALL_CARDS = {
     "victory": 0
   },
   "10701b": {
+    "acceptanceProfile": "fhv-campaign-f2-2026-11",
     "availability": "strict",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -342678,7 +343334,7 @@ export const ALL_CARDS = {
     "damage": 1,
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "residents",
     "encounterName": "Residents",
     "encounterPosition": 9,
@@ -343903,6 +344559,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "11531b": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -343915,7 +344572,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_western_wall",
     "encounterName": "The Western Wall",
     "encounterPosition": 17,
@@ -343951,6 +344608,7 @@ export const ALL_CARDS = {
     "victory": 1
   },
   "11532b": {
+    "acceptanceProfile": "tdc-campaign-a-2026-11",
     "availability": "catalog-only",
     "backFlavorZh": "",
     "backNameZh": "",
@@ -343963,7 +344621,7 @@ export const ALL_CARDS = {
     "customizationTextZh": "",
     "dataStatus": "validated",
     "doubleSided": false,
-    "effectStatus": "unverified",
+    "effectStatus": "verified",
     "encounterCode": "the_western_wall",
     "encounterName": "The Western Wall",
     "encounterPosition": 18,

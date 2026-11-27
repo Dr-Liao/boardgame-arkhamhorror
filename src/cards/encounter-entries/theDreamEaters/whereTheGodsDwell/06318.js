@@ -6,7 +6,7 @@
 // 行为位置（本文件）：encounterResolve 实现全部显现效果。
 //   · 「揭示手中复制品」= api.cardReveal；「攻击」走隐藏敌人通用攻击流程；
 //   · 「洗回遭遇牌库」走 `api.hiddenCards.take`（手牌 + 隐私标记一起摘出）再洗入遭遇牌库；
-//   · 涌动条件通过 scenarioFlags.myriadFormsAttacked 交给章节 behavior.encounterGainsSurge 读取；
+//   · 没有攻击时返回涌动结算结果，由引擎统一继续遭遇抽牌；
 //   · 「真形在场上则移动并攻击」由 api.resolveEnemyPhaseOf 复用猎手移动与敌军阶段攻击。
 import { ALL_CARDS } from '../../_shared.js'
 
@@ -40,19 +40,16 @@ export default {
     }
     // 2) 每张复制品攻击抽牌者，然后洗回遭遇牌库
     for (const code of copies) {
-      api.attackFromHiddenEnemy(inv.seat, code, { source: '06318' })
-      attacked = true
+      const didAttack = api.attackFromHiddenEnemy(inv.seat, code, { source: '06318' }) === true
+      if (didAttack) attacked = true
       shuffleBackIntoEncounterDeck(api, inv.seat, code)
-      api.info?.(`👹 手中隐藏的奈亚拉托提普攻击了 ${inv.name}，随后被洗回遭遇牌库。`)
     }
     // 3) 真形在场上：如同敌军阶段移动并攻击
     const shape = trueShapeOf(state)
     if (shape) {
       const phase = api.resolveEnemyPhaseOf(shape)
-      attacked = attacked || phase.attacked === true
+      attacked = attacked || phase.attackResolved === true
     }
-    // 4) 本效果没有导致任何奈亚拉托提普攻击时获得涌动（behavior.encounterGainsSurge 读标记）
-    api.setScenarioFlag?.('myriadFormsAttacked', attacked)
-    return false
+    return attacked ? false : { gainSurge: true }
   },
 }

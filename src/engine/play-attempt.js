@@ -2,6 +2,7 @@ import { registeredEntry } from './ability.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { bondedCardList, bondedSetKey } from './bonded.js'
 import { availablePlayResources } from './play-payment.js'
+import { actionsAvailable } from './restricted-actions.js'
 import { requestChoice } from './resolution.js'
 
 function damageDiscount(state, inv, definition) {
@@ -13,6 +14,10 @@ function damageDiscount(state, inv, definition) {
 
 export function damagePlayDiscount(state, inv, definition) {
   return damageDiscount(state, inv, definition)?.discount || 0
+}
+
+export function reactionPlayCostIncrease(descriptor, state, inv, context) {
+  return Math.max(0, Number(descriptor?.windowCostIncrease?.({ state, inv, context })) || 0)
 }
 
 export function quickPlayReduction(state, inv, def) {
@@ -36,13 +41,20 @@ export function bondedPlayCostAvailable(state, inv, code) {
   return count >= rule.count
 }
 
+export function optionalPlayActionCapacity(state, inv, baseCost = 1) {
+  if (state.currentSeat !== inv.seat || state.phase !== 'investigation' || state.immediateAction) return 0
+  return Math.max(0, actionsAvailable(inv) - baseCost)
+}
+
 export function preparePlayAttempt(state, inv, code, events, deps, discount = 0) {
   const active = state._prePlayAttempt
   if (active?.seat === inv.seat && active.cardCode === code) return active
   const context = { when: 'beforePlayAttempt', seat: inv.seat, location: inv.location,
-    cardCode: code, cost: Math.max(0, deps.playCost(state, inv, deps.cardDef(code)) - discount), costReduction: 0 }
+    cardCode: code, cost: Math.max(0, deps.playCost(state, inv, deps.cardDef(code), { rawActionDiscount: true }) - discount), costReduction: 0 }
   if (quickPlayReduction(state, inv, deps.cardDef(code)) > 0) context.optionalReduction = true
-  if (inv.assets.some(asset => registeredEntry(asset.code)?.abilities.some(descriptor => descriptor.trigger.includes('beforePlayAttempt')))) {
+  const listens = entry => entry?.abilities.some(descriptor => descriptor.trigger.includes('beforePlayAttempt'))
+  if (inv.assets.some(asset => listens(registeredEntry(asset.code)))
+    || inv.hand.includes(code) && listens(registeredEntry(code))) {
     context.availableResources = availablePlayResources(state, inv, deps.cardDef(code))
     deps.reactionWindow(state, 'beforePlayAttempt', context, events, { allowNested: true })
   }
@@ -54,6 +66,20 @@ export function preparePlayAttempt(state, inv, code, events, deps, discount = 0)
     context.damagePayment = payment.damage
     context.offerShuffle = payment.offerShuffle
   }
+  const perAction = registeredEntry(code)?.optionalPlayActionDiscount
+  if (!context.cancelled && perAction && deps.baseActionCost) {
+    const available = availablePlayResources(state, inv, deps.cardDef(code))
+    const maximum = optionalPlayActionCapacity(state, inv, deps.baseActionCost())
+    const options = Array.from({ length: maximum + 1 }, (_, count) => ({ id: String(count),
+      label: `${count} 个额外行动（资源费用 ${Math.max(0, context.cost - context.costReduction - count * perAction)}）`, count,
+    })).filter(option => context.optionalReduction || context.cost - context.costReduction - option.count * perAction <= available)
+    if (!options.length) return { ...context, cancelled: true }
+    const chosen = options.length === 1 ? options[0].id : requestChoice(state, {
+      kind: 'payment', source: code, seat: inv.seat, prompt: '选择为打出这张牌额外花费多少行动。', options,
+    })
+    context.extraActionCost = Number(chosen)
+    context.costReduction += context.extraActionCost * perAction
+  }
   const rule = registeredEntry(code)?.bondedShufflePlayCost
   if (!context.cancelled && rule) {
     if (!bondedPlayCostAvailable(state, inv, code)) return { ...context, cancelled: true }
@@ -62,7 +88,8 @@ export function preparePlayAttempt(state, inv, code, events, deps, discount = 0)
 }
 
 export function payAdditionalPlayDamage(state, inv, attempt, events, deps) {
-  if (attempt.damagePayment) deps.applyDamage(state, inv, attempt.damagePayment, events, true)
+  if (attempt.damagePayment) deps.applyDamage(state, inv, attempt.damagePayment, events, true,
+    { code: inv.code, sourceSeat: inv.seat })
 }
 
 export function choosePlayShuffle(state, inv, attempt) {

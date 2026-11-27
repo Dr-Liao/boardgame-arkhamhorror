@@ -3,7 +3,7 @@
   "unit": "05-a-5",
   "profile": {
     "id": "tcu-greater-good-2026-11",
-    "scope": "万象无终 05 段 For the Greater Good（fgg，05186–05228）44 条目录记录。38 条通过五维验收；5 条因 R1 别名直写、1 条实现缺口（05223）暂不切换。",
+    "scope": "万象无终 05 段 For the Greater Good（fgg，05186–05228）44 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,10 +17,10 @@
   },
   "summary": {
     "total": 44,
-    "verified": 38,
-    "unverified": 6,
+    "verified": 44,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 133
+    "testsPassed": 136
   },
   "testFiles": [
     {
@@ -29,11 +29,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+      "sha256": "85c6b1dc87868ef22313c167a02a4cd2ba50013809527855b7c089e23dd09ff5"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
-      "sha256": "dc9e8191a1a0dda58cf9c72f3a1c45f599ff98baf17bdcb6646b5a5aee319886"
+      "sha256": "0bcf42341378d6ddfb2f37b60fb4d13087541822afd122516cdebad700d8ac7d"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-p0-regressions.test.mjs",
@@ -77,17 +77,33 @@
       "code": "05188",
       "name": "秘密卷轴",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：把 state 的牌库数组取为 `zone.pile` 后直接 `splice/unshift/push`（调查员牌库 / 遭遇牌库）；同文件其它去向已走 api.putInHand/putInDiscard/discardEncounterCards，说明区域原语存在却未统一使用。行为正确（tcu-player-m2-3 用例通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05188 秘密卷轴 查看牌库底 3 张：可弃 1、可拿 1、其余逐张任意顺序放顶/底"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05188/05189 秘密卷轴：遭遇牌从指定一端移动，保留同号副本且不提供拿到手牌"
+        }
+      ]
     },
     {
       "code": "05189",
       "name": "秘密卷轴",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（别名写入，审计基线未检出）：`zone.pile.splice`、`discardPileOf(...).push`、`state.investigators[zone.seat].hand.push`、牌库 unshift/push 均直接改区域数组；应使用 putOnTopOfDeck/putOnDeckBottom/takeDeckBottom/putInDiscard/putInHand。行为正确（tcu-player-m2-3 用例通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05188/05189 秘密卷轴：遭遇牌从指定一端移动，保留同号副本且不提供拿到手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05189 秘密卷轴 查看任意牌库顶或底 1 张，然后弃/拿/放顶/放底"
+        }
+      ]
     },
     {
       "code": "05190",
@@ -157,25 +173,53 @@
       "code": "05194",
       "name": "恐怖图腾",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态 + 单卡新造字段：对 state.skillTest.committed 的条目直接 `committed.extraIcons = [...]`（未走 ctx.api，`extraIcons` 为单卡私有字段）；「额外图标」以 +1 检定加值近似，已在条目注释披露（近似本身可接受），写入方式违规。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05194 恐怖图腾 可选非匹配图标：可选择但不改变检定值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05194 恐怖图腾 投入后横置：投入卡再获得 1 个图标，检定成功抽 1 张"
+        }
+      ]
     },
     {
       "code": "05195",
       "name": "恐怖图腾",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态 + 单卡新造字段：在支援实例上直接写/删 `source.grislyReturn` 传递「本次投入卡」，并在失败窗口直接 `committed.splice` 改 state.skillTest.committed；应走提交区/窗口原语。行为正确（tcu-player-m2-3 用例通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05195 恐怖图腾 可选非匹配图标：不加值、失败仍返回手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05195 恐怖图腾 投入后横置：检定失败时把投入的卡牌返回手牌"
+        }
+      ]
     },
     {
       "code": "05196",
       "name": "委员会的保险箱",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写资产字段：entersPlay resolve 直接 `source.uses = ...` / `source.usesType = ...`（同卡行动分支已用 api.setAssetUses，存在正确原语却未统一）。其余子句（1×人数锁头、双行动任意技能(5)、锁头清零后全队免费打出并放逐、同地点队友可激活）有真实读点与用例。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05196 委员会的保险箱 双行动检定任意技能移除锁头，无锁时全队免费打出并放逐"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05196 委员会的保险箱 同地点队友可激活：费用由激活者支付、能力读写真实资产 uses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05196 委员会的保险箱 非队友支援/异地队友不可激活"
+        }
+      ]
     },
     {
       "code": "05197",
@@ -577,9 +621,17 @@
       "code": "05223",
       "name": "发号施令",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「spawn them in the **empty** location with the most remaining clues」与「If no Cultist enemies are spawned by this effect, Call to Order gains surge」两处未忠实实现：behavior.js:1344 在没有任何空地点时回退到 `state.locations`（含被调查员/敌人占据的地点），实测会在调查员所在位置生成；且生成被拒绝（秘社大门禁生成）时不会获得涌动。正常有空地点路径由 tcu-greater-good 用例覆盖且正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "05223 发号施令：无空地点或生成失败时，按卡面获得一次涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-greater-good.test.mjs",
+          "test": "诡计 05223 发号施令：从弃牌堆顶抽 2 张异教徒敌人到线索最多的无人地点"
+        }
+      ]
     },
     {
       "code": "05224",

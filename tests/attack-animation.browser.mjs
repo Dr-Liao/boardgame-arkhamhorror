@@ -49,6 +49,19 @@ async function fixture(page,{muted=false,reduced=false}={}) {
       session.events.push({seq:session.events.length,type:'presentation',kind:'checkpoint',tableState:structuredClone(session.state)})
       render()
     }
+    window.cardDamageAsset=()=>{
+      const asset=document.createElement('div')
+      asset.dataset.interaction='asset:soak'
+      asset.style.cssText='position:fixed;left:45%;top:460px;width:64px;height:90px'
+      document.querySelector('.ah-table').append(asset)
+      const before=structuredClone(session.state)
+      session=structuredClone(session);session.state.revision++
+      session.events.push({seq:session.events.length,type:'presentation',kind:'directDamage',code:'08689',
+        style:'claw',audio:'cardDamage',sourceName:'实体疯狂',sourceEnemyId:'e1',seat:0,location:'study',damage:2,
+        targets:[{seat:0,assetId:'soak',name:'支援',damage:2}],tableState:before})
+      session.events.push({seq:session.events.length,type:'presentation',kind:'checkpoint',tableState:structuredClone(session.state)})
+      render()
+    }
   },{muted})
   await page.locator('#unlock').click()
 }
@@ -75,6 +88,22 @@ test('攻击使用场上卡牌，受击后更新生命，锁定操作且重绘�
   await expect.poll(()=>page.evaluate(()=>window.presenter.isBlocking)).toBe(false)
   expect(await page.evaluate(()=>window.soundStarts)).toBe(5)
   expect(await page.locator('.ah-map-investigator').evaluate(el=>el.getAnimations().length)).toBe(0)
+})
+
+for(const width of [1440,390])test(`card damage anchors to an assigned asset and plays ElevenLabs audio at ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:900})
+  await fixture(page)
+  const audio=page.waitForResponse(response=>response.url().endsWith('/audio/card-damage-creature.mp3'))
+  await page.evaluate(()=>window.cardDamageAsset())
+  const fx=page.locator('.ah-direct-fx')
+  await expect(fx).toHaveAttribute('data-target-asset-id','soak')
+  await expect(fx.locator('.ah-combat-caption')).toContainText('实体疯狂 → 支援')
+  const target=await page.locator('[data-interaction="asset:soak"]').boundingBox()
+  const number=await fx.locator('.ah-direct-number').evaluate(el=>parseFloat(el.style.left))
+  expect(number).toBeCloseTo(target.x+target.width/2)
+  expect((await audio).ok()).toBe(true)
+  await expect(fx).toHaveCount(0)
+  expect(await page.evaluate(()=>window.samples.filter(file=>file==='card-damage-creature.mp3').length)).toBe(1)
 })
 
 test('枪械、刀和法术攻击使用专属动效和音效，未知样式回落默认',async({page})=>{

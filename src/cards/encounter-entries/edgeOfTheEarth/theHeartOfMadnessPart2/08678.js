@@ -8,7 +8,7 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: {
-    enterCostCluePerInvestigator: 1,
+    entryCost: { kind: 'groupClues', perInvestigator: 1, onlyUnrevealed: true },
     fastActions({ moves, state, inv, location }) {
       if (!inv || inv.location !== location.id) return
       moves.push({ action: 'scenarioAction', rule: 'heartOfMadnessUnleash:E', actions: 0,

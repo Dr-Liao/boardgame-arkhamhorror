@@ -15,11 +15,7 @@ export default {
     threatArea: true,
     resolveKind: "possessed"
   },
-  flags: {
-    frostWeakness: true,
-    threatHorrorSink: true,
-    redirectHeal: {
-      optional: true
-    }
-  }
+  threatHorrorSink: true,
+  redirectHeal: { optional: true },
+  flags: { frostWeakness: 'horror' }
 }

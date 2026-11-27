@@ -8,9 +8,9 @@ import { readdirSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import '../src/engine/engine.js'
+import { createGameState, hunterStep, playCost, scenarioRuntime, spawnEnemy, startScenario } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredCodes } from '../src/engine/ability.js'
-import { playCost } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { flipVeiledLocation } from '../src/engine/veiled.js'
 import { swarmCountOf } from '../src/engine/swarm.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/theSearchForKadath/index.js'
@@ -33,6 +33,30 @@ const pendingEntries = ENTRIES.filter(entry => !alreadyRegistered.has(entry.code
 if (pendingEntries.length) registerCardAbilities(pendingEntries)
 
 const clone = value => structuredClone(value)
+
+function liveKadath(seed, seats = 1) {
+  const players = Array.from({ length: seats }, (_, seat) => ({ seat }))
+  const state = createGameState({ seed, playerInvestigator: '01002' }, players)
+  state.campaign.records.theCatsCollectedTheirTributeFromTheZoogs = true
+  startScenario(state, 0, [], 'theSearchForKadath')
+  state.pendingChoice = null
+  state.continuation = null
+  for (const inv of state.investigators) inv.hand = []
+  return state
+}
+
+function finishTransaction(state, execute, answers) {
+  resolveTransaction(state, 0, { action: 'scenarioTest' }, execute)
+  let answerIndex = 0
+  while (state.pendingChoice) {
+    const { seat, options } = state.pendingChoice
+    const answer = answers[answerIndex]
+    const optionId = options.some(option => option.id === answer) ? answers[answerIndex++]
+      : options.find(option => ['done', 'skip'].includes(option.id))?.id || options[0].id
+    resolveTransaction(state, seat, { action: 'choose', optionId }, execute)
+  }
+  assert.equal(answerIndex, answers.length)
+}
 
 function makeState({ numInvestigators = 2, difficulty = 'standard', records = {} } = {}) {
   const scenario = clone(definition)
@@ -394,16 +418,22 @@ test('06135 祖兰-提克：轮末按在此的调查员数给夜色怪群加蜂�
   void location
 })
 
-test('06135b 祖兰-提克的地穴：发现 1 神迹并把夜色怪群加入胜利牌区', () => {
-  const state = makeState()
-  state.scenarioZones.setAside = ['06150']
-  const horde = { id: 'horde', code: '06147', originalCode: '06147', location: 'zulanThek', victory: 1, swarmCards: [] }
-  state.enemies.push(horde)
-  const api = makeApi(state)
+test('06135b 祖兰-提克的地穴：夜色怪群进入胜利牌区且归还所有物理蜂拥卡', () => {
+  const state = liveKadath('06135b-horde')
+  const inv = state.investigators[0]
+  const api = scenarioRuntime(state, [])
+  api.place('zulanThek', inv.seat)
+  const horde = spawnEnemy(state, '06147', 'zulanThek', inv.seat, true)
+  assert.ok(horde)
+  const swarm = state.enemies.filter(enemy => enemy.hostId === horde.id)
+  assert.ok(swarm.length > 0)
+  const returned = swarm.map(enemy => enemy.underlyingCard)
   assetRuleFor('06135b').resolve(state, api, {})
-  assert.equal(state.markerCounts.reference || 0, 1)
-  assert.deepEqual(api.calls.banished, ['06147'], '夜色怪群被放逐到胜利展示区')
-  assert.equal(state.enemies.includes(horde), false)
+  assert.equal(state.markerCounts.reference, 1)
+  assert.ok(state.victoryDisplay.some(card => card.code === '06147'))
+  assert.ok(!state.enemies.some(enemy => enemy.id === horde.id || enemy.hostId === horde.id))
+  assert.ok(swarm.every(enemy => !inv.engaged.includes(enemy.id)))
+  assert.deepEqual(inv.deck.slice(0, returned.length), returned.reverse())
 })
 
 test('06136 巴哈那港：掩藏地点翻面读故事并记录「在巴哈那港口获取补给」', () => {
@@ -599,24 +629,34 @@ test('06143b 凶星：发现 2 神迹、弃掉本地敌人、把调查员移到�
 // 剧情资产 / 敌人 06144–06152
 // ===========================================================================
 
-test('06144 维吉尔·格雷：发现神迹后反应（抽牌/资源/治愈）并在多人局转移控制权；离场移出游戏', () => {
-  const state = makeState({ numInvestigators: 2 })
-  behavior.setupLocations(state, [], {})
-  const virgil = { id: 'virgil', code: '06144', originalCode: '06144', horror: 0 }
-  state.investigators[0].assets.push(virgil)
-  // 通过 06138b 故事结算获得 1 神迹，触发维吉尔反应（选抽牌）。
-  const location = addLocation(state, 'namelessRuins', { clues: 0, veiled: true })
-  state.investigators[0].location = 'namelessRuins'
-  const api = makeApi(state, { choices: ['draw'] })
-  const flipped = flipVeiledLocation(state, 'namelessRuins')
-  behavior.veiledFlipped(state, state.investigators[0], 'namelessRuins', flipped, api)
-  assert.equal(api.calls.drawCards.some(entry => entry.seat === 0 && entry.amount === 1), true)
-  assert.equal(api.calls.gaveAssets.length, 1, '多人局把控制权交给另一位调查员')
-  assert.equal(state.investigators[1].assets.some(asset => asset.id === 'virgil'), true)
-  // 离场 → 移出游戏。
-  behavior.assetLeftPlay(state, state.investigators[1], virgil, api)
-  assert.equal(state.removedFromGame.includes('06144'), true)
-  void location
+test('06144 维吉尔·格雷：神迹反应可放弃，发动后治疗并由控制者选择接管人', () => {
+  for (const react of [false, true]) {
+    const state = liveKadath(react ? '06144-heal' : '06144-skip', 3)
+    const api = scenarioRuntime(state, [])
+    api.place('namelessRuins', 0)
+    const location = state.locations.find(item => item.id === 'namelessRuins')
+    location.clues = 0
+    state.investigators[0].location = location.id
+    const virgil = state.investigators[0].assets.find(asset => asset.code === '06144')
+    assert.ok(virgil)
+    virgil.horror = 1
+    const execute = (draft, seat, move, events) => {
+      const flipped = flipVeiledLocation(draft, 'namelessRuins')
+      assert.ok(flipped)
+      behavior.veiledFlipped(draft, draft.investigators[0], 'namelessRuins', flipped, scenarioRuntime(draft, events))
+    }
+    finishTransaction(state, execute, react ? ['heal', '2'] : ['skip'])
+    assert.equal(state.markerCounts.reference, 1)
+    const owner = state.investigators.find(inv => inv.assets.some(asset => asset.id === virgil.id))
+    assert.equal(owner.seat, react ? 2 : 0)
+    assert.equal(owner.assets.find(asset => asset.id === virgil.id).horror, react ? 0 : 1)
+    assert.ok(!state.removedFromGame?.includes('06144'))
+    if (react) {
+      scenarioRuntime(state, []).discardAsset(owner.seat, virgil.id)
+      assert.ok(state.removedFromGame.includes('06144'))
+      assert.ok(!owner.discard.includes('06144'))
+    }
+  }
 })
 
 test('06146 跟踪的蝎狮：成功躲避后解除交战但不横置，本阶段不能再与其交战', () => {
@@ -643,6 +683,23 @@ test('06148 伊伯生物：敌人攻击步骤改为攻击其地点的每位调�
   assert.deepEqual(api.calls.skipped, ['06148'])
 })
 
+test('06148 伊伯生物：只追逐位于遗迹的猎物，包括较远的合格调查员', () => {
+  const state = makeState({ numInvestigators: 2 })
+  const enemy = { id: 'ib', code: '06148', originalCode: '06148', location: 'start', elite: true }
+  state.locations = [
+    { id: 'start', connections: ['village', 'middle'] },
+    { id: 'village', traits: ['City'], connections: ['start'] },
+    { id: 'middle', traits: ['City'], connections: ['start', 'ruins'] },
+    { id: 'ruins', traits: ['Ruins'], connections: ['middle'] },
+  ]
+  state.enemies.push(enemy)
+  state.investigators[0].location = 'village'
+  state.investigators[1].location = 'middle'
+  assert.equal(hunterStep(state, enemy), null)
+  state.investigators[1].location = 'ruins'
+  assert.equal(hunterStep(state, enemy), 'middle')
+})
+
 test('06149 千面祭司：2/4/6 个神迹分别 +1 攻/躲、+2 生命、+1 伤害', () => {
   const state = makeState()
   const priest = { id: 'priest', code: '06149', originalCode: '06149', location: 'ulthar', swarmCards: [] }
@@ -654,6 +711,22 @@ test('06149 千面祭司：2/4/6 个神迹分别 +1 攻/躲、+2 生命、+1 伤
   assert.equal(behavior.enemyStatModifier(state, priest, 'health'), 2)
   state.markerCounts.reference = 6
   assert.deepEqual(behavior.enemyAttackModifier(state, priest, state.investigators[0]), { damage: 1 })
+})
+
+test('06149 千面祭司：6 个神迹时攻击失败会遭真实反击，5 个时不会', () => {
+  for (const signs of [5, 6]) {
+    const state = liveKadath('06149-retaliate-' + signs)
+    const inv = state.investigators[0]
+    inv.assets = []
+    scenarioRuntime(state, []).markers.set('reference', signs)
+    state.debugNextTokens = ['autoFail']
+    const priest = spawnEnemy(state, '06149', inv.location, inv.seat, true)
+    assert.ok(priest)
+    const damage = inv.damage
+    const execute = (draft, seat, move, events) => scenarioRuntime(draft, events).fight(0, priest.id)
+    finishTransaction(state, execute, [])
+    assert.equal(state.investigators[0].damage - damage, signs === 6 ? priest.damage + 1 : 0)
+  }
 })
 
 test('06150 黑暗夜魇：区域设置时放在一边（保留标记），设置后回到一个[[城市]]地点', () => {
@@ -671,6 +744,55 @@ test('06150 黑暗夜魇：区域设置时放在一边（保留标记），设�
   const restored = state.enemies.find(enemy => enemy.id.startsWith('restored-')) || null
   assert.ok(restored, '黑暗夜魇回到场上')
   assert.equal(restored.location, 'ilekVad', '放回一个[[城市]]地点')
+})
+
+test('06150 黑暗夜魇：真实换区保留敌人实体、伤害和毁灭', () => {
+  const state = liveKadath('06150-area-transfer')
+  const inv = state.investigators[0]
+  const enemy = spawnEnemy(state, '06150', inv.location, null, true)
+  assert.ok(enemy)
+  enemy.damageTaken = 1
+  enemy.doom = 1
+  const execute = (draft, seat, move, events) =>
+    behavior.actReveal(draft, draft.acts[1], scenarioRuntime(draft, events))
+  finishTransaction(state, execute, ['forbiddenLands', 'ilekVad'])
+  const returned = state.enemies.find(item => item.id === enemy.id)
+  assert.ok(returned)
+  assert.equal(returned.location, 'ilekVad')
+  assert.equal(returned.damageTaken, 1)
+  assert.equal(returned.doom, 1)
+})
+
+test('06154 奇妙平原：附属后实际帷幕减 2，离场即恢复', () => {
+  const state = liveKadath('06154-attachment-shroud')
+  const inv = state.investigators[0]
+  const api = scenarioRuntime(state, [])
+  api.place('sarnath', inv.seat)
+  const location = state.locations.find(item => item.id === 'sarnath')
+  inv.location = location.id
+  inv.assets = []
+  location.clues = 1
+  const original = api.locationShroud(location.id, inv.seat)
+  assert.ok(original >= 2)
+  assert.ok(ENTRIES.find(entry => entry.code === '06154').encounterResolve(state, inv, { code: '06154' }, api))
+  assert.equal(api.locationShroud(location.id, inv.seat), original - 2)
+  assert.ok(location.attachments.some(card => card.code === '06154'))
+  const execute = (draft, seat, move, events) => {
+    behavior.afterTest(draft, draft.investigators[seat], {
+      success: true,
+      value: 5,
+      difficulty: 3,
+      drawn: ['0'],
+      token: '0',
+      source: { label: '调查', code: '06131' },
+    }, scenarioRuntime(draft, events))
+  }
+  finishTransaction(state, execute, [])
+  const finalApi = scenarioRuntime(state, [])
+  assert.equal(finalApi.locationShroud(location.id, inv.seat), original)
+  assert.ok(state.encounterDiscard.includes('06154'))
+  assert.equal(state.investigators[0].horror, 1)
+  assert.equal(state.doom, 1)
 })
 
 test('06151 一群乌尼斯：头领没有附属蜂拥卡时攻击值+2、躲避值+2', () => {

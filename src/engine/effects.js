@@ -125,6 +125,11 @@ export function resolveEffect(state, seat, effect, rt) {
       candidates.find(a => a.id === id).exhausted = false
       break
     }
+    case 'transferResources': {
+      const amount = effect.all ? state.investigators[seat]?.resources || 0 : effect.amount
+      rt.transferResources?.(seat, effect.toSeat, amount)
+      return
+    }
     case 'gainResource': {
       if (rt.canGainResources?.(seat) === false) break
       const n = effect.amount || 1

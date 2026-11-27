@@ -11,13 +11,10 @@
 //   · 手牌来源强制能力 + cardDrawn 窗口（与 09106 同一「显现」实现）；
 //   · 立即行动：api.beginImmediateAction（引擎的跨回合即时行动原语，会开行动选择）；
 //   · 随机弃牌：api.discardRandomFromHand；抽牌：api.drawCardsLogged。
-// approximation: ①「每轮最多 2 张抉择」按本卡每轮 2 次近似；②「下个回合失去 1 个行动」没有
-//   「下回合行动数」写点，改为立刻失去 1 个行动（若目标当前没有行动则不失去）。
 const code = '09109'
 
 export default {
   code,
-  note: 'approximation: 「下个回合失去 1 个行动」改为立刻失去 1 个行动（缺下回合行动数写点）；「每轮最多 2 张抉择」按本卡每轮 2 次近似。',
   playCondition: [{ when: () => false, message: '「抉择时刻」具有显现，只能在抽到时结算' }],
   abilities: [
     {
@@ -25,9 +22,9 @@ export default {
       fromHand: true,
       noPlayCost: true,
       trigger: 'cardDrawn',
-      limit: { scope: 'perRound', owner: 'investigator', count: 2 },
+      limit: { scope: 'perRound', owner: 'group', count: 2, sharedKey: 'dilemma' },
       label: '显现：选择一位调查员，立即行动后随机弃 1 张，或失去 1 行动后抽 3 张',
-      criteria: [({ inv, context }) => context?.cardCode === code && (inv.hand || []).includes(code)],
+      criteria: [({ inv, context }) => context?.cardCode === code && context.seat === inv.seat && (inv.hand || []).includes(code)],
       resolve: ({ state, inv, api }) => {
         const targets = state.investigators.filter(owner => !owner.defeated && !owner.resigned)
         if (!targets.length) { api.discardFromHand(inv.seat, code); return }
@@ -50,9 +47,9 @@ export default {
           api.discardRandomFromHand(target.seat, 1)
           api.info(`🛤️ 「抉择时刻」：${target.name} 立即行动一次，然后随机弃掉 1 张手牌。`)
         } else {
-          api.loseActions(target.seat, 1)
+          api.grantActionOnNextTurn(target.seat, -1)
           api.drawCardsLogged(target.seat, 3)
-          api.info(`🛤️ 「抉择时刻」：${target.name} 抽 3 张牌（失去 1 个行动）。`)
+          api.info(`🛤️ 「抉择时刻」：${target.name} 抽 3 张牌，下个回合少 1 个行动。`)
         }
         api.discardFromHand(inv.seat, code)
       },

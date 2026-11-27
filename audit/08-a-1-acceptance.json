@@ -3,7 +3,7 @@
   "unit": "08-a-1",
   "profile": {
     "id": "eote-player-a-2026-11",
-    "scope": "地球边缘 08 段 eoep 调查员与玩家卡（08001–08042）46 条目录记录。45 条通过五维验收；08008 因 R1 直写暂不切换。",
+    "scope": "地球边缘 08 段 eoep 调查员与玩家卡（08001–08042）46 条目录记录。46 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,31 +17,19 @@
   },
   "summary": {
     "total": 46,
-    "verified": 45,
-    "unverified": 1,
+    "verified": 46,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 306
+    "testsPassed": 209
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
-      "sha256": "3cb5502805838f91f99f2b1c4c7444a36668b49385889957a590e29f956e7fc4"
+      "sha256": "3b55537668750540ba1fd77e134cde7433b9e80d255985d2e2ca838ac77858b4"
     },
     {
       "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
-      "sha256": "6997bc787f0a7ccf662e8e5e4eee59613c2af8489e202bf53361ce6783b978e3"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-player-m2-2.test.mjs",
-      "sha256": "9c86eb6b3afeec8520f8c33a57fd84393cacf4e9f1be36cdf5b1e8f3b78d87db"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-player-m2-3.test.mjs",
-      "sha256": "92735ec413693dde58e2dfbd82ebd42dc6ee4be98f1e552ba3952ddf7e153270"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-player-m2-4.test.mjs",
-      "sha256": "736dbcbbb09fdf0d94c452ace100338257a0ee6d917f013c566c0ee92cb67ce3"
+      "sha256": "fe18eaada641e7b806c1230876ce96d2866a247a9901a79c99891158ac9583b6"
     },
     {
       "file": "games/arkhamhorror/tests/eote-investigator-daniela.test.mjs",
@@ -81,7 +69,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/eote-primitives-investigator.test.mjs",
-      "sha256": "ffa1d6ea01c2435b4421d491b82069ef7400785081e4ed6f109660c49ffd6d60"
+      "sha256": "f10fbcc4b523f484d58696aadb4e58a12eabf25703fd676f03d1dd12f8331fe2"
     },
     {
       "file": "games/arkhamhorror/tests/eote-primitives-campaign.test.mjs",
@@ -237,9 +225,21 @@
       "code": "08008",
       "name": "可靠的长鞭",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态：条目回调里直接写 `whip.exhausted = true`（未走 ctx.api），同时被合规账本的 directStateWrite 与 singleCardField（whip.exhausted）基线命中，属 2026-11-08 检测范围扩大后登记的存量违规。行为本身（敏捷攻击/成功横置自动躲避或 +1 伤害）已实现且有测试，但按验收五维「无直写运行时状态（R1）」不通过。建议改为 `api.exhaust(whip)` 后重验。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard1.test.mjs",
+          "test": "08008 可靠的长鞭：合法攻击成功时可横置，让实际伤害增加 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08007/08008/08009 专属条目注册与旧印 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/eote-investigator-monterey.test.mjs",
+          "test": "P5 08008 长鞭：使用敏捷攻击；成功可横置自动躲避或 +1 伤害；已横置不再询问"
+        }
+      ]
     },
     {
       "code": "08009",
@@ -581,7 +581,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
-          "test": "P6 08024 防御姿态 手中/投入时获得等于敏捷的战斗图标、等于战斗的敏捷图标（approximation）"
+          "test": "P6 08024 防御姿态：根据当前敏捷和战斗计算投入图标"
         }
       ]
     },
@@ -737,7 +737,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/eote-player-m2-1.test.mjs",
-          "test": "P6 08037 地区勘测 手中/投入时获得等于敏捷的智力图标、等于智力的敏捷图标（approximation）"
+          "test": "P6 08037 地区勘测：根据当前敏捷和智识计算投入图标"
         }
       ]
     },

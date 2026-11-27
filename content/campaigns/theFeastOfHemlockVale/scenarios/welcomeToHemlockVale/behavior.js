@@ -52,6 +52,7 @@
 //     资产实例（与 theSilentHeath 给水晶残骸建实例同一口径）。
 //   · 老磨坊的反应只在「调查成功」这一条线索发现路径上触发；由其它效果在该地点放线索不会触发。
 //   · 额外提示卡 10704 的 [cultist] 简单/普通「谈判自动成功」在引擎里没有契约字段，见上面口径 1。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import {
@@ -469,7 +470,7 @@ function playFromHandTrait(state, inv, traits, api = {}) {
   }
   const code = pickCard(state, inv, matches, `选择要打出的一张 ${traits.join('/')} 卡牌（忽略费用）`, api)
   const at = hand.indexOf(code)
-  if (at >= 0) hand.splice(at, 1)
+  if (at >= 0) spliceHand(inv, at, 1)
   putAssetIntoPlay(state, inv, code, api)
   info(api, `${inv.name} 免费打出「${cardName(code)}」。`)
   return code

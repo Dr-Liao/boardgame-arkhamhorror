@@ -2,6 +2,7 @@
 // 显现时秘密进手牌。可以在手牌里攻击或躲避：成功则弃掉，失败则生成并交战。
 // 牌库耗尽而它还在手牌中时，它从手牌攻击你。
 
+import { spliceHand } from './hand-icons.js'
 export function isHiddenHandEnemy(entry) {
   return entry?.hiddenEnemyInHand === true
 }
@@ -9,7 +10,7 @@ export function isHiddenHandEnemy(entry) {
 export function takeHiddenEnemyFromHand(inv, cardId) {
   const index = inv.hand?.indexOf(cardId) ?? -1
   if (index < 0) return false
-  inv.hand.splice(index, 1)
+  spliceHand(inv, index, 1)
   if (Array.isArray(inv.hiddenCards)) {
     const hidden = inv.hiddenCards.indexOf(cardId)
     if (hidden >= 0) inv.hiddenCards.splice(hidden, 1)

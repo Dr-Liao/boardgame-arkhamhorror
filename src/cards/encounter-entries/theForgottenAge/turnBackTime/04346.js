@@ -26,21 +26,19 @@ export default {
         }))
         if (!Number.isInteger(seat)) seat = candidates[0].seat
       }
-      if (seat == null) seat = state.campaign.leadSeat
       const holder = state.investigators[seat]
       if (holder) {
         // 参考实现：TurnBackTime 放在一边/授予的是「重拾往昔」版本（04303）。
         hooks.removeSetAside('04303')
-        api.giveAsset?.(seat, '04303')
-        if (api.moveRelicOfAges) api.moveRelicOfAges({ code: '04303', seat })
-        else state.relicOfAges = { code: '04303', location: holder.location, seat }
+        api.giveAsset(seat, '04303')
+        api.moveRelicOfAges({ code: '04303', seat })
         api.info?.(`🏺 ${holder.name} 控制了古代遗物。`)
       }
       hooks.removeSetAside('04296')
       const spawnAt = chamber?.id || 'chamberOfTime'
       const yig = api.spawn('04296', spawnAt)
       if (yig) {
-        yig.damageTaken = 0
+        api.setEnemyDamageTaken(yig, 0)
         api.info?.(`🐍 伊格在「${yig.location}」现身！`)
       }
       hooks.addActToVictory(act)

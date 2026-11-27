@@ -1,3 +1,7 @@
+import { registeredEntry } from './ability.js'
+import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
+import { inPlayAttachments } from './in-play-attachments.js'
+
 // Phase 1（A1）：state.effects[] 进入存档结构，schemaVersion 6 → 7；
 // 同时把规则版本推到 n6.0（临时修正的结算方式变了，旧对局必须迁移而不是续算）。
 export const STATE_SCHEMA_VERSION = 7
@@ -28,7 +32,11 @@ export function nextInstanceId(state, kind) {
 }
 
 export function doomCards(state) {
-  return [...state.enemies, ...state.locations, ...(state.agendaAside || []), ...state.investigators.flatMap(inv => [...inv.assets, ...inv.threat])]
+  return [...state.enemies, ...state.locations, ...(state.agendaAside || []),
+    ...state.investigators.flatMap(inv => [
+      ...(inv.doom && !inv.defeated && !inv.resigned ? [inv] : []), ...inv.assets, ...inv.threat,
+    ]),
+    ...inPlayAttachments(state).filter(card => card.doom > 0)]
 }
 
 // Rules Reference, "Agenda": the agenda advances when the total amount of doom
@@ -39,13 +47,29 @@ export function doomCards(state) {
 // 《万象无终》05052/05123/05126 把强制毁灭写在议程实例上，此前不计入导致阈值/推进失效。
 export function agendaDoom(state) {
   const agenda = state.agendas?.[state.agendaIndex]
+  const otherDoom = countedCardDoom(state, agenda?.otherDoomSubtractsAtThreshold)
   return (state.doom || 0) + (agenda?.doom || 0)
-    + doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
+    + (agenda?.otherDoomSubtractsAtThreshold ? -otherDoom : otherDoom)
 }
 
-// Every doom marker in play, agenda included. Same total as the agenda threshold.
+function countedCardDoom(state, includeStoryAssets) {
+  const cards = doomCards(state)
+  if (includeStoryAssets) cards.push(...(state.storyAssets || []))
+  return cards.reduce((sum, card) => {
+    const doom = card.doom || 0
+    if (!doom || !card.attachedToAsset) return sum + doom
+    const owner = (state.investigators || []).find(inv => inv.assets.includes(card))
+    const host = owner?.assets.find(asset => asset.id === card.attachedToAsset)
+    const protectedDoom = host && !assetTextBlanked(host, owner, state) && !assetTextBlankedExceptForced(host)
+      && registeredEntry(host.code)?.assetRule?.ignoreOneDoomOnAttachment
+    return sum + doom - (protectedDoom ? 1 : 0)
+  }, 0)
+}
+
+// Card effects that count doom in play don't apply the agenda's threshold modifier.
 export function totalDoom(state) {
-  return agendaDoom(state)
+  const agenda = state.agendas?.[state.agendaIndex]
+  return (state.doom || 0) + (agenda?.doom || 0) + countedCardDoom(state, agenda?.otherDoomSubtractsAtThreshold)
 }
 
 export function stateCompatibilityError(state, resourceVersion) {

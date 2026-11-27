@@ -11,14 +11,14 @@
 import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { applyLocalActionDelta } from '../../../public/online-delta.js'
 
 const output = fileURLToPath(new URL('../../../artifacts/migration/eote/p6/screenshots/', import.meta.url))
 mkdirSync(output, { recursive: true })
 
 const EVENT_CODE = '08020'   // Toe to Toe（事件：攻击 +1 伤害并自动成功，敌人反击）
 const ASSET_CODE = '08025'   // Butterfly Swords（资产：行动攻击，可横置再攻击）
-const SKILL_CODE = '08024'   // Defensive Stance（技能：动态战斗/敏捷图标，见下方 annotation 说明）
-const COMMIT_SKILL_CODE = '08052' // 行业专家（技能：印刷 [wild] 图标，真实投入窗口的可投入证据）
+const SKILL_CODE = '08024'   // Defensive Stance（技能：按敏捷增加战斗投入图标）
 const WEAKNESS_CODE = '08130' // Arm Injury（基础弱点：显现进入威胁区）
 const INVESTIGATOR = '01001' // 核心守卫者，真实大厅生产选人用
 
@@ -30,12 +30,18 @@ async function start(page, { fixture = false } = {}) {
   const errors = []
   page.on('pageerror', error => errors.push(error.message))
   await page.addLocatorHandler(page.getByRole('button', { name: '跳过演出' }), async locator => { await locator.click() })
-  await page.addLocatorHandler(page.getByRole('button', { name: '继续', exact: true }), async locator => { await locator.click().catch(() => {}) })
+  await page.addLocatorHandler(page.locator('.ah-chaos-reveal').getByRole('button', { name: '继续', exact: true }),
+    async locator => { await locator.click() })
   await page.emulateMedia({ reducedMotion: 'reduce' })
   let latest = null
-  page.on('response', async response => {
+  let responseQueue = Promise.resolve()
+  page.on('response', response => {
     if (!/\/api\/(start|move|session)(\?|$)/.test(response.url()) || !response.ok()) return
-    try { const body = await response.json(); if (body.session) latest = body.session } catch {}
+    responseQueue = responseQueue.then(async () => {
+      const body = await response.json()
+      const session = body.session ?? applyLocalActionDelta(latest, body.localActionDelta)
+      if (session) latest = session
+    }).catch(error => { errors.push(error.message) })
   })
   await page.route('**/api/start', async route => {
     const original = route.request().postDataJSON()
@@ -222,37 +228,23 @@ for (const [viewport, width, height] of [['desktop', 1440, 900], ['mobile', 390,
   test(`P6 ${viewport} 技能卡投入检定`, async ({ page }) => {
     await page.setViewportSize({ width, height })
     const run = await start(page, { fixture: true })
-    expect(handCodes(run)).toContain(COMMIT_SKILL_CODE)
     expect(handCodes(run)).toContain(SKILL_CODE)
-    // 已知引擎缺口（不改引擎，报 Lead）：08024 的 commit 动态图标实现在 iconBonus 里按字符串
-    // `skill === 'combat'` 判断，但引擎开检定传给 commitIcons 的是 skillList 数组，导致其
-    // 候选被过滤掉（Node 分片测试直接用字符串调用所以是绿的）。这里用印刷 [wild] 图标的
-    // 08052 完成真实投入证据，并记录 08024 的缺口 annotation。
-    test.info().annotations.push({
-      type: 'ability-skip',
-      description: `08024 动态 commit 图标在引擎数组 skillList 路径返回 0（iconBonus 按字符串比较 skill），无法在真实投入窗口选择；用印刷 [wild] 图标的 ${COMMIT_SKILL_CODE} 完成真实投入。复现：commitIcons(state, inv, '08024', ['combat']) === 0，而 commitIcons(..., 'combat') === 2。`,
-    })
-    // 真实「攻击」行动开始一次战斗检定，进入投入手牌窗口后点技能卡投入。
-    const enemy = (stateOf(run).enemies || [])[0]
-    expect(enemy, '夹具应有同地点敌人以发起战斗检定').toBeTruthy()
-    await clickCard(page, page.locator(`[data-interaction="enemy:${enemy.id}"]`).first())
+    const enemy = page.getByRole('region', { name: '交战区' }).getByRole('button', { name: /P6 测试敌人/ })
+    await expect(enemy).toBeVisible()
+    await enemy.click()
     const popover = page.locator('.ah-card-action-popover')
-    // 地图敌人默认打开卡牌详情；卡牌详情里的「对该目标行动」把目标转成动作条。
-    if (!(await popover.count())) {
-      const targetAction = page.getByRole('button', { name: '对该目标行动' })
-      if (await targetAction.count()) await targetAction.click()
-    }
     await expect(popover).toBeVisible()
     await popover.locator('.ah-action').filter({ hasText: '攻击' }).first().click()
     const commit = page.locator('.ah-choice[data-choice-kind="commit"]')
     await expect(commit).toBeVisible({ timeout: 10_000 })
-    await clickCard(page, handCard(page, COMMIT_SKILL_CODE))
-    await expect.poll(() => (stateOf(run)?.skillTest?.committed || []).some(item => item.code === COMMIT_SKILL_CODE), { timeout: 10_000 }).toBe(true)
+    await clickCard(page, handCard(page, SKILL_CODE))
+    await expect.poll(() => stateOf(run)?.skillTest?.committed?.find(item => item.code === SKILL_CODE)?.icons,
+      { timeout: 10_000 }).toBe(3)
     await commit.locator('[data-option-id="done"]').dispatchEvent('click')
     await settle(page, run)
     await expect.poll(() => stateOf(run)?.pendingChoice == null, { timeout: 10_000 }).toBe(true)
-    expect(handCodes(run)).not.toContain(COMMIT_SKILL_CODE)
-    expect(ownInvestigator(run).discard || []).toContain(COMMIT_SKILL_CODE)
+    expect(handCodes(run)).not.toContain(SKILL_CODE)
+    expect(ownInvestigator(run).discard || []).toContain(SKILL_CODE)
     await screenshot(page, `${viewport}-skill`)
     expect(run.errors).toEqual([])
   })

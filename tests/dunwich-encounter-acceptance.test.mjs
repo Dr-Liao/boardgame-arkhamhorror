@@ -165,10 +165,12 @@ const enemyChecks = {
     assert.equal(definition('enemies', '02087').prey, 'fewestHand')
   },
   '02090'() {
-    const state = simpleState()
-    state.enemies = [{ code: '02090', location: 'a' }, { code: '02090', location: 'b' }]
+    const state = chapter('extracurricularActivity', 1)
+    const inv = state.investigators[0]
+    const other = state.locations.find(location => location.id !== inv.location)
+    state.enemies = [{ code: '02090', location: inv.location }, { code: '02090', location: other?.id }]
     for (const skill of ['willpower', 'intellect', 'combat', 'agility'])
-      assert.equal(encounterRules.statModifier(state, state.investigators[0], skill), -1)
+      assert.equal(getStat(state, inv, skill), inv[skill] - 1)
     assert.equal(definition('enemies', '02090').aloof, true)
   },
   '02094'() {

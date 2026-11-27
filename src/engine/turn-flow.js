@@ -1,15 +1,19 @@
-import { wouldAddToVictory } from './victory-destination.js'
+import { spliceHand } from './hand-icons.js'
+import { grantedEnemyVictory, wouldAddToVictory } from './victory-destination.js'
 import { routeEnemyDiscardToScenarioDeck } from './scenario-decks.js'
 import { discardPlayerCards, splicePlayerDiscard } from './player-zones.js'
 import { putInHand } from './hand-entry.js'
 import { effectRecipient, playerEffectCanAffect } from './effect-recipient.js'
 import { firstAssetDiscount, roundPlayRules } from './action-history.js'
 import { availableResources } from './resource-bank.js'
+import { optionalPlayActionCapacity } from './play-attempt.js'
 import { playTimingSource } from './play-timing.js'
 import { endAirTurn } from './flood.js'
+import { withDirectDamageHint } from '../integration/direct-damage.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { weaknessOwnerSeat } from './card-lookup.js'
-import { locationAttachmentTotal } from './location-attachments.js'
+import { leaveLocationActionCost, locationAttachmentTotal } from './location-attachments.js'
+import { locationExploreExtraActions } from './location-action-cost.js'
 import { noteChaosTokenChange } from './chaos-bag.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { vehicleOf } from './vehicles.js'
@@ -58,6 +62,7 @@ export function createTurnFlow(deps) {
     disengageEnemy,
     elderSignDescriptor,
     enemyDef,
+    enemyTextBlanked,
     expireEffects,
     getThreatEffect,
     groupClues,
@@ -115,7 +120,8 @@ export function createTurnFlow(deps) {
     const targetId = requestChoice(state, { kind: 'target', source: aquinnah.id, seat: inv.seat, prompt: '选择另一个敌人承受伤害。', options: candidates.map(item => ({ id: item.id, label: item.name })) })
     const target = candidates.find(item => item.id === targetId)
     if (target) {
-      damageEnemy(state, target, enemy.damage + extraDamage, inv.seat, events)
+      damageEnemy(state, target, enemy.damage + extraDamage, inv.seat, events, null,
+        { code: aquinnah.code, assetId: aquinnah.id, sourceSeat: inv.seat })
       info(state, events, '安奎娜将「' + enemy.name + '」的 ' + enemy.damage + ' 点伤害转移给「' + target.name + '」。')
     }
     if (enemy.horror + extraHorror) applyHorror(state, inv, enemy.horror + extraHorror, events)
@@ -150,7 +156,8 @@ export function createTurnFlow(deps) {
         descriptor: registered, window: 'eldersign', context: {}, events,
         api: abilityApi(state, events),
       }
-      return registered.resolve?.(ctx) || { delta: 0 }
+      return withDirectDamageHint(state, { code: inv.code, sourceSeat: inv.seat },
+        () => registered.resolve?.(ctx)) || { delta: 0 }
     }
     // 21 位可玩调查员的旧印全部迁移到能力层（src/cards/entries/<code>.js）；
     // 未登记的新调查员在补描述子之前按默认 +1 结算。
@@ -201,7 +208,8 @@ export function createTurnFlow(deps) {
       removeOne(attachments, ambush)
       state.investigators[ambush.ownerSeat]?.discard.push(ambush.code)
       enemy.defeatedBy = ambush.ownerSeat
-      damageEnemy(state, enemy, 2, ambush.ownerSeat, events)
+      damageEnemy(state, enemy, 2, ambush.ownerSeat, events, null,
+        { code: ambush.code, assetId: ambush.id, sourceSeat: ambush.ownerSeat })
     }
     // 批次 3（60562/60563/60565/60566/60578/60581）：敌人入场或移动进入带玩家地点附属的地点后，
     // 打开通用「进入附属地点后」窗口；是否结算由各附属条目的 forced/reaction 声明决定。
@@ -224,13 +232,14 @@ export function createTurnFlow(deps) {
   // 共同支付线索。allowShort 时**能付多少付多少**并返回 { paid, shortfall }——
   // 道路危害模板「每有一个线索不能花费，就……」要的正是这个差额，与幕目标「付不出就推进不了」
   // 的严格支付共用一份分摊交互。
-  function groupPayment(state, amount, location, events, { allowShort = false } = {}) {
+  function groupPayment(state, amount, location, events, { allowShort = false, recordContributions = false } = {}) {
     const payers = aliveInvestigators(state).filter(inv => canSpendClues(state, inv)).filter(inv => !location || inv.location === location)
     const available = groupClues(state, location)
     const required = Math.max(0, Number(amount) || 0)
     if (!allowShort && available < required) throw new Error('符合地点条件的共同线索不足')
     const target = allowShort ? Math.min(required, available) : required
     let remaining = target
+    const contributions = recordContributions ? {} : null
     for (let i = 0; remaining && payers.length; i++) {
       const inv = payers[i % payers.length]
       if (!inv.clues) continue
@@ -242,23 +251,25 @@ export function createTurnFlow(deps) {
         prompt: `第 ${round} 轮分摊 · 共同支付还需 ${remaining} 个线索，请决定个人贡献。`, options,
         payment: { required: target, remaining, paid: target - remaining, round, min, max, available: inv.clues } })
       const paid = Number(answer)
-      spendClues(state, inv, paid)
+      spendClues(state, inv, paid, events)
+      if (contributions) contributions[inv.seat] = (contributions[inv.seat] || 0) + paid
       remaining -= paid
       info(state, events, `${inv.name} 支付 ${paid} 个线索。`)
     }
-    return { paid: target - remaining, shortfall: required - (target - remaining) }
+    return { paid: target - remaining, shortfall: required - (target - remaining), ...(contributions ? { contributions } : {}) }
   }
 
   function addVictory(state, enemy, events, attachment = null) {
     const originalCode = enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code
     const vengeance = enemy.vengeance || enemyDef(enemy.code)?.vengeance || 0
     let addedToVictory = false
+    const points = (enemy.victory || 0) + (grantedEnemyVictory(state, enemy) ?? 0)
     // 复仇：带复仇点数的敌人被击败时同样进入胜利区（即使没有胜利点）。
-    if (attachment || wouldAddToVictory(enemy, enemyDef)) {
+    if (attachment || wouldAddToVictory(enemy, enemyDef, state)) {
       let enemyInVictory = state.victoryDisplay.find(card => card.id === enemy.id)
       if (!enemyInVictory) {
         enemyInVictory = {
-          id: enemy.id, code: enemy.code, originalCode, victory: enemy.victory || 0,
+          id: enemy.id, code: enemy.code, originalCode, victory: points,
           ...(vengeance ? { vengeance } : {}),
         }
         state.victoryDisplay.push(enemyInVictory)
@@ -275,9 +286,9 @@ export function createTurnFlow(deps) {
       if (owner) owner.discard.push(enemy.code)
       else state.encounterDiscard.push(enemy.code)
     } else if (!routeEnemyDiscardToScenarioDeck(state, enemy)) state.encounterDiscard.push(enemy.code)
-    if (enemy.victory) {
-      state.victory += enemy.victory
-      info(state, events, `💥 「${enemy.name}」被击败了！胜利点 +${enemy.victory}（累计 ${state.victory}）。`)
+    if (points) {
+      state.victory += points
+      info(state, events, `💥 「${enemy.name}」被击败了！胜利点 +${points}（累计 ${state.victory}）。`)
     }
     if (vengeance) info(state, events, `🐍 「${enemy.name}」带有 ${vengeance} 点复仇。`)
     scenarioBehavior(state).victoryChanged?.(state, scenarioRuntime(state, events))
@@ -306,10 +317,10 @@ export function createTurnFlow(deps) {
     }
   }
 
-  function cannotPlayTypes(inv) {
+  function cannotPlayTypes(inv, state = null) {
     const set = new Set()
     for (const t of inv.threat) {
-      const th = getThreatEffect(t)
+      const th = getThreatEffect(t, state)
       if (th && th.cannotPlay) for (const k of th.cannotPlay) set.add(k)
     }
     return set
@@ -354,7 +365,7 @@ export function createTurnFlow(deps) {
         .map(item => ({ id: String(item.index), label: cardName(item.code) }))
       if (!options.length) break
       const answer = requestChoice(state, { kind: 'discard', source: 'hand-limit', seat: inv.seat, prompt: `选择弃牌，保留至 ${limit()} 张。`, options })
-      const code = inv.hand.splice(Number(answer), 1)[0]
+      const code = spliceHand(inv, Number(answer), 1)[0]
       discardPlayerCards(state, inv, code)
       info(state, events, `${inv.name} 弃掉了「${cardName(code)}」。`)
       afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
@@ -382,7 +393,7 @@ export function createTurnFlow(deps) {
         options: discardableHandCards(inv, requiredIcon)
           .map(({ code, index }) => ({ id: String(index), cardCode: code, label: cardName(code) })),
       })
-      const code = inv.hand.splice(Number(answer), 1)[0]
+      const code = spliceHand(inv, Number(answer), 1)[0]
       discardPlayerCards(state, inv, code)
       info(state, events, `${inv.name} 弃掉了「${cardName(code)}」。`)
       afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
@@ -448,7 +459,7 @@ export function createTurnFlow(deps) {
         const effects = [horror ? `${horror} 恐惧` : null, damage ? `${damage} 伤害` : null].filter(Boolean).join('、')
         info(state, events, `🌑 ${inv.name} 回合结束时揭示「${cardName(code)}」，受到 ${effects}，卡牌留在手中。`)
         if (horror) applyHorror(state, inv, horror, events)
-        if (damage) applyDamage(state, inv, damage, events)
+        if (damage) applyDamage(state, inv, damage, events, false, { code, sourceSeat: inv.seat })
       }
       inv.tomeActionUsed = true
       inv.ignoreChaosThisTurn = false
@@ -456,6 +467,10 @@ export function createTurnFlow(deps) {
     // 回合结束：本回合内生效的效果到期（A1 的统一过期点）。
     for (const effect of expireEffects(state, 'endOfTurn')) {
       if (effect.label) info(state, events, `⌛ 「${effect.label}」到期（回合结束）。`)
+    }
+    if (state.treacheryTextBlankedThisTurn) {
+      for (const { attachment } of abilityApi(state, events).cardsInPlayTreacheries()) delete attachment.textBlankTurn
+      delete state.treacheryTextBlankedThisTurn
     }
     const next = nextSeat(state, seat)
     if (next != null && next !== seat) {
@@ -492,7 +507,7 @@ export function createTurnFlow(deps) {
       .some(card => /(^|\n)\s*(Resign|撤退)[.。]/i.test(card.text || ''))
   }
 
-  function playCost(state, inv, def) {
+  function playCost(state, inv, def, { rawActionDiscount = false } = {}) {
     const factions = def.factions || [def.klass, def.klass2, def.klass3].filter(Boolean)
     const lola = inv.lolaDiscount?.round === state.round && inv.lolaDiscount?.turnSeat === state.currentSeat
       && factions.includes(inv.lolaDiscount.role) ? inv.lolaDiscount.amount : 0
@@ -500,7 +515,7 @@ export function createTurnFlow(deps) {
     const cardDiscount = campaignState.playDiscount(inv)
     const playDiscount = (inv.playDiscount || 0) + nextPlayDiscount(state, inv.seat)
     const threatIncrease = inv.threat.reduce((sum, threat) =>
-      sum + (getThreatEffect(threat)?.playCostIncrease || 0), 0)
+      sum + (getThreatEffect(threat, state)?.playCostIncrease || 0), 0)
     const loc = state.locations.find(location => location.id === inv.location)
     const playRule = registeredEntry(loc?.originalCode || loc?.code)?.locationRule?.playDiscount
     const discount = playRule && def.type === playRule.cardType
@@ -512,7 +527,7 @@ export function createTurnFlow(deps) {
       && !(inv.playedCardsHistory?.round === state.round && inv.playedCardsHistory.traits.some(trait => matching.includes(trait))) ? firstRule.amount : 0
     // 2026-11-13 P1-11：剧本层的「在此地点打出每张支援费用 +N」读点（TSK 09532 废弃版杰马广场）。
     const locationIncrease = (loc?.playCostIncrease || 0)
-      + (scenarioBehavior(state).playCostIncrease?.(state, inv) || 0)
+      + (scenarioBehavior(state).playCostIncrease?.(state, inv, def) || 0)
     // 04142 珍品店：位于此处时打出每个 [[遗物]] 支援的费用 -2。
     const relicDiscount = loc && relicDiscountLocation(loc.originalCode || loc.code)
       && def.type === 'asset' && (def.traits || []).some(trait => String(trait).toLowerCase() === 'relic') ? 2 : 0
@@ -520,7 +535,9 @@ export function createTurnFlow(deps) {
     // 能力层修正：例如 03142「黑玛瑙扣环」在手牌中时其他手牌 +1 费用（负数为折扣）。
     // 定制卡（09021/09022/09023/09061 等）的 -1 费用走 tsk-customizable 注册表（勾满才生效），
     // 与条目级 `playCostModifier` 同一条汇总线；卡牌侧只保留一个声明。
-    const abilityLayer = playCostDelta(state, inv, def.code)
+    const rate = registeredEntry(def.code)?.optionalPlayActionDiscount
+    const actionDiscount = rate && !rawActionDiscount ? rate * optionalPlayActionCapacity(state, inv) : 0
+    const abilityLayer = playCostDelta(state, inv, def.code) - actionDiscount
       + (registeredEntry(def.code)?.playCostModifier?.({ state, inv, card: def }) || 0)
       + customizationPlayCostDelta(inv.seat, def.code, customizationChecked(state, inv.seat, def.code) || [])
     // 2026-10-25 第七轮修复 05002：揭示牌的 -2 折扣只通过 fromHunch 路径的 inv.playDiscount 生效，
@@ -588,7 +605,16 @@ export function createTurnFlow(deps) {
     if (!inv || vehicleOf(state, inv.seat)) return 0
     const destination = state.locations.find(location => location.id === (move.locationId || inv.location))
     const origin = state.locations.find(location => location.id === inv.location)
-    let total = 0
+    let total = leaveLocationActionCost(state, inv, origin)
+    for (const enemy of state.enemies) {
+      if (enemyTextBlanked(state, enemy) || ![origin?.id, destination?.id].includes(enemy.location)) continue
+      total += Number(registeredEntry(enemy.originalCode || enemy.code)?.flags?.moveSurchargeAtEnemyLocation) || 0
+    }
+    if (origin?.attachments?.some(card => cardDef(card.originalCode || card.code)?.type === 'treachery')) {
+      for (const card of inv.threat || []) {
+        total += Number(registeredEntry(card.originalCode || card.code)?.flags?.moveSurchargeFromTreacheryLocation) || 0
+      }
+    }
     for (const stage of [state.acts?.[state.actIndex], state.agendas?.[state.agendaIndex]]) {
       const entry = registeredEntry(stage?.originalCode || stage?.code)
       const rule = entry?.agendaRule?.movementActionSurcharge ?? entry?.actRule?.movementActionSurcharge
@@ -617,6 +643,7 @@ export function createTurnFlow(deps) {
     const investigateLoc = state.locations.find(loc => loc.id === (move.locationId || inv.location))
     // Phase 5（5a-11）：某些地点调查要多花行动，映射在卡号规则数据里。
     if (move.action === 'investigate') cost += investigateExtraActionsFor(investigateLoc?.originalCode || investigateLoc?.code)
+    if (move.action === 'explore') cost += locationExploreExtraActions(state, inv)
     // 04145「屋中无人」：附属地点调查额外 +1 行动（附属数据读点；地点实例上的旧字段继续兼容）。
     const attachmentInvestigateCost = locationAttachmentTotal(investigateLoc, 'investigateExtraActions')
     if (move.action === 'investigate' && (investigateLoc?.investigateExtraActions || attachmentInvestigateCost)) {

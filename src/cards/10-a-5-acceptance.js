@@ -2,7 +2,7 @@
 // Detailed evidence: audit/10-a-5-acceptance.json. Not a promise of all-combination equivalence.
 export const FHV_SHARD5_ACCEPTANCE_PROFILE = {
   "id": "fhv-campaign-a-2026-11",
-  "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10501–10536）43 条目录记录。35 条通过五维验收；8 条声明未接线/敌人地点每人生命未实现暂不切换。",
+  "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10501–10536）43 条目录记录。43 条通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const FHV_SHARD5_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const FHV_SHARD5_ACCEPTANCE_SHA256 = 'ae2372e12b1dd09fcdf0b5ea321d8b90d020c833198b1801cf1d5351abe47f9e'
-const verified = new Set(["10501","10502","10505","10506","10507","10509","10510a","10510b","10511a","10511b","10512","10513","10514","10515","10516","10517","10518","10519","10520","10521","10523","10524","10524b","10525","10526","10527","10528","10529","10530","10531","10532","10533","10534","10535","10536"])
+export const FHV_SHARD5_ACCEPTANCE_SHA256 = '108eb340c2df21580a52163bbad9f4743db0eb7e1646f9a0cfff2cd21136873a'
+const verified = new Set(["10501","10502","10503","10504","10505","10506","10507","10508","10509","10510a","10510b","10511a","10511b","10512","10513","10514","10515","10516","10517","10518","10519","10520","10521","10522","10523","10524","10524b","10525","10526","10527","10528","10529","10530","10531","10532","10532b","10533","10533b","10534","10534b","10535","10535b","10536"])
 export const fhvShard5CardVerified = code => verified.has(code)

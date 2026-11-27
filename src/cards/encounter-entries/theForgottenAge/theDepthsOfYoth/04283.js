@@ -12,12 +12,8 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api) {
       tfaPlacePursuit(state, api)
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.redDepthsOngoing = true
-      state.scenarioZones ||= {}
-      state.scenarioZones.pursuitReminders ||= []
-      const reminder = agenda.originalCode || agenda.code
-      if (!state.scenarioZones.pursuitReminders.includes(reminder)) state.scenarioZones.pursuitReminders.push(reminder)
+      api.setScenarioFlag('redDepthsOngoing')
+      api.addPursuitReminder(agenda.originalCode || agenda.code)
       api.info?.('赤红深渊：此后每次在本密谋上放置毁灭，都会把追击中的敌人放出来（放到追击区作提醒）。')
     },
     onDoomPlaced(state, payload, api) {

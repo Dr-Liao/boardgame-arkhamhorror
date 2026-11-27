@@ -12,7 +12,6 @@ export default {
   code: '06193',
   scope: 'treachery',
   implemented: true,
-  treacheryRule: { threatArea: true },
   abilities: [{
     kind: 'forced', trigger: 'threatEntered', silent: true,
     label: '另一张卡牌进入你的威胁区域后：选择并弃掉 1 张手牌',

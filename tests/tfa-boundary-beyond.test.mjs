@@ -7,6 +7,7 @@ import {
 import { implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/theBoundaryBeyond/behavior.js'
 import { symbolConnections } from '../content/campaigns/theForgottenAge/card-data.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import { mapGeometry } from '../web/map-layout.js'
 
 const { behavior } = chapter
@@ -119,7 +120,22 @@ function makeApi(state, options = {}) {
     value = (Math.imul(value, 1664525) + 1013904223) >>> 0
     return value / 0x100000000
   }
+  const runtime = scenarioRuntime(state, [])
+  state.log ||= []
   const api = {
+    setScenarioFlag: runtime.setScenarioFlag,
+    moveCard: runtime.moveCard,
+    shuffleDeck: runtime.shuffleDeck,
+    discardEntireHand: runtime.discardEntireHand,
+    canDiscoverClueAt: (seat, id) => behavior.canDiscoverClues(state, state.investigators[seat], locationOf(state, id)),
+    discoverClue(seat, amount, id) {
+      const location = locationOf(state, id)
+      const found = Math.min(location.clues, amount)
+      location.clues -= found
+      state.investigators[seat].clues += found
+      behavior.cluesRemoved(state, location, found, api)
+      return found
+    },
     calls,
     info: text => calls.info.push(text),
     random,
@@ -843,6 +859,11 @@ test('古代地点动作：04175/04177/04178/04184 发现线索的团队每轮�
   inv3.location = 'chapultepecPark'
   inv3.hand = ['01001', '01002', '01003']
   locationOf(hill, 'chapultepecPark').clues = 3
+  inv3.hiddenCards = [{ code: '01001' }]
+  assert.equal(behavior.actions(hill, inv3).some(move => move.rule === 'ancientClue'), false, '不能弃完整手牌时没有可执行行动')
+  assert.equal(makeApi(hill).discardEntireHand(inv3.seat), false)
+  assert.deepEqual(inv3.hand, ['01001', '01002', '01003'])
+  inv3.hiddenCards = []
   const rule3 = behavior.actions(hill, inv3).find(move => move.rule === 'ancientClue')
   behavior.performAction(hill, inv3, rule3, makeApi(hill))
   assert.equal(inv3.hand.length, 0)
@@ -932,8 +953,13 @@ test('04179 抽到巫术遭遇卡：从本地发现 1 个线索（团队每阶�
   location.clues = 2
   // 巫术牌都是遭遇诡计：引擎抽遭遇牌时只调用 encounterDrawn（不走 cardDrawn），
   // 所以这里必须用 encounterDrawn 验证，否则这张卡的反应永远不会触发。
+  const skip = makeApi(hill, { choose: () => 'skip' })
+  behavior.encounterDrawn(hill, inv, '04090', skip)
+  assert.equal(skip.calls.choices[0].canSkip, true)
+  assert.equal(inv.clues, 0, '放弃反应不发现线索')
+  assert.equal(location.clues, 2)
   behavior.encounterDrawn(hill, inv, '04090', makeApi(hill))
-  assert.equal(inv.clues, 1, '发现的是调查员的线索')
+  assert.equal(inv.clues, 1, '放弃后同阶段仍可发动')
   assert.equal(location.clues, 1, '线索从地点搬到调查员，而不是往地点上加')
   // 团队每阶段仅限一次：同阶段第二次抽到巫术不再发现。
   behavior.encounterDrawn(hill, inv, '04090', makeApi(hill))
@@ -954,10 +980,18 @@ test('古代地点反应：04174 击败/躲避蛇族后发现 1 个线索（团�
   const location = locationOf(state, 'templeRuins')
   location.clues = 3
   const inv = state.investigators[0]
+  inv.location = location.id
   const serpent = { id: 'e4', code: '04187', name: '蛇', location: 'templeRuins', traits: ['Serpent'], defeatedBy: 0 }
   state.enemies.push(serpent)
-  behavior.enemyDefeated(state, serpent, makeApi(state))
-  assert.equal(inv.clues, 1)
+  const skip = makeApi(state, { choose: () => 'skip' })
+  behavior.enemyDefeated(state, serpent, skip)
+  assert.equal(skip.calls.choices[0].canSkip, true)
+  assert.equal(location.clues, 3)
+  assert.equal(inv.clues, 0)
+  behavior.afterEvade(state, inv, serpent, { success: false }, makeApi(state))
+  assert.equal(inv.clues, 0, '失败的躲避不触发')
+  behavior.afterEvade(state, inv, serpent, { success: true }, makeApi(state))
+  assert.equal(inv.clues, 1, '放弃后同阶段仍可发动')
   assert.equal(location.clues, 2)
   behavior.afterEvade(state, inv, serpent, null, makeApi(state))
   assert.equal(inv.clues, 1, '同一阶段只触发一次')

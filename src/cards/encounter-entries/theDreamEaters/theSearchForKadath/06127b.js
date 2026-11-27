@@ -7,7 +7,6 @@
 export default {
   code: '06127b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api, ctx = {}) {
       const inv = ctx.inv || state.investigators?.[state.currentSeat] || null
       const locationId = ctx.location?.id || inv?.location || null
@@ -16,8 +15,9 @@ export default {
         api.endTurn?.(inv.seat)
         api.info?.('🐈 乌撒：猫群索要身体爱抚作为贡品——失去剩余行动并结束回合。')
       }
-      if (api.campaignRecord?.('theInvestigatorsForcedTheirWayIntoTheTemple') === true && inv) {
-        const spawned = api.spawnEngaged?.('06145', locationId, inv.seat)
+      if (api.campaignRecord?.('theInvestigatorsForcedTheirWayIntoTheTemple') === true && inv
+        && api.takeFromSetAside?.('06145')) {
+        const spawned = api.spawnEngaged?.('06145', locationId, inv.seat, { ignoreSpawn: true })
         if (spawned) api.info?.('🐈 乌撒：猫群包围了你——乌撒之猫生成并与你交战。')
       }
     },

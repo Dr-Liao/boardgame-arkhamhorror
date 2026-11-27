@@ -30,7 +30,7 @@ const isTomeOrSpellAsset = card => card?.type === 'asset'
   && card.traits?.some(trait => trait === 'Tome' || trait === 'Spell')
 
 export function registerCustomizationChoices(code, spec) {
-  if (!['assetTitle', 'encounterTrait'].includes(spec.kind) || !Number.isSafeInteger(spec.base) || spec.base < 1) {
+  if (!['assetTitle', 'encounterTrait', 'playerTrait', 'skill', 'slot'].includes(spec.kind) || !Number.isSafeInteger(spec.base) || spec.base < 0) {
     throw new TypeError(`卡 ${code} 的定制选择声明无效`)
   }
   for (const [index, count] of Object.entries(spec.options || {})) {
@@ -44,11 +44,21 @@ export function registerCustomizationChoices(code, spec) {
 function choiceCatalog(kind) {
   if (choiceCatalogs.has(kind)) return choiceCatalogs.get(kind)
   const choices = new Map()
+  if (kind === 'slot') {
+    choices.set('arcane', { value: 'arcane', name: 'Arcane', nameZh: '法术槽' })
+    choices.set('ally', { value: 'ally', name: 'Ally', nameZh: '盟友槽' })
+  }
+  if (kind === 'skill') {
+    for (const [key, nameZh] of Object.entries({ willpower: '意志', intellect: '智力', combat: '战斗', agility: '敏捷' })) {
+      choices.set(key, { value: key, name: key, nameZh })
+    }
+  }
   for (const card of Object.values(ALL_CARDS)) {
     if (kind === 'assetTitle' && isTomeOrSpellAsset(card)) {
       if (!choices.has(card.name)) choices.set(card.name, { value: card.name, name: card.name, nameZh: card.nameZh })
     }
-    if (kind === 'encounterTrait' && card.encounterCode) {
+    if ((kind === 'encounterTrait' && card.encounterCode)
+      || (kind === 'playerTrait' && !card.encounterCode && ['asset', 'event', 'skill', 'investigator'].includes(card.type))) {
       for (const trait of card.traits || []) {
         const value = trait.toLowerCase()
         if (!choices.has(value)) choices.set(value, { value, name: trait })
@@ -156,12 +166,16 @@ export function registerCustomizationEffects(table) {
   for (const [code, effects] of Object.entries(table)) {
     assertTskObject(effects, '定制效果')
     for (const key of Object.keys(effects)) {
-      if (!['playCost'].includes(key)) throw new TypeError(`未知定制效果字段 ${key}`)
+      if (!['playCost', 'fast', 'playUnderAnyAtLocation', 'slots', 'deckLimit'].includes(key)) throw new TypeError(`未知定制效果字段 ${key}`)
       if (typeof effects[key] !== 'function') throw new TypeError('定制效果必须是函数')
     }
     effectRegistry.set(code, { ...effects })
   }
   return effectRegistry.size
+}
+
+export function customizationEffect(state, seat, code, key) {
+  return effectRegistry.get(code)?.[key]?.(customizationChecked(state, seat, code), state, seat) ?? null
 }
 
 function customizationState(state, create = false) {

@@ -2,7 +2,7 @@
 // 约定：逐卡规则在各单卡条目；behavior 负责随机布置、高塔可被攻击/坍塌、坡道场景与结局分流。
 import { actRuleFor, agendaRuleFor, entryFlags, enemyScriptFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
-import { initializeSeals, sealsOf, placeSeal } from '../../../../../src/campaign/eote-seals.js'
+import { assignSealsForChapter, initializeSeals, sealsOf, placeSeal } from '../../../../../src/campaign/eote-seals.js'
 import { isPartnerAlive } from '../../../../../src/campaign/eote-partners.js'
 import { collapsedTowers, damageTower, initializeFacilities, towerHealth, towerState } from '../../../../../src/engine/eote-facilities.js'
 import { heartOfMadnessChaosAfterTest, heartOfMadnessChaosToken } from './chaos.js'
@@ -108,18 +108,25 @@ function recordCampaignLogBranch(state, api) {
 }
 
 function prepareSeals(state, api) {
-  if (flagsOf(state).sealsPrepared) return
+  const flags = flagsOf(state)
+  if (flags.sealsPrepared) return
   if (!sealsOf(state).length) initializeSeals(state)
-  const dormant = sealsOf(state).filter(entry => !entry.active && entry.placedBySeat == null && entry.locationId == null)
   const investigators = activeInvestigators(state)
-  const entries = state.campaign?.eote?.seals?.entries || []
-  dormant.forEach((entry, index) => {
-    const seat = investigators[index % Math.max(1, investigators.length)]?.seat ?? 0
-    const data = entries.find(item => item.kind === entry.kind)
-    if (data) data.placedBySeat = seat
-  })
-  flagsOf(state).sealsPrepared = true
-  api.info?.('🫀 疯狂之心 II：休眠封印由各调查员控制（战役状态近似）。')
+  const { sealsPlaced = [], sealsRecovered = [] } = recordsFor(state)
+  const assignments = []
+  for (const { kind } of sealsOf(state)) {
+    const active = sealsPlaced.includes(kind)
+    if (!active && !sealsRecovered.includes(kind)) continue
+    if (!investigators.length) break
+    const seat = investigators.length === 1 ? investigators[0].seat : Number(api.choice({
+      kind: 'investigator', source: 'heartOfMadnessSeals', seat: leadSeat(state),
+      prompt: `为${active ? '激活' : '休眠'}封印 ${kind} 选择控制者。`,
+      options: investigators.map(inv => ({ id: String(inv.seat), label: inv.name })),
+    }))
+    assignments.push({ kind, seat, active })
+  }
+  assignSealsForChapter(state, assignments)
+  flags.sealsPrepared = true
 }
 
 function nearestPylonTo(state, inv) {
@@ -147,19 +154,19 @@ function nearestPylonTo(state, inv) {
 
 function spawnNameless(state, api, locationId) {
   if (!locationId) return null
-  const spawned = api.spawn?.(RAW_CODES.namelessMadness, locationId)
-  api.info?.(`👁️ 生成 1 份「无名的疯狂」（${locationId}）。`)
+  const spawned = api.spawnSetAsideEnemy(RAW_CODES.namelessMadness, locationId)
+  if (spawned) api.info?.(`👁️ 生成 1 份「无名的疯狂」（${locationId}）。`)
   return spawned
 }
 
-function applyRampSequence(state, api) {
+function applyRampSequence(state, api, from) {
   if (flagsOf(state).rampSequence) return
   flagsOf(state).rampSequence = true
   const gateId = 'theGateOfYquaa'
   const ramps = ['titanicRamp1', 'titanicRamp2', 'titanicRamp3', 'titanicRamp4']
   const chain = [gateId, ...ramps, 'hiddenTunnel']
   const keep = new Set(chain)
-  state.locations = (state.locations || []).filter(location => keep.has(location.id))
+  const oldLocations = (state.locations || []).filter(location => !keep.has(location.id))
   for (const definitionId of chain) {
     if (state.locations.some(location => location.id === definitionId)) continue
     const base = state.scenario.locations[definitionId]
@@ -173,13 +180,30 @@ function applyRampSequence(state, api) {
     if (!to.connections.includes(from.id)) to.connections.push(from.id)
   }
   const target = locationOf(state, 'titanicRamp1')
-  if (target) for (const inv of state.investigators || []) if (!inv.defeated && !inv.resigned) inv.location = target.id
-  const collapsed = collapsedTowers(state).length
+  if (!target) return
   const nameless = (state.enemies || []).filter(enemy => codeOf(enemy) === RAW_CODES.namelessMadness)
-  const keepCount = Math.max(0, 3 - collapsed)
-  const removed = nameless.slice(keepCount)
-  state.enemies = (state.enemies || []).filter(enemy => !removed.includes(enemy))
-  api.info?.(`🌊 坡道场景：只保留伊夸之门与泰坦坡道/隐藏隧道；${removed.length} 份无名的疯狂移出。`)
+  const removed = from === 'act' ? nameless.slice(3) : nameless.slice(0, 3 * collapsedTowers(state).length)
+  for (const inv of state.investigators || []) {
+    inv.clues = 0
+    if (!inv.defeated && !inv.resigned) inv.location = target.id
+  }
+  for (const enemy of nameless) {
+    if (removed.includes(enemy)) {
+      api.enemyZones.enter(enemy, 'namelessMadness')
+    } else enemy.location = target.id
+  }
+  for (const old of oldLocations) {
+    if (api.removeLocationFromGame) api.removeLocationFromGame(old.id)
+    else state.locations = state.locations.filter(location => location !== old)
+  }
+  state.clues = 0
+  const final = (state.scenario.acts || []).find(card => codeOf(card) === '08681')
+  if (final) {
+    state.acts = [structuredClone(final)]
+    state.agendas = [{ ...structuredClone(final), type: 'agenda' }]
+    state.actIndex = state.agendaIndex = 0
+  }
+  api.info?.(`🌊 坡道场景：${removed.length} 份无名的疯狂放一边，调查员进入最终幻景。`)
 }
 
 function currentActCode(state) { return codeOf(state.acts?.[state.actIndex]) }
@@ -190,6 +214,11 @@ export const behavior = {
 
   preScenarioSetup(state, events, api) {
     prepareSeals(state, api)
+    if (!flagsOf(state).namelessSetAsideInitialized) {
+      const setAside = (state.scenarioZones ||= {}).setAside ||= []
+      setAside.push(...state.scenario.setAsideAliases.filter(code => code === RAW_CODES.namelessMadness))
+      flagsOf(state).namelessSetAsideInitialized = true
+    }
     recordCampaignLogBranch(state, api)
     state.scenarioFlags.gateFlipped = true
     api.info?.('🫀 疯狂之心 II：伊夸之门翻面；十五格随机布置设施与迷雾高塔（内环不得全是高塔）。')
@@ -227,7 +256,7 @@ export const behavior = {
     if (!location) return []
     const moves = []
     locationRuleFor(codeOf(location))?.actions?.({ moves, state, inv, location })
-    if (currentActCode(state) === '08673' && location.mistPylon && towerState(state, location.id)?.collapsed !== true) {
+    if (currentActCode(state) === '08673' && location.revealed && location.mistPylon && towerState(state, location.id)?.collapsed !== true) {
       moves.push({ action: 'scenarioAction', rule: `heartOfMadnessAttackPylon:${location.id}`, actions: 1,
         label: `🗼 攻击迷雾高塔（fight=${location.shroud}，health=${towerHealth(state, location.id)}）` })
     }
@@ -236,7 +265,9 @@ export const behavior = {
 
   fastActions(state, inv) {
     const location = locationOf(state, inv?.location)
-    if (!location) return []
+    const kind = location?.revealed && entryFlags(codeOf(location))?.pylonKind
+    if (!kind || !sealsOf(state).some(seal => seal.kind === kind && seal.active
+      && seal.locationId == null && seal.placedBySeat === inv.seat)) return []
     const moves = []
     locationRuleFor(codeOf(location))?.fastActions?.({ moves, state, inv, location })
     return moves.map(move => ({ ...move, reactionSourceCode: location.revealed ? codeOf(location) : null }))
@@ -249,21 +280,22 @@ export const behavior = {
     if (typeof move.rule === 'string' && move.rule.startsWith('heartOfMadnessAttackPylon:')) {
       const towerId = move.rule.slice('heartOfMadnessAttackPylon:'.length)
       const tower = towerState(state, towerId)
-      if (!tower || tower.collapsed) return true
-      const resolve = () => {
-        const damage = 1 + (flagsOf(state).pylonDamageBonus || 0)
+      if (!tower || tower.collapsed || towerId !== location.id || !location.revealed) return false
+      const resolve = test => {
+        if (!test.success) return
+        const damage = 1 + (sealsOf(state).some(entry => entry.kind === 'A' && entry.locationId && entry.placedBySeat === inv.seat) ? 1 : 0)
         const result = damageTower(state, { towerId, amount: damage })
-        api.info?.(`🗼 迷雾高塔受到 ${damage} 伤害（剩余 ${result?.remaining ?? 0}）。`)
+        if (!result) return
+        api.info?.(`🗼 迷雾高塔受到 ${damage} 伤害（剩余 ${result.remaining}）。`)
         if (result?.collapsed) api.info?.('🗼 迷雾高塔坍塌！')
       }
-      api.test?.(inv.seat, 'combat', tower.health || location.shroud || 1, resolve)
+      api.test?.(inv.seat, 'combat', api.locationShroud?.(towerId, inv.seat, { includeLocationState: true }) ?? location.shroud, resolve)
       return true
     }
     if (typeof move.rule === 'string' && move.rule.startsWith('heartOfMadnessUnleash:')) {
       const kind = move.rule.slice('heartOfMadnessUnleash:'.length)
       if (placeSeal(state, kind, { seat: inv.seat, locationId: location.id })) {
         flagsOf(state).pylonPowers = { ...(flagsOf(state).pylonPowers || {}), [kind]: true }
-        if (kind === 'A') flagsOf(state).pylonDamageBonus = 1
         api.info?.(`🔓 释放封印 ${kind} 的力量。`)
       }
       return true
@@ -271,10 +303,44 @@ export const behavior = {
     return locationRuleFor(codeOf(location))?.performAction?.(state, inv, move, api) || false
   },
 
-  locationLeaveTest(state, inv, from, to, api) {
-    const rule = locationRuleFor(codeOf(from))
-    if (!rule?.leaveTestDifficulty) return undefined
-    return { skill: 'agility', difficulty: rule.leaveTestDifficulty, spendClueAutoSucceed: rule.spendClueAutoSucceed === true }
+  doomPlacementReplacement(state, amount, api) {
+    const act = actRuleFor(currentActCode(state))
+    const agenda = agendaRuleFor(codeOf(state.agendas?.[state.agendaIndex]), CHAPTER_ID)
+    return (act?.doomPlacementReplacement || agenda?.doomPlacementReplacement)?.(state, amount, api) === true
+  },
+
+  actIndexAfterAdvance(state) {
+    return state.scenarioFlags?.rampSequence ? 0 : undefined
+  },
+
+  agendaIndexAfterAdvance(state) {
+    return state.scenarioFlags?.rampSequence ? 0 : undefined
+  },
+
+  locationShroudModifier(state, location) {
+    return location.mistPylon && state.scenarioFlags?.pylonPowers?.B ? -2 : 0
+  },
+
+  statModifier(state, inv) {
+    return locationOf(state, inv.location)?.mistPylon && state.scenarioFlags?.pylonPowers?.C ? 1 : 0
+  },
+
+  enemyStatModifier(state, enemy, stat) {
+    return (stat === 'fight' || stat === 'evade') && locationOf(state, enemy.location)?.mistPylon
+      && state.scenarioFlags?.pylonPowers?.E ? -2 : 0
+  },
+
+  beforeHarm(state, inv, harm, api) {
+    if (!state.scenarioFlags?.pylonPowers?.D || !locationOf(state, inv.location)?.mistPylon) return null
+    const options = [
+      ...(harm.damage ? [{ id: 'damage', label: '取消 1 点伤害' }] : []),
+      ...(harm.horror ? [{ id: 'horror', label: '取消 1 点恐惧' }] : []),
+    ]
+    if (!options.length) return null
+    const chosen = options.length === 1 ? options[0].id : api.choice({
+      kind: 'effect', seat: inv.seat, source: '08677', prompt: '封印 D：选择取消 1 点伤害或恐惧', options,
+    })
+    return { ...harm, [chosen]: harm[chosen] - 1 }
   },
 
   checkObjectives(state, api) {
@@ -282,14 +348,6 @@ export const behavior = {
     const act = state.acts?.[state.actIndex]
     if (!act) return
     const code = codeOf(act)
-    if (['08673'].includes(code)) {
-      const pylons = pylonSlots(state)
-      if (pylons.length && pylons.every(slot => towerState(state, slot)?.collapsed === true)) {
-        api.info?.('🗼 全部迷雾高塔坍塌：推进幕 3。')
-        api.advanceAct?.()
-      }
-      return
-    }
     if (['08681'].includes(code)) {
       const active = activeInvestigators(state)
       const tunnel = locationOf(state, 'hiddenTunnel')
@@ -314,7 +372,8 @@ export const behavior = {
       const target = nearestPylonTo(state, state.investigators?.[leadSeat(state)] || activeInvestigators(state)[0])
       if (target) spawnNameless(state, api, target)
     }
-    if (rule?.backEffect === 'rampSequence') applyRampSequence(state, api)
+    rule?.onLeave?.(state, agenda, api)
+    if (rule?.backEffect === 'rampSequence') applyRampSequence(state, api, 'agenda')
   },
 
   actReveal(state, act, api) {
@@ -323,33 +382,13 @@ export const behavior = {
   },
 
   actLeftPlay(state, act, api) {
-    if (actRuleFor(codeOf(act))?.backEffect === 'rampSequence') applyRampSequence(state, api)
-  },
-
-  enemyPhaseEnd(state, api) {
-    const phantasm = (state.enemies || []).find(enemy => codeOf(enemy) === RAW_CODES.unsealedPhantasm)
-    if (!phantasm || phantasm.location == null) return
-    const order = ['theGateOfYquaa', ...(state.scenario.facilitySlots || [])]
-    const index = order.indexOf(phantasm.location)
-    const next = order.slice(Math.max(0, index + 1)).find(id => id !== phantasm.location)
-    if (next) {
-      phantasm.location = next
-      api.info?.('👻 未封幻影在敌人阶段结束时朝最近的迷雾高塔移动 1 格。')
-    }
+    if (actRuleFor(codeOf(act))?.backEffect === 'rampSequence') applyRampSequence(state, api, 'act')
   },
 
   afterTest(state, inv, result, api) {
     for (const effect of heartOfMadnessChaosAfterTest(state, inv, result)) {
-      if (effect.type === 'drawTekeli') api.info?.('🟣 石板标记：忒咳哩-哩牌库抽牌（P5 弱点管线近似）。')
+      if (effect.type === 'drawTekeli') api.resolveTekeliTop?.(inv.seat)
       if (effect.type === 'addDoom') api.addDoom?.(effect.amount)
-    }
-    const enemy = state.skillTest?.testTarget?.enemy || state.skillTest?.enemy
-    if (enemy && codeOf(enemy) === RAW_CODES.namelessMadness && result?.success) {
-      const nearest = (state.enemies || []).find(other => codeOf(other) === RAW_CODES.namelessMadness && other.exhausted)
-      if (nearest) {
-        nearest.exhausted = false
-        api.info?.('👁️ 成功差值令最近一份「无名的疯狂」重整。')
-      }
     }
   },
 

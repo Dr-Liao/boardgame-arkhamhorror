@@ -14,6 +14,7 @@
 //
 // 规则事实源：参考实现 `TheWagesOfSin.hs`、`Scenarios/TheCircleUndone/TheWagesOfSin/Helpers.hs`
 // 与 Cards 目录下的逐卡文件；中文卡文是文案事实源。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { entryFlags } from '../../../../../src/cards/card-rules.js'
 import {
@@ -828,7 +829,7 @@ export const behavior = {
     if (!def || def.type === 'weakness' || /weakness/i.test(String(def.typeName || ''))) return
     const index = inv.hand.lastIndexOf(code)
     if (index < 0) return
-    inv.hand.splice(index, 1)
+    spliceHand(inv, index, 1)
     location.beneath ||= []
     location.beneath.push({ code, ownerSeat: inv.seat })
     api.info?.(`📦 ${inv.name} 抽到的卡牌被放在教堂阁楼底下。`)
@@ -933,7 +934,7 @@ export const behavior = {
     const role = enemyRoleOf(state, enemy)
     if (role === 'vengefulWitch') {
       for (const inv of alive(state).filter(target => target.location === enemy.location)) {
-        api.directDamage(inv.seat, Number(enemy.damage) || 0)
+        api.directDamage(inv.seat, Number(enemy.damage) || 0, { code: original(enemy), sourceEnemyId: enemy.id })
         api.directHorror(inv.seat, Number(enemy.horror) || 0)
       }
       api.info?.('🔥 复仇女巫倒下：同地点的每位调查员受到其伤害与恐惧（直接）。')

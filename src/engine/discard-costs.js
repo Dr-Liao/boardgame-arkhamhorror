@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 const ICONS = new Set(['willpower','intellect','combat','agility','wild','wildMinus'])
 const integer = n => Number.isSafeInteger(n) && n >= 0
 
@@ -63,7 +64,7 @@ export function createDiscardCostApi(state, deps) {
 }
 export function discardOneHandCardAsCost(state,inv,index,expectedCode,events,deps) {
   if(inv.hand[index]!==expectedCode || !deps.discardableHandCards(inv).some(row=>row.index===index))return false
-  const [code]=inv.hand.splice(index,1)
+  const [code]=spliceHand(inv, index,1)
   deps.discardPlayerCards(state,inv,code)
   deps.afterHandDiscard(state,inv,code,events,deps.reactionWindow,deps.cardName)
   return true

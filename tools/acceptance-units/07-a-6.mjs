@@ -1,13 +1,6 @@
 // 验收单元 07-a-6：07-a 印斯茅斯暗潮分片 6（A Light in the Fog）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-07-a-印斯茅斯暗潮-分片-6.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-07-a-印斯茅斯暗潮-分片-6.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const code of verdict.pendingCodes || []) if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: 'pending', reason: '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' })
-const failed = [...failedByCode.values()]
+// 2026-11-26 复验通过，逐卡证据保存在生成的验收账本。
 
 // 范围锁定为审计时未验收的 42 条记录（lif）。
 const codes = ["07220", "07221", "07222", "07223", "07224", "07225", "07226", "07227", "07228", "07229", "07230", "07231", "07232", "07233", "07234", "07235", "07236", "07237", "07238", "07239", "07240", "07241", "07242", "07243", "07244", "07245", "07246", "07247", "07248", "07249", "07250", "07251", "07252", "07252b", "07253", "07254", "07255", "07256", "07257", "07258", "07259", "07260"]
@@ -35,7 +28,7 @@ export default {
   select: card => codeSet.has(card.code),
   exclude: [],
   expectedCount: 42,
-  failed,
+  failed: [],
   testFiles: [
     "games/arkhamhorror/tests/acceptance-07-a-shard6.test.mjs",
     "games/arkhamhorror/tests/tic-scenario-aLightInTheFog.test.mjs",

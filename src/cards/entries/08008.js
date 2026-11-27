@@ -27,7 +27,7 @@ export default {
                 { id: 'damage', label: '横置：本次攻击 +1 伤害' },
                 { id: 'skip', label: '不横置' }] })
             if (choice !== 'evade' && choice !== 'damage') return
-            whip.exhausted = true
+            api.exhaust(whip)
             if (choice === 'evade') {
               if (enemy && !enemy.defeated) api.autoEvadeEnemy(enemy)
             } else {

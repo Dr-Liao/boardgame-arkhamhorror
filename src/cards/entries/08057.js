@@ -13,9 +13,7 @@
 //     引擎没有「条件性常驻 extraAction」的读点；free 触发需在自己回合，等价于本回合多一次行动。
 export default {
   code: '08057',
-  // approximation: 引擎 getMaxHealth/getMaxSanity 不读 modifiers，因此「10+ 资源 +1 生命/神智」
-  // 用被动数据通道常驻实现（资源条件在引擎接线前无法读取）。
-  passive: { healthBonus: 1, sanityBonus: 1 },
+  passive: { healthBonus: 1, sanityBonus: 1, statCapacityResourcesAtLeast: 10 },
   abilities: [
     {
       kind: 'free',

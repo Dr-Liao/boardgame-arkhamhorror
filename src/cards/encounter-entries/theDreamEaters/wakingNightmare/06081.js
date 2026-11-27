@@ -14,11 +14,11 @@ export default {
   code: '06081',
   scope: 'enemy',
   implemented: true,
-  flags: {
+  enemyRule: {
     cannotAttack: true,
     cannotBeAttacked: true,
     cannotBeDamaged: true,
     cannotBeDefeated: true,
-    blocksInvestigationWhileEngaged: true,
   },
+  flags: { blocksInvestigationWhileEngaged: true },
 }

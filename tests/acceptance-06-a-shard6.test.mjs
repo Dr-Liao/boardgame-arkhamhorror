@@ -4,10 +4,15 @@
 //   06206 06207 06208 06209 06210 06211 06212 06213 06214 06214b 06215 06216 06217
 //   06218 06219 06220 06221 06222 06224 06225 06226 06227 06229 06231 06233
 // 断言对象是当前 HEAD 的章节 behavior / 单卡条目 / chaos 读点，不是「条目存在」。
-// 已判失败的卡（报告 §3）这里只断言已实现子句，失败点写在报告里，不写假绿断言。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { registerCardAbilities, registeredCodes } from '../src/engine/ability.js'
+import { canDiscoverClueAt, discoverClueAt, scenarioRuntime } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
+import { agendaDoom } from '../src/engine/rules-state.js'
+import { canCommitToTest } from '../src/engine/commit-rules.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { fixture } from './core-fixture.mjs'
+import { registerCardAbilities, registeredCodes, registeredEntry } from '../src/engine/ability.js'
 import { CARD_ABILITY_ENTRIES } from '../src/cards/card-abilities.js'
 import { NON_PLAYER_ABILITY_ENTRIES } from '../src/cards/encounter-abilities.js'
 
@@ -77,6 +82,7 @@ function createApi(state, overrides = {}) {
   const api = {
     calls,
     info: () => {},
+    choose: request => api.choice(request),
     choice: request => (overrides.choice ? overrides.choice(request) : request?.options?.[0]?.id ?? null),
     random: () => 0.5,
     shuffle: list => [...list],
@@ -202,21 +208,22 @@ const byCode = (state, code) => state.locations.find(location => (location.origi
 // ---------------------------------------------------------------------------
 // 06206 场景卡（混乱袋参照）
 // ---------------------------------------------------------------------------
-test('06206 月之暗面：混乱标记取值（skull 半/全警报、tablet、elder_thing）与失败后果', () => {
+test('06206 月之暗面：混乱标记取值与失败后果，cultist 追加一次揭示', () => {
   const state = createState()
   state.investigatorCounters.alarmLevel.seats = [3, 1]
   assert.equal(dsmChaosToken(state, state.investigators[0], 'skull'), -2, '简单面 skull = ceil(3/2)')
   assert.equal(dsmChaosToken(state, state.investigators[0], 'tablet'), -1)
-  assert.equal(dsmChaosToken(state, state.investigators[0], 'elder_thing'), 1)
+  assert.deepEqual(behavior.resolveChaosToken(state, state.investigators[0], 'cultist'), { delta: 0, drawAnother: true })
+  assert.equal(dsmChaosToken(state, state.investigators[0], 'elderthing'), 1)
   const hard = createState({ difficulty: 'hard' })
   hard.investigatorCounters.alarmLevel.seats = [3, 1]
   assert.equal(dsmChaosToken(hard, hard.investigators[0], 'skull'), -3)
   assert.equal(dsmChaosToken(hard, hard.investigators[0], 'tablet'), -2)
-  assert.equal(dsmChaosToken(hard, hard.investigators[0], 'elder_thing'), 0)
+  assert.equal(dsmChaosToken(hard, hard.investigators[0], 'elderthing'), 0)
   // tablet 失败：警报 +1；cultist 失败且警报 > 修正后技能值：抽遭遇牌库顶。
   const api = createApi(state)
   dsmChaosAfterTest(state, state.investigators[0], {
-    success: false, value: 2, difficulty: 5, drawn: ['tablet', 'cultist'], cancelledTokens: [], source: null,
+    success: false, value: 2, difficulty: 5, drawn: ['cultist', 'tablet'], cancelledTokens: [], source: null,
   }, api)
   assert.equal(state.investigatorCounters.alarmLevel.seats[0], 4)
   assert.equal(state.drawnBy, 0, 'cultist：警报 4 > 修正后技能值 2，抽遭遇牌库顶')
@@ -274,11 +281,16 @@ test('06210 月兽腹地：月兽之城团队 3×人数线索推进；背面把�
   const rescue = createState({ actIndex: 0 })
   placeScenarioLocations(rescue)
   rescue.investigators[0].location = 'cityOfTheMoonBeasts'
-  rescue.investigators[1].location = 'moonForest'
+  rescue.investigators[1].location = 'cityOfTheMoonBeasts'
   rescue.scenarioZones.setAside = ['06224']
-  const rescueApi = createApi(rescue)
+  const rescueApi = createApi(rescue, { choice: request => {
+    assert.deepEqual(request.options.map(option => option.id), ['0', '1'])
+    return '1'
+  } })
   assert.equal(behavior.actReveal(rescue, rescue.acts[0], rescueApi), true)
-  assert.ok(rescue.investigators[0].assets.some(asset => asset.code === '06224'))
+  assert.equal(rescue.investigators[0].assets.some(asset => asset.code === '06224'), false)
+  assert.ok(rescue.investigators[1].assets.some(asset => asset.code === '06224'))
+  assert.equal(rescue.scenarioZones.setAside.includes('06224'), false)
 })
 
 test('06211 月上探索：月蜥神庙团队 1×人数线索推进；背面放置月下洞穴（暗面）/黑暗月核并横置生成月蜥', () => {
@@ -295,10 +307,23 @@ test('06211 月上探索：月蜥神庙团队 1×人数线索推进；背面放�
   assert.equal(lizard.exhausted, true, '月蜥以横置状态生成')
 })
 
-test('06212 月之核心：目标全员在黑暗月核且无线索；背面放置月下洞穴（亮面）/月之亮面/白船', () => {
+test('06212 月之核心：仅成功调查可发现黑暗月核线索；满足推进目标后放置三个地点', () => {
   const state = createState({ actIndex: 2 })
   placeScenarioLocations(state, ['cityOfTheMoonBeasts', 'templeOfTheMoonLizard', 'moonForest',
     'theDarkCrater', 'cavernsBeneathTheMoonDarkSide', 'theBlackCore'])
+  const discovery = fixture()
+  const core = { ...CLONE(definition.locations.theBlackCore), id: 'theBlackCore', originalCode: '06220', clues: 2, revealed: true }
+  discovery.locations.push(core)
+  discovery.acts = CLONE(definition.acts)
+  discovery.actIndex = 2
+  discovery.investigators[0].location = core.id
+  assert.equal(canDiscoverClueAt(discovery, discovery.investigators[0], core), false)
+  assert.equal(discoverClueAt(discovery, discovery.investigators[0], 1, []), false)
+  assert.equal(core.clues, 2)
+  assert.equal(canDiscoverClueAt(discovery, discovery.investigators[0], core, { investigation: true }), true)
+  discoverClueAt(discovery, discovery.investigators[0], 1, [], { investigation: true })
+  assert.equal(core.clues, 1)
+  assert.equal(discovery.investigators[0].clues, 1)
   state.scenarioZones.setAside = ['06221', '06222', '06223']
   const api = createApi(state)
   assert.equal(behavior.actReveal(state, state.acts[2], api), true)
@@ -361,7 +386,7 @@ test('06214b 下船：翻面时已有线索 → 每位调查员警报 +1，并�
 // ---------------------------------------------------------------------------
 // 06215 月兽之城
 // ---------------------------------------------------------------------------
-test('06215 月兽之城：轮末本地每位调查员敏捷(2)，失败者警报等级 +1', () => {
+test('06215 月兽之城：帷幕等于最高警报；轮末敏捷(2)失败者警报 +1', () => {
   const state = createState()
   placeScenarioLocations(state)
   const city = byCode(state, '06215')
@@ -371,6 +396,9 @@ test('06215 月兽之城：轮末本地每位调查员敏捷(2)，失败者警�
   behavior.roundEnded(state, api)
   assert.equal(state.investigatorCounters.alarmLevel.seats[0], 2, '本地失败者 +1')
   assert.equal(state.investigatorCounters.alarmLevel.seats[1], 1, '不在本地的调查员不受影响')
+  assert.equal(behavior.locationShroudModifier(state, city, state.investigators[0]), 2)
+  state.investigatorCounters.alarmLevel.seats[1] = 4
+  assert.equal(behavior.locationShroudModifier(state, city, state.investigators[0]), 4)
 })
 
 // ---------------------------------------------------------------------------
@@ -568,6 +596,9 @@ test('06227 月之拜亚基：生成在最近的[[月面]]地点；忽略/不能
   low.enemies.push(enemy)
   behavior.hunterMove(low, enemy, createApi(low))
   assert.equal(enemy.location, 'moonForest', '低警报调查员被忽略，不移动')
+  state.investigatorCounters.alarmLevel.seats = [3, 5]
+  assert.deepEqual(behavior.preyRank(state, enemy, [0, 1]), [1])
+  assert.deepEqual(behavior.preyRank(state, enemy, state.investigators), [state.investigators[1]])
 })
 
 // ---------------------------------------------------------------------------
@@ -596,17 +627,40 @@ test('06231 被迫藏身：意志检定难度 = 你的警报等级；失败差�
   }
 })
 
-test('06233 卡达斯：开局在密谋牌库旁；任意调查员可检定任意技能（2+1×人数），成功从游戏中移除', () => {
-  const state = createState()
-  behavior.preScenarioSetup(state, [], createApi(state))
-  assert.deepEqual(state.scenarioFlags.agendaAside, ['06233'])
-  const api = createApi(state)
-  const moves = behavior.actions(state, state.investigators[0])
-  const awakening = moves.find(move => move.rule === 'tshFalseAwakening')
-  assert.ok(awakening, '密谋牌库旁时任意调查员可发动')
-  behavior.performAction(state, state.investigators[0], awakening, api)
-  const testCall = api.calls.find(call => call.name === 'test')
-  assert.equal(testCall.args[2], 4, '难度 2 + 1[per_investigator]×2')
-  assert.equal(state.scenarioFlags.agendaAside.includes('06233'), false)
+test('06233 卡达斯：公开旁置并有 1 毁灭；其他座位也能行动，成功移出游戏', () => {
+  const state = fixture('01001', 2)
+  state.scenario = CLONE(definition)
+  const before = agendaDoom(state)
+  const actual = scenarioRuntime(state, [])
+  behavior.afterChaosBagSetup(state, [], actual)
+  const card = state.agendaAside[0]
+  assert.equal(card.code, '06233')
+  assert.equal(card.doom, 1)
+  assert.equal(agendaDoom(state), before + 1)
+  assert.equal(viewState(state, 1).agendaAside[0].code, '06233')
+  const inv = state.investigators[1]
+  const awakening = behavior.actions(state, inv).find(move => move.rule === 'tshFalseAwakening')
+  assert.ok(awakening)
+  const api = { ...actual, choice: () => 'agility', test: (seat, skill, difficulty, resolve) => {
+    assert.deepEqual([seat, skill, difficulty], [1, 'agility', 4])
+    resolve({ success: true })
+  } }
+  behavior.performAction(state, inv, awakening, api)
+  assert.ok(!state.agendaAside.some(item => item.id === card.id))
   assert.ok(state.removedFromGame.includes('06233'))
+  assert.equal(agendaDoom(state), before)
+})
+
+test('06203 月石：不能投入检定，作为手牌仍可弃置', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  inv.hand = ['06203', '01089']
+  state.skillTest = { seat: 0, skill: 'willpower', explicitBaseValue: 2, difficulty: 3, committed: [] }
+  const deps = { cardDef: code => ALL_CARDS[code], commitIcons: () => 1, registeredEntry }
+  assert.equal(canCommitToTest(state, inv, '06203', deps), false)
+  assert.equal(canCommitToTest(state, inv, '01089', deps), true)
+  inv.resources = 0
+  assert.equal(scenarioRuntime(state, []).discardFromHand(0, '06203'), true)
+  assert.deepEqual(inv.discard, ['06203'])
+  assert.deepEqual(inv.hand, ['01089'])
 })

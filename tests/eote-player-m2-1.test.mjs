@@ -1,10 +1,9 @@
 // 七循环《地球边缘》P6 一般玩家卡 · M2-1 分片（08019–08048）逐卡验收。
 //
 // 分片共 30 张；每张都有 `src/cards/entries/<code>.js` 与一条 `P6 <code> <中文名> …` 真实行为测试。
-// 其中 15 张因缺引擎读点采用「现有原语的最接近等价实现」，条目注释以 approximation 标注：
+// 旧验收记录的近似实现包括：
 //   08020 攻击自动成功（改为直接结算攻击伤害，跳过检定）
 //   08021 持续到阶段结束的攻击改向（退化为单次手牌快速反应，见 03106 同构）
-//   08024/08037 动态 commit 图标（iconBonus 无 getStat，按印刷基值）
 //   08028 事件附到敌人 + 宿主击败反应（P0-9 已接真实 mythosEncounterStep skip 替代遭遇抽取；
 //         事件附敌与奖励归属仍为近似：缺玩家事件附敌通用原语，用持续效果 sourceInstanceId 记账）
 //   08029 任意已揭示地点敌人（doFight 不支持远程攻击，改为必先移动到敌人地点）
@@ -484,13 +483,15 @@ test('P6 08021 “到我身后！” 另一位调查员被攻击时改为攻击�
   assert.equal(me(state).horror, 0, '取消该次攻击 1 点恐惧（近似为治愈 1 点恐惧）')
 })
 
-// ── 08024 防御姿态（approximation）──────────────────────────────────────────
-test('P6 08024 防御姿态 手中/投入时获得等于敏捷的战斗图标、等于战斗的敏捷图标（approximation）', () => {
+// ── 08024 防御姿态
+test('P6 08024 防御姿态：根据当前敏捷和战斗计算投入图标', () => {
   const state = fixture('01001')
-  const base = ALL_CARDS['01001']
-  assert.equal(commitIcons(state, me(state), '08024', 'combat'), base.agility, '战斗检定：等于敏捷的战斗图标')
-  assert.equal(commitIcons(state, me(state), '08024', 'agility'), base.combat, '敏捷检定：等于战斗的敏捷图标')
-  assert.equal(commitIcons(state, me(state), '08024', 'willpower'), 0, '其他技能不提供图标')
+  asset(state, '08035')
+  asset(state, '01028')
+  assert.equal(commitIcons(state, me(state), '08024', ['combat']), 3)
+  assert.equal(commitIcons(state, me(state), '08024', ['agility']), 5)
+  assert.equal(commitIcons(state, me(state), '08024', ['combat', 'agility']), 8)
+  assert.equal(commitIcons(state, me(state), '08024', ['willpower']), 0)
 })
 
 // ── 08028 追猎行动（P0-9 修复：真实神话阶段 skip 遭遇抽取）──────────────────
@@ -597,12 +598,14 @@ test('P6 08034 繁星密语 弃牌库顶：弱点洗回，非弱点本回合每�
   assert.equal(fresh.effects.some(item => item.sourceCode === '08034'), false, '弱点分支不产生加值效果')
 })
 
-// ── 08037 地区勘测（approximation）──────────────────────────────────────────
-test('P6 08037 地区勘测 手中/投入时获得等于敏捷的智力图标、等于智力的敏捷图标（approximation）', () => {
+// ── 08037 地区勘测
+test('P6 08037 地区勘测：根据当前敏捷和智识计算投入图标', () => {
   const state = fixture('01001')
-  const base = ALL_CARDS['01001']
-  assert.equal(commitIcons(state, me(state), '08037', 'intellect'), base.agility, '智力检定：等于敏捷的智力图标')
-  assert.equal(commitIcons(state, me(state), '08037', 'agility'), base.intellect, '敏捷检定：等于智力的敏捷图标')
+  asset(state, '08035')
+  asset(state, '01033')
+  assert.equal(commitIcons(state, me(state), '08037', ['intellect']), 3)
+  assert.equal(commitIcons(state, me(state), '08037', ['agility']), 4)
+  assert.equal(commitIcons(state, me(state), '08037', ['intellect', 'agility']), 7)
 })
 
 // ── 08041 通路档案（等级 4，approximation）──────────────────────────────────

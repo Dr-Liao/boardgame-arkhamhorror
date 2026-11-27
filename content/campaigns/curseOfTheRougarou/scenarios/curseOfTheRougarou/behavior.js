@@ -18,6 +18,7 @@
 //   locationLeft → 地点强制离场效果（诅咒河岸/遗忘湿地）
 //   resolveChaosToken / applyTokenEffect / tokenMeanings → 混乱标记（skull/cultist/tablet/elder_thing）
 //   resolution → 声明式结局 effects（记录 / 移除诅咒弱点 / 奖励牌）
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
@@ -603,7 +604,7 @@ export function locationLeft(state, inv, location, api = {}) {
     const skills = (inv.hand || []).filter(card => ALL_CARDS[card]?.type === 'skill')
     if (skills.length) {
       const pick = skills[Math.floor(randomOf(api) * skills.length)]
-      inv.hand.splice(inv.hand.indexOf(pick), 1)
+      spliceHand(inv, inv.hand.indexOf(pick), 1)
       inv.discard.push(pick)
       info(api, `🌫️ ${inv.name} 离开诅咒河岸：弃掉技能卡「${ALL_CARDS[pick]?.nameZh || pick}」。`)
     }

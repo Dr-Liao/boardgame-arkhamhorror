@@ -5,18 +5,16 @@
 //       你可以不使用原本指示的技能，改为使用 [willpower]。
 //
 // 一卡一文件：这张卡的行为只在这里维护。
-// approximation: 「额外充能数 = 职阶数」用 entersPlay + api.setAssetUses 动态初值；
-// 「执行一次基础行动」用 api.beginImmediateAction({ basicOnly: true })。
-// 「技能检定改用 willpower」缺少 ctx.api 级的 substituteSkill 绑定时长，暂未接线（条目与报告标注）。
+// 即时基础行动的检定可各自选择原技能或意志，替代只在该行动期间有效。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const classCount = inv => {
-  const classes = new Set()
-  for (const asset of inv.assets || []) {
-    const klass = ALL_CARDS[asset.code]?.klass
-    if (klass) classes.add(String(klass).toLowerCase())
-  }
-  return classes.size
+  const cards = [inv.code, ...inv.assets.map(asset => asset.code)]
+  const classes = cards.flatMap(code => {
+    const definition = ALL_CARDS[code]
+    return [definition?.klass, definition?.faction2, definition?.faction3]
+  }).filter(value => value && value !== 'neutral' && value !== 'mythos')
+  return new Set(classes).size
 }
 
 export default {
@@ -39,10 +37,11 @@ export default {
       kind: 'free',
       cost: { exhaust: true, uses: 1 },
       label: '花 1 充能并横置：执行一次基础行动',
-      criteria: [({ state, inv }) => state.currentSeat === inv.seat],
+      criteria: [({ state, inv, helpers }) => !state.immediateAction
+        && helpers.hasImmediateAction(inv.seat, { basicOnly: true, includeBasicPlay: true })],
       resolve: ({ inv, source, api }) => {
         if (!source) return
-        const started = api.beginImmediateAction(inv.seat, { source, basicOnly: true })
+        const started = api.playerTools.takeBasicActionWithSubstitution(inv.seat, { source: source.id, optional: true, includeBasicPlay: true })
         if (!started) {
           api.info('「闭环」：当前没有可以执行的基础行动。')
           return

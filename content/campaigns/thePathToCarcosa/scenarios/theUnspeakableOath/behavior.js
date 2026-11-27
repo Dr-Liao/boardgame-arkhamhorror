@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { campaignCardChange } from '../../../../../src/campaign/campaign.js'
@@ -105,7 +106,7 @@ function unspeakableChaosToken(state, inv, token, api) {
 
 function discardHidden(state, inv, code) {
   const handIndex = inv.hand.indexOf(code)
-  if (handIndex >= 0) inv.hand.splice(handIndex, 1)
+  if (handIndex >= 0) spliceHand(inv, handIndex, 1)
   const hiddenIndex = (inv.hiddenCards || []).indexOf(code)
   if (hiddenIndex >= 0) inv.hiddenCards.splice(hiddenIndex, 1)
   state.encounterDiscard.push(code)
@@ -261,7 +262,7 @@ export const behavior = {
         prompt: '食堂：选择弃掉一张手牌。',
         options: inv.hand.map((code, index) => ({ id: String(index), label: ALL_CARDS[code]?.nameZh || code })),
       })
-      inv.discard.push(inv.hand.splice(Number(choice), 1)[0])
+      inv.discard.push(spliceHand(inv, Number(choice), 1)[0])
     }
   },
   actions(state, inv) {

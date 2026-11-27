@@ -1,3 +1,7 @@
+import { enemyAttackingDamageBonus } from './enemy-keyword-movement.js'
+import { spliceHand } from './hand-icons.js'
+import { hiddenParityBlocks } from './hidden-rules.js'
+import { customizationEffect } from './tsk-customizable.js'
 import { draftDeckStatus, draftDecksReady } from '../deck/draft-mode.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // table-decisions.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
@@ -177,6 +181,7 @@ export function createTableDecisions(deps) {
       const inv = state.investigators[seat]
       const built = buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
         { seat, seed: 1, xpBudget: campaignOpeningExperience(state.campaign), deferBasicWeakness: !state._legacyStartingDeckRules, investigatorBuild: inv.investigatorBuild,
+          cardCopyLimit: code => customizationEffect(state, seat, code, 'deckLimit'),
           playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state, inv.code) })
       return built.errors?.length ? `自定义卡组无效：${built.errors.join('；')}` : null
     }
@@ -223,6 +228,7 @@ export function createTableDecisions(deps) {
   }
 
   function cardPlayBlockedReason(state, inv, def) {
+    if (hiddenParityBlocks(state, inv, def, 'play')) return '隐私牌禁止你打出这张卡牌'
     // Phase 2（C1）：capability:play —— 声明式「不能打出卡牌」。
     if (capabilityBlocked(state, inv, 'play')) return '当前效果禁止你打出卡牌'
     // Phase 5（5c-20）：条目的同名字段优先（迁移后可删旧 DSL 条目），读点只有一个。
@@ -311,22 +317,18 @@ export function createTableDecisions(deps) {
     // 第 126 轮：旧 DSL（EFFECTS）通道已删；支援/威胁区的「不引发借机攻击」仍走 assetEffect。
     const source = move.action === 'ability' ? assetEffect(inv, controlledAbilityCard(inv, move.assetId)) : null
     if (source?.noOpportunityAttack) return 'evade'
-    // Phase 2：描述子化的「不引发借机攻击」事件卡（统一读点）。
-    if (move.action === 'play' && cardPlayFlag(move.copyCode || move.cardId, 'noOpportunityAttack')) return 'evade'
-    const actionEffect = move.action === 'play' ? playedEffect(move.copyCode || move.cardId)
-      : move.action === 'ability' ? abilityOfMove(state, inv, move)?.effect : null
-    if (actionEffect?.noOpportunityAttack) return 'evade'
-    // Phase 6（2026-10-26）：played 描述子的 countsAs 同样决定「按哪种行动结算」——旧实现只对
-    // [action] 能力读它，事件卡写了 countsAs（卡面「攻击。/躲避。/谈判。/撤退。」）等于没写，
-    // 打出时照样引发借机攻击。现在与 action 能力走同一读点。
     if (move.action === 'play') {
-      const playedDescriptor = (registeredEntry(move.copyCode || move.cardId)?.abilities || [])
-        .find(descriptor => descriptor.kind === 'played' && (descriptor.countsAs || descriptor.actionKind === 'parley'))
-      if (playedDescriptor) return playedDescriptor.actionKind === 'parley' ? 'parley' : playedDescriptor.countsAs
+      const code = move.copyCode || move.cardId
+      const played = (registeredEntry(code)?.abilities || [])
+        .find(descriptor => descriptor.kind === 'played' && (descriptor.actionKind || descriptor.countsAs))
+      if (played) return played.actionKind || played.countsAs
+      if (cardPlayFlag(code, 'noOpportunityAttack')) return 'evade'
     }
     // Phase 5：描述子用 resolve 实现时没有 effect 数据体，「按哪种行动结算」写在 countsAs 上
     // （旧式能力写在 effect.kind 上，见「意志闪避」）。
     const ability = move.action === 'ability' ? abilityOfMove(state, inv, move) : null
+    const actionEffect = move.action === 'play' ? playedEffect(move.copyCode || move.cardId) : ability?.effect
+    if (actionEffect?.noOpportunityAttack) return 'evade'
     // 第 2 步 P2.7：描述子可以直接声明自己按哪种行动结算（谈判 / 阵法 …），优先于旧的 countsAs。
     if (ability?.descriptor?.actionKind) return ability.descriptor.actionKind
     if (ability?.descriptor?.countsAs) return ability.descriptor.countsAs
@@ -350,6 +352,10 @@ export function createTableDecisions(deps) {
     // 批次 3（12007 特里希）：额外行动只能用于躲避（比 fightEvade 更严格）。
     if (kind === 'evade' && inv.evadeOnlyActions > 0) return 'evade'
     // 批次 3（60551）：额外行动只能用于打出事件。
+    if (move.action === 'play' && inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.restrictedAction === 'handAssetPlay'
+      && !asset.restrictedActionSpent) && cardDef(move.copyCode || move.cardId)?.slots?.some(slot => /^hand(?:\s*x\s*2)?$/i.test(slot))) {
+      return 'handAssetPlay'
+    }
     if (move.action === 'play' && inv.eventPlayOnlyActions > 0
       && cardDef(move.cardId || move.copyCode)?.type === 'event') return 'eventPlay'
     if (isSpellAction(state, inv, move)) return 'spell'
@@ -411,7 +417,9 @@ export function createTableDecisions(deps) {
       clues: extraCost.clues || 0, discardHand: extraCost.discardHand || 0,
       groupClues: move.action === 'drawCultist' ? 2 * state.numInvestigators : move.action === 'advanceAct' ? (state.acts[state.actIndex]?.objective?.perInvestigator || 0) * state.numInvestigators : 0,
       uses: ability?.cost?.uses || 0, exhaust: !!ability?.cost?.exhaust,
-      opportunityAttacks: attacks.map(e => ({ id: e.id, name: e.name, damage: e.damage, horror: e.horror })),
+      opportunityAttacks: attacks.map(e => ({
+        id: e.id, name: e.name, damage: e.damage + enemyAttackingDamageBonus(state, e, inv), horror: e.horror,
+      })),
       entryNotice: entryNotice || undefined,
       note: attacks.length ? '借机攻击发生在行动效果之前；伤害数值为当前基础值，反应或强制效果可能改变结果。' : undefined }
   }
@@ -470,14 +478,14 @@ export function createTableDecisions(deps) {
             options: [{ id: 'done', label: '完成下方事件选择' },
               ...eligible.map(item => ({ id: String(item.index), cardCode: item.code, label: cardName(item.code) }))] })
           if (answer === 'done') break
-          inv.beneath.push(inv.hand.splice(Number(answer), 1)[0])
+          inv.beneath.push(spliceHand(inv, Number(answer), 1)[0])
         }
         const returned = []
         while (inv.hand.length > 8) {
           const answer = requestChoice(state, { kind: 'openingHand', source: 'sefinaKeepEight', seat: inv.seat,
             prompt: `选择返回牌库的牌（还需返回 ${inv.hand.length - 8} 张）。`,
             options: inv.hand.map((code, index) => ({ id: String(index), cardCode: code, label: cardName(code) })) })
-          returned.push(inv.hand.splice(Number(answer), 1)[0])
+          returned.push(spliceHand(inv, Number(answer), 1)[0])
         }
         // 卡面：弃掉其余卡牌（不是洗回牌库）。
         discardPlayerCards(state, inv, ...returned)
@@ -491,7 +499,7 @@ export function createTableDecisions(deps) {
           ...mulliganCandidates(inv, registeredEntry).map(({ code, index }) => ({ id: String(index), label: '换掉：' + cardName(code) }))]
         const answer = requestChoice(state, { kind: 'mulligan', source: 'opening-hand', seat: inv.seat, prompt: '选择要更换的起始手牌，完成后确认。', options, canSkip: true })
         if (answer === 'done') break
-        held.push(inv.hand.splice(Number(answer), 1)[0])
+        held.push(spliceHand(inv, Number(answer), 1)[0])
       }
       drawOpeningHand(state, inv)
       inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...held], () => randomValue(state)), 'shuffle')

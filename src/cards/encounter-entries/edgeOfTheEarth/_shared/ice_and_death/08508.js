@@ -6,8 +6,8 @@
 
 export default {
   code: '08508', scope: 'location', implemented: true,
-  flags: { shelter: 3, campCandidate: true, entryGroupCluesPerInvestigator: 1, surgeOnAttachedTreachery: true },
-  note: '「诡计附属到本地点时该诡计获得涌动（每阶段一次）」需要引擎的地点附属事件窗口（P7 读点请求 primitive-requests/p7-08508.json）。',
+  flags: { shelter: 3, campCandidate: true, entryGroupCluesPerInvestigator: 1 },
+  locationRule: { surgeAttachedTreachery: true },
 }
 
 

@@ -4,6 +4,7 @@
 // 这一组是「地图怎么变」：从探索牌库放出地点、翻开、移出（含离开时的结算）、
 // 以及线索的发现/归还/同步。地点相关的反应窗口（locationRevealed 等）通过
 // triggerReaction 触发，所以本模块依赖它。
+import { currentEffectSource } from './effect-provenance.js'
 import { registeredEntry } from './ability.js'
 import { applyRevealFloodPolicy, floodLevel, setFloodLevel } from './flood.js'
 import { syncDynamicLocationSymbols } from './location-symbols.js'
@@ -122,7 +123,6 @@ export function createLocations(deps) {
     reactionWindow,
     scenarioBehavior,
     scenarioRuntime,
-    spendClues,
     triggerReaction,
   } = deps
 
@@ -258,7 +258,7 @@ function flipLocationFace(state, id, seat, events, options = {}) {
   return true
 }
 
-function revealLocation(state, id, events, seat = null) {
+function revealLocation(state, id, events, seat = null, options = {}) {
   const loc = state.locations.find((l) => l.id === id)
   if (loc && !loc.revealed) {
     loc.revealed = true
@@ -271,7 +271,8 @@ function revealLocation(state, id, events, seat = null) {
     // D1：地点卡自己的声明式线索修正；剧本钩子仍然优先（历史数据依赖它的覆盖语义）。
     const clueDelta = entityModifierTotal(state, loc, 'locationClues')
     const clueOverride = scenarioBehavior(state).cluesOnReveal?.(state, loc, seat == null ? null : state.investigators[seat])
-    loc.clues = Math.max(0, clueOverride ?? ((loc.maxClues || 0) + clueDelta))
+    const revealedClues = Math.max(0, clueOverride ?? ((loc.maxClues || 0) + clueDelta))
+    loc.clues = (loc.clues || 0) + revealedClues
     info(state, events, `「${loc.name}」被揭示。`, locationRevealCue(loc, false, seat))
     awardLocationVictory(state, loc, events)
     applyRevealFloodPolicy(state, id, { onChange: context => reactionWindow(state, 'floodChanged', { when: 'floodChanged', ...context }, events, { allowNested: true }) })
@@ -279,7 +280,7 @@ function revealLocation(state, id, events, seat = null) {
       && (entityRuleActive(state, loc, 'ignore:revealText')
         || scenarioBehavior(state).ignoreLocationRevealText?.(state, state.investigators[seat], loc))
     if (!ignored) {
-      scenarioBehavior(state).locationRevealed?.(state, loc, scenarioRuntime(state, events), seat)
+      scenarioBehavior(state).locationRevealed?.(state, loc, scenarioRuntime(state, events), seat, options)
       // 第 55 轮：地点卡自己的「揭示时」规则（02173/02176/02177/02285–02292 等）。
       locationRuleOf(loc)?.onReveal?.(state, loc, scenarioRuntime(state, events), seat)
       // 道路地点的「揭示后扩路」（07204–07210 的「道路 N」，参考实现 SilentForcedAbility →
@@ -290,7 +291,11 @@ function revealLocation(state, id, events, seat = null) {
         scenarioRuntime(state, events).mechanics.map.extendRoad(loc.id, roadCount)
       }
     }
-    if (seat != null) triggerReaction(state, seat, 'locationRevealed', events, { when: 'locationRevealed', seat, location: loc.id })
+    if (seat != null) {
+      const context = { when: 'locationRevealed', seat, location: loc.id }
+      triggerReaction(state, seat, 'locationRevealed', events, context)
+      if (hasWindowListener(state, 'locationRevealed')) reactionWindow(state, 'locationRevealed', context, events, { allowNested: true })
+    }
     // 「地点入场/被揭示后」的玩家卡（04306 有利位置）读最近一次揭示；回合结束自然过期。
     state.lastLocationRevealed = { id: loc.id, round: state.round, turnSerial: state.turnSerial ?? null }
   }
@@ -352,11 +357,16 @@ function removeLocation(state, id, events, options = {}) {
 function placeCluesOnLocation(state, inv, amount, events) {
   const n = Math.min(amount, inv.clues)
   const loc = state.locations.find((l) => l.id === inv.location)
-  if (n <= 0 || !loc) return
-  spendClues(state, inv, n)
+  if (n <= 0 || !loc) return 0
+  inv.clues -= n
+  syncClues(state)
   loc.clues += n
   loc.maxClues = Math.max(loc.maxClues || 0, loc.clues)
   info(state, events, `🔍 ${inv.name} 将 ${n} 个线索放回「${loc.name}」。`)
+  if (hasWindowListener(state, 'cluesPlaced')) reactionWindow(state, 'cluesPlaced', {
+    when: 'cluesPlaced', seat: inv.seat, location: loc.id, amount: n, source: currentEffectSource(state),
+  }, events, { allowNested: true })
+  return n
 }
 
 // ---------------------------------------------------------------------------
@@ -374,7 +384,12 @@ function notifyCluesRemoved(state, loc, amount, events) {
 // 只限制发现，不阻止线索本身存在或调查行动以外的目标枚举。
 function locationClueDiscoveryBlocked(state, loc, investigation = false) {
   const rule = registeredEntry(loc?.originalCode || loc?.code)?.locationRule
-  if (rule?.cluesOnlyByInvestigation && !investigation) return true
+  if (rule?.blocksClueDiscovery) return true
+  if (!investigation) {
+    const act = state.acts?.[state.actIndex]
+    const limit = registeredEntry(act?.originalCode || act?.code)?.actRule?.cannotDiscoverCluesExceptInvestigation
+    if (rule?.cluesOnlyByInvestigation || (limit && limit.locationCode === (loc?.originalCode || loc?.code))) return true
+  }
   if (!rule?.cannotDiscoverWhileFlooded) return false
   return floodLevel(state, loc.id) >= 1
 }
@@ -506,7 +521,7 @@ function discoverClueAt(state, inv, amount, events, opts = {}) {
     const clueContext = { when: 'clueDiscovered', seat: inv.seat, ...firstDiscovery,
       location: loc.id, amount: got, lastClue: loc.clues === 0, shroud: loc.shroud,
       prompt: `${inv.name} 发现了 ${got} 个线索` }
-    triggerReaction(state, inv.seat, 'clueDiscovered', events, clueContext)
+    triggerReaction(state, inv.seat, 'clueDiscovered', events, clueContext, { skipAbilityWindow: true })
     reactionWindow(state, 'clueDiscovered', clueContext, events)
     return true
   }

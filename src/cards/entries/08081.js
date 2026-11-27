@@ -5,9 +5,7 @@
 //       [free]花费1资源：你本次技能检定得到+1[willpower]或+1[intellect]。
 //
 // 读点：
-//   · 沉稳（composure）由引擎 harm-threat.js#assignHarm 读「非直接恐惧先分配给本卡」；
-//     伤害侧的强制分配暂无引擎读点 → 已提交 primitive request m2-3-08081（见 artifacts/）。
-//     approximation: 目前只有恐惧侧生效；伤害仍按普通分配（印刷要求伤害也先分配给本卡）。
+//   · 沉稳与 composureDamage 负责非直接恐惧和伤害的强制先分配。
 //   · 两组 +1 修正走 entry.modifiers（skill:willpower / skill:intellect）。
 //   · 资源换 +1 检定走 freeTriggers（与 03115 同构，引擎自动询问档位）。
 //
@@ -17,6 +15,7 @@ export default {
   code: '08081',
   fast: true,
   composure: true,
+  flags: { composureDamage: true },
   freeTriggers: [
     { skill: 'willpower', cost: { resources: 1 }, bonus: 1 },
     { skill: 'intellect', cost: { resources: 1 }, bonus: 1 },

@@ -2,17 +2,18 @@
 //
 // 覆盖目标：
 //   1. 07333/07334 达贡之子 / 海德拉之子：真实遭遇抽取的「更远生成点」与交战后强制选择的接线；
-//   2. 07315 回到深海：目标成立时引擎自动推进——锁定卡面「你可以选择推进」缺少玩家选择（缺口记录）。
+//   2. 07315 回到深海：条件满足后保留场景，由调查员选择免费推进。
 //
 // 其余 38 张卡的标题级证据在既有 TIC 测试文件（tic-maelstrom-*、tic-parallel-acts、
 // tic-slumbering-bosses、tic-scenarios-late/a1、tic-late-b-cards、tic-w2-new-cards、
-// tic-scenario-intoTheMaelstrom、tic-player-*）中，本文件只补缺失与缺口。
+// tic-scenario-intoTheMaelstrom、tic-player-*）中。
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
+import { legalMoves, move, settle, validateMove } from './core-fixture.mjs'
 import {
-  checkAct, drawEncounter, engageEnemy, scenarioRuntime,
+  checkAct, drawEncounter, engageEnemy, moveCost, scenarioRuntime,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -134,19 +135,42 @@ test('07333 达贡之子：交战强制在「达贡放毁灭」与「达贡攻�
 test('07334 海德拉之子：交战强制在「海德拉放毁灭」与「海德拉攻击」间选择（沉睡时只能放毁灭）',
   forcedChoiceTest('07334', '07329', '07331a', '07331b'))
 
-// --- 07315：「你可以选择推进」的玩家选择缺失（缺口记录） ------------------------------
+// --- 07315：目标成立后由调查员决定是否推进 ---------------------------------------------
 
-test('07315 回到深海：目标成立时 checkAct 自动推进，卡面「你可以选择推进」没有玩家选择（缺口）', () => {
-  const state = chapterFixture('intoTheMaelstrom', 1)
-  state.humanSeats = [0]
+test('07315 回到深海：全员在门扉并持有四色钥匙后可选择免费推进', () => {
+  const state = chapterFixture('intoTheMaelstrom', 2)
+  state.humanSeats = [0, 1]
   state.enemies = []
-  giveKeys(state, 0)
-  assert.equal(registeredEntry('07315').actRule.objective(state, state.acts[state.actIndex]), true,
-    '全员门扉 + 四色钥匙时目标成立')
-  assert.equal(state.actIndex, 0)
-  let asked = 0
-  transaction(state, draft => checkAct(draft, []), () => { asked += 1; return null })
-  assert.equal(asked, 0, '引擎没有为「是否推进」询问玩家（缺口证据）')
-  assert.equal(state.actIndex, 1, '目标成立后直接自动推进到幕 2')
+  const gateway = locationByCode(state, '07320')
+  const outside = state.locations.find(location => location.id !== gateway.id)
+  const advance = () => legalMoves(state, 0).find(command => command.action === 'advanceAct')
+  const objective = registeredEntry('07315').actRule.objective
+
+  giveKeys(state, 0, ['blue', 'red', 'yellow'])
+  assert.equal(advance(), undefined)
+  assert.notEqual(validateMove(state, 0, { action: 'advanceAct' }), null, '缺一把钥匙时拒绝推进')
+  giveKeys(state, 1, ['green'])
+  assert.equal(objective(state, state.acts[state.actIndex]), true)
+  transaction(state, draft => checkAct(draft, []))
+  assert.equal(codeOf(state.acts[state.actIndex]), '07315')
+  assert.equal(state.pendingChoice, null)
+  move(state, legalMoves(state, 0).find(command => command.action === 'resource'))
+  settle(state)
+  assert.equal(codeOf(state.acts[state.actIndex]), '07315', '可以先执行其他行动')
+
+  const offered = advance()
+  assert.ok(offered, '全员在门扉且集齐钥匙时有可选推进入口')
+  state.investigators[1].location = outside.id
+  assert.equal(advance(), undefined)
+  assert.notEqual(validateMove(state, 0, offered), null, '队友离开门扉后旧命令失效')
+  state.investigators[1].location = gateway.id
+
+  const actions = state.investigators.map(inv => inv.actionsLeft)
+  const command = advance()
+  assert.equal(command.scriptCard, 'act')
+  assert.equal(moveCost(state, 0, command), 0)
+  move(state, command)
+  settle(state)
   assert.equal(codeOf(state.acts[state.actIndex]), '07316')
+  assert.deepEqual(state.investigators.map(inv => inv.actionsLeft), actions, '推进没有消耗行动')
 })

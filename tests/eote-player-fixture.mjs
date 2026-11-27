@@ -7,19 +7,16 @@
 //
 // wave 条目若尚未进入生成索引，本文件会在 createGameState 之后按需 `registerCardAbilities`
 // 手动注册（仅服务端夹具进程；浏览器 spec 独立进程不 import 引擎）。
-import { fixture, enemy } from './core-fixture.mjs'
+import { fixture, asset, enemy } from './core-fixture.mjs'
 import { legalMoves, scenarioRuntime } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 
 export const EVENT_CODE = '08020'
 export const ASSET_CODE = '08025'
 export const SKILL_CODE = '08024'
-// 印刷 [wild] 图标的技能卡：用于真实 commit 窗口的可投入证据（08024 是动态图标，
-// 引擎测试路径把 skillList 数组传给 commitIcons 时其 iconBonus 返回 0，见 spec annotation）。
-export const COMMIT_SKILL_CODE = '08052'
 export const WEAKNESS_CODE = '08130'
-export const HAND_CODES = Object.freeze([EVENT_CODE, SKILL_CODE, ASSET_CODE, '08021', COMMIT_SKILL_CODE])
-export const MANUAL_ENTRY_CODES = Object.freeze([EVENT_CODE, ASSET_CODE, SKILL_CODE, COMMIT_SKILL_CODE, WEAKNESS_CODE, '08021'])
+export const HAND_CODES = Object.freeze([EVENT_CODE, SKILL_CODE, ASSET_CODE, '08021'])
+export const MANUAL_ENTRY_CODES = Object.freeze([EVENT_CODE, ASSET_CODE, SKILL_CODE, WEAKNESS_CODE, '08021'])
 
 // 预加载 wave 条目（仅 import，不注册）：runner 在 createGameState 之前调用，
 // 由夹具在创建状态（完整 entries/index 已注册）之后补注册索引缺失的条目。
@@ -52,6 +49,7 @@ export function eotePlayerFixture(prefetchedEntries = []) {
   s.locations.find(loc => loc.id === location).clues = 2
   s.locations.find(loc => loc.id === location).shroud = 2
   s.investigators[0].hand = [...HAND_CODES]
+  asset(s, '01055') // 飞贼让敏捷从 2 升到 3，验收 08024 读取当前值。
   // 牌库顶 = 数组末尾：把弱点放在顶牌，抽牌即触发显现（draw 动作由真实 UI 点击）。
   s.investigators[0].deck = [...Array(9).fill('01088'), WEAKNESS_CODE]
   s.investigators[0].resources = 30

@@ -30,6 +30,10 @@
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { connectGrid, gridPosition } from '../../../../../src/engine/grid-map.js'
+import {
+  campsiteDeck, campsiteDrawMove, chamberTurnEnded, drawCampsite,
+  needsCampsiteSaveRepair, prepareCampsiteDeck, restoreCampsiteDeck,
+} from './campsite.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 // P7 第三轮：《沉没之城》战役级规则（Good Money 失败 → 下一章维护阶段不能获得资源）。
 import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
@@ -590,6 +594,8 @@ export function actions(state, inv) {
   const actCode = currentActCode(state)
   const required = investigatorCount(state)
   const hereCode = codeOf(here)
+  const draw = campsiteDrawMove(state, inv)
+  if (draw) moves.push(draw)
   // 幕 1：调查员共同花费 1 个或更多线索：每花费 1 个线索，从遭遇牌库顶弃 5（单人 10）张，
   // 并抽取以此效果弃掉的每处地点。
   if (actCode === ACT1_CODE && groupCluesAt(state, here.id) > 0) {
@@ -681,6 +687,7 @@ function anyInvestigatorControls(state, code) {
 }
 
 export function performAction(state, inv, move, api = {}) {
+  if (move?.rule === 'apiaryDrawCampsite' && inv && !inv.defeated && !inv.resigned) return drawCampsite(state, inv, api)
   if (!move || !inv || inv.defeated || inv.resigned) return false
   switch (move.rule) {
     case 'apiaryDiscardForLocations': return discardForLocationsAction(state, inv, api)
@@ -1202,27 +1209,7 @@ function act1Back(state, api = {}) {
       entrance.face = 'dangerousExit'
       entrance.clues = 0
     }
-    // 把遭遇牌库/弃牌堆/放一边区的全部非弱点[[异教徒]]敌人叠到迷失营地下。
-    const under = [...cultistCardsUnderAct(state)]
-    for (const pile of ['encounterDeck', 'encounterDiscard']) {
-      const list = state[pile] || []
-      for (let index = list.length - 1; index >= 0; index--) {
-        const code = list[index]
-        const card = ALL_CARDS[code]
-        if (card?.type !== 'enemy' || !(card.traits || []).includes('Cultist')) continue
-        list.splice(index, 1)
-        under.push(code)
-      }
-    }
-    const aside = zonesFor(state).setAside || []
-    for (let index = aside.length - 1; index >= 0; index--) {
-      const code = aside[index]
-      const card = ALL_CARDS[code]
-      if (card?.type !== 'enemy' || !(card.traits || []).includes('Cultist')) continue
-      aside.splice(index, 1)
-      under.push(code)
-    }
-    setFlag(state, 'apiaryCultistsUnder', under)
+    const under = prepareCampsiteDeck(state, api, cards => shuffled(cards, resolveShuffle(api), randomOf(api)))
     // 玛莉亚·里维拉：由一位调查员控制（西向）。
     const mariaTaken = (state.investigators || []).some(inv => (inv.assets || []).some(asset => codeOf(asset) === MARIA_RIVERA_CODE))
     if (!mariaTaken) {
@@ -1233,7 +1220,7 @@ function act1Back(state, api = {}) {
     spawnTheInescapable(state, api)
     placeCluesOnRevealedLocations(state, api)
     setFlag(state, 'apiaryInterlude', 'lostPilgrims')
-    info(api, `幕间：失落的朝圣者（叠在迷失营地下的异教徒 ${under.length} 张）。`)
+    info(api, `幕间：失落的朝圣者（叠在迷失营地下的异教徒 ${under} 张）。`)
     return true
   }
   // 蜂巢思维幕间：重排环位、清走其余地点、中央腔室朝酸性体腔、主母生成。
@@ -1403,14 +1390,13 @@ export function phaseBegan(state, phase, api = {}) {
  * 引擎既有 `scenarioBehavior.spawnLocation` 钩子（encounter.js / enemy-entry.js 生成落点）。
  */
 export function spawnLocation(state, code, defaultLocation, engagedSeat, api = {}) {
-  void defaultLocation
   void engagedSeat
   void api
   const entrance = locationOf(state, START_LOCATION)
-  if (!entrance || codeOf(entrance) !== '11559b') return null
+  if (!entrance || codeOf(entrance) !== '11559b') return defaultLocation
   const card = ALL_CARDS[code]
   const traits = (card?.traits || []).map(trait => String(trait).toLowerCase())
-  if (card?.type !== 'enemy' || !traits.includes('stowaway')) return null
+  if (card?.type !== 'enemy' || !traits.includes('stowaway')) return defaultLocation
   return entrance.id
 }
 
@@ -1787,6 +1773,7 @@ export function scenarioSummary(state) {
     centralFacing: centralFacing(state),
     motherInPlay: Boolean(motherInPlay(state)),
     cultistsUnderAct: cultistCardsUnderAct(state).length,
+    lostCampsiteCards: campsiteDeck(state).length,
     cultistsInVictory: cultistCardsInVictory(state).length,
     doomInPlay: doomInPlay(state),
     skull: skullValue(state),
@@ -1802,6 +1789,10 @@ export function implementedEntryFlags(code) {
 }
 
 export const behavior = {
+  needsSaveRepair: needsCampsiteSaveRepair,
+  repairSavedState: restoreCampsiteDeck,
+  saveRepairNote: '恢复迷失营地下方的独立牌堆',
+  turnEnded: chamberTurnEnded,
   id: CHAPTER_ID,
   startLocation: () => START_LOCATION,
   locationsStartRevealed: false,

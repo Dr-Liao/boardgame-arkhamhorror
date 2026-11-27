@@ -76,14 +76,15 @@ export function createPlayerApi(state, events, deps) {
         source: { code: source.code, assetId: source.id }, resolve: result => {
           if (result.success) return
           const controller = state.investigators.find(inv => inv.assets.includes(source))
-          if (controller) {
-            api().discardAsset(controller.seat, source)
-            if (controller.seat !== owner) {
-              const index = controller.discard.lastIndexOf(source.code)
-              if (index >= 0) { splicePlayerDiscard(controller, index, 1); state.investigators[owner].discard.push(source.code) }
+          if (!controller || !api().discardAsset(controller.seat, source)) return
+          if (controller.seat !== owner && state.investigators[owner]) {
+            const index = controller.discard.lastIndexOf(source.code)
+            if (index >= 0) {
+              splicePlayerDiscard(controller, index, 1)
+              state.investigators[owner].discard.push(source.code)
             }
           }
-          api().harm(owner, { damage: context.damage || 0, horror: context.horror || 0 })
+          deps.reassignHarm(context.assigningSeat ?? context.seat, context)
         },
       })
     },

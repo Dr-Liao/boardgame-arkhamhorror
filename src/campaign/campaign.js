@@ -188,7 +188,38 @@ export function registerCampaignInvestigator(campaign, inv, deck) {
   return record
 }
 
+function applyStartingDeckTrauma(campaign, record, context) {
+  const requested = new Set(record.deck.filter(code => entryFlagOf(code)?.campaignDeck?.startingTrauma > 0))
+  if (!requested.size && !record.startingDeckTrauma) return
+  const trauma = campaign.trauma[record.seat]
+  const previous = record.startingDeckTrauma || {}
+  const recorded = {}
+  for (const code of requested) {
+    const count = entryFlagOf(code).campaignDeck.startingTrauma
+    if (previous[code] != null) {
+      recorded[code] = previous[code]
+      continue
+    }
+    const options = Array.from({ length: count + 1 }, (_, physical) => ({
+      id: String(physical), label: physical + ' 点肉体创伤、' + (count - physical) + ' 点精神创伤',
+    }))
+    const physical = Number(selectPurchaseOption(context, code, record.seat, '选择购买永久卡时承受的创伤', options))
+    trauma.physical += physical
+    trauma.mental += count - physical
+    recorded[code] = { physical, mental: count - physical }
+  }
+  for (const [code, cost] of Object.entries(previous)) {
+    if (requested.has(code)) continue
+    trauma.physical = Math.max(0, trauma.physical - cost.physical)
+    trauma.mental = Math.max(0, trauma.mental - cost.mental)
+  }
+  if (requested.size) record.startingDeckTrauma = recorded
+  else delete record.startingDeckTrauma
+  updateCampaignStatus(campaign, record.seat)
+}
+
 export function applyStartingDeckExperience(campaign, record, built, context = null) {
+  applyStartingDeckTrauma(campaign, record, context)
   const brand = record.deck.find(code => entryFlagOf(code)?.campaignDeck?.brandSpellOnPurchase)
   if (brand) {
     const options = brandedSpellOptions(record.deck)
@@ -291,7 +322,7 @@ function nonReplaceableReason(card) {
 }
 
 // 单张替换的判定（顺序与 legalMoves 完全一致）：成功给出报价，失败给出界面可直接展示的中文原因。
-function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, keepLower = false) {
+function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, cardCopyLimit, keepLower = false) {
   const removed = removedCode ? ALL_CARDS[removedCode] : null
   if (record.draftMode && added.permanent && removedCode) return { ok: false, reason: '永久卡直接加入牌组，不能替换普通卡。' }
   if (!removedCode) {
@@ -304,7 +335,7 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
     || (removed && (removed.permanent || removed.signatureFor || removed.subtype))) {
     return { ok: false, reason: nonReplaceableReason(removed) }
   }
-  const limit = record.draftMode ? draftCardLimit(added) : cardLimit(added)
+  const limit = cardCopyLimit?.(addedCode) ?? (record.draftMode ? draftCardLimit(added) : cardLimit(added))
   const label = added.nameZh || added.name
   const count = countedDeck(record).filter(code => ALL_CARDS[code]?.name === added.name).length
     - (removed?.name === added.name ? 1 : 0)
@@ -328,7 +359,7 @@ function replacementVerdict(record, addedCode, added, inv, removedCode, mayFillV
     }
   }
   const errors = validateDeckRules(inv, validatable, ALL_CARDS,
-    { partial: mayFillVacancy || Boolean(registeredEntry(addedCode)?.deckConstruction?.sizeBonus), draftMode: !!record.draftMode }).errors
+    { partial: mayFillVacancy || Boolean(registeredEntry(addedCode)?.deckConstruction?.sizeBonus), draftMode: !!record.draftMode, cardCopyLimit }).errors
   if (errors.length) {
     // 永久卡不占牌组槽位：换走一张普通卡会让牌组少一张，只能「无需替换」直接加入。
     const rulesSize = inv.deckRequirements?.size || 30
@@ -408,17 +439,18 @@ export function replacementAnalysis(record, addedCode, campaignRecords = null, c
   const invRulesSize = deckRules(inv, record.deck, ALL_CARDS).size
   const ordinaryCount = ordinaryDeck(record).filter(code => !ALL_CARDS[code]?.permanent).length
   const mayFillVacancy = ordinaryCount < invRulesSize
+  const cardCopyLimit = context?.cardCopyLimit
   for (const removedCode of [null, ...new Set(record.deck)]) {
     if (entryFlagOf(addedCode)?.researchUpgradeFrom && removedCode !== entryFlagOf(addedCode).researchUpgradeFrom) continue
     if (knownLegal?.has(removedCode)) continue
     if (purchaseRuleChoices(record, addedCode, removedCode) === null) continue
-    const verdict = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy)
+    const verdict = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, cardCopyLimit)
     if (verdict.ok) result.removals.push({ code: removedCode, ...verdict.quote, adaptable: verdict.adaptable })
     else if (removedCode) result.blocked.push({ code: removedCode, reason: verdict.reason })
     const lower = ALL_CARDS[removedCode]
     if (lower?.name === added.name && (lower.xp || 0) < (added.xp || 0) && !added.permanent
       && retainedUpgradeTraits(record).some(trait => lower.traits?.some(value => value.toLowerCase() === trait.toLowerCase()))) {
-      const retained = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, true)
+      const retained = replacementVerdict(record, addedCode, added, inv, removedCode, mayFillVacancy, cardCopyLimit, true)
       if (retained.ok) result.removals.push({ code: removedCode, ...retained.quote, keepLower: true })
     }
   }

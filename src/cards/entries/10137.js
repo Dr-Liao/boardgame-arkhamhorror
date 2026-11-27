@@ -15,11 +15,7 @@
 //   · 「你得到 -1 神智值」= 条目级 threatEffect.sanityModifier（stats.js#getMaxSanity 对
 //     inv.threat 逐卡求和的唯一读点，与 07106「印斯茅斯面容」/ 01182 同一通道）。
 //   · 「[action][action]：弃掉」= kind:'action' + cost:{action:2} + api.removeThreat。
-//
-// approximation（缺读点见 artifacts/migration/fhv/primitive-requests/10135.json，
-// 与 10135/10136 同一模板，四条基础弱点共用同一句卡文）：
-//   ① 「除上述能力外不能离场」没有威胁区读点（只有 threatCannotLeaveWhileCounters 按计数拦截）。
-//   ② 1 点恐惧走普通恐惧分配（可被支援承接），不是直接恐惧。
+
 const CODE = '10137'
 const CARD_NAME = '银蛾'
 
@@ -27,8 +23,7 @@ export default {
   code: CODE,
   name: 'The Silver Moth',
   threatEffect: { sanityModifier: -1 },
-  simplified: true,
-  note: 'approximation: ①「除上述[action][action]能力外不能离场」没有威胁区读点（引擎只有 threatCannotLeaveWhileCounters 按计数拦截）；②1 点恐惧按普通恐惧分配（可被支援承接），与 10135 同一模板，见 primitive-requests/10135.json。',
+  cannotLeavePlay: true,
   abilities: [
     {
       kind: 'weakness',
@@ -59,7 +54,7 @@ export default {
       cost: { action: 2 },
       resolve: ({ inv, source, api }) => {
         if (!source) return
-        api.removeThreat(source)
+        if (!api.removeThreat(source, { force: true })) return
         api.info(`🩹 ${inv.name} 花费 2 行动弃掉「${CARD_NAME}」。`)
       },
     },

@@ -14,8 +14,8 @@ export default {
       {
         rule: "mapRoomStudy",
         values: [
-          "-3",
-          "-3"
+          -3,
+          -3
         ],
         remember: "theTeamStudiedTheHistoryOfTheElderThings",
         label: "花费 2 个「-3」钥匙：揭示 3 个地点并各发现 1 线索（记录）"

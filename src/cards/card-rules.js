@@ -13,16 +13,15 @@ import { registeredEntry, registeredEntries } from '../engine/ability.js'
 import { SKILL_NAMES } from '../engine/presentation-constants.js'
 import { CARD_ABILITY_ENTRIES } from './card-abilities.js'
 import { investigatorRule } from './investigator-abilities.js'
-import { NON_PLAYER_ABILITY_ENTRIES } from './encounter-abilities.js'
+import { NON_PLAYER_ABILITY_ENTRIES, nonPlayerEntryFor } from './encounter-abilities.js'
 
 // 注册表由 engine.js 在模块初始化时填充；本文件可能被独立 import（测试 / 工具），
 // 因此保留一份静态条目索引作为回落。两者内容相同，注册表优先。
-const STATIC_ENTRIES = [...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES]
-const staticEntry = code => STATIC_ENTRIES.find(entry => entry.code === code) || null
+const staticEntry = code => nonPlayerEntryFor(code) || CARD_ABILITY_ENTRIES.find(entry => entry.code === code) || null
 const entryOf = code => (code && (registeredEntry(code) || staticEntry(code))) || null
 const allEntries = () => {
   const registered = registeredEntries()
-  return registered.length ? registered : STATIC_ENTRIES
+  return registered.length ? registered : [...CARD_ABILITY_ENTRIES, ...NON_PLAYER_ABILITY_ENTRIES]
 }
 
 const entryWith = (field, value) => allEntries().find(entry => entry[field] === value) || null
@@ -44,6 +43,10 @@ export function threatEffectFor(code) {
 
 export function enemyRuleFor(code) {
   return (code && entryOf(code)?.enemyRule) || null
+}
+
+export function treacheryScriptFor(code) {
+  return (code && entryOf(code)?.treacheryScript) || null
 }
 
 export function treacheryRuleFor(code) {

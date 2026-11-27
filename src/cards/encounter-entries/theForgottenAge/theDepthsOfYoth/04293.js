@@ -13,7 +13,7 @@ export default {
     beforeExplore(state, inv, api) {
       if (api.hasSupply?.(inv.seat, 'pickaxe') ?? api.checkSupplies?.(inv.seat, 'pickaxe')) return true
       const location = state.locations.find(item => item.id === inv.location)
-      if (location) location.doom = (location.doom || 0) + 1
+      if (location) api.doomOn(location, 1)
       api.info?.(`坍塌的通道：${inv.name} 没有鹤嘴锄，此地点放置 1 点毁灭。`)
       return true
     },

@@ -10,7 +10,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { enemyIsAloof } from '../src/engine/enemy-aloof.js'
+import { asset, enemy, fixture, move, settle, validateMove } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { assetRuleFor, enemyRuleFor, treacheryRuleFor, entryFlags } from '../src/cards/card-rules.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -202,14 +204,20 @@ test('09668 吉隆坡火车站（西翼）：地点可撤退；团队线索各�
   assert.equal(state.locations[0].resign, true, '地点声明撤退读点（引擎 moves.js:699 读 loc.resign）')
 })
 
-test('09669 雪兰莪俱乐部：印刷「在场调查员维持阶段不获得资源」没有引擎读点（缺口）', () => {
-  const entry = entries['09669']
-  assert.ok(String(ALL_CARDS['09669'].text).includes('does not collect resources'))
-  assert.equal(entry.locationRule, undefined)
-  assert.equal(entry.flags?.upkeepResources, undefined)
-  assert.equal(shadesBehavior.behavior.upkeepBegins, undefined, '章节没有维持阶段资源抑制钩子')
-  const modifierReaders = Object.keys(entry.flags || {})
-  assert.deepEqual(modifierReaders.sort(), ['printedClues', 'printedShroud'], '条目只落印刷值元数据')
+test('09669 雪兰莪俱乐部：揭示面跳过重整资源，普通资源行动仍可用', () => {
+  for (const revealed of [false, true]) {
+    const state = fixture()
+    const inv = state.investigators[0]
+    Object.assign(state.locations.find(location => location.id === inv.location), { originalCode: '09669', revealed })
+    const resources = inv.resources
+    move(state, { action: 'resource' })
+    settle(state)
+    assert.equal(state.investigators[0].resources, resources + 1)
+    move(state, { action: 'endTurn' })
+    settle(state)
+    assert.equal(state.investigators[0].resources, resources + (revealed ? 1 : 2))
+    assert.equal(state.investigators[0].hand.length, 1)
+  }
 })
 
 test('09670 雪兰莪俱乐部草坪：combat(4) 加入球赛，失败记住「让领事蒙羞」/成功 +3 资源（每轮一次成功）', () => {
@@ -421,18 +429,43 @@ test('09681 不留痕迹：剧本参考卡混乱标记表（skull 地点数 / cu
   assert.equal(hardSkull.delta, -2, '困难 skull = 地点数')
 })
 
-test('09682 异界恐惧：背面洗入天启噩兆/原生质重组者并群选两项；正面入场额外费用时机未落地（缺口）', () => {
+test('09682 异界恐惧：背面洗入天启噩兆和原生质重组者，并由全队选两项', () => {
   const state = withoutState({ agendas: [{ id: 'agenda09682', code: '09682', originalCode: '09682',
     backAction: 'chooseTwoOfThree', shuffleBack: [withoutDef.RAW_CODES.apocalypticPresage, withoutDef.RAW_CODES.protoplasmicReassembler] }] })
   const api = makeApi({ shuffleIntoEncounterDeck: () => true, choice: choice => choice.options[0].id,
     info: () => true, dealTo: () => true, harm: () => true })
   withoutBehavior.behavior.agendaReveal(state, state.agendas[0], api)
   assert.equal(called(api, 'shuffleIntoEncounterDeck'), true, '洗入两张放一边的敌人')
-  // 缺口证据：入场额外费用被记成「待付」并在下一次 locationLeft 才扣（单槽位可被覆盖）。
-  const flags = withoutBehavior.withoutATraceFlags(withoutState())
-  assert.equal(flags.pendingEntryCost, null, 'pendingEntryCost 是单一待付槽位')
-  assert.equal(withoutBehavior.behavior.upkeepBegins, undefined)
 })
+
+for (const code of ['09682', '09683', '09684']) {
+  test(`${code} 未揭示地点进入费用从出发地队员扣除，已揭示的地点不重复收费`, () => {
+    const state = fixture('01001', 2)
+    state.scenario.id = 'withoutATrace'
+    const [inv, partner] = state.investigators
+    const start = state.locations.find(location => location.id === inv.location)
+    const [id] = withoutDef.CITY_OF_REMNANTS_LOCATION_IDS
+    const destination = { id, name: id, code: '09747a', revealed: false, connections: [start.id], clues: 0, shroud: 2 }
+    start.connections.push(id)
+    state.locations.push(destination)
+    state.agendas = [{ id: 'agenda', code, originalCode: code }]
+    inv.clues = 0
+    partner.clues = 1
+    assert.match(validateMove(state, 0, { action: 'move', locationId: id }), /共同花费 2 个线索/)
+    partner.clues = 2
+    move(state, { action: 'move', locationId: id })
+    settle(state)
+    assert.equal(state.investigators[0].location, id)
+    assert.equal(state.investigators[1].clues, 0)
+    assert.equal(state.locations.find(location => location.id === id).revealed, true)
+    assert.equal(withoutBehavior.withoutATraceFlags(state).entryCharges.length, 1)
+    move(state, { action: 'move', locationId: start.id })
+    settle(state)
+    move(state, { action: 'move', locationId: id })
+    settle(state)
+    assert.equal(withoutBehavior.withoutATraceFlags(state).entryCharges.length, 1)
+  })
+}
 
 test('09683 异界的羔羊：背面三选二（伤害恐惧 / 空洞 / 混洗迷你卡）', () => {
   const state = withoutState({ agendas: [{ id: 'agenda09683', code: '09683', originalCode: '09683', backAction: 'chooseTwoOfThree' }] })
@@ -442,15 +475,18 @@ test('09683 异界的羔羊：背面三选二（伤害恐惧 / 空洞 / 混洗�
   assert.equal(api.calls.filter(call => call.key === 'choice').length, 2, '共同选择两项')
 })
 
-test('09684 异界的屠杀：背面未撤退者发疯、已撤退者可立即推进幕 3b（未实现「可」的选择，缺口）', () => {
-  const state = withoutState({ agendas: [{ id: 'agenda09684', code: '09684', originalCode: '09684', backAction: 'drivenInsane' }],
-    investigators: [investigator(0, { resigned: true, location: withoutDef.START_LOCATION }),
-      investigator(1, { location: withoutDef.START_LOCATION })] })
-  const api = makeApi({ driveInsane: () => true, finish: () => true, info: () => true })
-  withoutBehavior.behavior.agendaReveal(state, state.agendas[0], api)
-  assert.equal(called(api, 'driveInsane'), true, '未撤退者被驱入疯狂')
-  assert.equal(called(api, 'finish'), true, '有撤退者时直接推进结局（自动，无「可」选择）')
-  assert.equal(called(api, 'choice'), false, '缺口：没有询问是否立即推进')
+test('09684 异界的屠杀：未撤退者发疯，已撤退者可选择推进到幕 3b 或不推进', () => {
+  for (const choice of ['advance', 'skip']) {
+    const state = withoutState({ agendas: [{ id: 'agenda09684', code: '09684', originalCode: '09684', backAction: 'drivenInsane' }],
+      investigators: [investigator(0, { resigned: true, location: withoutDef.START_LOCATION }),
+        investigator(1, { location: withoutDef.START_LOCATION })] })
+    const api = makeApi({ driveInsane: () => true,
+      choice: request => { assert.equal(request.seat, 0); return choice },
+      finish: () => true, info: () => true })
+    withoutBehavior.behavior.agendaReveal(state, state.agendas[0], api)
+    assert.deepEqual(argsOf(api, 'driveInsane'), [[1]])
+    assert.deepEqual(argsOf(api, 'finish'), [[choice === 'advance' ? 'resolution4' : 'noResolution']])
+  }
 })
 
 test('09685 穿越域外之地：域外来客之巢揭示推进；背面生成横置拟态克星、弃牌堆空洞、红手套放一边', () => {
@@ -482,23 +518,32 @@ test('09686 红色废墟：与拟态克星同地点花 1 线索造成 2 伤害�
   assert.equal(called(objectiveApi, 'advanceAct'), true, '红手套男子入场 → 推进幕')
 })
 
-test('09687 逃出异界：域外敌人失去冷漠（近似自动交战）；全体幸存者撤退推进；背面按同谋胜利区 R1–R4', () => {
-  assert.equal(withoutBehavior.behavior.assetLeftPlay, undefined,
-    '缺口：红手套被击败（资产离场）没有 assetLeftPlay 读点')
+test('09687 逃出异界：域外敌人失去冷漠；全体幸存者撤退推进；背面按同谋胜利区决定结局', () => {
   const state = withoutState({ actIndex: 2, acts: [{ id: 'act09685', code: '09685', originalCode: '09685' },
     { id: 'act09686', code: '09686', originalCode: '09686' },
     { id: 'act09687', code: '09687', originalCode: '09687', objective: { type: 'campaignRule', kind: 'allResigned' } }],
     enemies: [{ id: 'o1', code: withoutDef.OUTSIDERS_GROUP_ENEMIES[0], originalCode: withoutDef.OUTSIDERS_GROUP_ENEMIES[0],
-      location: withoutDef.START_LOCATION, defeated: false }] })
-  const api = makeApi({ engageAtInvestigator: () => true, info: () => true })
-  withoutBehavior.behavior.phaseBegan(state, 'enemy', api)
-  assert.equal(called(api, 'engageAtInvestigator'), true, '幕 3 域外敌人失去冷漠（自动交战近似）')
+      location: withoutDef.START_LOCATION, defeated: false, aloof: true, traits: ['Outsider'] }] })
+  assert.equal(enemyIsAloof(state, state.enemies[0]), false)
   state.investigators[0].resigned = true
   const objApi = makeApi({ advanceAct: () => true, info: () => true })
   withoutBehavior.behavior.checkObjectives(state, objApi)
   assert.equal(called(objApi, 'advanceAct'), true)
   const resolved = withoutBehavior.resolutionFromVictory({ victoryDisplay: [{ code: '09692', originalCode: '09692' }] })
   assert.equal(resolved, 'resolution2', '仅红手套在胜利区 → R2')
+})
+
+test('09687 逃出异界：红手套男子被击败后移出游戏', () => {
+  const state = fixture()
+  state.acts[state.actIndex] = { id: 'act09687', code: '09687', originalCode: '09687' }
+  const man = asset(state, '09692')
+  enemy(state, { damage: 3 })
+  move(state, { action: 'endTurn' })
+  settle(state, choice => choice.kind === 'assign-damage' && choice.options.some(option => option.id === man.id)
+    ? man.id : null)
+  assert.equal(state.investigators[0].assets.some(item => item.id === man.id), false)
+  assert.ok(state.removedFromGame.includes('09692'))
+  assert.equal(state.investigators[0].discard.includes('09692'), false)
 })
 
 test('09688 域外来客之廷：撤退检定(4)成功撤退并把同谋加入胜利区；失败后本回合难度 -1', () => {
@@ -515,21 +560,20 @@ test('09688 域外来客之廷：撤退检定(4)成功撤退并把同谋加入�
   assert.equal(withoutBehavior.withoutATraceFlags(failState).courtResignFailRound, failState.round, '失败后本回合难度 -1')
 })
 
-test('09689 域外来客之巢：域外敌人 +1 fight/evade；[fast] 红手套唯一空洞时入场；揭示左/中/右强制（缺失去冷漠读点）', () => {
+test('09689 域外来客之巢：本地域外敌人攻击和躲避各 +1 并失去冷漠，红手套唯一空洞时可入场', () => {
   const state = withoutState({ locations: [{ id: withoutDef.OUTSIDERS_LAIR_ID, name: '巢', originalCode: '09689',
     revealed: true, connections: [], traits: [] }],
     enemies: [{ id: 'o1', code: withoutDef.OUTSIDERS_GROUP_ENEMIES[0], originalCode: withoutDef.OUTSIDERS_GROUP_ENEMIES[0],
-      location: withoutDef.OUTSIDERS_LAIR_ID, defeated: false }],
+      location: withoutDef.OUTSIDERS_LAIR_ID, defeated: false, aloof: true, traits: ['Outsider'] }],
     investigators: [investigator(0, { location: withoutDef.OUTSIDERS_LAIR_ID })] })
   state.investigators[0].location = withoutDef.OUTSIDERS_LAIR_ID
   assert.equal(withoutBehavior.behavior.enemyStatModifier(state, state.enemies[0], 'fight'), 1)
   assert.equal(withoutBehavior.behavior.enemyStatModifier(state, state.enemies[0], 'evade'), 1)
   const moves = withoutBehavior.behavior.actions(state, state.investigators[0])
   assert.ok(moves.some(move => move.rule === 'lairSummonRedGlovedMan'))
-  // 缺口：印刷「此地点每个域外敌人失去冷漠」没有读点（behavior 只在幕 3 自动交战）。
-  assert.equal(withoutBehavior.behavior.locationRule, undefined)
-  assert.equal(withoutDef.scenario.locations[withoutDef.OUTSIDERS_LAIR_ID].losesAloof, undefined,
-    '巢地点定义没有「域外敌人失去冷漠」字段（缺口）')
+  assert.equal(enemyIsAloof(state, state.enemies[0]), false)
+  state.locations[0].revealed = false
+  assert.equal(enemyIsAloof(state, state.enemies[0]), true)
 })
 
 test('09690 拟态克星：造成伤害改为弃等量空洞；轮末本地调查员空洞化或受攻击', () => {

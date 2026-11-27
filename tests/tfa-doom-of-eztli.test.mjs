@@ -1,5 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { enemyScriptFor } from '../src/cards/card-rules.js'
 import * as eztli from '../content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/index.js'
 import { poisonSetAsideCount } from '../content/campaigns/theForgottenAge/scenarios/theDoomOfEztli/behavior.js'
 import {
@@ -176,6 +178,7 @@ test('暗起波澜背面：把放在一边的预示者生成在毁灭标记最�
   loc(state, 'grandChamber').doom = 3
   const spawned = []
   const api = {
+    ...scenarioRuntime(state, []),
     info: () => {},
     spawn(code, locationId) {
       spawned.push({ code, locationId })
@@ -184,6 +187,7 @@ test('暗起波澜背面：把放在一边的预示者生成在毁灭标记最�
         damageTaken: 0, engagedSeat: null, resources: 0,
       }
       state.enemies.push(enemy)
+      enemyScriptFor(code).onSpawn(state, enemy, api)
       return enemy
     },
   }
@@ -211,7 +215,7 @@ test('进入遗迹背面：时间石室洗入探索牌库；没有粉笔则进�
     const state = setup(placed(stateFor(1), ['entryway']))
     state.explorationDeck = ['ancientHall']
     const api = {
-      random: () => 0.25,
+      ...scenarioRuntime(state, []),
       info: () => {},
       hasSupply: (seat, name) => hasChalk && name === 'chalk',
     }
@@ -713,7 +717,7 @@ test('混乱标记表与四档难度一致，elder thing 失败时在所在地�
 test('同一路线的开始状态在 JSON 往返后完全一致', () => {
   const build = () => {
     const state = setup(placed(stateFor(2), ['entryway', 'ancientHall', 'grandChamber']), 41)
-    eztli.behavior.actReveal(state, state.acts[0], { random: () => 0.25, info: () => {}, hasSupply: () => false })
+    eztli.behavior.actReveal(state, state.acts[0], { ...scenarioRuntime(state, []), info: () => {}, hasSupply: () => false })
     eztli.behavior.roundEnded(state, { choose: () => 'skip', info: () => {} })
     return state
   }

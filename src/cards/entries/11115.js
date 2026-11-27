@@ -19,6 +19,7 @@ export default {
       const amount = Math.min(3, result.drawn.filter(token => symbolFaces.has(token)).length)
       if (!amount) return
       const sourceOfHarm = { code, assetId: source.id }
+      // A single chosen enemy takes the cumulative damage for the matching symbols.
       const enemies = state.enemies.filter(enemy => !enemy.defeated && enemy.location === inv.location
         && api.canDamageEnemy(enemy, inv.seat, sourceOfHarm))
       if (!enemies.length) return

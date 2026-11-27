@@ -8,7 +8,6 @@
 export default {
   code: '06120', scope: 'agenda', implemented: true,
   agendaRule: {
-    portResign: true,
     onReveal(state, agenda, api) {
       let shuffled = 0
       for (let index = 0; index < 2; index += 1) {

@@ -20,24 +20,18 @@
 //     （自己与敌人都不能交战：enemies.js / moves.js 的 capabilityBlocked 同一读点）与「对敌人造成伤害」。
 //   · 「揭示了符号」= 本次检定的 result.drawn（B3 契约）与 _shared.js 的 CHAOS_SYMBOLS
 //     （骷髅/教徒/石板/古神/自动失败，与本仓 03034/03197/05033 同一口径）。
-//
-// 近似披露（simplified）：「当你回合结束时返回手牌」——引擎没有「事件卡延迟去向」读点
-// （09074 同一缺口），这里按「结算后立即返回手牌」近似；事件用 keepOnPlay 接管去向
-// （符号 → 手牌，否则 → 弃牌堆），不依赖引擎默认弃置。见 primitive-requests/10100.json。
+
+// · 符号的回合末去向由 api.returnPlayedEventAtEndOfTurn 登记。
 import { CHAOS_SYMBOLS } from './_shared.js'
 
 const CODE = '10100'
 
 const engagedWithMe = (state, inv) => (state.enemies || []).filter(enemy => enemy.engagedSeat === inv.seat)
-const isSymbol = token => CHAOS_SYMBOLS.includes(String(token))
+const isSymbol = token => [...CHAOS_SYMBOLS, 'eldersign', 'bless', 'curse', 'frost'].includes(token)
 
 export default {
   code: CODE,
   name: '缥缈灵体',
-  keepOnPlay: true,
-  simplified: true,
-  note: 'approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），'
-    + '按「结算后立即返回手牌」近似；见 primitive-requests/10100.json。',
   playCondition: [{
     when: ({ state, inv }) => engagedWithMe(state, inv).length > 0,
     message: '没有与你交战的敌人，不能打出「缥缈灵体」',
@@ -47,11 +41,10 @@ export default {
       kind: 'played',
       countsAs: 'evade',
       label: '躲避：加入意志值；成功后解除交战并化为无形（本轮）；揭示符号则返回手牌',
-      resolve: ({ state, inv, api }) => {
+      resolve: ({ state, inv, api, context }) => {
         const candidates = engagedWithMe(state, inv)
         if (!candidates.length) {
           api.info('「缥缈灵体」：没有可躲避的交战敌人。')
-          api.putIntoDiscard(inv.seat, CODE)
           return
         }
         const chosenId = candidates.length === 1 ? candidates[0].id : api.choice({
@@ -76,13 +69,7 @@ export default {
             api.info('💨 你化为无形：解除所有交战，直到本轮结束不能攻击、交战或伤害敌人。')
           },
         })
-        // 「如果本次躲避尝试期间揭示了符号……返回你的手牌」（近似：结算后立即返回）。
-        if ((result?.drawn || []).some(isSymbol)) {
-          if (!(inv.hand || []).includes(CODE)) api.putInHand(inv.seat, CODE)
-          api.info('💨 「缥缈灵体」：本次躲避揭示了符号，返回你的手牌。')
-          return
-        }
-        api.putIntoDiscard(inv.seat, CODE)
+        if ((result?.drawn || []).some(isSymbol)) api.returnPlayedEventAtEndOfTurn(context)
       },
     },
   ],

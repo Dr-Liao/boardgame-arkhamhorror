@@ -3,7 +3,7 @@
   "unit": "06-a-7",
   "profile": {
     "id": "tde-point-of-no-return-2026-11",
-    "scope": "食梦者 06 段 Point of No Return（pnr，06234–06275）54 条目录记录。48 条通过五维验收；6 条因伤害状态源未接线、子句未实现或口径收窄暂不切换。",
+    "scope": "食梦者 06 段 Point of No Return（pnr，06234–06275）54 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 54,
-    "verified": 48,
-    "unverified": 6,
+    "verified": 54,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 418
+    "testsPassed": 419
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
-      "sha256": "a3d9893ad3d468a91d183e4011f502c8ed08dc0b91ee9b4afbeb32002705505a"
+      "sha256": "b0dc7ab48a728737fc2b7e092e65179f4e51d0401737c53bc4374eb4cca9ede8"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
-      "sha256": "0806ef36e8a4fc501ece81b4ac95f0f92ce662bca8b7f8e9a3f00ad4501922eb"
+      "sha256": "c8c3fc5e63768fdd37c61bded9b4735d256983bed348caa07306047cd53e0e5d"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
@@ -289,7 +289,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
-          "test": "验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 交出皮克曼"
+          "test": "验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 由指定调查员控制皮克曼，离场时移出游戏"
         }
       ]
     },
@@ -297,9 +297,17 @@
       "code": "06251",
       "name": "进入地下世界(版本二)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "背面「本局剩余时间，若理查德·厄普顿·皮克曼离场，将其移出游戏」未实现：条目 flags.removeStoryAssetOnLeave 与 definition 同名字段均无读点；behavior 只写无读点的 flags.pickmanRemovedOnLeave；06266 无 removeFromGameOnLeave → 通用支援离场不会移出游戏。其余子句正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06251 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 由指定调查员控制皮克曼，离场时移出游戏"
+        }
+      ]
     },
     {
       "code": "06252",
@@ -821,9 +829,21 @@
       "code": "06268",
       "name": "鲜血的滋味",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「把 1 个你的线索放到最近的敌人上」被收窄：nearestEnemy 只查同地点/直接相邻，最近敌人 ≥2 条连接时该选项被错误过滤（未披露近似）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06268 鲜血的滋味：意志(3)失败差值逐点三选一（无线索时只能受伤）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06268 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06268 鲜血的滋味：可把线索放到相距三个连接的最近敌人上"
+        }
+      ]
     },
     {
       "code": "06269",
@@ -845,9 +865,21 @@
       "code": "06270",
       "name": "意外伏击",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「失败时最近的敌人重整、逐地点移动直到你的地点并交战」只在敌人同地点/相邻时结算，≥2 条连接时整段静默不执行（未披露近似）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-pointOfNoReturn.test.mjs",
+          "test": "06270 意外伏击：场上无敌人时受到 1 伤害与 1 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06270 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06270 意外伏击：失败差值达到 3，远处最近敌人重整、移动、交战并立即攻击"
+        }
+      ]
     },
     {
       "code": "06271",
@@ -869,25 +901,49 @@
       "code": "06272",
       "name": "巨噬蠕虫隧道",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「附属到与最近的巨噬蠕虫隧道之间连接次数至少为 2 的地点（否则附属到你所在地点）」；实现按「离调查员所在地点 ≥2」筛选，距离口径错误 → 可能选到紧邻最近隧道的地点或错误退回调查员所在地点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06272 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06272 巨噬蠕虫隧道：按既有隧道的距离选址，并从胜利区取出敌人横置生成"
+        }
+      ]
     },
     {
       "code": "06273",
       "name": "漆黑蜘蛛",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「蜂拥 X。X 为冒险参考卡牌上的伤害数量」未接线：swarmingXFromState('scenarioDamage') 读 state.scenarioFlags.referenceDamage，而本章权威计数在 state.markerCounts.reference（chaos.js#referenceDamage），全仓无 scenarioFlags.referenceDamage 写点 → 实际 X 恒 0（不放置蜂拥卡）。其余子句（生成点、伤害/恐惧二选一）正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06273 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06273 漆黑蜘蛛：生成点=无人漆黑之海；攻击伤害/恐惧二选一；蜂拥 X 随参考卡伤害变化"
+        }
+      ]
     },
     {
       "code": "06274",
       "name": "阿特拉克·纳克亚之影",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「本剧本参考卡上每有 1 点伤害，本次检定难度 +1」未接线：条目读无写点的 state.scenarioFlags.referenceDamage，实际难度恒为 2；本章权威计数为 markerCounts.reference。失败惩罚（1 伤害 + 1 恐惧）正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06274 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard7.test.mjs",
+          "test": "验收 06274 阿特拉克·纳克亚之影：以参考卡伤害加成难度，失败受伤害与恐惧"
+        }
+      ]
     },
     {
       "code": "06275",

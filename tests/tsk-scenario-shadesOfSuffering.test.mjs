@@ -584,7 +584,7 @@ test('P7 shadesOfSuffering 灵怪：密谋 3 期间不能被翻面（击败被�
 // ---------------------------------------------------------------------------
 // 6. 影穑充能 / 混乱标记 / 两张诡计 / Shift
 // ---------------------------------------------------------------------------
-test('P7 shadesOfSuffering 影穑：[skull] 取充能一半（上限 6），困难档等于充能数', () => {
+test('P7 shadesOfSuffering 09660 参考卡：影穑充能决定骷髅标记，其他符号按难度分派', () => {
   const state = setup(stateFor(1))
   const inv = state.investigators[0]
   assert.equal(chargesOf(state), 0)
@@ -776,7 +776,7 @@ test('P7 shadesOfSuffering 幕 2：轮末没有非弱点灵怪 → 推进幕；�
   assert.equal(back.agendaIndex, 2, '密谋直接推进到 3a')
 })
 
-test('P7 shadesOfSuffering 密谋 1 背面：苦难历史（弃盟友检定或放毁灭）并推进幕', () => {
+test('P7 shadesOfSuffering 09661 苦难历史：弃盟友并检定或放毁灭，随后推进幕', () => {
   const state = setup(stateFor(1))
   const api = apiStub(state)
   state.investigators[0].assets.push({ id: 'ally-1', code: '01004' })

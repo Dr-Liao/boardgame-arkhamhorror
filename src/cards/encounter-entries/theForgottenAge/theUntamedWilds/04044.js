@@ -14,12 +14,7 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api) {
       for (const card of ['04083', '04084', '04085']) {
-        let index = (state.scenarioZones?.setAside || []).indexOf(card)
-        while (index >= 0) {
-          state.scenarioZones.setAside.splice(index, 1)
-          state.encounterDeck.push(card)
-          index = (state.scenarioZones?.setAside || []).indexOf(card)
-        }
+        while (api.takeFromSetAside(card)) api.putOnEncounterDeck(card)
       }
       api.shuffleDiscard()
       for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned)) {

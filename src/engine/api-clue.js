@@ -1,3 +1,5 @@
+import { locationRuleFor } from '../cards/card-rules.js'
+import { withAbilityLocation } from './as-if-location.js'
 import { discardPlayerCards } from './player-zones.js'
 import { transferControlledClues } from './asset-clues.js'
 import { discardControlledAsset } from './asset-departure.js'
@@ -143,7 +145,10 @@ export function createClueApi(state, events, deps) {
     // Phase 5（5c）：调查与躲避的主体流程（与行动入口共用同一份规则与日志）。
     // options 直接透传：{ locationId, shroudMod, addSkill, clueBonus, lockpicksAssetId, ancientStone } /
     // { enemyId, skill, addSkill, moveAfterEvade, skipReadyRounds, evadeModifier }。
-    investigate: (seat, options = {}) => doInvestigate(state, seat, { ...options }, events, true),
+    investigate: (seat, options = {}) => {
+      const investigate = () => doInvestigate(state, seat, { ...options }, events, true)
+      return options.asIfLocation ? withAbilityLocation(state, state.investigators[seat], options.locationId, investigate) : investigate()
+    },
     evade: (seat, options = {}) => doEvade(state, seat, { ...options }, events, true),
     // Phase 5（5c）：读取敌人的当前战斗值（含修正），供「攻击战斗值最高的交战敌人」这类卡使用。
     enemyFight: (enemy, seat = state.currentSeat) => enemyFightValue(state, enemy, state.investigators[seat]),
@@ -183,7 +188,7 @@ export function createClueApi(state, events, deps) {
     moveClueToLocation: (fromId, toId, amount = 1) => {
       const from = state.locations.find(location => location.id === fromId)
       const to = state.locations.find(location => location.id === toId)
-      if (!from || !to) return 0
+      if (!from || !to || locationRuleFor(from.originalCode || from.code)?.blocksClueDiscovery) return 0
       const moved = Math.min(amount, from.clues || 0)
       if (!moved) return 0
       from.clues -= moved

@@ -21,7 +21,7 @@
 //   5. 结局：未达成 / 1（用伞制住她）/ 2（放她走）/ 3（被她控制），记录、时间与影穑归属都在 resolution 里结算。
 import { exposeWithReaction } from '../../concealed.js'
 import { concealedMiniCards, distributeConcealed, exposeMiniCard } from '../../../../../src/engine/tsk-concealed.js'
-import { isPendingChoice } from '../../../../../src/engine/resolution.js'
+import { isPendingChoice } from '../../../../../src/engine/resolution-error.js'
 import { canDiscardControlledAsset } from '../../../../../src/engine/asset-departure.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { assetRuleFor, enemyRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
@@ -596,7 +596,7 @@ export function drainShadeReaperOnSuccess(state, inv, successBy, api = null) {
   }
   // 幕 3「收割苦难」的反应：同地点调查员可以花线索取消等量伤害/恐惧。
   if (currentActCode(state) === RAW_CODES.act3) plan = harvesterCancelHarm(state, inv, plan, api)
-  if (plan.damage > 0 || plan.horror > 0) safeCall(api, 'harm', inv?.seat, plan)
+  if (plan.damage > 0 || plan.horror > 0) safeCall(api, 'harm', inv?.seat, plan, { code: TZU_SAN_NIANG_OUT_FOR_BLOOD })
   api?.info?.(`🔑 血债血偿：移除影穑 ${amount} 充能，${inv?.name || '调查员'} 承受 `
     + `${plan.damage} 点伤害 / ${plan.horror} 点恐惧。`)
   return amount

@@ -9,9 +9,14 @@ export default {
   code: '10670',
   scope: 'location',
   implemented: true,
+  modifiers: [{
+    target: 'loses:aloof',
+    condition: { when: ({ state, source, entity }) => source.revealed
+      && state.phase === 'enemy' && entity.traits?.includes('Shattered') },
+  }],
   flags: {
     entryKillsIfCards: true,
   },
-  note: 'approximation: 「[[破碎]]敌人失去冷漠」依赖引擎敌军阶段的 aloof 关键词读点，当前只保留卡面文本（未接线）；深渊在布置时与故事卡同面，由 behavior.flipAbyssToLocation 翻到地点面。',
+  note: '深渊由故事面翻到地点面。敌军阶段，位于本地点的破碎敌人失去冷漠。',
   abilities: [],
 }

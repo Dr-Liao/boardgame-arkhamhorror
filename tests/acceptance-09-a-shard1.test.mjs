@@ -112,10 +112,6 @@ test('TSK 09002 如你所愿：投入他人检定，成功其抽 1、失败你�
   assert.equal(criteria({ state: { skillTest }, inv: { seat: 0 } }), true, '投入他人检定时触发')
   assert.equal(criteria({ state: { skillTest: { ...skillTest, seat: 0, committed: [] } }, inv: { seat: 0 } }), false, '自己检定不触发')
 
-  // 可达性探针（记录当前 HEAD 缺口）：09002 的 commit 描述子只有空 skill{}，缺 otherTestOnly。
-  // 结果：他人检定可以协助并投入 09002（正确）；但本人检定也错误地出现 09002 的投入入口（违反卡面）。
-  const profile = e09002.abilities[0].skill
-  assert.equal(profile.otherTestOnly, undefined, '当前描述子缺少 otherTestOnly（缺口）')
   const runCommitProbe = (performerSeat, chooseHelp) => {
     const state = fixture('09001', 2)
     state.investigators[0].hand = ['09002']
@@ -138,9 +134,9 @@ test('TSK 09002 如你所愿：投入他人检定，成功其抽 1、失败你�
     return windows
   }
   const ownWindows = runCommitProbe(0, false)
-  const ownFirst = ownWindows.find(window => window.kind === 'commit')
-  assert.ok(ownFirst.options.some(option => option.label.includes('如您所愿')),
-    '本人检定错误地出现 09002 投入入口（缺口：应只允许他人检定）')
+  assert.equal(ownWindows.some(window => window.kind === 'commit'
+    && window.seat === 0 && window.options.some(option => option.label.includes('如您所愿'))), false,
+  '本人检定不提供 09002 的投入入口')
   const crossWindows = runCommitProbe(1, true)
   const helperWindow = crossWindows.find(window => window.kind === 'commit' && window.seat === 0)
   assert.ok(helperWindow?.options.some(option => option.label.includes('如您所愿')),

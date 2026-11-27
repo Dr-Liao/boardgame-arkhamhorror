@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import { enemyRuleFor, entryFlags } from '../../../src/cards/card-rules.js'
 
@@ -159,7 +160,7 @@ export function dunwichChaosAfterTest(id, state, inv, result, api) {
       const chosen = api.choose({ kind: 'card', source: '02159', seat: inv.seat,
         prompt: '古神标记：选择一张手牌弃掉。',
         options: inv.hand.map((code, index) => ({ id: String(index), label: ALL_CARDS[code]?.nameZh || code })) })
-      inv.discard.push(inv.hand.splice(Number(chosen), 1)[0])
+      inv.discard.push(spliceHand(inv, Number(chosen), 1)[0])
     }
   }
   if (id === 'bloodOnTheAltar') {

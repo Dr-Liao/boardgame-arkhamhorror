@@ -1,7 +1,7 @@
 // 07315 回到深渊（《暗潮之下》幕 1）：目标判定 + 幕背面「Act 2 布置」。
 //
 // 读点：
-//   · actRule.objective ← act-agenda.js#checkAct（行动结算后读条目函数分支并自动推进）；
+//   · actRule.objective 决定是否提供可选的 advanceAct 动作；
 //   · actRule.chapterSetup: 'act1Back' ← content entry-rules.actReveal 的数据驱动分派，
 //     布置数据来自 chapter-data.setup.act1Back（按调查员人数的坐标图示）；
 //   · 条目 setupSpawns 用 record/then/else 声明「达贡按 DagonHasAwakened 记录选面」。
@@ -9,21 +9,16 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
-import { advanceAct, scenarioRuntime } from '../src/engine/engine.js'
-import { resolveTransaction } from '../src/engine/resolution.js'
+import { legalMoves, move, settle } from './core-fixture.mjs'
 import { registeredEntry } from '../src/engine/ability.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { floodLevel } from '../src/engine/flood.js'
 
-function transaction(s, execute, select = () => null) {
-  resolveTransaction(s, 0, { action: 'testTicMaelstromAct' }, execute)
-  for (let guard = 0; s.pendingChoice; guard++) {
-    assert.ok(guard < 80, 'choice loop')
-    const choice = s.pendingChoice
-    const id = select(choice, s) ?? ['done', 'skip', 'self'].find(optionId => choice.options.some(option => option.id === optionId))
-      ?? choice.options[0].id
-    resolveTransaction(s, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, execute)
-  }
+function chooseAdvanceAct(state) {
+  const command = legalMoves(state).find(item => item.action === 'advanceAct')
+  assert.ok(command, '满足目标后应有推进选项')
+  move(state, command)
+  settle(state)
 }
 const codeOf = entity => entity?.originalCode || entity?.code
 const locationByCode = (s, code) => s.locations.find(location => codeOf(location) === code)
@@ -59,7 +54,7 @@ test('07315 背面：移除旧地点、按 1 人图示布置 Act 2 地图并生�
   giveGatewayKeys(s)
   const oldLocations = s.locations.map(location => location.id)
   const victoryLocation = s.locations.find(location => Number(location.victory || 0) > 0 && (location.clues || 0) === 0)
-  transaction(s, draft => advanceAct(draft, []))
+  chooseAdvanceAct(s)
   assert.equal(s.actIndex, 1, '推进到幕 2（07316）')
   assert.equal(codeOf(s.acts[s.actIndex]), '07316')
   // 起始地点保留，其余旧地点全部移除。
@@ -93,7 +88,7 @@ test('07315 背面：移除旧地点、按 1 人图示布置 Act 2 地图并生�
 test('07315 背面：DagonHasAwakened 记录让达贡以苏醒狂怒面入场', () => {
   const s = prepareMaelstrom(1, { DagonHasAwakened: true })
   giveGatewayKeys(s)
-  transaction(s, draft => advanceAct(draft, []))
+  chooseAdvanceAct(s)
   const dagon = s.enemies.find(enemy => ['07330a', '07330b'].includes(codeOf(enemy)))
   assert.ok(dagon)
   assert.equal(codeOf(dagon), '07330b', '记录已苏醒 → 苏醒狂怒面')
@@ -104,7 +99,7 @@ test('07315 背面：4 人图示用 7 个普通地点与 (-3,-1)/(3,-1) 圣堂�
   const s = chapterFixture('intoTheMaelstrom', 4)
   s.enemies = []
   giveGatewayKeys(s)
-  transaction(s, draft => advanceAct(draft, []))
+  chooseAdvanceAct(s)
   const ordinary = s.locations.filter(location => ['07321', '07322', '07323'].includes(codeOf(location)))
   assert.equal(ordinary.length, 7, '4 人图示 7 个普通地点全放')
   const sanctums = s.locations.filter(location => ['07324', '07325', '07326', '07327'].includes(codeOf(location)))

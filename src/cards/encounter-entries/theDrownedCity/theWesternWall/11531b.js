@@ -4,7 +4,7 @@
 //       在剧本日志的符文记录中，于 [tdc_rune_w] 下记录“寄生虫”。该符文已被翻译。
 //       将本卡牌加入胜利区。
 // 印刷：胜利 1；双面（正面 11531）。
-// 读点：behavior.friezeFlipAction 读 flags.glyph（W/寄生虫）并写 discoveredGlyphs；胜利区由 behavior 写。
+// 读点：behavior.friezeFlipAction 验证 storyOf，记录 glyph，并将故事面加入胜利区。
 export default {
   code: '11531b',
   scope: 'storyAsset',

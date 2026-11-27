@@ -8,7 +8,7 @@
 //     `tsk-scarlet-keys.js`、`tsk-map.js`；写入口优先 `api.mechanics.tsk.*`。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
-  agendaRuleFor, encounterResolveFor, enemyRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor,
+  actRuleFor, agendaRuleFor, encounterResolveFor, enemyRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../../../src/cards/card-rules.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import {
@@ -82,9 +82,9 @@ function distributeMini(state, api, spec) {
   const adapter = concealedApiOf(api)
   return adapter ? adapter.distribute(spec) : distributeConcealed(state, spec)
 }
-function exposeMini(state, api, id, seat = null) {
+function exposeMini(state, api, id, seat = null, options = {}) {
   const adapter = concealedApiOf(api)
-  if (adapter) return adapter.expose(id, { seat })
+  if (adapter) return adapter.expose(id, { ...options, seat })
   return exposeMiniCard(state, id)
 }
 function hollowOne(state, api, spec) {
@@ -126,7 +126,8 @@ function distributeEvenly(state, api, cards, locationIds) {
 /** 隐匿 X 的迷你卡组：真身 1 张 + X 张诱饵（X 按卡面 per_investigator 换算）。 */
 export function concealedMiniSet(state, code) {
   const rule = enemyRuleFor(code)?.concealed || concealedXOf(code) || { value: 1, perInvestigator: false }
-  const x = Math.max(1, (Number(rule.value) || 1) * (rule.perInvestigator ? investigatorCount(state) : 1))
+  const amount = typeof rule === 'number' ? rule : rule.value
+  const x = Math.max(1, (Number(amount) || 1) * (rule.perInvestigator ? investigatorCount(state) : 1))
   const kind = miniKindOf(code)
   if (!kind) return { cards: [], x }
   return {
@@ -272,6 +273,20 @@ function checkHollowForcedDoom(state, api) {
     if (state.doom >= (agenda.doomThreshold ?? Infinity)) api?.advanceAgenda?.()
   }
   return chosen.map(card => card.code)
+}
+
+function setAsideLeavingAsset(state, asset, api) {
+  const rule = actRuleFor(codeOf(state.acts?.[actIndexOf(state)]))
+  if (!rule?.assetLeavesPlaySetAside || codeOf(asset) !== rule.assetLeavesPlaySetAside || asset.setAsideByScenario) return false
+  const zones = state.scenarioZones ||= {}
+  zones.setAside ||= []
+  if (!zones.setAside.includes(codeOf(asset))) zones.setAside.push(codeOf(asset))
+  asset.setAsideByScenario = true
+  // 支援离场后，发动它离场的效果不能再把同一张卡放入原本的目的地。
+  asset.removedFromGame = true
+  for (const inv of aliveInvestigators(state)) api.horror(inv.seat, rule.horrorOnAssetLeavesPlay)
+  api.info?.('德西离场：将他放在一边，每位调查员受到 1 点恐惧。')
+  return true
 }
 
 // —— 阴影敌人的正面行为（德西）——
@@ -517,14 +532,6 @@ export const behavior = {
     }
     // 地点能力。
     const here = locationCodeOf(state, inv.location)
-    if (here === RAW_CODES.granTeatroDeLaHabana) {
-      moves.push({
-        action: 'scenarioAction', rule: 'granTeatroShroud', actions: 0, fast: true, locationId: inv.location,
-        reason: (inv.resources || 0) < 2 ? `需要 2 资源（当前 ${inv.resources || 0}）`
-          : (inv.granTeatroRound === state.round ? '本回合已经使用过' : null),
-        label: '🎭 花费 2 资源：本回合大剧院隐藏值 -2',
-      })
-    }
     if (here === RAW_CODES.plazaHotel) {
       moves.push({
         action: 'scenarioAction', rule: 'plazaHotelLook', actions: 0, fast: true, locationId: inv.location,
@@ -597,15 +604,6 @@ export const behavior = {
         + `（${cardNameOf(other)}${other === RAW_CODES.desiderioLinkedEnemy ? ' / 剧情资产 09607b' : ''}）。`)
       return true
     }
-    if (move.rule === 'granTeatroShroud') {
-      if ((inv.resources || 0) < 2 || inv.granTeatroRound === state.round) return false
-      inv.resources -= 2
-      inv.granTeatroRound = state.round
-      const location = locationById(state, inv.location)
-      if (location) location.shroudMod = (location.shroudMod || 0) - 2
-      api?.info?.('🎭 花费 2 资源：大剧院隐藏值 -2（直到你的回合结束）。')
-      return true
-    }
     if (move.rule === 'plazaHotelLook') {
       if ((flags.plazaHotelRound || 0) === state.round) return false
       inv.horror = (inv.horror || 0) + 1
@@ -637,22 +635,30 @@ export const behavior = {
     const card = concealedAt(state, targetLocation).find(item => item.id === miniCardId)
     if (!card) return null
     const locationId = card.locationId
-    const result = exposeMini(state, api, miniCardId, inv?.seat ?? null)
-    if (!result) return null
+    const result = exposeMini(state, api, miniCardId, inv?.seat ?? null, {
+      materializeEnemy: exposed => {
+        const code = exposed.code || enemyCodeOfMiniKind(exposed.kind)
+        return !exposed.decoy && enemyRuleFor(code)?.sharedConcealed
+          ? api?.spawn?.(code, locationId) : null
+      },
+    })
+    if (!result || result.cancelled) return null
     const flags = dancingMadFlags(state)
     if (result.decoy) {
       flags.lastExposed = { kind: 'decoy', locationId, round: state.round, seat: inv.seat }
       api?.info?.(`🃏 ${inv.name} 揭露了一张诱饵：弃掉它。`)
       return { decoy: true, locationId }
     }
-    const code = enemyCodeOfMiniKind(result.kind)
+    const code = result.code || enemyCodeOfMiniKind(result.kind)
     flags.lastExposed = { kind: result.kind, code, locationId, round: state.round, seat: inv.seat }
     markAlert(state, true)
     if (!code) return { decoy: false, kind: result.kind, locationId }
     const sameSeat = inv.location === locationId
-    const enemy = sameSeat
-      ? api?.spawnEngaged?.(code, locationId, inv.seat)
-      : api?.spawn?.(code, locationId)
+    const enemy = result.enemyId != null
+      ? state.enemies.find(item => item.id === result.enemyId)
+      : sameSeat
+        ? api?.spawnEngaged?.(code, locationId, inv.seat)
+        : api?.spawn?.(code, locationId)
     api?.info?.(`🕵️ ${inv.name} 揭露了「${cardNameOf(code)}」：在「${locationName(state, locationId)}」入场（战斗警报）。`)
     return { decoy: false, kind: result.kind, code, locationId, enemy: enemy || null }
   },
@@ -753,6 +759,14 @@ export const behavior = {
     flags.defeatedDesiderio = code
     api?.info?.(`🎭 「${cardNameOf(code)}」被击败（幕 3 目标达成；不要查看它的另一面）。`)
     return false
+  },
+
+  assetLeftPlay(state, _inv, asset, api) {
+    return setAsideLeavingAsset(state, asset, api)
+  },
+
+  storyAssetLeftPlay(state, asset, api) {
+    return setAsideLeavingAsset(state, asset, api)
   },
 
   afterEvade(state, inv, enemy, result, api) {

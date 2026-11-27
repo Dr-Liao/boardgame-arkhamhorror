@@ -3,7 +3,7 @@
   "unit": "07-a-1",
   "profile": {
     "id": "tic-deluxe-a-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。54 条全部通过五维验收。",
+    "scope": "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
-      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+      "sha256": "dad8a46848dd19c8f5d092d5e0dbb1efedd6470f7477bd1f15e4bd89e9f342d8"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-reference.test.mjs",
@@ -73,7 +73,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+      "sha256": "77085f74c7104b64befad15759c8cb5bd07adcf52e1734ae304d11f0aac4c52f"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-thePitOfDespair.test.mjs",

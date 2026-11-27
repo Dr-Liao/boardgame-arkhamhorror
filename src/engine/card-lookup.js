@@ -12,21 +12,11 @@ import { ALL_CARDS } from '../cards/cards-data.js'
 import { EFFECTS } from '../cards/card-effects.js'
 import { enemyWeaknessExtra } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
-import { contentRegistry } from '../../content/registered.js'
+import { collectionLoanPrintedCode } from './collection-loans.js'
+import { ALL_ENEMIES, ALL_TREACHERIES, ALL_STORY_ASSETS } from './scenario-card-index.js'
+import '../../content/registered.js'
 
-// 合并剧本注册表（遭遇牌 code 全局唯一，跨剧本合并后可按 code 直查）。
-// 与 engine.js 里的构建方式完全一致；搬来这里后 engine 不再需要自己拼表。
-export const ALL_ENEMIES = {}
-export const ALL_TREACHERIES = {}
-export const ALL_STORY_ASSETS = {}
-const SCENARIO_DATA = Object.fromEntries(contentRegistry.listScenarios()
-  .filter(entry => ['playable', 'verified'].includes(entry.status))
-  .map(entry => [entry.id, contentRegistry.getScenarioData(entry.id)]))
-for (const sc of Object.values(SCENARIO_DATA)) {
-  Object.assign(ALL_ENEMIES, sc.enemies || {})
-  Object.assign(ALL_TREACHERIES, sc.treacheries || {})
-  Object.assign(ALL_STORY_ASSETS, sc.storyAssets || {})
-}
+export { ALL_ENEMIES, ALL_TREACHERIES, ALL_STORY_ASSETS } from './scenario-card-index.js'
 
 // 2026-11-13 P1-8：把「伤害/攻击来源」解析为卡牌定义。source 可能是 5 位卡号（事件、
 // 直接来源）或场上支援实例 id；解析失败返回 null（来源特质的读点据此 fail-closed）。
@@ -46,6 +36,11 @@ export function sourceCardDef(state, source) {
 }
 
 export function cardDef(code) {
+  const printedCode = collectionLoanPrintedCode(code)
+  if (printedCode) {
+    const printed = ALL_CARDS[printedCode]
+    return printed ? { ...printed, code, originalCode: printedCode } : null
+  }
   const rule = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || ALL_STORY_ASSETS[code]
   if (rule) {
     const metadata = ALL_CARDS[rule.originalCode || code]

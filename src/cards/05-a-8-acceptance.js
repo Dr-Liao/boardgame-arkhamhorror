@@ -2,7 +2,7 @@
 // Detailed evidence: audit/05-a-8-acceptance.json. Not a promise of all-combination equivalence.
 export const TCU_SHARD8_ACCEPTANCE_PROFILE = {
   "id": "tcu-before-the-black-throne-2026-11",
-  "scope": "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。33 条通过五维验收；1 条（05322）同类规则第 4 次手写暂不切换。",
+  "scope": "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TCU_SHARD8_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TCU_SHARD8_ACCEPTANCE_SHA256 = '4d10f498e662e47e9272e73661126a859706b7d94ef0e4a41901334cda9c3c54'
-const verified = new Set(["05313","05314","05315","05316","05317","05318","05319","05320","05321","05323","05324","05325","05326","05327","05328","05329","05330","05331","05332","05333","05334","05335","05336","05337","05338","05339","05340","05341","05342","05343","05344","05345","05346"])
+export const TCU_SHARD8_ACCEPTANCE_SHA256 = '66c8ffc2ef0a63ec53933fc44ce10a37249c60a20af9623e21788a4be1d70235'
+const verified = new Set(["05313","05314","05315","05316","05317","05318","05319","05320","05321","05322","05323","05324","05325","05326","05327","05328","05329","05330","05331","05332","05333","05334","05335","05336","05337","05338","05339","05340","05341","05342","05343","05344","05345","05346"])
 export const tcuShard8CardVerified = code => verified.has(code)

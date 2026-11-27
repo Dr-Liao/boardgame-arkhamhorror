@@ -1,14 +1,24 @@
-// 08548 千变幻景
-// 归属：关卡专用 · edgeOfTheEarth/iceAndDeathPart3（P7 亡命冰原 III）。
-// behavior/遭遇结算读点：无渗出梦魇时获得涌动，否则翻出其底下 1 张或让其移动并攻击。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+// 08548 千变幻景：从最近的渗出梦魇底下随机翻出敌人；它底下没有牌时则移动并攻击。
+const CODE = '08548'
 
 export default {
-  code: '08548',
-  scope: 'treachery',
-  implemented: true,
-  treacheryRule: { spawnBeneathOrHunterAttack: true },
-  flags: { surgeIfNoSeepingNightmare: true, curse: true },
+  code: CODE, scope: 'treachery', implemented: true,
+  encounterResolve(state, inv, card, api) {
+    const nightmares = state.enemies.filter(enemy => (enemy.originalCode || enemy.code) === '08547'
+      && !enemy.defeated && !enemy.removedFromGame)
+    if (!nightmares.length) return { gainSurge: true }
+    const investigators = state.investigators.filter(other => !other.defeated && !other.resigned)
+    const distances = nightmares.map(enemy => Math.min(...investigators.map(other => api.mechanics.map.distance(other.location, enemy.location))))
+    const closest = Math.min(...distances)
+    const targets = nightmares.filter((enemy, index) => distances[index] === closest)
+    const id = targets.length === 1 ? targets[0].id : api.choice({
+      kind: 'enemy', source: CODE, seat: inv.seat, prompt: '选择最近的渗出梦魇。',
+      options: targets.map(enemy => ({ id: enemy.id, label: enemy.name, cardCode: enemy.code })),
+    })
+    const enemy = targets.find(candidate => candidate.id === id)
+    if (!enemy) return false
+    if (enemy.beneath?.some((code, index) => enemy.beneathFaceDown?.[index] !== false)) api.spawnRandomEnemyBeneath(enemy)
+    else api.resolveEnemyPhaseOf(enemy, { exhaust: false })
+    return false
+  },
 }

@@ -1,14 +1,10 @@
-// 08579 悔恨航程之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08579 悔恨航程之记忆：被击败时，翻开并结算记忆剧情。
 export default {
-  code: '08579',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"retaliate":true,"preyPartner":"08587","reactionDrawDamage":true,"flipOnDefeat":true} },
+  code: '08579', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08587' },
+  abilities: [{
+    kind: 'reaction', trigger: 'cardsDrawn', label: '它横置时你抽牌后：对它造成等量伤害',
+    criteria: ({ context, inv, source }) => context.seat === inv.seat && source.exhausted && context.drawnCodes?.length > 0,
+    resolve: ({ inv, source, context, api }) => api.damageEnemy(source, context.drawnCodes.length, inv.seat),
+  }],
 }

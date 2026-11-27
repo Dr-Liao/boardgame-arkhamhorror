@@ -267,24 +267,6 @@ const enemyDefinition = code => {
   })
 }
 
-// 钥匙节点也用「可攻击实体」建模（见 behavior.scenarioApproximations）：印刷是剧情支援，
-// 但引擎没有「把在场支援当作敌人攻击」的读点，用敌人实例承载战斗值/伤害/击败。
-const keyLocusEnemyDefinition = code => {
-  const spec = KEY_LOCUS_DATA[code]
-  const base = printedOf(code)
-  return Object.freeze({
-    ...base,
-    code, originalCode: code,
-    fight: spec.fight, evade: null,
-    health: spec.healthPerInvestigator ? null : spec.health,
-    ...(spec.healthPerInvestigator ? { healthPerInvestigator: spec.health } : {}),
-    damage: 0, horror: 0,
-    victory: spec.victory,
-    unique: false, elite: false,
-    keyLocus: true, keyLocusFace: spec.face,
-  })
-}
-
 export const KEY_LOCUS_CODES = Object.freeze([RAW_CODES.keyLocusDefensiveBarrier,
   RAW_CODES.keyLocusLastBastion])
 
@@ -292,7 +274,6 @@ export const enemies = Object.freeze({
   ...sharedDefinitions.enemies,
   ...Object.fromEntries([
     ...ENEMY_CODES.map(code => [code, enemyDefinition(code)]),
-    ...KEY_LOCUS_CODES.map(code => [code, keyLocusEnemyDefinition(code)]),
   ]),
 })
 
@@ -349,8 +330,7 @@ const agendaDefinition = version => {
   return Object.freeze({
     ...base,
     doomThreshold: Number(card.doom) || 14,
-    // 版本一：其它卡上的毁灭改为「扣减」总毁灭（behavior.doomPlaced 读）。
-    ...(version === 'v1' ? { otherDoomSubtracts: true } : {}),
+    ...(version === 'v1' ? { otherDoomSubtractsAtThreshold: true } : {}),
   })
 }
 

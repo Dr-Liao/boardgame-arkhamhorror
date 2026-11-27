@@ -24,7 +24,7 @@ export default {
       moveBroodToward(state, chosen, inv.location, api)
       pending.splice(pending.indexOf(chosen), 1)
     }
-    api.drawEncounter(inv.seat)
+    api.drawEncounter(inv.seat, { surgeDraw: true })
     return { placed: false, surgeHandled: true }
   },
 }

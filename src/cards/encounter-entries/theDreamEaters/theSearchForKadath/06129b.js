@@ -7,8 +7,6 @@
 export default {
   code: '06129b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
-    signs: 1,
     resolve(state, api) {
       const signs = api.markers?.add?.('reference', 1) ?? 0
       api.info?.(`✨ 发现一个神迹（参考卡上现有 ${signs} 个神迹）。`)

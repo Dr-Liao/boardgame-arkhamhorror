@@ -14,7 +14,7 @@ import assert from 'node:assert/strict'
 
 import { fixture, move, settle, asset, enemy, validateMove } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry, playedActionCost } from '../src/engine/ability.js'
-import { legalMoves, canEquip, getStat, applyDamage } from '../src/engine/engine.js'
+import { legalMoves, canEquip, getStat, getHandSize, applyDamage } from '../src/engine/engine.js'
 import { commitProfile } from '../src/engine/lifecycle.js'
 import { modifierTotal } from '../src/engine/modifiers.js'
 
@@ -49,21 +49,21 @@ function locationWithConnections(state, inv) {
 }
 
 // ── 10109 毛皮货 ────────────────────────────────────────────────────────────
-test('P6 10109 毛皮货 在手牌中时手牌上限修正 -3，离开手牌即失效（缺 stats.handSize 读点已在 note/请求登记）', () => {
+test('P6 10109 毛皮货 在手牌中时手牌上限修正 -3，离开手牌即失效', () => {
   const entry = registeredEntry('10109')
   assert.deepEqual(entry.modifiers, [{ target: 'handSize', amount: -3, condition: { sourceInHand: true } }],
     '印刷「在手牌中时手牌上限减少 3 张」= handSize 修正 + sourceInHand 条件')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /primitive-requests\/10109\.json/, '缺读点登记在请求文件')
-
   const state = fixture('01001')
   const inv = me(state)
   inv.hand = []
+  const handSize = getHandSize(state, inv)
   assert.equal(modifierTotal(state, inv, 'handSize'), 0)
   inv.hand.push('10109')
+  assert.equal(getHandSize(state, inv), handSize - 3)
   assert.equal(modifierTotal(state, inv, 'handSize'), -3, '修正来源枚举读到了手牌中的毛皮货（-3）')
   inv.hand = []
   assert.equal(modifierTotal(state, inv, 'handSize'), 0, '不在手牌时修正失效')
+  assert.equal(getHandSize(state, inv), handSize)
 })
 
 // ── 10110 草叉 ──────────────────────────────────────────────────────────────
@@ -86,12 +86,13 @@ test('P6 10110 草叉 攻击 +1[战斗]/+2 伤害；成功后附属到所在地�
   const here = state.locations.find(location => location.id === me(state).location)
   const attachment = here.attachments.find(card => card.code === '10110')
   assert.ok(attachment, '草叉附属到所在地点')
-  assert.equal(attachment.ownerSeat, null, '附属没有控制者：任意调查员都能触发取回能力')
+  assert.equal(attachment.ownerSeat, 0, '附属仍保留草叉的物理所有者')
+  assert.equal(attachment.controllerSeat, undefined, '附属时无人控制')
 
   const detach = legalMoves(state, 0).find(option => option.action === 'detachLocationAttachment')
   assert.ok(detach, '附属地点提供「控制草叉」的 1 行动入口')
   move(state, { action: 'detachLocationAttachment', locationId: here.id, attachmentIndex: detach.attachmentIndex })
-  assert.equal(me(state).assets.filter(item => item.code === '10110').length, 1, '行动者获得草叉')
+  assert.equal(me(state).assets.filter(item => item.id === fork.id).length, 1, '行动者获得原草叉实体')
   assert.equal(state.locations.find(location => location.id === here.id).attachments.length, 0, '地点附属被取下')
   assert.equal(me(state).actionsLeft, actionsBefore - 2, '攻击 1 行动 + 取回 1 行动')
 
@@ -181,7 +182,7 @@ test('P6 10112 围魏救赵 Double 额外花费 1 行动；所在地点非精英
     if (pending.options.some(option => option.id === 'damage')) return 'damage'
     return pickDone(pending)
   })
-  assert.deepEqual(prompts, [['evade', 'damage', 'skip'], ['damage', 'skip']],
+  assert.deepEqual(prompts, [['evade', 'damage']],
     '非精英可选自动躲避/伤害；精英没有躲避选项')
   assert.equal(state.enemies.find(item => item.id === near.id).exhausted, true, '所在地点非精英被自动躲避')
   assert.equal(state.enemies.find(item => item.id === near.id).engagedSeat, null, '自动躲避会脱离交战')
@@ -384,11 +385,7 @@ test('P6 10117 飞斧 把[敏捷]加入技能值、伤害 +1；未击败则附�
 })
 
 // ── 10118 百折不挠 ──────────────────────────────────────────────────────────
-test('P6 10118 百折不挠 手牌投入按[wild]图标正常结算；弃牌堆投入缺引擎读点（note/请求已登记）', () => {
-  const entry = registeredEntry('10118')
-  assert.equal(entry.simplified, true)
-  assert.match(entry.note, /primitive-requests\/10118\.json/, '弃牌堆投入的缺读点登记在请求文件')
-
+test('P6 10118 百折不挠 手牌投入按[wild]图标正常结算；亦可投入弃牌堆并洗回牌库', () => {
   // 手牌投入（卡面数据本身的 [wild] 图标）仍然正常：投入后进弃牌堆。
   const state = fixture('01001')
   const inv = me(state)
@@ -412,7 +409,7 @@ test('P6 10118 百折不挠 手牌投入按[wild]图标正常结算；弃牌堆�
   assert.equal(state.lastTestResult.success, true)
   assert.ok(me(state).discard.includes('10118'), '投入后进入弃牌堆')
 
-  // 弃牌堆里的百折不挠目前不会作为投入候选（缺 play-channels 的弃牌堆 commit 通道）。
+  // 弃牌堆投入后随本次检定清理洗回牌库。
   const discarded = fixture('01001')
   const other = me(discarded)
   other.assets = []
@@ -424,8 +421,12 @@ test('P6 10118 百折不挠 手牌投入按[wild]图标正常结算；弃牌堆�
   move(discarded, { action: 'investigate' })
   let offered = false
   settle(discarded, pending => {
-    if (pending.kind === 'commit' && pending.options.some(option => /百折不挠/.test(String(option.label)))) offered = true
-    return null
+    if (pending.kind !== 'playerWindow') return null
+    const option = pending.options.find(option => /百折不挠/.test(String(option.label)))
+    if (option) offered = true
+    return option?.id ?? null
   })
-  assert.equal(offered, false, '弃牌堆投入在引擎有读点之前不会出现在候选里')
+  assert.equal(offered, true, '检定投入前可选弃牌堆中的百折不挠')
+  assert.equal(me(discarded).discard.includes('10118'), false)
+  assert.equal(me(discarded).deck.filter(code => code === '10118').length, 1)
 })

@@ -1,3 +1,6 @@
+import { effectSourceIsPlayer } from './effect-provenance.js'
+import { attachmentTextBlanked } from './attachment-rules.js'
+import { registeredEntry } from './ability.js'
 import { createEnemyZoneApi } from './enemy-zones.js'
 import { investigatorAt, mechanicState } from './mechanic-state.js'
 import * as pool from './chaos-token-pool.js'
@@ -59,6 +62,51 @@ import { changeRelationship, changeResidentNote, crossOutResident, residentStatu
 // Composition only. Writes remain in the reusable domain primitives.
 export function createMechanicsApi(state, deps = {}) {
   const changed = result => { deps.sealedChanged?.(); return result }
+  const exposeScarletMiniCard = (id, { seat = null, materializeEnemy = null } = {}) => {
+    const card = tskConcealed.concealedById(state, id)
+    const location = card?.locationId ?? null
+    if (effectSourceIsPlayer(state) && (state.enemies || []).some(enemy => !enemy.exhausted && enemy.location === location
+      && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.blocksPlayerCardExposeHereWhileReady)) {
+      return { id, cancelled: true }
+    }
+    const limit = tskConcealed.exposeLimitPerInvestigator(state)
+    if (limit > 0 && Number.isSafeInteger(seat) && tskConcealed.exposuresThisRound(state, seat) >= limit) {
+      throw new Error(`本轮 ${state.investigators?.[seat]?.name || '该调查员'} 已揭露 ${limit} 张隐匿迷你卡，不能再揭露。`)
+    }
+    if (card && deps.wouldExpose?.(state, { ...card, location, seat })?.cancelled) return { id, cancelled: true }
+    const result = tskConcealed.exposeMiniCard(state, id)
+    const enemy = !result.decoy && ((state.enemies || []).find(item => item.shadowMiniKind === result.kind)
+      || materializeEnemy?.(result))
+    if (enemy) {
+      delete enemy.shadowMiniKind
+      enemy.location = location
+      result.enemyId = enemy.id
+    }
+    tskConcealed.recordExposure(state, seat)
+    deps.exposed?.(state, { ...result, location, seat })
+    if (enemy) {
+      tskConcealed.setAsideRemainingDecoys(state)
+      deps.engageExposedEnemy?.(location)
+    }
+    return result
+  }
+  const shiftScarletKey = (id, options = {}) => {
+    const record = tskKeys.scarletKey(state, id)
+    if (!options.force && tskKeys.keyShiftedThisRound(state, id, options.round)) throw new Error('该密钥本轮已经变换过')
+    const from = record.stable ? record.stableFace : record.unstableFace
+    const seat = options.seat ?? record.bearer.seat ?? null
+    const by = options.by ?? (record.bearer.type === 'enemy' ? 'enemy' : 'investigator')
+    const context = { keyId: id, from, bearer: record.bearer, seat, by }
+    const resolve = registeredEntry(from)?.assetRule?.shift
+    if (resolve && deps.abilityApi) resolve({ state, api: deps.abilityApi(), context })
+    const result = tskKeys.shiftKey(state, id, { ...options, keepFace: by === 'enemy' && !record.stable })
+    const round = options.round ?? state.round ?? 0
+    const sequence = state.campaign?.tsk?.keys?.shifts?.[round] || 0
+    deps.keyShifted?.(state, { ...context, to: result.to, face: result.to,
+      windowInstance: `key:${id}:${round}:${sequence}`,
+      keyStable: !record.stable && result.stable, stable: result.stable })
+    return result
+  }
   function eoteInteractionGroups(state, deps) {
   // keys 会和既有 key 交互函数重名，扁平层不展开（只在 interactions.eote.keys 提供）。
   const { keys, ...groups } = createEoteInteractions(state, deps)
@@ -66,11 +114,28 @@ export function createMechanicsApi(state, deps = {}) {
 }
 
   const deck = createScenarioDeckApi(state, deps)
+  function shuffleTekeliIn(seat, count = 1, options) {
+    const inv = state.investigators?.[seat]
+    const location = state.locations?.find(item => item.id === inv?.location)
+    const source = deps.resolveTekeliTop && location?.attachments?.find(card => !attachmentTextBlanked(state, card)
+      && registeredEntry(card.originalCode || card.code)?.treacheryRule?.tekeliShuffleToBottom)
+    if (!source || !Number.isSafeInteger(count) || count < 1) return tekeli.tekeliShuffleIn(state, seat, count, options)
+    if (tekeli.tekeliDeckSize(state) < count) return false
+    const drawn = []
+    for (let index = 0; index < count && !inv.defeated; index++) {
+      const code = deps.resolveTekeliTop(seat, { destination: 'deck' })
+      if (!code) break
+      drawn.push(code)
+    }
+    if (drawn.length) source.discardAtRound = state.round
+    return drawn.length ? drawn : false
+  }
+  const eoteDeps = { ...deps, shuffleTekeliIn }
   return {
     // 七循环 P4：EotE 待决选择事务。`eote` 命名空间完整暴露（keys 等与既有交互同名者只在此处）；
     // 其余不冲突的分组在顶层再给一次，供内容层简写调用。
-    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, deps), eote: createEoteInteractions(state, deps),
-      tsk: createTskInteractions(state, deps), fhv: createFhvInteractions(state, deps), tdc: createTdcInteractions(state, deps) },
+    interactions: { ...createMechanicChoices(state, deps), ...eoteInteractionGroups(state, eoteDeps), eote: createEoteInteractions(state, eoteDeps),
+      tsk: createTskInteractions(state, { ...deps, shiftScarletKey, exposeScarletMiniCard }), fhv: createFhvInteractions(state, deps), tdc: createTdcInteractions(state, deps) },
     scenarioDecks: deck,
     calendar: {
       current: () => scenarioDate(state),
@@ -163,6 +228,8 @@ export function createMechanicsApi(state, deps = {}) {
       beginAirTurn: (seat, options) => water.beginAirTurn(state, seat, options), endAirTurn: seat => water.endAirTurn(state, seat, deps.directDamage),
     },
     keys: {
+      valueAt: holder => keys.valueKeysAt(state, holder),
+      spendValue: (holder, options) => keys.spendValueKeys(state, holder, options),
       linkAsset: (color, assetId) => keys.linkKeyAsset(state, color, assetId),
       heldAtLocation: id => keys.keysHeldAtLocation(state, id),
       heldByGroup: () => keys.keysHeldByGroup(state),
@@ -262,7 +329,7 @@ export function createMechanicsApi(state, deps = {}) {
     },
     tekeli: {
       initialize: spec => tekeli.initializeTekeliDeck(state, spec),
-      size: () => tekeli.tekeliDeckSize(state), shuffleIn: (seat, count, options) => tekeli.tekeliShuffleIn(state, seat, count, options),
+      size: () => tekeli.tekeliDeckSize(state), shuffleIn: shuffleTekeliIn,
       draw: () => tekeli.tekeliDraw(state), return: (code, options) => tekeli.tekeliReturn(state, code, options),
     },
     hiddenDecks: {
@@ -358,21 +425,15 @@ export function createMechanicsApi(state, deps = {}) {
             // 2026-11-13 P1-1：揭露后派发 `tskExposed` 窗口（此前 18 张条目的强制/反应能力永不触发）。
             // 这是唯一派发点；内容层统一经本包装器揭露（直接调原语会漏窗口）。
             // 上下文同时给 `locationId` 与引擎窗口惯例的 `location`（09749a/09750 等按 context.location 过滤来源）。
-            expose: (id, options = {}) => {
-              // 2026-11-13 P1-16（09740）：每位调查员每轮最多揭露 N 张（N 由密谋旁的卡声明）。
-              const seat = options?.seat ?? null
-              const limit = tskConcealed.exposeLimitPerInvestigator(state)
-              if (limit > 0 && Number.isSafeInteger(seat)
-                && tskConcealed.exposuresThisRound(state, seat) >= limit) {
-                throw new Error(`本轮 ${state.investigators?.[seat]?.name || '该调查员'} 已揭露 ${limit} 张隐匿迷你卡，不能再揭露。`)
-              }
-              const result = tskConcealed.exposeMiniCard(state, id)
-              tskConcealed.recordExposure(state, seat)
-              deps.exposed?.(state, {
-                ...result, location: result.locationId ?? null, seat,
-              })
-              return result
+            expose: exposeScarletMiniCard,
+            cancelExpose: context => {
+              if (context?.when !== 'tskWouldExpose' || context.cancelled || !context.decoy) return false
+              context.cancelled = true
+              return true
             },
+            reposition: placements => tskConcealed.repositionMiniCards(state, placements),
+            setCodes: entries => tskConcealed.setMiniCardCodes(state, entries),
+            flipDecoys: () => tskConcealed.flipDecoyMiniCards(state),
             targetScope: id => tskConcealed.concealTargetScope(state, id),
             reshuffle: options => tskConcealed.reshuffleConcealed(state, options),
             projection: options => tskConcealed.concealedProjection(state, options),
@@ -393,6 +454,33 @@ export function createMechanicsApi(state, deps = {}) {
             cardInvalid: code => tskHollow.cardInvalidInCampaign(state, code),
             choices: () => tskHollow.hollowChoices(state),
           },
+          investigatorShadows: {
+            enter: seat => {
+              const inv = state.investigators[seat]
+              if (!inv?.location || inv.defeated || inv.resigned) return false
+              for (const enemy of state.enemies.filter(card => card.engagedSeat === seat)) deps.disengageEnemy?.(enemy)
+              inv.investigatorShadowAnchor = inv.location
+              inv.location = null
+              return true
+            },
+            leave: seat => {
+              const inv = state.investigators[seat]
+              const anchor = inv?.investigatorShadowAnchor
+              if (!anchor) return false
+              const location = state.locations.find(card => card.id === anchor)
+              let destination = location?.id
+              if (!destination) {
+                const options = state.locations.filter(card => card.revealed).map(card => ({ id: card.id, label: card.name }))
+                if (!options.length) return false
+                destination = options.length === 1 ? options[0].id : deps.choice({ kind: 'location', seat,
+                  prompt: '选择从阴影归来的地点。', options })
+              }
+              deps.moveInvestigator?.(seat, destination)
+              if (inv.location !== destination) return false
+              delete inv.investigatorShadowAnchor
+              return true
+            },
+          },
           keys: {
             initialize: specs => tskKeys.initializeScarletKeys(state, specs),
             all: () => tskKeys.scarletKeys(state),
@@ -400,14 +488,7 @@ export function createMechanicsApi(state, deps = {}) {
             face: id => tskKeys.keyFace(state, id),
             // 2026-11-13 P1-1：变换后派发 `tskKeyShifted` 窗口（09752 等「变换后」能力此前永不触发）。
             // 上下文契约：{ keyId, from, to, face, keyStable, seat }。唯一派发点；内容层统一经本包装器。
-            shift: (id, options = {}) => {
-              const result = tskKeys.shiftKey(state, id, options)
-              deps.keyShifted?.(state, {
-                keyId: result.id, from: result.from, to: result.to, face: result.to,
-                keyStable: result.stable, stable: result.stable, seat: options?.seat ?? null,
-              })
-              return result
-            },
+            shift: shiftScarletKey,
             shiftedThisRound: (id, round) => tskKeys.keyShiftedThisRound(state, id, round),
             bind: (id, bearer) => tskKeys.bindKey(state, id, bearer),
             steal: (id, bearer) => tskKeys.stealKey(state, id, bearer),

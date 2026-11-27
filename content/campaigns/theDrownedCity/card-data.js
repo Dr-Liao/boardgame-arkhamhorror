@@ -102,6 +102,17 @@ export function stage (code, extra = {}) {
   }
 }
 
+const preyRules = {
+  'Fewest cards in hand': 'fewestCardsInHand', 'Lowest [agility]': 'lowestAgility',
+  'Lowest [willpower]': 'lowestWillpower', 'Most cards in hand': 'mostCardsInHand',
+  'Highest [agility]': 'highestAgility', 'Most remaining health': 'mostRemainingHealth',
+  'Most clues': 'mostClues', 'Nearest investigator with an [[Artifact]] asset': 'artifactController',
+}
+
+export function encounterPrey(card) {
+  return preyRules[/Prey - ([^.]+)/.exec(card.text || '')?.[1]]
+}
+
 // 遭遇牌定义：enemy/treachery/story asset，数值与关键词直接取印刷字段/卡文。
 export function encounterDefinitions (codes) {
   const enemies = {}, treacheries = {}, storyAssets = {}
@@ -112,21 +123,14 @@ export function encounterDefinitions (codes) {
     if (c.type === 'enemy') {
       const keywords = String(c.text || '').split('\n')
         .filter(line => !/\b(?:gains?|loses?|while|if|forced|reaction)\b/i.test(line)).join('\n')
-      const prey = /Prey - ([^.]+)/.exec(c.text || '')?.[1]
-      const preyRules = {
-        'Fewest cards in hand': 'fewestCardsInHand', 'Lowest [agility]': 'lowestAgility',
-        'Lowest [willpower]': 'lowestWillpower', 'Most cards in hand': 'mostCardsInHand',
-        'Highest [agility]': 'highestAgility',
-        // P7 TDC 11671 星之眷族血魔：印刷「Most remaining health」（引擎 PREY_RANK 同名读点）。
-        'Most remaining health': 'mostRemainingHealth',
-      }
+      const prey = encounterPrey(c)
       enemies[code] = {
         ...base,
         surge: /^Surge\./m.test(c.text || ''),
         fight: c.fight ?? null,
         evade: c.evade ?? null,
         health: c.health ?? null,
-        ...(preyRules[prey] ? { prey: preyRules[prey] } : {}),
+        ...(prey ? { prey } : {}),
         ...(c.healthPerInvestigator ? { healthPerInvestigator: c.health } : {}),
         damage: c.damage || 0,
         horror: c.horror || 0,

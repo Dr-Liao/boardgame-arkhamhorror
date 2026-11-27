@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 import { beneathCards, pullBeneath } from './commit-origins.js'
 import { afterUsesSpent } from './uses.js'
 import { consumeDeckTop, deckTopCard, deckTopDiscountUsed, restoreDeckTop } from './eote-deck-top.js'
@@ -55,10 +56,10 @@ export function parleyDiscardProvider(inv, code, sourceId, { cardDef, registered
 // LEGACY_PLAY_CHANNELS 是 2026-11-07 前的既有通道集合；新增通道不得改变它的相对顺序，
 // 保证旧对局的候选顺序/重放指纹不变。
 export const LEGACY_PLAY_CHANNELS = Object.freeze(['attached', 'hunch', 'threat', 'beneath', 'backpack', 'discard', 'plan'])
-export const PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_PLAY_CHANNELS, 'deckTop', 'otherHand'])
+export const PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_PLAY_CHANNELS, 'deckTop', 'otherHand', 'sharedSetAside'])
 // 反应/能力窗口的既有顺序（与旧实现逐字一致），新通道同样追加在末尾。
 const LEGACY_WINDOW_ORDER = Object.freeze(['plan', 'attached', 'beneath', 'hunch', 'discard', 'backpack', 'threat'])
-export const WINDOW_PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_WINDOW_ORDER, 'deckTop', 'otherHand'])
+export const WINDOW_PLAY_CHANNEL_ORDER = Object.freeze([...LEGACY_WINDOW_ORDER, 'deckTop', 'otherHand', 'sharedSetAside'])
 
 const isPlainObject = value => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 
@@ -173,6 +174,15 @@ export function createPlayChannels(deps) {
   // ---------------------------------------------------------------------------
   // 每个通道声明枚举钩子；可用性（entryError）与取牌（takeToHand/actionTake）另有统一实现。
   const entriesOf = {
+    sharedSetAside(state) {
+      return (state.sharedPlayCards || []).flatMap(card => {
+        if (!['asset', 'event'].includes(cardDef(card.code)?.type)) return []
+        return [entry({ channel: 'sharedSetAside', code: card.code, sourceId: card.id,
+          move: { action: 'play', cardId: card.code, fromSharedSetAside: card.id, ownerSeat: card.ownerSeat },
+          uiKey: `sharedPlay:${card.id}`, labelSuffix: '（公共场外区）' })]
+      })
+    },
+
     // 弃牌堆：卡面声明 playableFromDiscard 的牌（任意位置），以及「温蒂的护身符」看弃牌堆顶事件。
     discard(state, inv) {
       const out = []
@@ -398,7 +408,7 @@ export function createPlayChannels(deps) {
   function isChannelMove(move) {
     return Boolean(move && (move.fromHunch || move.fromBeneath || move.fromAttachedEventOf
       || move.fromBackpackId || move.fromPlanAssetId || move.threatId || move.fromDiscard
-      || move.fromDeckTop || move.fromOtherHand))
+      || move.fromDeckTop || move.fromOtherHand || move.fromSharedSetAside))
   }
 
   // 从 move 片段还原通道条目（validateMove / dispatch / 窗口执行共用；move 是权威协议）。
@@ -413,6 +423,7 @@ export function createPlayChannels(deps) {
     else if (move.threatId) channel = 'threat'
     else if (move.fromDeckTop) channel = 'deckTop'
     else if (move.fromOtherHand) channel = 'otherHand'
+    else if (move.fromSharedSetAside) channel = 'sharedSetAside'
     else channel = 'discard'
     return byChannel(state, inv, channel).find(candidate => sameMove(candidate.move, move)) || null
   }
@@ -429,6 +440,7 @@ export function createPlayChannels(deps) {
     if ((a.fromDiscardProviderId ?? null) !== (b.fromDiscardProviderId ?? null)) return false
     if ((a.fromDeckTop ?? false) !== (b.fromDeckTop ?? false)) return false
     if ((a.fromOtherHand ?? false) !== (b.fromOtherHand ?? false)) return false
+    if ((a.fromSharedSetAside ?? null) !== (b.fromSharedSetAside ?? null)) return false
     if ((a.ownerSeat ?? null) !== (b.ownerSeat ?? null)) return false
     return true
   }
@@ -441,6 +453,8 @@ export function createPlayChannels(deps) {
     if (!def) return '未知卡牌'
     const code = candidate.code
     switch (candidate.channel) {
+      case 'sharedSetAside':
+        break
       case 'hunch':
         if (inv.hunchRevealed !== code) return '直觉牌库没有揭示这张牌'
         break
@@ -513,7 +527,7 @@ export function createPlayChannels(deps) {
     // 通道内通用门控（窗口会另加自己的时机/条件判定）。
     if (!runtimeCardAvailable(state, inv, code) || def.dataStatus === 'quarantined') return '该卡牌未获运行时许可'
     if (!lolaCanUseCard(inv, code)) return '罗拉只能使用中立或当前角色阵营的卡牌'
-    if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
+    if (cannotPlayTypes(inv, state).has(def.type)) return '当前禁止打出该类型卡牌'
     if (isWeaknessCard(def) && !playAccess(code).playableWeakness) return '该牌不能作为行动打出'
     if (def.type === 'skill') return '该牌不能作为行动打出'
     const blocked = cardPlayBlockedReason(state, inv, def)
@@ -571,6 +585,21 @@ export function createPlayChannels(deps) {
   function takeToHand(state, inv, candidate, events = []) {
     const base = { ok: true, code: candidate.code, discount: discountOf(candidate) }
     switch (candidate.channel) {
+      case 'sharedSetAside': {
+        const pile = state.sharedPlayCards || []
+        const index = pile.findIndex(card => card.id === candidate.sourceId && card.code === candidate.code)
+        if (index < 0) return { ok: false }
+        const [card] = pile.splice(index, 1)
+        const previous = state._playedUnderControl
+        inv.hand.push(card.code)
+        return { ...base, handIndex: inv.hand.length - 1,
+          apply() { state._playedUnderControl = { seat: inv.seat, fromSeat: card.ownerSeat, code: card.code } },
+          restore() {
+            if (previous === undefined) delete state._playedUnderControl
+            else state._playedUnderControl = previous
+          },
+        }
+      }
       case 'beneath': {
         const channel = (inv.assets || []).find(asset => asset.id === candidate.sourceId
           && registeredEntry(asset.code)?.beneathPlayAsIfInHand === true && !asset.exhausted)
@@ -699,7 +728,7 @@ export function createPlayChannels(deps) {
         if (!owner || owner === inv || owner.location !== inv.location) return { ok: false }
         const at = (owner.hand || []).lastIndexOf(candidate.code)
         if (at < 0) return { ok: false }
-        owner.hand.splice(at, 1)
+        spliceHand(owner, at, 1)
         inv.hand.push(candidate.code)
         const previous = state._playedFromOtherHand
         const context = {
@@ -729,8 +758,11 @@ export function createPlayChannels(deps) {
 
   // 取出后二次校验失败（资源不足等）：把牌放回原处，避免凭空消失。
   function putBack(state, inv, candidate, handIndex) {
-    if (Number.isInteger(handIndex) && inv.hand[handIndex] === candidate.code) inv.hand.splice(handIndex, 1)
+    if (Number.isInteger(handIndex) && inv.hand[handIndex] === candidate.code) spliceHand(inv, handIndex, 1)
     switch (candidate.channel) {
+      case 'sharedSetAside':
+        (state.sharedPlayCards ||= []).push({ id: candidate.sourceId, code: candidate.code, ownerSeat: candidate.move.ownerSeat })
+        break
       case 'beneath':
         inv.beneath ||= []
         inv.beneath.push(candidate.code)
@@ -796,6 +828,18 @@ export function createPlayChannels(deps) {
     const candidate = entryOf(state, inv, move)
     if (!candidate) return null
     switch (candidate.channel) {
+      case 'sharedSetAside': {
+        const copies = inv.hand.filter(code => code === candidate.code).length
+        const shared = takeToHand(state, inv, candidate, events)
+        if (!shared.ok) return null
+        shared.apply()
+        return { toHand: true, handCode: candidate.code, handIndex: shared.handIndex, restore() {
+          shared.restore()
+          if (inv.hand.filter(code => code === candidate.code).length > copies) {
+            putBack(state, inv, candidate, inv.hand.lastIndexOf(candidate.code))
+          }
+        } }
+      }
       case 'hunch': {
         if (inv.hunchRevealed !== move.cardId) return null
         const discount = hunchDeck.playDiscount(state, inv, move.cardId) || 0
@@ -841,7 +885,7 @@ export function createPlayChannels(deps) {
         if (!owner || owner === inv || owner.location !== inv.location) return null
         const at = (owner.hand || []).lastIndexOf(move.cardId)
         if (at < 0) return null
-        owner.hand.splice(at, 1)
+        spliceHand(owner, at, 1)
         inv.hand.push(move.cardId)
         const context = {
           seat: inv.seat, fromSeat: owner.seat, code: move.cardId,
@@ -1020,6 +1064,7 @@ export function createPlayChannels(deps) {
       case 'threat': return `threat:${candidate.instanceId ?? candidate.code}`
       case 'deckTop': return 'deckTop'
       case 'otherHand': return `otherHand:${candidate.move?.ownerSeat ?? '?'}:${candidate.code}`
+      case 'sharedSetAside': return `sharedPlay:${candidate.sourceId}`
       default: return candidate.channel
     }
   }

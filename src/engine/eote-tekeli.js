@@ -127,6 +127,13 @@ export function tekeliDraw(state) {
  * 返回 `{ code, destination, seat }`；牌库未初始化返回 false。是否已从原区域移出
  * 由弱点结算调用方负责（本原语不做来源猜测、不重复检查副本）。
  */
+export function returnTekeliToShuffledDeck(state, codes) {
+  const deck = scenarioDeckOf(state)
+  if (!deck || !codes.length) return false
+  deck.deck = shuffleWithRandom(state, [...deck.deck, ...codes])
+  return true
+}
+
 export function tekeliReturn(state, code, { destination = 'bottom', seat = null, shuffle = null } = {}) {
   requireState(state)
   if (typeof code !== 'string' || !code) throw new TypeError('忒咳哩-哩 code 必须是非空字符串')

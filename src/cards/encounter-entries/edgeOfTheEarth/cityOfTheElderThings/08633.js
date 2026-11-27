@@ -14,8 +14,8 @@ export default {
       {
         rule: "towerStudy",
         values: [
-          "-2",
-          "-2"
+          -2,
+          -2
         ],
         remember: "theTeamStudiedTheHistoryOfTheElderThings",
         label: "花费 2 个「-2」钥匙：抽 2 张牌、获得 2 资源、移除 2 个 [frost]（记录）"

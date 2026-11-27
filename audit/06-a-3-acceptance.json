@@ -3,7 +3,7 @@
   "unit": "06-a-3",
   "profile": {
     "id": "tde-search-for-kadath-a-2026-11",
-    "scope": "食梦者 06 段 The Search for Kadath（sfk，06110–06132）29 条目录记录。15 条通过五维验收；14 条因声明未接线、背面模板重复手写或字段误判暂不切换。",
+    "scope": "食梦者 06 段 The Search for Kadath（sfk，06110–06132）29 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 29,
-    "verified": 15,
-    "unverified": 14,
+    "verified": 29,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 408
+    "testsPassed": 414
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
-      "sha256": "b02d8e46e4dba0b827191e743c1f6e17c9a028180553e1da722a1f62ae2526bf"
+      "sha256": "556a20d309d7dd0a8533880f2816ae879267219b318eecd3dce6263fc40ac82e"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-1.test.mjs",
@@ -37,7 +37,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
-      "sha256": "579fe5855982c0f041a34245e27ebd896106695b94c23eff1665d6a7ed087a76"
+      "sha256": "8efcb2720a422bcdc935c9b4d3cc1fbce24ef3b6b20aa94cf93a7dd69d4da108"
     },
     {
       "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
@@ -189,57 +189,125 @@
       "code": "06120",
       "name": "穿过幻梦境的旅程",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`agendaRule.portResign: true` 在整个仓库无读点（正面撤退实际由 definition 的港口地点 `resign: true` 提供）；声明字段未接线，按未实现计。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06120 06121 正面：真实合法行动仅在港口提供撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06120 穿过幻梦境的旅程：背面把 2 张冷原海盗与遭遇弃牌堆洗入遭遇牌库；港口正面可撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06120 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "议程背面：06120 把 2 张冷原海盗与遭遇弃牌堆一起洗入遭遇牌库"
+        }
+      ]
     },
     {
       "code": "06121",
       "name": "外神的使徒",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 06120：`agendaRule.portResign: true` 无读点（撤退由 definition 港口 resign 提供）；背面「每位幸存调查员被击败」已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06120 06121 正面：真实合法行动仅在港口提供撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06121 外神的使徒：背面每位存活调查员被击败；正面同为港口撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06121 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06122",
       "name": "斯凯王国",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写（第 1/5 份）：背面「洗回遭遇弃牌堆 + 在未造访区域中选择 + 全部造访→结局 1」与 purgeEncounterCode 在 06122–06126 各手写一份（purge helper 4 份复制），未上收共享原语/数据键；06123–06126 甚至已声明 `regionOptions`/`removeFromGameCodes` 却无人读，说明共享化半途而废。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06122 斯凯王国：背面移出乌撒之猫/一群乌尼斯/祖格鼠、洗回千面祭司并选择下一区域"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06122 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06123",
       "name": "奥瑞巴岛",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：条目声明 `actRule.regionOptions` 与 `removeFromGameCodes`，但引擎/内容层无任何读点（onReveal 自行硬编码同一份数据）；声明字段按未实现计。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06123 奥瑞巴岛：背面排除已造访区域；全部造访后进入结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06123 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06124",
       "name": "昔日厄运",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`actRule.regionOptions` / `actRule.removeFromGameCodes` 无读点（onReveal 内联自己的 REGIONS 与 purge 卡号）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06124 往事之祸：背面把伊伯生物移出游戏并选择未造访区域"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06124 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06125",
       "name": "找寻黑夜",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`actRule.regionOptions` / `actRule.removeFromGameCodes` 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06125 探寻夜色：背面把夜色怪群与跟踪的蝎狮移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06125 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06126",
       "name": "王之判决",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`actRule.regionOptions` / `actRule.removeFromGameCodes` 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06126 国王的敕令：背面把蠕行之雾移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06126 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06127",
@@ -250,6 +318,10 @@
         {
           "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
           "test": "06127 乌撒：掩藏地点、翻面门槛为「无线索」、读过故事后不能再翻"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06127b 强行入庙：真实场景中的乌撒之猫只从放在一边生成一次"
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
@@ -269,9 +341,21 @@
       "code": "06127b",
       "name": "神秘生物",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「将乌撒之猫敌人生成并与你交战」只调 api.spawnEngaged，未先用 api.takeFromSetAside 从「放在一边」取出该卡：setupLocations 把 CATS_OF_ULTHAR 放进 scenarioZones.setAside（behavior.js:353-364），spawnEnemy 不从 setAside 移除，导致同一张卡同时处于场内与场外集合（状态不变量被破坏；本关后续无再生成点，玩法影响低）。项目内既有口径见 05122/05126/08619（spawn 前 takeFromSetAside）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06127b 强行入庙：真实场景中的乌撒之猫只从放在一边生成一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06127b 神秘生物：检查剧本日志——猫群贡品失去行动并结束回合；强行入庙生成乌撒之猫"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06127b 已验收 · story 关联面 06127"
+        }
+      ]
     },
     {
       "code": "06128",
@@ -286,6 +370,10 @@
         {
           "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
           "test": "06128 斯凯河：未翻面时离开检定（意志/敏捷二选一），失败翻面并结算背面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06128b 如梦恐惧：实战弃牌后仅将选中的物理副本从弃牌堆生成"
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
@@ -309,9 +397,25 @@
       "code": "06128b",
       "name": "如梦恐惧",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「弃遭遇牌库顶直到弃出生物敌人，并将其生成与你交战」：实现用 api.discardEncounterTop 把该敌人弃进遭遇弃牌堆后直接 api.spawnEngaged，未调用 api.takeEncounterDiscard 将其从弃牌堆取出；同一卡牌同时留在遭遇弃牌堆与场上，之后若弃牌堆洗回遭遇牌库（如 06123/24/25/26 背面）可被再次抽出重复生成。项目内既有口径见 06101/06185（生成前 takeEncounterDiscard）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06128b 如梦恐惧：实战弃牌后仅将选中的物理副本从弃牌堆生成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06128b 如梦恐惧：斯凯河已有生物敌人时改为加 1 张蜂拥卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06128b 如梦恐惧：斯凯河无生物敌人时弃遭遇牌库顶直到生物敌人并交战"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06128b 已验收 · story 关联面 06128"
+        }
+      ]
     },
     {
       "code": "06129",
@@ -341,9 +445,17 @@
       "code": "06129b",
       "name": "无穷秘密",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：条目声明 `assetRule.signs: 1`，全仓库无读点（实际 resolve 直接 api.markers.add）；声明字段按未实现计。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06129b 无穷秘密：发现 1 个神迹（参考卡资源 +1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06129b 已验收 · story 关联面 06129"
+        }
+      ]
     },
     {
       "code": "06130",
@@ -377,33 +489,97 @@
       "code": "06130b",
       "name": "卡达瑟隆之柱",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`assetRule.signs: 1` 无读点（resolve 自行 api.markers.add）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06130b 卡达瑟隆之柱 / 06134b 诸神庙宇：神迹 +1 并洗入 1 张黑暗夜魇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06130b 卡达瑟隆之柱：神迹 +1 并把 1 张放在一边的黑暗夜魇洗入遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06130b 已验收 · story 关联面 06130"
+        }
+      ]
     },
     {
       "code": "06131",
       "name": "萨尔纳斯",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「成功且至多超过难度 1 点」判定错值：locationRule.afterTest 用 `Number(result.successBy) > 1` 提前返回，但引擎传给章节 afterTest 的 result（src/engine/tests.js:1875-1885 构造）**没有 successBy 字段**（successBy 只在 skillTestSuccess 窗口上下文与 commit onSuccessResolve 的内联对象里），于是 NaN>1 恒为 false → 任何成功调查萨尔纳斯都会受到 1 点恐惧，而非仅在「≤1 点」时。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06131 萨尔纳斯：不知道伊伯的事情不能翻面；成功调查萨尔纳斯受到 1 点恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-theSearchForKadath.test.mjs",
+          "test": "06131 萨尔纳斯：不知道伊伯的事情时不能翻面（actionBlocked）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06131 萨尔纳斯：用实际调查检定的价值和难度结算成功差值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06131b 萨尔纳斯的覆灭：发现 1 个神迹（参考卡资源 +1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06131 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06131b 已验收 · story 关联面 06131"
+        }
+      ]
     },
     {
       "code": "06131b",
       "name": "萨尔纳斯的覆灭",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「声明即接线」违规：`assetRule.signs: 1` 无读点（resolve 自行 api.markers.add）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06131b 萨尔纳斯的覆灭：发现 1 个神迹（参考卡资源 +1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06131b 已验收 · story 关联面 06131"
+        }
+      ]
     },
     {
       "code": "06132",
       "name": "伊伯遗迹",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「揭示 [skull] 或 [cultist] 标记后」只读 `result.token`（本次检定最终结算标记），未读 `result.drawn`（全部揭示标记）。[cultist] 自身「再揭示一个标记」，最终 token 通常是第二个标记 → 调查伊伯遗迹时揭示 cultist 永远不触发弃支援（缺分支；behavior.js 的 resolveChaosEffectsAfterTest 用 `has()` 同时读 token 与 drawn，可作为同仓口径对照）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06132 伊伯遗迹：真实检定首揭异教徒、最后揭数字仍弃掉玩家支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06132 伊伯遗迹：调查时揭示 skull/cultist 标记后弃掉一个你控制的支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard3.test.mjs",
+          "test": "06132b 亡者之魂：记住调查员「知道伊伯发生的事情」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06132 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06132b 已验收 · story 关联面 06132"
+        }
+      ]
     },
     {
       "code": "06132b",

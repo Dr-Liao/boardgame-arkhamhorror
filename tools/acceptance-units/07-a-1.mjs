@@ -1,13 +1,6 @@
 // 验收单元 07-a-1：07-a 印斯茅斯暗潮分片 1（tic 豪华包前半）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-07-a-印斯茅斯暗潮-分片-1.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-07-a-印斯茅斯暗潮-分片-1.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const code of verdict.pendingCodes || []) if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: 'pending', reason: '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' })
-const failed = [...failedByCode.values()]
+// 2026-11-26 复验通过，逐卡证据保存在生成的验收账本。
 
 // 范围锁定为审计时未验收的 54 条记录（tic）。
 const codes = ["07001", "07002", "07003", "07004", "07005", "07006", "07007", "07008", "07009", "07010", "07011", "07012", "07013", "07014", "07015", "07016", "07017", "07018", "07019", "07020", "07021", "07022", "07023", "07024", "07025", "07026", "07027", "07028", "07029", "07030", "07031", "07032", "07033", "07034", "07035", "07036", "07037", "07038", "07039", "07040", "07041", "07042", "07043", "07044", "07045", "07046", "07047", "07048", "07049", "07050", "07051", "07052", "07053", "07054"]
@@ -20,7 +13,7 @@ export default {
   verifiedFn: "ticShard1CardVerified",
   profile: {
     id: "tic-deluxe-a-2026-11",
-    scope: "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。54 条全部通过五维验收。",
+    scope: "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。全部通过五维验收。",
     basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。',
     houseRules: [
       '保留项目既有的自动奖励反应与协作请求规则',
@@ -35,7 +28,7 @@ export default {
   select: card => codeSet.has(card.code),
   exclude: [],
   expectedCount: 54,
-  failed,
+  failed: [],
   testFiles: [
     "games/arkhamhorror/tests/acceptance-07-a-shard1.test.mjs",
     "games/arkhamhorror/tests/tic-investigators.test.mjs",

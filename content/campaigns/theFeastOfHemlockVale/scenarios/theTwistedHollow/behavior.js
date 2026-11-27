@@ -164,7 +164,7 @@ export function isDarkLocation(state, location) {
   if (!lantern || !lantern.lit || !lantern.location) return true
   if (location.id === lantern.location) return false
   const lanternLocation = findLocation(state, lantern.location)
-  if (lanternLocation && (lanternLocation.connections || []).includes(location.id)) return false
+  if (lantern.version === 'boon' && lanternLocation?.connections?.includes(location.id)) return false
   return true
 }
 
@@ -565,6 +565,11 @@ export function flipLantern(state, api = {}, options = {}) {
   asset.lit = nextLit
   asset.face = nextLit ? 'lit' : 'unlit'
   asset.exhausted = nextLit ? false : asset.exhausted
+  if (!nextLit) {
+    asset.controllerSeat = null
+    recordEntry.controllerSeat = null
+  }
+  recordEntry.exhausted = asset.exhausted
   recordEntry.code = nextCode
   recordEntry.lit = nextLit
   recordEntry.face = nextLit ? 'lit' : 'unlit'
@@ -963,14 +968,77 @@ function applyDirectHorror(state, inv, amount, api = {}) {
 }
 
 /** 引擎真实入口：地点揭示后（议程 1 正面强制 + 该地点的强制效果）。 */
-export function locationRevealed(state, location, api = {}, seat = null) {
+export function locationRevealed(state, location, api = {}, seat = null, { from, ignoreForced = false } = {}) {
   if (!location) return false
-  resolveLocationReveal(state, location, api, seat)
+  if (!ignoreForced && !suppressLanternForestReveal(state, location, seat, from, api)) {
+    resolveLocationReveal(state, location, api, seat)
+  }
   if (currentAgendaFrontCode(state) === AGENDA_CODES[0]) {
     placeWoodsAround(state, location.id, api)
     return true
   }
   return false
+}
+
+function lanternAsset(state) {
+  const record = lanternRecord(state)
+  return (state.storyAssets || []).find(asset => asset.id === record?.id)
+}
+
+function lanternLocation(state, asset) {
+  return state.investigators[asset?.controllerSeat]?.location || asset?.location
+}
+
+export function locationEntered(state, inv, location) {
+  const asset = lanternAsset(state)
+  if (!asset || asset.controllerSeat !== inv.seat || !location) return
+  asset.location = location.id
+  lanternRecord(state).location = location.id
+}
+
+function exhaustLantern(state, asset) {
+  asset.exhausted = true
+  lanternRecord(state).exhausted = true
+}
+
+function suppressLanternForestReveal(state, location, seat, from, api) {
+  const asset = lanternAsset(state)
+  const owner = state.investigators[asset?.controllerSeat]
+  const rule = flagsOf(codeOf(asset)).lanternRules
+  const printed = flagsOf(codeOf(location)).onReveal || REVEAL_BY_CODE[codeOf(location)]
+  const forest = (location.traits || []).some(trait => trait.toLowerCase() === 'forest')
+  if (!from || !rule?.suppressForestReveal || asset.exhausted || !owner || owner.defeated || owner.resigned
+    || !printed || !forest || (seat !== owner.seat && from !== owner.location)) return false
+  const selected = api.choose?.({ kind: 'reaction', seat: owner.seat, source: asset.id, canSkip: true,
+    prompt: '横置山谷提灯以忽略这个森林地点的揭示强制效果？',
+    options: [{ id: 'skip', label: '跳过' }, { id: 'exhaust', label: '横置提灯并忽略强制效果' }] })
+  if (selected !== 'exhaust') return false
+  exhaustLantern(state, asset)
+  return true
+}
+
+export function replaceStoryAssetDeparture(state, asset, api = {}) {
+  if (asset !== lanternAsset(state)) return false
+  const record = lanternRecord(state)
+  const from = state.investigators[asset.controllerSeat]?.location || asset.location
+  const location = nearestLocationTo(state, from)
+  if (!location) return false
+  flipLantern(state, api, { lit: false, location })
+  asset.controllerSeat = null
+  record.controllerSeat = null
+  return true
+}
+
+export function investigatorEliminated(state, inv, clues, api = {}) {
+  const asset = lanternAsset(state)
+  if (asset?.controllerSeat === inv.seat) replaceStoryAssetDeparture(state, asset, api)
+}
+
+export function enemyConnections(state, enemy, origin) {
+  const clearing = (state.locations || []).find(location => location.revealed
+    && flagsOf(codeOf(location)).enemyConnectedFromOtherLocations)
+  if (!clearing || clearing.id === origin?.id) return []
+  return [clearing.id]
 }
 
 /** 引擎真实入口：调查结果窗口（尸林「成功调查后受到 1 点恐惧」）。 */
@@ -1052,6 +1120,14 @@ export function actions(state, inv) {
   const actCode = currentActCode(state)
   const agendaCode = currentAgendaFrontCode(state)
   const hasUnrevealedNeighbor = adjacentUnrevealed(state, inv).length > 0
+  const lanternAt = lanternAsset(state)
+  const lanternRules = flagsOf(codeOf(lanternAt)).lanternRules
+  if (lanternAt?.location === inv.location && lanternAt.controllerSeat == null && lanternRules?.recover === 'action') {
+    moves.push({ action: 'scenarioAction', rule: 'twistedHollowRecoverLantern', actions: 1, label: '取得并点燃山谷提灯' })
+  }
+  if (lanternLocation(state, lanternAt) === inv.location && !lanternAt?.exhausted && lanternRules?.peekAndMove && hasUnrevealedNeighbor) {
+    moves.push({ action: 'scenarioAction', rule: 'twistedHollowLanternPeek', actions: 1, label: '横置山谷提灯：查看相邻地点并可以移动' })
+  }
   // 幕 2 正面：[fast] 花费 1 线索，查看相邻地点的已揭示面。
   if (actCode === ACT_CODES[1] && hasUnrevealedNeighbor) {
     moves.push((inv.clues || 0) >= 1
@@ -1091,6 +1167,13 @@ export function actions(state, inv) {
   return moves
 }
 
+export function fastActions(state, inv) {
+  const asset = lanternAsset(state)
+  if (asset?.location !== inv?.location || !asset || asset.controllerSeat != null
+    || flagsOf(codeOf(asset)).lanternRules?.recover !== 'fast') return []
+  return [{ action: 'scenarioAction', rule: 'twistedHollowRecoverLantern', actions: 0, label: '快速：取得并点燃山谷提灯' }]
+}
+
 function chooseNeighbor(state, inv, api) {
   const candidates = adjacentUnrevealed(state, inv)
   if (!candidates.length) return null
@@ -1106,7 +1189,7 @@ function chooseNeighbor(state, inv, api) {
   return picked
 }
 
-function lookAtAdjacent(state, inv, api, { allowMove = false } = {}) {
+function lookAtAdjacent(state, inv, api, { allowMove = false, ignoreForced = false } = {}) {
   const target = chooseNeighbor(state, inv, api)
   if (!target) return false
   const peeked = typeof api.peekLocation === 'function' ? api.peekLocation(inv.seat, target.id) : false
@@ -1122,7 +1205,7 @@ function lookAtAdjacent(state, inv, api, { allowMove = false } = {}) {
     })
     : 'skip'
   if (answer !== 'move') return true
-  if (typeof api.moveInvestigator === 'function') api.moveInvestigator(inv.seat, target.id)
+  if (typeof api.moveInvestigator === 'function') api.moveInvestigator(inv.seat, target.id, { ignoreLocationForced: ignoreForced })
   else inv.location = target.id
   info(api, `${inv.name} 移动到「${target.name}」。`)
   return true
@@ -1130,6 +1213,21 @@ function lookAtAdjacent(state, inv, api, { allowMove = false } = {}) {
 
 export function performAction(state, inv, move, api = {}) {
   if (!move || !inv) return false
+  if (move.rule === 'twistedHollowRecoverLantern') {
+    const asset = lanternAsset(state)
+    const rule = flagsOf(codeOf(asset)).lanternRules
+    if (!rule?.recover || asset.controllerSeat != null || asset.location !== inv.location) return false
+    asset.controllerSeat = inv.seat
+    lanternRecord(state).controllerSeat = inv.seat
+    return Boolean(flipLantern(state, api, { lit: true, location: inv.location }))
+  }
+  if (move.rule === 'twistedHollowLanternPeek') {
+    const asset = lanternAsset(state)
+    if (!flagsOf(codeOf(asset)).lanternRules?.peekAndMove || asset.exhausted
+      || lanternLocation(state, asset) !== inv.location || !adjacentUnrevealed(state, inv).length) return false
+    exhaustLantern(state, asset)
+    return lookAtAdjacent(state, inv, api, { allowMove: true, ignoreForced: true })
+  }
   if (move.rule === 'twistedHollowLookAdjacent') {
     if (currentActCode(state) !== ACT_CODES[1] || (inv.clues || 0) < 1) return false
     if (typeof api.spendClues === 'function') api.spendClues(inv.seat, 1)
@@ -1784,6 +1882,13 @@ export function allResigned(state, api = {}) {
 
 /** 引擎读点 phaseBegan：敌人阶段紧接调查阶段之后，用它结算「调查阶段结束时」。 */
 export function phaseBegan(state, phase, api = {}) {
+  if (phase === 'upkeep') {
+    const asset = lanternAsset(state)
+    if (asset?.exhausted) {
+      asset.exhausted = false
+      lanternRecord(state).exhausted = false
+    }
+  }
   if (phase !== 'enemy') return false
   if (currentAgendaFrontCode(state) !== AGENDA_CODES[0]) return false
   let handled = false
@@ -2059,13 +2164,18 @@ export const behavior = {
   setupLocations,
   locationPlaced,
   locationRevealed,
+  locationEntered,
   afterDeckSetup,
   investigateResult,
   locationShroudModifier,
   enemyStatModifier,
   preyRank,
   actions,
+  fastActions,
   performAction,
+  replaceStoryAssetDeparture,
+  investigatorEliminated,
+  enemyConnections,
   phaseBegan,
   enemySpawned,
   enemyMoved,

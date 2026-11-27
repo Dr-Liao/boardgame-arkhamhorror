@@ -9,7 +9,8 @@ import { readdirSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import '../src/engine/engine.js'
+import { createGameState, legalMoves, performTest, scenarioRuntime, startScenario } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredCodes } from '../src/engine/ability.js'
 import { canFlipVeiledLocation } from '../src/engine/veiled.js'
 import { swarmCountOf } from '../src/engine/swarm.js'
@@ -40,6 +41,36 @@ const CREATURE_ENEMY = Object.values(ALL_CARDS)
   .find(card => card.type === 'enemy' && card.pack === 'sfk'
     && (card.traits || []).map(trait => String(trait).toLowerCase()).includes('creature')).code
 const NON_ENEMY_CARD = '01001'
+
+function liveKadath(seed) {
+  const state = createGameState({ seed, playerInvestigator: '01002' }, [{ seat: 0 }])
+  state.campaign.records.theCatsCollectedTheirTributeFromTheZoogs = true
+  startScenario(state, 0, [], 'theSearchForKadath')
+  state.pendingChoice = null
+  state.continuation = null
+  state.investigators[0].hand = []
+  return state
+}
+
+function investigateWithTokens(state, locationId, difficulty, tokens) {
+  const location = state.locations.find(item => item.id === locationId)
+  state.investigators[0].location = locationId
+  state.debugNextTokens = tokens
+  let result
+  const execute = (draft, seat, move, events) => performTest(draft, seat, 'intellect', difficulty, {
+    source: { label: '调查', name: location.name, code: location.originalCode || location.code },
+    testTarget: { kind: 'location', id: locationId, actionKind: 'investigate' },
+    events,
+    resolve: outcome => { result = outcome },
+  })
+  resolveTransaction(state, 0, { action: 'investigate' }, execute)
+  while (state.pendingChoice) {
+    const { seat, options } = state.pendingChoice
+    const optionId = options.find(option => ['done', 'skip'].includes(option.id))?.id || options[0].id
+    resolveTransaction(state, seat, { action: 'choose', optionId }, execute)
+  }
+  return result
+}
 
 function makeState({ numInvestigators = 2, difficulty = 'standard', records = {} } = {}) {
   const scenario = clone(definition)
@@ -126,6 +157,13 @@ function makeApi(state, options = {}) {
       if (discardIndex < 0) return false
       state.encounterDiscard.splice(discardIndex, 1)
       return true
+    },
+    takeEncounterDeckCard: code => {
+      const index = state.encounterDeck.lastIndexOf(code)
+      return index >= 0 ? state.encounterDeck.splice(index, 1)[0] : null
+    },
+    removeFromGameCards: code => {
+      if (!state.removedFromGame.includes(code)) state.removedFromGame.push(code)
     },
     takeEncounterDiscard: code => {
       const index = state.encounterDiscard.lastIndexOf(String(code))
@@ -346,6 +384,17 @@ test('06120 穿过幻梦境的旅程：背面把 2 张冷原海盗与遭遇弃�
   for (const port of PORT_LOCATIONS) assert.equal(definition.locations[port].resign, true)
 })
 
+test('06120 06121 正面：真实合法行动仅在港口提供撤退', () => {
+  const state = liveKadath('06120-06121-port')
+  for (const agendaIndex of [0, 1]) {
+    state.agendaIndex = agendaIndex
+    state.investigators[0].location = 'ulthar'
+    assert.ok(!legalMoves(state, 0).some(move => move.action === 'resign'))
+    state.investigators[0].location = 'dylathLeen'
+    assert.ok(legalMoves(state, 0).some(move => move.action === 'resign'))
+  }
+})
+
 test('06121 外神的使徒：背面每位存活调查员被击败；正面同为港口撤退', () => {
   const state = makeState({ numInvestigators: 3 })
   const api = makeApi(state)
@@ -382,10 +431,10 @@ test('06122 斯凯王国：背面移出乌撒之猫/一群乌尼斯/祖格鼠、
   assert.equal(state.encounterDeck.includes('06106'), false)
   assert.equal(state.encounterDeck.includes('06107'), false)
   assert.equal(state.encounterDiscard.includes('06108'), false)
+  assert.ok(['06106', '06107', '06108', '06109'].every(code => state.removedFromGame.includes(code)))
   assert.equal(state.scenarioZones.setAside.filter(code => code === PRIEST_OF_A_THOUSAND_MASKS).length, 0)
   assert.equal(state.encounterDeck.filter(code => code === PRIEST_OF_A_THOUSAND_MASKS).length, 3)
-  // actReveal 在同一调用内结算区域设置（behavior 读 pendingRegion 后清除）。
-  assert.equal(state.scenarioFlags.pendingRegion, null)
+  // actReveal 在同一调用内结算区域设置。
   assert.deepEqual(state.investigators.map(inv => inv.location), ['kadatheron', 'kadatheron'])
   for (const id of ['kadatheron', 'sarnath', 'ruinsOfIb']) assert.ok(state.locations.some(location => location.id === id), `${id} 应入场`)
   assert.ok(state.enemies.some(enemy => enemy.code === BEINGS_OF_IB && enemy.location === 'ruinsOfIb'))
@@ -471,6 +520,7 @@ test('06127b 神秘生物：检查剧本日志——猫群贡品失去行动并�
     records: { theCatsCollectedTheirTributeFromTheZoogs: true, theInvestigatorsForcedTheirWayIntoTheTemple: true },
   })
   state.investigators[0].actionsLeft = 2
+  state.scenarioZones.setAside = [CATS_OF_ULTHAR]
   state.locations = [{ id: 'ulthar', name: '乌撒', revealed: true }]
   const api = makeApi(state)
   entryOf('06127b').assetRule.resolve(state, api, { inv: state.investigators[0], location: state.locations[0] })
@@ -478,6 +528,24 @@ test('06127b 神秘生物：检查剧本日志——猫群贡品失去行动并�
   assert.deepEqual(api.calls.endTurn, [0])
   assert.equal(api.calls.spawnedEngaged.at(-1).code, CATS_OF_ULTHAR)
   assert.equal(api.calls.spawnedEngaged.at(-1).seat, 0)
+  assert.ok(!state.scenarioZones.setAside.includes(CATS_OF_ULTHAR))
+})
+
+test('06127b 强行入庙：真实场景中的乌撒之猫只从放在一边生成一次', () => {
+  const state = liveKadath('06127b-set-aside')
+  delete state.campaign.records.theCatsCollectedTheirTributeFromTheZoogs
+  state.campaign.records.theInvestigatorsForcedTheirWayIntoTheTemple = true
+  const inv = state.investigators[0]
+  const location = state.locations.find(item => item.id === inv.location)
+  assert.ok(state.scenarioZones.setAside.includes(CATS_OF_ULTHAR))
+  const api = scenarioRuntime(state, [])
+  for (let attempt = 0; attempt < 2; attempt++) {
+    entryOf('06127b').assetRule.resolve(state, api, { inv, location })
+  }
+  const cats = state.enemies.filter(enemy => enemy.code === CATS_OF_ULTHAR && !enemy.hostId)
+  assert.equal(cats.length, 1)
+  assert.equal(cats[0].engagedSeat, 0)
+  assert.ok(!state.scenarioZones.setAside.includes(CATS_OF_ULTHAR))
 })
 
 test('06128 斯凯河：未翻面时离开检定（意志/敏捷二选一），失败翻面并结算背面', () => {
@@ -505,8 +573,28 @@ test('06128b 如梦恐惧：斯凯河无生物敌人时弃遭遇牌库顶直到�
   entryOf('06128b').assetRule.resolve(state, api, { inv: state.investigators[0], location: state.locations[0] })
   assert.ok(state.encounterDeck.includes(NON_ENEMY_CARD) === false, '非生物卡应被弃掉')
   assert.equal(state.encounterDiscard.includes(NON_ENEMY_CARD), true)
+  assert.ok(!state.encounterDiscard.includes(CREATURE_ENEMY))
   assert.deepEqual(api.calls.spawnedEngaged.at(-1), { code: CREATURE_ENEMY, locationId: 'skaiRiver', seat: 0 })
   assert.equal(api.calls.swarmPlaced.length, 0)
+})
+
+test('06128b 如梦恐惧：实战弃牌后仅将选中的物理副本从弃牌堆生成', () => {
+  const state = liveKadath('06128b-encounter-discard')
+  const inv = state.investigators[0]
+  inv.location = 'skaiRiver'
+  state.enemies = state.enemies.filter(enemy => enemy.location !== inv.location)
+  const api = scenarioRuntime(state, [])
+  assert.ok(api.takeFromSetAside('06146'))
+  state.encounterDeck = ['06146', '06097']
+  state.encounterDiscard = ['06146']
+  const location = state.locations.find(item => item.id === inv.location)
+  entryOf('06128b').assetRule.resolve(state, api, { inv, location })
+  assert.deepEqual(state.encounterDeck, [])
+  assert.deepEqual(state.encounterDiscard, ['06146', '06097'])
+  const spawned = state.enemies.filter(enemy => enemy.code === '06146')
+  assert.equal(spawned.length, 1)
+  assert.equal(spawned[0].engagedSeat, 0)
+  assert.equal(spawned[0].location, 'skaiRiver')
 })
 
 test('06128b 如梦恐惧：斯凯河已有生物敌人时改为加 1 张蜂拥卡', () => {
@@ -588,6 +676,19 @@ test('06131 萨尔纳斯：不知道伊伯的事情不能翻面；成功调查�
   assert.deepEqual(api.calls.horror, [{ seat: 0, amount: 1 }])
 })
 
+test('06131 萨尔纳斯：用实际调查检定的价值和难度结算成功差值', () => {
+  const state = liveKadath('06131-success-margin')
+  const api = scenarioRuntime(state, [])
+  api.place('sarnath', 0)
+  state.investigators[0].assets = []
+  const wide = investigateWithTokens(state, 'sarnath', 3, ['0'])
+  assert.equal(wide.value - wide.difficulty, 2)
+  assert.equal(state.investigators[0].horror, 0)
+  const narrow = investigateWithTokens(state, 'sarnath', 4, ['0'])
+  assert.equal(narrow.value - narrow.difficulty, 1)
+  assert.equal(state.investigators[0].horror, 1)
+})
+
 test('06131b 萨尔纳斯的覆灭：发现 1 个神迹（参考卡资源 +1）', () => {
   const state = makeState()
   const api = makeApi(state)
@@ -606,6 +707,19 @@ test('06132 伊伯遗迹：调查时揭示 skull/cultist 标记后弃掉一个�
   behavior.afterTest(state, inv, result, api, {})
   assert.deepEqual(api.calls.discardedAssets, [{ seat: 0, assetId: 'asset-a' }])
   assert.equal(inv.assets.length, 0)
+})
+
+test('06132 伊伯遗迹：真实检定首揭异教徒、最后揭数字仍弃掉玩家支援', () => {
+  const state = liveKadath('06132-reveal-cultist')
+  const api = scenarioRuntime(state, [])
+  api.place('ruinsOfIb', 0)
+  state.investigators[0].assets = []
+  api.giveAsset(0, '01018')
+  const result = investigateWithTokens(state, 'ruinsOfIb', 1, ['cultist', '0'])
+  assert.deepEqual(result.drawn, ['cultist', '0'])
+  assert.equal(result.token, '0')
+  assert.equal(state.investigators[0].assets.length, 0)
+  assert.ok(state.investigators[0].discard.includes('01018'))
 })
 
 test('06132b 亡者之魂：记住调查员「知道伊伯发生的事情」', () => {

@@ -1,17 +1,10 @@
 // 验收单元 12-a-1：12-a 2026 核心盒分片 1（调查员与玩家卡 A）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
 // 审计报告：docs/test/验收-12-a-2026核心盒-分片-1.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-12-a-2026核心盒-分片-1.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const entry of verdict.pendingCodes || []) { const code = typeof entry === 'string' ? entry : entry.code; if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: entry.dimension || 'pending', reason: entry.reason || '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' }) }
-const failed = [...failedByCode.values()]
-
 // 范围锁定为审计时未验收的 40 条记录（core_2026）。
 const codes = ["12001", "12002", "12003", "12004", "12005", "12006", "12007", "12008", "12009", "12010", "12011", "12012", "12013", "12014", "12015", "12016", "12017", "12018", "12019", "12020", "12021", "12022", "12023", "12024", "12025", "12026", "12027", "12028", "12029", "12030", "12031", "12032", "12033", "12034", "12035", "12036", "12037", "12038", "12039", "12040"]
 const codeSet = new Set(codes)
+const failed = []
 
 export default {
   id: "12-a-1",

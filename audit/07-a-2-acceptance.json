@@ -3,7 +3,7 @@
   "unit": "07-a-2",
   "profile": {
     "id": "tic-deluxe-b-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 tic 豪华包后半（07055–07107）54 条目录记录。52 条通过五维验收；2 条因 victory 数据语义判错暂不切换。",
+    "scope": "印斯茅斯暗潮 07 段 tic 豪华包后半（07055–07107）54 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 54,
-    "verified": 52,
-    "unverified": 2,
+    "verified": 54,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 296
   },
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
-      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+      "sha256": "dad8a46848dd19c8f5d092d5e0dbb1efedd6470f7477bd1f15e4bd89e9f342d8"
     },
     {
       "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
@@ -65,7 +65,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+      "sha256": "77085f74c7104b64befad15759c8cb5bd07adcf52e1734ae304d11f0aac4c52f"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
@@ -493,17 +493,33 @@
       "code": "07074",
       "name": "印斯茅斯监狱",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「在印斯茅斯监狱击败一个**没有胜利点**的敌人后：将其洗入线索牌堆」的核心分支对本案最常见的敌人（嫌疑敌人 07076–07081 的印刷数据 victory=0，以及 07062b 愤怒暴民 victory=0）永不触发：criteria 用 `!Object.hasOwn(ALL_CARDS[code],'victory')` 判断「没有胜利点」，而 victory:0 也是自有属性，于是被当成有胜利点。全仓库同为「有胜利点」的既有口径是 `Number(victory||0) > 0`（如 07280/_shared awardLocationVictory）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "test": "07074 Jail preserves printed Victory 0 and positive Victory, and requires the revealed location and its investigator"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
+          "test": "07074 Jail redirects an ordinary remote defeat by an investigator here to Leads and keeps defeat afters"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-harper-acts.test.mjs",
+          "test": "07074 印斯茅斯监狱：从迹象牌堆揭示即真实入场，不再 throw 未知遭遇卡（审计 M1 回归）"
+        }
+      ]
     },
     {
       "code": "07075",
       "name": "新格林教堂",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「查看线索牌堆顶牌；若它**没有胜利X**，弃掉它」对 victory:0 的牌（嫌疑敌人 07076–07081）判定反了：resolve 用 `Object.hasOwn(ALL_CARDS[code],'victory')`，于是没有胜利点的嫌疑敌人被当成有胜利点、不被弃掉；只有完全不带 victory 字段的牌才会被弃。行动可用性与线索牌堆顶/揭视读点正常。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07075 actual peek discards a non-Victory card and retains both Victory 0 and Victory 1"
+        }
+      ]
     },
     {
       "code": "07076",

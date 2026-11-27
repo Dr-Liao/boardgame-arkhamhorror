@@ -10,7 +10,7 @@ export default {
   implemented: true,
   locationRule: {
     tokenPenalty: {
-      tokens: ['skull', 'cultist', 'tablet', 'elder_thing', 'autofail'],
+      tokens: ['skull', 'cultist', 'tablet', 'elderthing', 'autofail'],
       damage: 1,
       loseAction: 1,
     },

@@ -23,6 +23,7 @@
 // api 缺省时回退 P2 原语（scenario-calendar.js / resident-record.js），与兄弟章节同一口径。
 // 本序曲**没有本章专属单卡条目**（全部规则在 definition/behavior）；共享的 The Vale / Day of the
 // Feast / Residents 卡由各自 worker 落条目，卡面规则读点见 `implementedEntryFlags`。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { changeRelationship, changeResidentNote } from '../../../../../src/engine/resident-record.js'
 // 战役层（records.js）是记录键/勘察/居民笔记的权威读点；本文件只读它，不写共享文件。
@@ -324,7 +325,7 @@ const discardCards = (state, inv, amount, api = {}) => {
   if (typeof api.discardChosen === 'function') return api.discardChosen(inv.seat, amount, 'codex8')
   if (typeof api.discardRandom === 'function') return api.discardRandom(inv.seat, amount)
   const hand = inv.hand || []
-  const removed = hand.splice(0, Math.min(amount, hand.length))
+  const removed = spliceHand(inv, 0, Math.min(amount, hand.length))
   inv.discard = [...(inv.discard || []), ...removed]
   return removed.length
 }

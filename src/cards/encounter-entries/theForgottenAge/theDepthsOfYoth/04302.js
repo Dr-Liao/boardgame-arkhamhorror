@@ -14,34 +14,27 @@ export default {
   name: '蛇族的愤怒',
   text: '显现 - 如果没有[[蛇族]]敌人处于追击中，本卡获得涌动。否则攻击值最高且处于追击中的[[蛇族]]敌人生成并与你交战。',
   encounterResolve(state, inv, card, api) {
-    state.scenarioZones ||= {}
     const pursuit = state.scenarioZones.pursuit || []
     const serpents = pursuit.filter(entry => isPursuitSerpent(state, entry.code))
     if (!serpents.length) {
       api.info?.('蛇族的愤怒：追击区域没有蛇族敌人，本卡获得涌动。')
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return { placed: false, surgeHandled: true }
     }
     const best = Math.max(...serpents.map(entry => pursuitFightOf(state, entry.code)))
-    const chosen = serpents.filter(entry => pursuitFightOf(state, entry.code) === best)[0]
-    const index = pursuit.indexOf(chosen)
-    if (index >= 0) pursuit.splice(index, 1)
-    const enemy = api.spawn(chosen.code, inv.location)
-    if (!enemy) {
-      pursuit.push(chosen)
-      return { placed: false, surgeHandled: true }
-    }
-    enemy.damageTaken = chosen.damageTaken || 0
-    if (!enemy.exhausted) {
-      if (typeof api.engage === 'function') api.engage(enemy, inv.seat)
-      else {
-        enemy.engagedSeat = inv.seat
-        if (!inv.engaged.includes(enemy.id)) inv.engaged.push(enemy.id)
-      }
-    }
+    const candidates = serpents.filter(entry => pursuitFightOf(state, entry.code) === best)
+    const selected = candidates.length === 1 ? 0 : Number(api.choose({
+      kind: 'enemy', source: '04302', seat: inv.seat,
+      prompt: '选择一名攻击值最高的追击蛇族敌人。',
+      options: candidates.map((entry, index) => ({
+        id: String(index), label: state.scenario.enemies?.[entry.code]?.name || entry.code,
+      })),
+    }))
+    const enemy = api.spawnPursuingEnemy(candidates[selected] || candidates[0], inv.location, inv.seat)
+    if (!enemy) return { placed: false, surgeHandled: true }
     const location = state.locations.find(candidate => candidate.id === inv.location)
     api.info?.(`蛇族的愤怒：「${enemy.name}」在「${location?.name || inv.location}」生成并与 ${inv.name} 交战。`)
-    const difficulty = enemy.fight || 0
+    const difficulty = api.enemyFight(enemy, inv.seat)
     api.test(inv.seat, 'agility', difficulty, result => {
       if (result.success) return
       if (!state.enemies.includes(enemy)) return

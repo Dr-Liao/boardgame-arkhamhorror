@@ -475,12 +475,16 @@ test('幕 3 推进：按战役记录选择 R3/R4/R5（无记录 → R5）', () =
   }
 })
 
-test('checkObjectives：幕 1 全员在最下方 + 团队 3/人线索 → advanceAct', () => {
+test('06337 幕 1：全员在最下方且线索足够时，队伍可以决定何时支付线索推进', () => {
   const state = setupState(2)
-  const api = apiStub(state)
-  state.investigators.forEach(inv => { inv.location = 'theGreatWeb4'; inv.clues = 3 })
-  chapter.behavior.checkObjectives(state, api)
-  assert.equal(state.actIndex, 1)
+  for (const inv of state.investigators) {
+    inv.location = WEB[3]
+    inv.clues = 3
+  }
+  assert.equal(engine.canAdvanceWithClues(state), true)
+  chapter.behavior.checkObjectives(state, apiStub(state))
+  assert.equal(state.actIndex, 0)
+  assert.deepEqual(state.investigators.map(inv => inv.clues), [3, 3])
 })
 
 test('checkObjectives：幕 2 胜利区 4 条腿 → advanceAct；幕 3 atlachNachaDefeated → advanceAct', () => {

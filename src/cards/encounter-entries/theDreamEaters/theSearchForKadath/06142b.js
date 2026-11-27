@@ -5,7 +5,6 @@
 export default {
   code: '06142b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api) {
       api.takeFromSetAside?.('06143')
       api.place?.('cityWhichAppearsOnNoMap')

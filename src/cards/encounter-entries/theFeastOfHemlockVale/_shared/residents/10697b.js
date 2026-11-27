@@ -9,8 +9,9 @@
 // Aloof / Hunter 由章节 encounterDefinitions 从英文正文解析。
 // 读点：
 //   · 谈判 = abilities 的 action/parley（parley.js 枚举同地点敌人），成功后 api.scenario.setEnemyAside；
-//   · 「每轮此地第一张诡计获得涌动」没有引擎读点（涌动在抽牌前决定、早于任何条目窗口），只以
-//     flags.firstTreacherySurge 声明，由章节 behavior.encounterDrawn / encounterCardWouldDraw 结算。
+//   · 每轮在瑞玟所在地抽到第一张诡计时，为该次遭遇结算授予涌动。
+import { ALL_CARDS } from '../../../_shared.js'
+
 const CODE = '10697b'
 const RESIDENT = 'riverHawthorne'
 const NAME = '瑞玟·霍桑'
@@ -44,7 +45,14 @@ export default {
       actionKind: 'parley',
       resolve: result => { if (result.success) setAside(source, api) },
     }),
+  }, {
+    kind: 'forced',
+    trigger: 'encounterDrawn',
+    silent: true,
+    label: '每轮在瑞玟所在地抽到的第一张诡计获得涌动',
+    limit: { scope: 'perRound', owner: 'instance' },
+    criteria: ({ source, context }) => source.location === context.location
+      && ALL_CARDS[context.cardCode]?.type === 'treachery',
+    resolve: ({ context, api }) => api.grantEncounterDrawSurge(context),
   }],
-  note: '未接线部分：「每轮此地第一张诡计获得涌动」只以 flags.firstTreacherySurge 声明（引擎没有条目级涌动读点），'
-    + '由章节抽遭遇牌时结算；谈判与关键词是本条目的完整行为。',
 }

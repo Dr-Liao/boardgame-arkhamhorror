@@ -53,8 +53,8 @@ const packStatusLabel = value => PACK_STATUS_KEYS[value] ? t(PACK_STATUS_KEYS[va
 // Arkham-only campaign shell. The hall provides transport and generic modal hosting.
 export function createHubUI({ h, api, render, state, startGame, loadSavedSession, renderOnlineSetup,
   rememberSession, leave, submitMove, refreshSession, catalogOpen, rulebookOpen, inspectCard, canAct = () => true,
-  openFeedback }) {
-  installCardZoom(h)
+  openFeedback, onCardZoom }) {
+  installCardZoom(h, onCardZoom)
   // 页签在每次渲染时按当前语言生成，onLocaleChange 后重绘即可切换（无需重新加载模块）。
   const tabLabels = () => [
     ['departure', t('hub.tab.departure')],

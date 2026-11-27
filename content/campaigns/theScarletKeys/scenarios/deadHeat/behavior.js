@@ -17,6 +17,7 @@
 //   actReveal / agendaReveal / checkObjectives → 幕/议程背面与推进
 //   resolveChaosToken / applyTokenEffect → 09520 混乱标记
 //   resolution → 结局 1–5 / 无结局与剧本日志记录
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { shiftWithReaction } from '../../concealed.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
@@ -275,15 +276,7 @@ export function lastBlossom(state) {
   try { return scarletKey(state, KEY_SPEC.id) } catch { return null }
 }
 
-function keyHolderLocation(state) {
-  const record = lastBlossom(state)
-  if (!record) return null
-  if (record.bearer.type === 'investigator') return state.investigators?.[record.bearer.seat]?.location || null
-  if (record.bearer.type === 'enemy') {
-    return state.enemies?.find(enemy => enemy.id === record.bearer.enemyId)?.location || null
-  }
-  return null
-}
+
 
 export function bindLastBlossom(state, bearer, api = {}) {
   ensureScarletKeys(state, api)
@@ -302,63 +295,15 @@ export function bindLastBlossom(state, bearer, api = {}) {
   }
 }
 
-function healAllEnemiesOne(state, api) {
-  let healed = 0
-  for (const enemy of state.enemies || []) {
-    if (!(Number(enemy.damageTaken) > 0)) continue
-    enemy.damageTaken = Math.max(0, Number(enemy.damageTaken) - 1)
-    safeCall(api, 'healEnemy', enemy, 1)
-    healed += 1
-  }
-  return healed
-}
-
-function healInvestigatorsAt(state, locationId, api) {
-  let healed = 0
-  for (const inv of activeInvestigators(state)) {
-    if (inv.location !== locationId) continue
-    if (inv.damage > 0) { inv.damage -= 1; healed += 1; safeCall(api, 'healDamage', inv.seat, 1) }
-    if (inv.horror > 0) { inv.horror -= 1; healed += 1; safeCall(api, 'healHorror', inv.seat, 1) }
-  }
-  return healed
-}
-
-/**
- * Shift 末绽之花：按当前面条目的 shiftEffect 结算，然后经密钥原语翻面。
- * 近似：动荡面的「若由调查员变换则翻回稳定面」按统一翻面处理（见 primitive-requests/09544b.json）。
- */
 export function shiftLastBlossom(state, api = {}, { by = 'investigator' } = {}) {
   ensureScarletKeys(state, api)
-  const record = lastBlossom(state)
-  if (!record) return null
-  const wasStable = record.stable === true
-  const faceCode = wasStable ? KEY_SPEC.stableFace : KEY_SPEC.unstableFace
-  const faceFlags = flagsOf(faceCode)
-  const bearerType = record.bearer?.type || 'none'
-  if (faceFlags.shiftEffect === 'healInvestigatorsAtBearerLocation') {
-    if (bearerType === 'investigator') {
-      const healed = healInvestigatorsAt(state, keyHolderLocation(state), api)
-      info(api, `末绽之花（稳定面）：治愈了 ${healed} 点伤害/恐惧。`)
-    } else {
-      info(api, '末绽之花（稳定面）：持有者不是调查员，没有可治愈的调查员。')
-    }
-  } else if (faceFlags.shiftEffect === 'healAllEnemies') {
-    const healed = healAllEnemiesOne(state, api)
-    info(api, `末绽之花（动荡面）：场上 ${healed} 个敌人各治愈 1 点伤害。`)
-  } else {
-    info(api, `末绽之花：未登记的面效果「${faceFlags.shiftEffect || '无'}」。`)
-  }
+  if (!lastBlossom(state)) return null
   try {
-    const shifted = shiftWithReaction(state, api, KEY_SPEC.id, by === 'enemy' ? { force: true } : {})
-    info(api, `末绽之花变换：${wasStable ? '稳定面 → 动荡面' : '动荡面 → 稳定面'}${by === 'enemy' ? '（敌人强制变换）' : ''}。`)
-    razinReactsToKeyShift(state, api)
-    return shifted
+    return shiftWithReaction(state, api, KEY_SPEC.id, { by, force: by === 'enemy' })
   } catch (error) {
-    if (/本轮已经变换过/.test(String(error?.message || ''))) {
-      info(api, '末绽之花本轮已经变换过。')
-      return null
-    }
-    throw error
+    if (!/本轮已经变换过/.test(String(error?.message || ''))) throw error
+    info(api, '末绽之花本轮已经变换过。')
+    return null
   }
 }
 
@@ -780,13 +725,6 @@ export function actions(state, inv) {
     }
   }
 
-  for (const enemy of state.enemies || []) {
-    if (!isThrallCode(enemy.originalCode || enemy.code)) continue
-    if (enemy.location !== inv.location || enemy.defeated) continue
-    if (thrallEvadedThisTurn(state, inv, enemy.id)) continue
-    moves.push({ action: 'scenarioAction', rule: `deadHeatThrallEvade:${enemy.id}`, actions: 0,
-      label: '快速躲避「奴仆」（本次躲避它获得警戒；每回合一次）' })
-  }
   return moves
 }
 
@@ -976,29 +914,11 @@ function applySaadiansEntry(state, enemy, api) {
 
 /** 哈立德入场：把其地点的其他非[[精英]]敌人与平民尽可能均匀地移到相邻地点。 */
 export function khalidEnteredPlay(state, khalid, api = {}) {
-  const here = (state.locations || []).find(location => location.id === khalid.location)
-  if (!here) return 0
-  const neighbors = (here.connections || []).filter(id => (state.locations || []).some(location => location.id === id))
-  if (!neighbors.length) return 0
-  const roll = index => neighbors[index % neighbors.length]
-  let moved = 0
-  for (const enemy of [...(state.enemies || [])]) {
-    if (enemy === khalid || enemy.elite || enemy.location !== here.id) continue
-    const destination = roll(moved)
-    if (typeof api.moveEnemy === 'function') api.moveEnemy(enemy, destination)
-    else enemy.location = destination
-    moved += 1
-  }
-  let civilians = Math.max(0, Number(here.resources) || 0)
-  if (civilians > 0) here.resources = 0
-  let index = 0
-  while (civilians > 0) {
-    const target = (state.locations || []).find(location => location.id === roll(moved + index))
-    if (target) target.resources = (Number(target.resources) || 0) + 1
-    civilians -= 1
-    index += 1
-    moved += 1
-  }
+  const rule = registeredEntry(khalid.originalCode || khalid.code)?.enemyRule
+  const moved = rule?.onSpawnDistribute?.(state, khalid, api, (from, target) => {
+    from.resources = Math.max(0, (Number(from.resources) || 0) - 1)
+    target.resources = (Number(target.resources) || 0) + 1
+  }) || 0
   info(api, `哈立德入场：把 ${moved} 个敌人/平民尽可能均匀地移到相邻地点。`)
   return moved
 }
@@ -1096,44 +1016,21 @@ export function encounterGainsSurge(state, code) {
   return true
 }
 
-function putFamineNextToAgenda(state, api) {
-  state.agendaAside ||= []
-  const existing = state.agendaAside.filter(card => (card.originalCode || card.code) === FAMINE_CODE).length
-  let card = null
-  if (typeof api.putNextToAgenda === 'function') card = api.putNextToAgenda(FAMINE_CODE)
-  if (!card) {
-    card = {
-      id: `deadheat-famine-${existing + 1}`, code: FAMINE_CODE, originalCode: FAMINE_CODE,
-      name: ALL_CARDS[FAMINE_CODE]?.nameZh || ALL_CARDS[FAMINE_CODE]?.name || FAMINE_CODE,
-    }
-    state.agendaAside.push(card)
-  }
-  for (const location of state.locations || []) {
-    location.playCostIncrease = (Number(location.playCostIncrease) || 0) + 1
-  }
-  info(api, '饥荒放在议程牌库旁：打出每张卡牌的费用 +1（轮末弃掉）。')
+function putFamineNextToAgenda(state, api, seat) {
+  const card = api.putNextToAgenda?.(FAMINE_CODE, { ownerSeat: seat })
+  if (!card) return null
+  info(api, '饥荒放在密谋牌库旁：你打出的每张牌费用 +1，轮末弃掉。')
   return card
 }
 
-function removeFamineCost(state, api) {
-  const famines = (state.agendaAside || []).filter(card => (card.originalCode || card.code) === FAMINE_CODE)
-  if (!famines.length) return 0
-  for (const location of state.locations || []) {
-    location.playCostIncrease = Math.max(0, (Number(location.playCostIncrease) || 0) - famines.length)
-    if (!location.playCostIncrease) delete location.playCostIncrease
-  }
-  for (const card of famines) {
-    const index = state.agendaAside.indexOf(card)
-    if (index >= 0) state.agendaAside.splice(index, 1)
-    state.encounterDiscard ||= []
-    state.encounterDiscard.push(FAMINE_CODE)
-  }
-  info(api, `饥荒离开场上：卡牌费用恢复（${famines.length} 张）。`)
-  return famines.length
-}
-
 export function roundEnded(state, api = {}) {
-  removeFamineCost(state, api)
+  const famines = (state.agendaAside || []).filter(item => (item.originalCode || item.code) === FAMINE_CODE)
+  const legacyCount = famines.filter(card => card.ownerSeat == null).length
+  for (const location of legacyCount ? state.locations || [] : []) {
+    const remaining = Math.max(0, (location.playCostIncrease || 0) - legacyCount)
+    if (remaining > 0) location.playCostIncrease = remaining
+    else delete location.playCostIncrease
+  }
 }
 
 function resolveCornered(state, inv, api) {
@@ -1169,14 +1066,13 @@ function resolveCornered(state, inv, api) {
 }
 
 export function resolveEncounterCard(state, inv, code, api = {}) {
-  if (isFamineCode(code)) return famineEvent(state, api)
+  if (isFamineCode(code)) return famineEvent(state, { seat: inv.seat }, api)
   if (isCorneredCode(code)) { resolveCornered(state, inv, api); return false }
   return false
 }
 
-export function famineEvent(state, api = {}) {
-  putFamineNextToAgenda(state, api)
-  return true
+export function famineEvent(state, { seat } = {}, api = {}) {
+  return Number.isInteger(seat) && Boolean(putFamineNextToAgenda(state, api, seat))
 }
 
 export function corneredEvent(state, payload = {}, api = {}) {
@@ -1277,9 +1173,11 @@ export function spawnLocation(state, code, loc, engagedSeat, api = {}) {
 /** 09532 废弃版杰马广场：你在此地打出的每张支援费用 +2。 */
 export function playCostIncrease(state, inv) {
   const location = (state.locations || []).find(item => item.id === inv?.location)
-  if (!location) return 0
-  const code = String(location.originalCode || location.code || '')
-  return code === JEMAA_EL_FNAA_ABANDONED_CODE || location.id === 'jemaaElFnaaSquareAbandoned' ? 2 : 0
+  const famine = (state.agendaAside || []).filter(card => (card.originalCode || card.code) === FAMINE_CODE
+    && card.ownerSeat === inv.seat).length
+  const code = String(location?.originalCode || location?.code || '')
+  const square = code === JEMAA_EL_FNAA_ABANDONED_CODE || location?.id === 'jemaaElFnaaSquareAbandoned'
+  return famine + (square ? 2 : 0)
 }
 
 /** 09521/09522 正面：复生者/食尸鬼获得「生成-随机地点」；09522 还让它获得猎手。 */
@@ -1495,7 +1393,7 @@ function applyElderThingToken(state, inv, api, mode) {
     const index = typeof api.random === 'function'
       ? Math.min(hand.length - 1, Math.floor(api.random() * hand.length))
       : 0
-    const [code] = hand.splice(index, 1)
+    const [code] = spliceHand(inv, index, 1)
     ;(inv.discard ||= []).push(code)
     info(api, `[elder_thing]：${inv.name} 随机弃掉「${ALL_CARDS[code]?.nameZh || code}」。`)
     return
@@ -1510,7 +1408,7 @@ function applyElderThingToken(state, inv, api, mode) {
       options: hand.map((code, position) => ({ id: String(position), cardCode: code, label: ALL_CARDS[code]?.nameZh || code })) }))
     : 0
   const safeIndex = Number.isInteger(index) && index >= 0 && index < hand.length ? index : 0
-  const [code] = hand.splice(safeIndex, 1)
+  const [code] = spliceHand(inv, safeIndex, 1)
   ;(inv.discard ||= []).push(code)
   info(api, `[elder_thing]：${inv.name} 弃掉「${ALL_CARDS[code]?.nameZh || code}」。`)
 }
@@ -1685,8 +1583,11 @@ export const behavior = {
   beforeMove,
   enemySpawned,
   enemyMoved,
-  enemyAttackStarted,
-  enemyAttackResolved,
+  enemyAttackResolved(state, enemy, inv, api) {
+    if (!isAncientRaiderCode(enemy.originalCode || enemy.code)) return
+    const location = state.locations.find(item => item.id === inv.location)
+    if (location?.resources > 0) slayCivilian(state, inv.location, api)
+  },
   enemyDefeated: (state, enemy, api = {}) => {
     const code = String(enemy?.originalCode || enemy?.code || '')
     if (isAmaranthCode(code)) {

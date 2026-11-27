@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor, encounterResolveFor, entryFlags, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, entryFlags, isPoisonThreat, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -14,8 +14,6 @@ const original = card => card?.originalCode || card?.code
 const here = (state, inv) => state.locations.find(location => location.id === inv.location)
 const locationById = (state, id) => state.locations.find(location => location.id === id)
 // 中毒判定走条目读点（04102 的 poisonThreat），不在内容层写死卡号。
-const isPoisoned = inv => (inv?.threat || []).some(card => isPoisonThreat(card?.originalCode || card?.code))
-  || inv?.poisoned === true
 const attachmentsWith = (location, code) =>
   (location?.attachments || []).filter(attachment => original(attachment) === code)
 
@@ -49,12 +47,6 @@ function shuffleWith(list, random) {
 function shuffleWithApi(state, api, list) {
   if (typeof api?.random === 'function') return shuffleWith(list, api.random)
   return [...list]
-}
-
-// 某地点上的调查员是否带有某个补给（宽阔步道的双筒望远镜等）。
-function locationHasSupply(state, locationId, name) {
-  return state.investigators.some(inv => !inv.defeated && !inv.resigned && inv.location === locationId
-    && ((state.campaign?.supplies || {})[inv.seat] || []).includes(name))
 }
 
 // ---------------------------------------------------------------------------
@@ -243,66 +235,6 @@ function resolveDescentToYoth(state, api) {
 
 // ---- 本地补齐的共享遭遇组诡计 ----------------------------------------------
 
-// 落入陷阱（04215）：险境；要么检定敏捷(3)，要么洗回探索牌库（从探索牌库抽出时不能选）。
-function resolvePitfall(state, inv, api) {
-  const flags = flagsFor(state)
-  const fromExploration = flags.exploringSeat === inv.seat
-  const options = [{ id: 'test', label: '检定敏捷(3)：每低于难度 1 点受到 1 点伤害' }]
-  if (!fromExploration) options.push({ id: 'shuffle', label: '将落入陷阱洗入探索牌库' })
-  const answer = options.length === 1 ? 'test' : api.choose({
-    kind: 'treachery', source: '04215', seat: inv.seat, peril: true,
-    prompt: '落入陷阱：跳过这条裂隙，还是把它洗回探索牌库？', options,
-  })
-  if (answer === 'shuffle') {
-    state.explorationDeck ||= []
-    state.explorationDeck = shuffleWithApi(state, api, [...state.explorationDeck, '04215'])
-    api.info?.('落入陷阱被洗入探索牌库。')
-    return true
-  }
-  api.test(inv.seat, 'agility', 3, result => {
-    if (result.success) return
-    const failedBy = Math.max(1, 3 - result.value)
-    for (let index = 0; index < failedBy; index++) api.damage(inv.seat, 1)
-  })
-  return false
-}
-
-// 有毒孢子（04216）：附属到你所在地点；一轮结束时结算并弃掉。
-function resolvePoisonousSpores(state, inv, api) {
-  const location = here(state, inv)
-  if (!location) return false
-  location.attachments ||= []
-  location.attachments.push({
-    id: `poisonousSpores:${state.round}:${inv.seat}:${location.attachments.length}`,
-    code: '04216', originalCode: '04216',
-  })
-  api.info?.('有毒孢子附属到此地点：一轮结束时，此地点的中毒者受到 2 点恐惧。')
-  return true
-}
-
-function resolvePoisonousSporesEnd(state, location, attachment, api) {
-  const targets = active(state).filter(inv => inv.location === location.id)
-  for (const inv of targets.filter(isPoisoned)) api.horror(inv.seat, 2)
-  for (const inv of targets.filter(target => !isPoisoned(target))) poisonFromSetAside(state, inv.seat, api)
-  removeOne(location.attachments || [], attachment)
-  state.encounterDiscard = state.encounterDiscard || []
-  state.encounterDiscard.push('04216')
-}
-
-// 卡面「将放在一边的一张中毒弱点卡牌放置入场」：从 setAside 池里拿走一张 04102。
-// 与上部 behavior 的 poisonFromSetAside 同口径（修复下部池子只增不减的问题）。
-function poisonFromSetAside(state, seat, api) {
-  const setAside = state.scenarioZones?.setAside
-  const index = Array.isArray(setAside) ? setAside.indexOf('04102') : -1
-  if (index < 0) {
-    api.info?.('放在一边的中毒弱点已经用完，本次没有可放置的中毒弱点。')
-    return false
-  }
-  setAside.splice(index, 1)
-  api.poison?.(seat)
-  return true
-}
-
 // 无路可退（04228）：附属到你的地点或一个相连地点；被附属地点不能进出。
 function resolveNoTurningBack(state, inv, api) {
   const location = here(state, inv)
@@ -477,10 +409,6 @@ export const behavior = {
     if (encounterRules.canExplore(state, inv) === false) return false
     const location = here(state, inv)
     if ((location?.clues || 0) > 0) return false
-    // 宽阔步道：没有双筒望远镜要额外花 1 个行动，行动不足时不要给出探索按钮，
-    // 否则点下去会先扣掉这 1 个行动、再被 beforeExplore 取消（白丢行动）。
-    if (original(location) === '04222' && !locationHasSupply(state, location.id, 'binoculars')
-      && (inv.actionsLeft || 0) < 2) return false
     return true
   },
 
@@ -490,21 +418,11 @@ export const behavior = {
     return connectsForExplore(state, fromId, code)
   },
 
-  beforeExplore(state, inv, api) {
-    // 第 117 轮：宽阔步道（04222）的双筒望远镜行动费在地点条目的 locationRule.beforeExplore。
-    const rule = locationRuleFor(original(here(state, inv)))
-    if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api) === false) return false
-    // 记录本次探索，用于「落入陷阱」的「从探索牌库抽出」判断。
-    flagsFor(state).exploringSeat = inv.seat
-    return true
-  },
-
   afterExplore(state, inv, context) {
     syncSymbolConnections(state)
     const api = context?.runtime
     const code = context?.code
     const kind = context?.kind
-    delete flagsFor(state).exploringSeat
     if (kind !== 'location') return
     inv.tfaExploredThisTurn = true
     if (code === 'hallOfIdolatry') resolveHallOfIdolatry(state, inv, api)
@@ -541,22 +459,9 @@ export const behavior = {
     return tfaChaosToken(CHAOS_CHAPTER_ID, state, inv, token, api)
   },
 
-  // 共享遭遇组效果先结算，再本地补齐落入陷阱／有毒孢子／无路可退。
-  // 如果 part 1 的实现者把 04215／04216 也写进共享条目（encounterResolve 声明），
-  // 就完全交给共享规则，避免本章的本地补齐重复结算。
-  resolveEncounter(state, inv, t, api) {
-    const code = original(t)
-    // 第 117 轮：这几张卡的身份由条目标志声明（两章共用，但本章文案与数值仍在本文件）。
-    const flags = entryFlags(code) || {}
-    const locallyImplemented = flags.pitfall || flags.spores
-    if (locallyImplemented && encounterResolveFor(code)) {
-      return encounterRules.resolveEncounter(state, inv, t, api)
-    }
-    const handled = encounterRules.resolveEncounter?.(state, inv, t, api)
-    if (flags.pitfall) return resolvePitfall(state, inv, api)
-    if (flags.spores) return resolvePoisonousSpores(state, inv, api)
-    if (flags.noTurningBack) return resolveNoTurningBack(state, inv, api)
-    return handled
+  resolveEncounter(state, inv, card, api, context) {
+    if (entryFlags(original(card))?.noTurningBack) return resolveNoTurningBack(state, inv, api)
+    return encounterRules.resolveEncounter(state, inv, card, api, context)
   },
 
   // 无路可退：被附属地点不能进入。
@@ -726,13 +631,6 @@ export const behavior = {
 
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    // 有毒孢子：一轮结束时结算并弃掉。
-    for (const location of state.locations) {
-      for (const attachment of attachmentsWith(location, '04216').slice()) {
-        resolvePoisonousSporesEnd(state, location, attachment, api)
-      }
-    }
-    delete flagsFor(state).exploringSeat
   },
 
   turnEnded(state, inv, api) {

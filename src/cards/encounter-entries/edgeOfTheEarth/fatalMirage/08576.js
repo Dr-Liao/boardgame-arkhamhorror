@@ -1,14 +1,10 @@
-// 08576 去世病人之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08576 去世病人之记忆：被击败时，翻开并结算记忆剧情。
 export default {
-  code: '08576',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"retaliate":true,"preyPartner":"08590","reactionHealDamageBack":true,"flipOnDefeat":true} },
+  code: '08576', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08590' },
+  abilities: [{
+    kind: 'reaction', trigger: 'damageHealed', label: '它横置时你治疗伤害后：对它造成等量伤害',
+    criteria: ({ context, inv, source }) => context.seat === inv.seat && source.exhausted && context.amount > 0,
+    resolve: ({ inv, source, context, api }) => api.damageEnemy(source, context.amount, inv.seat),
+  }],
 }

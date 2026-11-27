@@ -13,13 +13,7 @@
 //     （state.enemies 只读筛选；与参考实现的 EnemyAt YourLocation <> EnemyWithFight 同口径）。
 //   · 检定：api.test(seat, skill, difficulty, { source, resolve })（performTest 的标准入口）；
 //     X 走 api.enemyFight(enemy, seat)（enemies.js#enemyFightValue 的只读投影，含修正）。
-//   · 「把伤害从调查员移动到敌人」：引擎没有「调查员 ↔ 敌人」的转移原语
-//     （harm-transfer.js#moveHarm 只支持调查员 ↔ 其受控支援）。这里按 10017 的同一口径组合：
-//     api.scenario.healDamage（原始扣减，不算「治疗」，不触发治疗窗口）+ api.damageEnemy（伤害的唯一写点）。
-//
-// 近似披露（simplified）：「移动 1/最多 2 点伤害」由「扣调查员伤害 + 对敌人造成伤害」两步合成
-// （不是原子转移，敌人免疫/伤害来源限制会挡下第二步而第一步已扣）；缺的原语见
-// artifacts/migration/fhv/primitive-requests/10094.json。
+// 伤害由统一搬运原语移动，目的敌人须能承受伤害。
 const CODE = '10094'
 
 // 同地点、有攻击值的敌人（参考实现：EnemyAt YourLocation <> EnemyWithFight）。
@@ -30,9 +24,6 @@ const drainTargets = (state, inv) => (state.enemies || []).filter(enemy =>
 export default {
   code: CODE,
   name: '精华汲取',
-  simplified: true,
-  note: 'simplified: 「移动伤害到敌人」用 api.scenario.healDamage（原始扣减）+ api.damageEnemy 两步合成，'
-    + '不是原子转移（敌人免疫/来源限制会让第二步无效而第一步已扣）；缺的原语见 primitive-requests/10094.json。',
   playCondition: [
     {
       when: ({ state, inv }) => drainTargets(state, inv).length > 0,
@@ -59,9 +50,10 @@ export default {
         if (!enemy) return
         const difficulty = Math.max(0, api.enemyFight(enemy, inv.seat))
         api.test(inv.seat, 'willpower', difficulty, {
+          actionKind: 'parley',
           source: { label: '精华汲取', enemyId: enemy.id, name: enemy.name, code: CODE },
           resolve: result => {
-            if (!result?.success || !state.enemies.includes(enemy)) return
+            if (!result?.success || !api.canDamageEnemy(enemy, inv.seat, CODE)) return
             const max = enemy.elite ? 1 : 2
             const available = Math.min(max, Math.max(0, inv.damage || 0))
             if (!available) {
@@ -77,10 +69,7 @@ export default {
               })),
             })) || 1
             const amount = Math.max(1, Math.min(available, Number.isFinite(moved) ? moved : 1))
-            // 「移动」不是「治疗」：raw 扣减（不触发治疗窗口），再对敌人造成等量伤害。
-            if (api.scenario.healDamage(inv.seat, amount) <= 0) return
-            api.damageEnemy(enemy, amount, inv.seat, CODE)
-            api.info(`🩸 「精华汲取」：把 ${amount} 点伤害从 ${inv.name} 移动到「${enemy.name}」。`)
+            api.moveHarm({ seat: inv.seat }, { enemyId: enemy.id }, { damage: amount }, { source: CODE })
           },
         })
       },

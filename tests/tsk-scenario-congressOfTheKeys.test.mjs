@@ -11,6 +11,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { validateTskState } from '../src/engine/tsk-primitives.js'
+import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { playCostDelta } from '../src/engine/modifiers.js'
 import * as tskKeys from '../src/engine/tsk-scarlet-keys.js'
 import * as tskConcealed from '../src/engine/tsk-concealed.js'
@@ -657,18 +658,26 @@ test('P7 congressOfTheKeys 密钥变换：敌人持钥只结算效果不翻回�
   assert.equal(record.stable, false)
   const enemyShift = resolveKeyShift(state, null, api, '09634', { by: 'enemy' })
   assert.equal(enemyShift.flipped, false)
-  // 恸哭女士的旧契约（assetRule.shift：发现 1 个线索）。
+  // 恸哭女士使用当前面的变换函数，由密钥 API 结算。
+  const mechanics = createMechanicsApi(state, { abilityApi: () => ({ ...api, canDiscoverClueAt: () => true }) })
+  const runtime = { ...api, mechanics }
+  const location = state.locations.find(item => item.id === state.investigators[0].location)
+  location.clues = 1
   tskKeys.bindKey(state, '09565', { type: 'investigator', seat: 0 })
-  const legacy = resolveKeyShift(state, 0, api, '09565')
-  assert.equal(legacy.effect, 'discoverClue')
-  // 末绽之花的第四种声明（flags.shiftEffect）：治愈持有者所在地点每位调查员 1 伤害/1 恐惧。
+  const legacy = resolveKeyShift(state, 0, runtime, '09565')
+  assert.equal(legacy.effect, 'declared')
+  assert.equal(legacy.flipped, true)
+  assert.equal(location.clues, 0)
+  assert.equal(state.investigators[0].clues, 1)
+  // 末绽之花治愈持有者所在地点每位调查员 1 伤害/1 恐惧。
   tskKeys.bindKey(state, '09544', { type: 'investigator', seat: 0 })
   state.investigators[0].damage = 2
   state.investigators[0].horror = 2
   state.investigators[1].location = state.investigators[0].location
   state.investigators[1].damage = 1
-  const flagShift = resolveKeyShift(state, 0, api, '09544')
-  assert.equal(flagShift.effect, 'healInvestigatorsAtBearerLocation')
+  const flagShift = resolveKeyShift(state, 0, runtime, '09544')
+  assert.equal(flagShift.effect, 'declared')
+  assert.equal(flagShift.flipped, true)
   assert.equal(state.investigators[0].damage, 1)
   assert.equal(state.investigators[0].horror, 1)
   assert.equal(state.investigators[1].damage, 0)

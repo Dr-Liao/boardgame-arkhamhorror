@@ -1,14 +1,14 @@
 // 08581 可怕发现之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { frostPoolRoom } from '../../_shared.js'
 
 export default {
-  code: '08581',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"alert":true,"preyPartner":"08591","parleyAddFrostDamage4":true,"flipOnDefeat":true} },
+  code: '08581', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08591' },
+  abilities: [{
+    kind: 'action', actionKind: 'parley', label: '加入 1 个寒霜：谈判，对它造成 4 伤害',
+    criteria: ({ state }) => frostPoolRoom(state) > 0,
+    resolve: ({ inv, source, api }) => {
+      if (api.mechanics.frost.add(1)) api.damageEnemy(source, 4, inv.seat)
+    },
+  }],
 }

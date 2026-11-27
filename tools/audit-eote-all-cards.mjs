@@ -124,9 +124,10 @@ function loadInputs() {
   return { scope, partitions, cardCodes, ledgers, entryFiles, pending, requestFiles: sorted([...requestFiles]) }
 }
 
-// 证据测试文件（Lead P8 任务书列出的实跑证据：P6 4 份 + P5 5 份 + P7 9 份）。
+// 证据来自分片验收、调查员、玩家卡与章节的实际测试。
 // 不把其它进行中的 eote 测试（如 P8 campaign/interaction/primitives）混入逐卡账本证据面。
 const EVIDENCE_TEST_FILES = Object.freeze([
+  ...[1, 2, 4, 5, 6, 7, 8, 9].map(shard => `tests/acceptance-08-a-shard${shard}.test.mjs`),
   'tests/eote-player-m2-1.test.mjs', 'tests/eote-player-m2-2.test.mjs',
   'tests/eote-player-m2-3.test.mjs', 'tests/eote-player-m2-4.test.mjs',
   'tests/eote-investigator-daniela.test.mjs', 'tests/eote-investigator-norman.test.mjs',

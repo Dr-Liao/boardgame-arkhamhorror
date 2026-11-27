@@ -7,6 +7,8 @@
 //
 // 本章 chaos.js 同时暴露静态文案表与运行时数值函数；definition 把它接入 scenario.tokenMeanings，
 // behavior.chaosTokenValue 供引擎/测试读当前庇护值。
+import { iceAndDeathTokenValue } from '../iceAndDeathPart1/chaos.js'
+
 export const PART3_TOKEN_MEANINGS = Object.freeze({
   easy: Object.freeze({ skull: 'ceil(庇护值 / 2)', cultist: -2, tablet: -3 }),
   standard: Object.freeze({ skull: 'ceil(庇护值 / 2)', cultist: -2, tablet: -3 }),
@@ -26,13 +28,7 @@ export function shelterValueOf(state, locationId) {
 
 export function part3ChaosTokenValue(state, tokenFace, inv) {
   const hard = ['hard', 'expert'].includes(String(state?.difficulty || 'standard'))
-  const shelter = shelterValueOf(state, inv?.location)
-  switch (tokenFace) {
-    case 'skull': return hard ? shelter : Math.ceil(shelter / 2)
-    case 'cultist': return -2
-    case 'tablet': return hard ? -4 : -3
-    default: return null
-  }
+  return iceAndDeathTokenValue(tokenFace, shelterValueOf(state, inv?.location), hard)
 }
 
 /**

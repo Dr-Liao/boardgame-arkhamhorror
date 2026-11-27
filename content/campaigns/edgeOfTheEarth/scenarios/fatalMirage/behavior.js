@@ -14,8 +14,9 @@
 //   actReveal → 幕背面（→R1 结局）
 //   resolution → 结局记录写入 campaign.records（fatalMirageTimes/Resolution/memories*/…）
 //   resolveChaosToken / afterTest → 08549 混乱标记数值与失败追加效果
+import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { entryFlags, enemyRuleFor } from '../../../../../src/cards/card-rules.js'
+import { agendaRuleFor, entryFlags, enemyRuleFor, locationRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   partnerState, setPartnerStatus, resoluteFormOf, isPartnerAlive, initializePartners,
 } from '../../../../../src/campaign/eote-partners.js'
@@ -154,6 +155,16 @@ export function mirageClueTotal(state, locationId) {
 export function isClearedOfMirages(state, locationId) {
   const targets = mirageTargets(locationId)
   return targets.length > 0 && targets.every(target => targetActive(state, target))
+}
+
+function preyRank(state, enemy, candidates) {
+  const preferred = enemyRuleFor(enemy.originalCode || enemy.code)?.preyPartner
+  if (!preferred) return null
+  const base = BASE_BY_RESOLUTE[preferred]
+  return candidates.filter(candidate => {
+    const inv = typeof candidate === 'number' ? state.investigators[candidate] : candidate
+    return inv?.assets.some(asset => asset.code === preferred || asset.code === base)
+  })
 }
 
 // 未被翻出的目标（用于行动文本/合法性）：记忆剧情只有一个目标（记忆敌人）。
@@ -369,7 +380,16 @@ export function locationStory(state, location, api = {}, seat = null) {
   const pending = state.scenarioFlags?.pendingMirageFlip
   const choice = pending && pending.locationId === id ? pending.choice : null
   const inv = seat == null ? activeInvestigators(state)[0] : state.investigators?.[seat]
-  return flipStoryFace(state, LOCATIONS[id].storyCode, api, { location: id, inv, choice })
+  locationRuleFor(location.originalCode || location.code)?.onMirageFlip?.(state, location, pending?.contributions || {}, api)
+  const resolved = flipStoryFace(state, LOCATIONS[id].storyCode, api, { location: id, inv, choice })
+  if (isClearedOfMirages(state, id)) {
+    for (const attachment of (location.attachments || []).slice()) {
+      const code = attachment.originalCode || attachment.code
+      if (!treacheryRuleFor(code)?.discardWhenMirageCleared) continue
+      if (api.detachLocationAttachment?.(id, attachment.id)) api.discardEncounterCards?.(code)
+    }
+  }
+  return resolved
 }
 
 // 引擎读点：记忆敌人被击败 → 翻面读记忆剧情（enemyRule.flipOnDefeat / flags.flipOnDefeat）。
@@ -601,9 +621,15 @@ export function choosePartner(state, seat, cardCode, api = {}) {
   }
   state.campaign.partnersBySeat ||= {}
   state.campaign.partnersBySeat[seat] = cardCode
-  inv.assets ||= []
-  const asset = { id: `partner-${cardCode}`, code: cardCode, exhausted: false, uses: ALL_CARDS[cardCode]?.uses ?? undefined }
-  inv.assets.push(asset)
+  const { uses, usesType } = registeredEntry(cardCode) || {}
+  const extra = { damage: entry.damage || 0, horror: entry.horror || 0,
+    ...(uses == null ? {} : { uses, usesType }) }
+  let asset
+  if (typeof api.giveAsset === 'function') asset = api.giveAsset(seat, cardCode, extra)
+  else {
+    asset = { id: `partner-${cardCode}`, code: cardCode, exhausted: false, ...extra }
+    ;(inv.assets ||= []).push(asset)
+  }
   info(api, `🤝 ${inv.name} 带上伙伴「${ALL_CARDS[cardCode]?.nameZh || cardCode}」。`)
   return asset
 }
@@ -642,9 +668,19 @@ function mirageFlipMoves(state, inv) {
   return moves
 }
 
+function canReturnToPrison(state, inv) {
+  const agenda = state.agendas?.[state.agendaIndex]
+  return inv.location !== START_LOCATION
+    && Boolean(agendaRuleFor(agenda?.originalCode || agenda?.code)?.freeMoveToPrisonOfMemories)
+}
+
 export function actions(state, inv) {
   if (!inv || state.status !== 'playing') return []
   const moves = [...mirageFlipMoves(state, inv)]
+  if (canReturnToPrison(state, inv)) {
+    moves.push({ action: 'scenarioAction', rule: 'fatalMirageReturnToPrison', actions: 0,
+      label: '受到 1 点恐惧，移动到记忆囚笼' })
+  }
   if (state.scenarioFlags?.fatalMirageMayAdvance) {
     moves.push({ action: 'scenarioAction', rule: 'fatalMirageAdvanceAct', actions: 0,
       label: '📜 推进当前幕（已直面内心恶魔）' })
@@ -654,6 +690,14 @@ export function actions(state, inv) {
 
 export function performAction(state, inv, move, api = {}) {
   if (!move) return false
+  if (move.rule === 'fatalMirageReturnToPrison') {
+    if (!canReturnToPrison(state, inv)) return false
+    const agenda = state.agendas[state.agendaIndex]
+    const rule = agendaRuleFor(agenda.originalCode || agenda.code)?.freeMoveToPrisonOfMemories
+    api.horror?.(inv.seat, rule?.cost?.horror ?? 1)
+    if (!inv.defeated && !inv.resigned) api.moveInvestigator?.(inv.seat, START_LOCATION)
+    return true
+  }
   if (move.rule === 'fatalMirageAdvanceAct') {
     if (!state.scenarioFlags?.fatalMirageMayAdvance) return false
     info(api, '📜 调查员选择推进当前幕（直面内心恶魔之后）。')
@@ -667,9 +711,29 @@ export function performAction(state, inv, move, api = {}) {
     if (!location?.revealed || isClearedOfMirages(state, locationId)) return false
     const cost = mirageFlipCost(state, locationId)
     if (groupCluesAt(state, locationId) < cost) return false
-    api.payGroupClues?.(cost, { atLocation: locationId })
+    const payment = api.payGroupClues?.(cost, { atLocation: locationId, recordContributions: true })
+    const contributions = { ...payment?.contributions }
+    for (const attachment of location.attachments || []) {
+      const code = attachment.originalCode || attachment.code
+      const hazard = treacheryRuleFor(code)?.mirageFlipCost
+      if (!hazard) continue
+      const options = [
+        ...(groupCluesAt(state, locationId) >= hazard.groupClues ? [{ id: 'clues', label: '共同支付额外线索' }] : []),
+        { id: 'damage', label: '此地点的每位调查员受到伤害' },
+      ]
+      const choice = options.length === 1 ? options[0].id
+        : api.choice({ kind: 'effect', source: code, seat: inv.seat, prompt: '选择翻开幻景的额外费用', options })
+      if (choice === 'clues') {
+        const extra = api.payGroupClues(hazard.groupClues, { atLocation: locationId, recordContributions: true })
+        for (const [seat, amount] of Object.entries(extra.contributions)) contributions[seat] = (contributions[seat] || 0) + amount
+      } else {
+        for (const other of activeInvestigators(state).filter(candidate => candidate.location === locationId)) {
+          api.damage(other.seat, hazard.damagePerInvestigator)
+        }
+      }
+    }
     state.scenarioFlags ||= {}
-    state.scenarioFlags.pendingMirageFlip = { locationId, choice: move.choice ?? null, seat: inv.seat }
+    state.scenarioFlags.pendingMirageFlip = { locationId, choice: move.choice ?? null, seat: inv.seat, contributions }
     try {
       if (api.flipLocation) api.flipLocation(locationId, inv.seat)
       else locationStory(state, location, api, inv.seat)
@@ -725,7 +789,7 @@ export function agendaReveal(state, agenda, api = {}) {
   const active = activeInvestigators(state)
   for (const inv of active) {
     if (version === 1) {
-      try { tekeliShuffleIn(state, inv.seat, 1) } catch { /* 牌库未初始化/牌数不足时忽略 */ }
+      shuffleTekeliIn(state, inv.seat, 1, api)
     } else if (version === 2) {
       const choice = typeof api.choose === 'function'
         ? api.choose({ kind: 'agenda', source: code, seat: inv.seat,
@@ -734,7 +798,7 @@ export function agendaReveal(state, agenda, api = {}) {
         : 'tekelili'
       if (choice === 'trauma') addCampaignTrauma(state, inv.seat, 'mental', 1)
       else {
-        try { tekeliShuffleIn(state, inv.seat, 2) } catch { /* 同上 */ }
+        shuffleTekeliIn(state, inv.seat, 2, api)
       }
     } else {
       addCampaignTrauma(state, inv.seat, 'mental', 1)
@@ -784,8 +848,8 @@ function moveToPrison(state, seat, api) {
   return true
 }
 
-function shuffleTekeliIn(state, seat, count = 1) {
-  try { return tekeliShuffleIn(state, seat, count) !== false } catch { return false }
+function shuffleTekeliIn(state, seat, count, api) {
+  return (api.mechanics?.tekeli?.shuffleIn(seat, count) ?? tekeliShuffleIn(state, seat, count)) !== false
 }
 
 // 08549 的失败追加效果（cultist/tablet/elder_thing）。
@@ -820,7 +884,7 @@ function applyChaosRider(state, inv, rider, { failedBy, successBy }, api) {
       info(api, `🃏 [tablet]：${inv.name} 移动到记忆囚笼。`)
     }
     if (doShuffle && canShuffle) {
-      shuffleTekeliIn(state, inv.seat, 1)
+      shuffleTekeliIn(state, inv.seat, 1, api)
       info(api, `🃏 [tablet]：${inv.name} 将忒咳哩-哩牌库顶 1 张洗入牌库。`)
     }
     return
@@ -924,6 +988,7 @@ export const behavior = {
   startLocation: () => START_LOCATION,
   locationPlaced,
   locationShroudModifier,
+  preyRank,
   locationStory,
   placeLocation,
   actions,

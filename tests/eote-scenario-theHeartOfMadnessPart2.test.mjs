@@ -10,7 +10,7 @@ import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js
 import { applyMove, checkAgenda, registerCampaignScenarios, scenarioRuntime, validateMove } from '../src/engine/engine.js'
 import { registerContentBundle, contentRegistry } from '../content/registered.js'
 import { manifest as campaign } from '../content/campaigns/edgeOfTheEarth/manifest.js'
-import { fixture, settle } from './core-fixture.mjs'
+import { fixture, legalMoves, move, settle } from './core-fixture.mjs'
 import { sealsOf } from '../src/campaign/eote-seals.js'
 import { collapsedTowers, damageTower, towerHealth, towerState } from '../src/engine/eote-facilities.js'
 import * as chapter from '../content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/index.js'
@@ -111,47 +111,42 @@ test('P7 theHeartOfMadnessPart2 setup：随机布置 10 设施 + 5 高塔，门�
   assert.ok(pylons.every(slot => towerHealth(state, slot) > 0), '高塔生命 = 线索值')
   assert.ok(!INNER_RING_SLOTS.every(slot => PYLON_SLOT_CODES.includes(codeOf(locationOf(state, slot)))),
     '内环五格不能全是迷雾高塔')
-  assert.equal(sealsOf(state).length, 5, '封印从战役状态继承（测试默认五枚休眠分配）')
+  assert.equal(sealsOf(state).length, 5, '五种封印状态已登记')
+  assert.ok(sealsOf(state).every(seal => seal.placedBySeat == null), '没有前章记录时没有开局持有的封印')
   assert.equal(state.encounterDeck.length, 14, '四个遭遇组按 setup 限制后的牌数')
 })
 
 test('P7 theHeartOfMadnessPart2 高塔：幕 3 期间可被当作敌人攻击并坍塌', () => {
-  const state = buildState()
+  const state = buildState(1)
   const api = setup(state)
   const slot = pylonSlotsOf(state)[0]
-  const inv = state.investigators[0]
-  inv.location = slot
-  const moves = chapter.behavior.actions(state, inv)
-  const attack = moves.find(item => item.rule === `heartOfMadnessAttackPylon:${slot}`)
-  assert.ok(attack, '已揭示高塔提供攻击行动')
-  const stub = { ...api, test: (seat, skill, difficulty, resolve) => resolve() }
-  let guard = 0
-  while (!towerState(state, slot).collapsed && guard < 20) {
-    guard += 1
-    chapter.behavior.performAction(state, inv, attack, stub)
+  api.reveal(slot, 0)
+  state.investigators[0].location = slot
+  state.chaosBag = ['+8']
+  const health = towerHealth(state, slot)
+  for (let hit = 0; hit < health; hit++) {
+    const attack = legalMoves(state).find(item => item.rule === `heartOfMadnessAttackPylon:${slot}`)
+    assert.ok(attack, '已揭示高塔提供攻击行动')
+    move(state, attack)
+    settle(state)
+    assert.equal(state.lastTestResult.success, true)
+    assert.equal(towerState(state, slot).damage, hit + 1)
   }
   assert.equal(towerState(state, slot).collapsed, true, '生命归零后坍塌')
   assert.ok(collapsedTowers(state).includes(slot))
 })
 
-test('P7 theHeartOfMadnessPart2 幕 3 目标：全部高塔坍塌 → 推进到第 4 幕', () => {
-  const state = buildState()
-  const api = setup(state)
+test('P7 theHeartOfMadnessPart2 幕 3 目标：全部高塔坍塌后在轮末推进到最终幻景', () => {
+  const state = buildState(1)
+  setup(state)
+  state.encounterDeck = []
+  state.investigators[0].location = 'theGateOfYquaa'
+  for (const slot of pylonSlotsOf(state)) damageTower(state, { towerId: slot, amount: towerHealth(state, slot) })
   assert.equal(codeOf(state.acts[state.actIndex]), '08673')
-  const stub = { ...api, test: (seat, skill, difficulty, resolve) => resolve() }
-  const inv = state.investigators[0]
-  for (const slot of pylonSlotsOf(state)) {
-    inv.location = slot
-    const attack = chapter.behavior.actions(state, inv).find(item => item.rule === `heartOfMadnessAttackPylon:${slot}`)
-    let guard = 0
-    while (!towerState(state, slot).collapsed && guard < 20) {
-      guard += 1
-      chapter.behavior.performAction(state, inv, attack, stub)
-    }
-  }
-  chapter.behavior.checkObjectives(state, stub)
-  assert.equal(state.actIndex, 1, '推进到最终幻景')
+  move(state, { action: 'endTurn' })
+  settle(state)
   assert.equal(codeOf(state.acts[state.actIndex]), '08681')
+  assert.ok(locationOf(state, 'hiddenTunnel'), '背面完成了坡道布置')
 })
 
 test('P7 theHeartOfMadnessPart2 坡道场景：幕 3 背面清场并铺设泰坦坡道 + 隐藏隧道', () => {

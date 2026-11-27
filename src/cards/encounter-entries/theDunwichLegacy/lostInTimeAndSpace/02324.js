@@ -13,7 +13,7 @@ export default {
     onDraw(state, loc, api, seat, meta) {
       // 涌动只在从遭遇牌库抽取时结算；从弃牌堆放入场不触发。
       if (meta?.fromDiscard) return
-      api.drawEncounter(seat)
+      api.drawEncounter(seat, { surgeDraw: true })
     },
   },
 }

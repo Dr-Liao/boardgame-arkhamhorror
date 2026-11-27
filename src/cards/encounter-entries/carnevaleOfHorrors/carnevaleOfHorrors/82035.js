@@ -14,7 +14,7 @@ export default {
       && current.ring.filter(id => id !== 'sanMarcoBasilica').length > 0
     if (!hereHasMasked) {
       api.info?.('🌀 催眠术：场上没有面具行人，本卡获得涌动（再抽一张遭遇牌）。')
-      api.drawEncounter?.(inv.seat)
+      api.drawEncounter?.(inv.seat, { surgeDraw: true })
       return true
     }
     api.resolveScenarioEvent?.('carnevaleFlipMaskedGoer', { choose: false })

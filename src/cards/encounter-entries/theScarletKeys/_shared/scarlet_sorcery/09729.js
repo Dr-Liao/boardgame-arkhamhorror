@@ -15,8 +15,7 @@
 //     parleyMovesFor 的「敌人身上的附属卡自身行动」分支；descriptor.range: 'anywhere'）；
 //   · 钥匙翻面 = api.mechanics.tsk.keys.shift（绯红密钥变换唯一写入口；先读 keyChoices().canShift 避开每轮一次限制）；
 //   · 弃掉本卡 = api.cardsInPlayTreacheries + api.discardCardInPlay（场上诡计通用去除）；
-//   · 「+1 攻击 / +1 躲避」需要「附属卡对宿主敌人的数值修正」读点（modifiers 的 entity 行只认敌人自己/
-//     所在地点/幕/议程，不认 enemy.attachments），见 primitive-requests/09729.json。
+//   · 「+1 攻击 / +1 躲避」由宿主敌人的实体修正读点读取。
 import { ALL_CARDS, hasTrait } from '../../../_shared.js'
 
 const CODE = '09729'
@@ -37,6 +36,10 @@ function discardSelf(api, source) {
 
 export default {
   code: CODE, scope: 'treachery', implemented: true,
+  modifiers: [
+    { target: 'enemyFight', amount: 1 },
+    { target: 'enemyEvade', amount: 1 },
+  ],
   treacheryRule: {
     // 附属敌人 +1 伤害 / +1 恐惧：唯一读点在 enemies.js#enemyAttack（attackBonus）。
     attackBonus: { damage: 1, horror: 1 },
@@ -77,10 +80,7 @@ export default {
       options: candidates.map(enemy => ({ id: enemy.id, label: `${enemy.name}（生命 ${printedHealth(state, enemy)}）` })),
     })) || candidates[0]
     api.attachEncounterToEnemy(CODE, target.id)
-    api.info?.(`🩸 「身染猩红」附属到「${target.name}」（+1 伤害、+1 恐惧）。`)
+    api.info?.(`🩸 「身染猩红」附属到「${target.name}」（+1 攻击、+1 躲避、+1 伤害、+1 恐惧）。`)
     return { placed: true }
   },
-  note: 'approximation: 「+1 伤害/+1 恐惧」走 treacheryRule.attackBonus（唯一读点）；「+1 攻击/+1 躲避」缺少'
-    + '「附属卡对宿主敌人的数值修正」读点（modifiers 的 entity 行不读 enemy.attachments），已在条目里逐条披露。'
-    + '请求见 primitive-requests/09729.json。',
 }

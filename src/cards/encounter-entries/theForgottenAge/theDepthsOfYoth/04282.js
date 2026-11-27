@@ -12,24 +12,18 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api) {
       tfaPlacePursuit(state, api)
-      const zones = (state.scenarioZones ||= {})
-      const index = (zones.setAside || []).indexOf('04296')
-      if (index < 0) return
-      zones.setAside.splice(index, 1)
       const start = state.scenarioFlags?.depthStartLocation
-      const enemy = api.spawn('04296', start)
-      if (enemy) api.info?.(`伊格在「${start}」现身。`)
-      else zones.setAside.push('04296')
+      if (api.spawnSetAsideEnemy('04296', start)) api.info?.(`伊格在「${start}」现身。`)
     },
     onDoomPlaced(state, payload, api) {
       if (!payload?.agenda) return
-      const flags = (state.scenarioFlags ||= {})
-      flags.furyDoomPlaced ||= {}
+      const flags = state.scenarioFlags
       const key = String(state.agendaIndex)
-      flags.furyDoomPlaced[key] = (flags.furyDoomPlaced[key] || 0) + (payload.amount || 0)
-      if (flags.furyDoomPlaced[key] < 3) return
-      if (flags.furyDoomThird) return
-      flags.furyDoomThird = true
+      const previous = flags?.furyDoomPlaced || {}
+      const placed = (previous[key] || 0) + (payload.amount || 0)
+      api.setScenarioFlag('furyDoomPlaced', { ...previous, [key]: placed })
+      if (placed < 3 || flags?.furyDoomThird) return
+      api.setScenarioFlag('furyDoomThird')
       tfaPlacePursuit(state, api)
     },
   },

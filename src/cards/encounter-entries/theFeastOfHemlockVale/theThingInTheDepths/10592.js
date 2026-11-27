@@ -6,9 +6,8 @@
 //   目标 - 当一轮结束时，如果鳄龟混种在起始地点，立即推进。
 // 背面（奇异构造）：如果是第一日，阅读下列内容（→结局 2）；否则（→结局 1）。
 //
-// 快速改巡逻 = behavior.actions/performAction（deepths* 见 behavior），敌军阶段末伤害见
-// behavior.enemyPhaseEnd 的近似（enemyPhaseAfterHunters），目标见 behavior.checkObjectives，
-// 背面见 behavior.actReveal。数据型条目。
+// behavior.fastActions/performAction 结算快速改巡逻，behavior.patrolTarget 提供当轮目标。
+// behavior.enemyPhaseEnd 结算伤害，behavior.checkObjectives 检查幕目标。
 export default {
   code: '10592',
   scope: 'act',
@@ -19,6 +18,5 @@ export default {
     objective: { type: 'chelydranHybridAtStartingLocation', timing: 'roundEnd' },
     back: { resolutionByDay: { 1: 'resolution2', otherwise: 'resolution1' } },
   },
-  note: '数据型幕条目；快速改巡逻由 behavior.actions/performAction 结算（引擎巡逻只读条目静态目标，本轮改目标用「敌军阶段后走一步」近似，见 note 于 behavior），敌军阶段末伤害与目标/背面也在 behavior。',
   abilities: [],
 }

@@ -3,6 +3,7 @@ import { ALL_CARDS } from '../cards/cards-data.js'
 import { keysOnExit } from './scenario-keys.js'
 import { releaseChaosTokens } from './chaos-bag.js'
 import { afterThreatEntered } from './threat-entry.js'
+import { returnSwarmCard, swarmGroup } from './swarm.js'
 // 异端者多面与放逐 —— 第 2 步 P2.12。
 //
 // 《罪恶报应》的 6 个异端者每张卡有两个面：**敌人面**与**未了之事面**（威胁区剧情卡）。
@@ -111,6 +112,7 @@ export function banishEnemyToVictory(state, enemy, deps = {}) {
   const { info, events, victory = Number(enemy?.victory || 0), addVictory = null, forceVictory = false } = deps
   if (!enemy) return false
   if (state.enemies.includes(enemy)) {
+    for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
     releaseChaosTokens(state, enemy.id)
     keysOnExit(state, `enemy:${enemy.id}`, enemy.location)
   }

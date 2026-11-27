@@ -3,7 +3,7 @@
   "unit": "07-a-7",
   "profile": {
     "id": "tic-lair-of-dagon-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 The Lair of Dagon（lod，07261–07300b）42 条目录记录。37 条通过五维验收；5 条因同句模板三份手写或展示契约未接线暂不切换。",
+    "scope": "印斯茅斯暗潮 07 段 The Lair of Dagon（lod，07261–07300b）42 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 42,
-    "verified": 37,
-    "unverified": 5,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 381
+    "testsPassed": 383
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
-      "sha256": "1801dac291903c47bdc0da7b567114a26a39c8d4b74705dab34fb5852a9b25be"
+      "sha256": "ff84941f6a2299092d14cdfd5586f951ce6d1183abd7ae5c2a9f8f8a228c98dd"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+      "sha256": "8e1a6aa3b2eafa4e15101268f7ca36d234c8aacb710ba2309d846f9b92f2c090"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -137,9 +137,17 @@
       "code": "07267",
       "name": "伊恰克",
       "type": "asset",
-      "status": "pending",
-      "dimension": "interaction",
-      "reason": "新承载区 capturedCards（面朝下放于伊恰克下方的基础弱点）只被 projection 折成 capturedCardCount，web/** 无渲染读点，docs/card-model.md §7.1 未登记 → 玩家看不到下方弱点数量；违反 ARCHITECTURE §3.5「新增承载区 card-defs/observation/web 三处一起改并登记」。行为本身正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
+          "test": "P6 07267 captures a basic weakness from its actual owner and draws it on leave"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07267 伊恰克：公开面朝下张数，隐藏原始卡号和持有人，牌桌标记读取公开张数"
+        }
+      ]
     },
     {
       "code": "07268",
@@ -213,9 +221,17 @@
       "code": "07273",
       "name": "净化腐败",
       "type": "asset",
-      "status": "pending",
-      "dimension": "interaction",
-      "reason": "新使用标记类型 usesType:'corruption' 未登记 web/table-components.js#USE_TOKEN_DISPLAY，也未补中英词典（AGENTS 要求新增使用标记类型同轮补展示登记 + 词典）→ 卡面腐化计数回退显示原始 id。行为本身正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-survivor-neutral.test.mjs",
+          "test": "P6 07273 Purifying Corruption cancels real revelations, pays combined harm, removes at three, draws encounter before choice and excludes weaknesses"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07273 净化腐败：主标记与具名标记显示腐化及数量，第三个腐化使本卡离场"
+        }
+      ]
     },
     {
       "code": "07274",
@@ -513,25 +529,121 @@
       "code": "07280",
       "name": "第一誓约",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "三张达贡幕正面同句模板（嫌犯三行 modifiers + [fast] 花蓝/红/白/黄钥匙清屏障）三份手写声明之一；p8-release §7 的维护项 w5-07280-oath-shared-rules（共用正面模板工厂）明确未完成。行为正确，仅复用债务。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 正面：[[嫌犯]]敌人 +1[每调查员]生命、失去冷漠、不能谈判；非嫌犯不受影响"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 注册为 act：三行实体规则 + 免费弃屏障能力 + 目标函数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 目标：全员在宏伟入口且“解锁了洞穴的入口”才推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "幕 07280 目标：全员在宏伟入口且解锁洞穴入口时才成立（objective）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "幕 07280 背面：移除旧地点、潮水通道入场、提升淹没并洗回朔望/星潮合相"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07280/07281/07282 共用达贡誓约正面：只修正嫌犯并使用钥匙清除当地屏障"
+        }
+      ]
     },
     {
       "code": "07281",
       "name": "第二誓约",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句模板三份手写声明之一（与 07280/07282 逐字重复），共享工厂重构未完成。行为正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07280/07281 背面：潮水通道与达贡巢穴落在 act1BackMap 矩阵槽位（相对宏伟入口）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07281 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07281 注册为 act：三行实体规则 + 免费弃屏障能力 + 解锁最终深渊目标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07281 目标：有调查员“解锁了最终深渊”才推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07281 背面：密谋2a 加 5 诅咒、密谋3a 不加诅咒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07281 背面：达贡巢穴完全淹没入场、沉睡达贡入场、密谋1a 加 10 诅咒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "幕 07281 背面：达贡巢穴完全淹没、沉睡达贡入场、诅咒按密谋次序加入"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07280/07281/07282 共用达贡誓约正面：只修正嫌犯并使用钥匙清除当地屏障"
+        }
+      ]
     },
     {
       "code": "07282",
       "name": "第三誓约",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句模板三份手写声明之一（与 07280/07281 逐字重复），共享工厂重构未完成。行为正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07282 [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07282 注册为 act：三行实体规则 + 本幕线索目标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07282 目标：本幕上的线索达到 3[每调查员] 才推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07282 背面：达贡沉睡时记录仪式被破坏与仍沉睡 → 结局1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
+          "test": "07282 背面：达贡苏醒（在场或胜利区）时记录已苏醒 → 结局1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-theLairOfDagon.test.mjs",
+          "test": "幕 07282 背面：记录仪式被破坏与达贡仍沉睡，结算结局 1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard7.test.mjs",
+          "test": "验收 07280/07281/07282 共用达贡誓约正面：只修正嫌犯并使用钥匙清除当地屏障"
+        }
+      ]
     },
     {
       "code": "07283",
@@ -891,10 +1003,6 @@
       "type": "treachery",
       "status": "verified",
       "evidence": [
-        {
-          "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-          "test": "07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）"
-        },
         {
           "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
           "test": "07299 显现：附属到最近且没有石障的地点，不弃牌；第二张落到下一个最近地点"

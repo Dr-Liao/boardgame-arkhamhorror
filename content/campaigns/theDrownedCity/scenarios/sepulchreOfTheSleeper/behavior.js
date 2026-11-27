@@ -12,6 +12,7 @@
 //
 // 任务/记录：入场门槛读 campaign.records 的 5 件神器与 discoveredGlyphs；resolution1 写
 // theInvestigatorsHaltedCthulhusAwakening。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { tdcCannotGainUpkeepResources } from '../../campaign-rules.js'
@@ -429,7 +430,7 @@ export function afterEvade(state, inv, enemy, result = null, api = {}) {
     options: [{ id: 'ready', label: '重整克苏鲁' }, { id: 'damage', label: '每位调查员受到 1 点直接伤害' }] }) : 'ready'
   if (choice === 'damage') {
     for (const other of (state.investigators || []).filter(item => !item.defeated && item.resigned !== true && item.location === enemy.location)) {
-      if (typeof api.damage === 'function') api.damage(other.seat, 1)
+      if (typeof api.damage === 'function') api.damage(other.seat, 1, { code: codeOf(enemy), sourceEnemyId: enemy.id })
       else other.damage = (Number(other.damage) || 0) + 1
     }
     info(api, '克苏鲁被躲避：他所在地点每位调查员受到 1 点直接伤害。')
@@ -468,7 +469,7 @@ export function enemyMoved(state, enemy, previous, api = {}) {
     switch (here.id) {
       case 'sigilCarvedAlcoveAmbition':
         if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
-        else if ((inv.hand || []).length) inv.hand.pop()
+        else if ((inv.hand || []).length) spliceHand(inv, -1, 1)[0]
         break
       case 'sigilCarvedAlcoveResilience':
         if (typeof api.damage === 'function') api.damage(inv.seat, 1)
@@ -660,7 +661,7 @@ export function applyTokenEffect(state, inv, effect = {}, api = {}) {
       }) : (hasCards ? 'discard' : 'horror')
       if (choice === 'discard' && hasCards) {
         if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
-        else inv.hand.pop()
+        else spliceHand(inv, -1, 1)[0]
       } else if (typeof api.horror === 'function') api.horror(inv.seat, 1)
       else inv.horror = (Number(inv.horror) || 0) + 1
       handled += 1

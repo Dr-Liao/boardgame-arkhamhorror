@@ -65,12 +65,12 @@ test('P6 10129 静候时机 Double 额外花 1 行动；下个回合获得额外
   assert.equal(me(state).actionsLeft, 1, '打出 1 行动 + Double 额外 1 行动')
   assert.equal(me(state).resources, 5, '0 资源费用')
   assert.equal(me(state).discard.includes('10129'), true, '事件结算后进弃牌堆')
-  assert.equal(me(state).extraActionNextTurn, true, '记录「下个回合的额外行动」')
+  assert.equal(me(state).extraActionNextTurn, 2, '记录「下个回合的额外行动」')
 
   move(state, { action: 'endTurn' })
   settle(state)
   assert.equal(state.round, 2, '结束回合后进入下一轮')
-  assert.equal(me(state).actionsLeft, 4, '下个回合 3 + 1 行动（近似，印刷为 +2）')
+  assert.equal(me(state).actionsLeft, 5, '下个回合 3 + 2 行动')
   assert.equal(me(state).extraActionNextTurn, undefined, '额外行动已消费')
 })
 
@@ -228,15 +228,17 @@ test('P6 10133 破碎冠冕 同检定揭示祝福与诅咒后放贡品；满 3 �
   assert.ok(twilight, '3 个贡品：与暮光冠冕交换')
   assert.equal(twilight.uses, 3, '所有贡品移动到暮光冠冕上')
   assert.equal(me(state).assets.some(card => card.code === '10133'), false, '破碎冠冕已离场')
-  assert.equal(me(state).hand.includes('10133'), true, '近似：破碎冠冕返回手牌（缺绑定卡就地交换原语）')
+  assert.equal(Object.values(state.bondedSets).some(set => set.cards.includes('10133')), true, '破碎冠冕返回绑定区')
 })
 
 // ── 10134 暮光冠冕 ─────────────────────────────────────────────────────────
 test('P6 10134 暮光冠冕 揭示[诅咒]时花 1 贡品横置改为[elder_sign]；没有贡品则换回破碎冠冕', () => {
   const state = fixture('01001')
   me(state).assets = []
-  me(state).hand = ['10133'] // 反向交换要求破碎冠冕在手牌（由 10133 的交换放入）
-  const twilight = asset(state, '10134', { uses: 1 })
+  asset(state, '10133', { uses: 2 })
+  investigateWithBlessAndCurse(state)
+  const twilight = me(state).assets.find(card => card.code === '10134')
+  twilight.uses = 1
   const here = state.locations.find(location => location.id === me(state).location)
   here.revealed = true
   here.clues = 2
@@ -249,8 +251,8 @@ test('P6 10134 暮光冠冕 揭示[诅咒]时花 1 贡品横置改为[elder_sign
   assert.equal(state.lastTestResult.success, true, '检定成功')
   assert.equal(me(state).assets.some(card => card.code === '10134'), false, '没有贡品后换回破碎冠冕')
   assert.equal(me(state).assets.some(card => card.code === '10133'), true, '破碎冠冕放置入场')
-  assert.equal(me(state).hand.includes('10134'), true, '近似：暮光冠冕返回手牌')
-  assert.equal(fresh(state, twilight.id), undefined, '原实例已离场')
+  assert.equal(Object.values(state.bondedSets).some(set => set.cards.includes('10134')), true, '暮光冠冕返回绑定区')
+  assert.notEqual(fresh(state, twilight.id)?.code, '10134', '原牌已离场')
 })
 
 // ── 10135 手部残疾 ─────────────────────────────────────────────────────────

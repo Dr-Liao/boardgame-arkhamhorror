@@ -3,7 +3,7 @@
   "unit": "07-a-3",
   "profile": {
     "id": "tic-in-too-deep-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 In Too Deep（itd，07108–07151）44 条目录记录。32 条通过五维验收；12 条（07129–07138、07140、07141）因「谈判移除屏障」同句模板逐卡手写暂不切换（复审更新）。",
+    "scope": "印斯茅斯暗潮 07 段 In Too Deep（itd，07108–07151）44 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 44,
-    "verified": 32,
-    "unverified": 12,
+    "verified": 44,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 832
+    "testsPassed": 846
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
-      "sha256": "3557bf72e1ed8d2aad6e2bfc213a46a695d1052b6eec0ca85552955dcc25d8e8"
+      "sha256": "f3894fe55da64f6d6c385f98e8f31106155baf99758f5e248cc7c282a2df9d7c"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
-      "sha256": "7e776eb6970b754d96fc77e663932e5f3b2cd814e6f05be88473d5ff5f613c4e"
+      "sha256": "dad8a46848dd19c8f5d092d5e0dbb1efedd6470f7477bd1f15e4bd89e9f342d8"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-inTooDeep.test.mjs",
@@ -85,11 +85,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+      "sha256": "77085f74c7104b64befad15759c8cb5bd07adcf52e1734ae304d11f0aac4c52f"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -689,81 +689,193 @@
       "code": "07129",
       "name": "达贡密教",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07129 two-action intellect parley removes one barrier on success and provokes no attack"
+        }
+      ]
     },
     {
       "code": "07130",
       "name": "锯骨巷",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07130 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07130 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07130 one-action willpower test uses initial player count and removes barrier only on success"
+        }
+      ]
     },
     {
       "code": "07131",
       "name": "朝岸贫民窟",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07131 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07131 damage cost is assignable to an asset and free parley leaves ordinary actions unchanged"
+        }
+      ]
     },
     {
       "code": "07132",
       "name": "水街老屋",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07132 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07132 selected hand discard is paid before free removal and an empty hand cannot activate"
+        }
+      ]
     },
     {
       "code": "07133",
       "name": "印斯茅斯监狱",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07133 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07133 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07133 resource parley spends three; only the actual black-key holder can trigger FlashbackVIII"
+        }
+      ]
     },
     {
       "code": "07134",
       "name": "新格林教堂",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07134 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07134 requires its own clues cleared, then spends one action to remove one barrier"
+        }
+      ]
     },
     {
       "code": "07135",
       "name": "小利透书店",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07135 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07135 actual flashback activation checks actor/group keys and shared limit across JSON"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07135 lethal revelation paid as a cost stops before any barrier benefit"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07135 two-action encounter cost draws real enemy before barrier removal and empty piles reject atomically"
+        }
+      ]
     },
     {
       "code": "07136",
       "name": "鱼街旧桥",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07136 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07136 shroud counts physical barrier tokens and exact curse fee rejects insufficient supply"
+        }
+      ]
     },
     {
       "code": "07137",
       "name": "国立第一杂货铺",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07137 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07137 actual entry adds a barrier behind; parley chooses lowest modified skill including ties"
+        }
+      ]
     },
     {
       "code": "07138",
       "name": "印斯茅斯港口",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07138 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07138 optional arrival move uses actual printed House identity and respects blocked entry"
+        }
+      ]
     },
     {
       "code": "07139",
@@ -793,17 +905,41 @@
       "code": "07140",
       "name": "吉尔曼旅社",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07140 以战力或敏捷谈判：成功只移除所选通道的一个屏障，失败保持原数"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07140 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenarios-early.test.mjs",
+          "test": "P7 07140 combat/agility choice conducts the chosen real test and removes a barrier only on success"
+        }
+      ]
     },
     {
       "code": "07141",
       "name": "马什精炼厂",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则模板重复手写：「[行动] 谈判。检定…；成功移除本地点与连接地点之间的 1 个屏障」在本章 12 张地点上逐卡手写（cost/skill/difficulty 各写一遍），另有「揭示后随机放 1 把未揭示钥匙」模板 5 份（07129/07131/07132/07134/07140）。按迁移规范 §4.3 与 TIC acceptance §0.5，出现第三张前应上收共享工厂（同章 07124–07127 的 floodedTurnEndAgenda 与 keyedFlashbackAbility 已是正确形态）；现实现未上收。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07141 屏障谈判在真实地点的合法菜单上显示正确行动费用"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard3.test.mjs",
+          "test": "07141 马什精炼厂：控制钥匙时可自由移动到连接地点；弃支援谈判移除 1 个屏障"
+        }
+      ]
     },
     {
       "code": "07142",

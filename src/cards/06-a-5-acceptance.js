@@ -2,7 +2,7 @@
 // Detailed evidence: audit/06-a-5-acceptance.json. Not a promise of all-combination equivalence.
 export const TDE_SHARD5_ACCEPTANCE_PROFILE = {
   "id": "tde-thousand-shapes-2026-11",
-  "scope": "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。35 条通过五维验收；6 条因整条子句未实现或死声明暂不切换。",
+  "scope": "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TDE_SHARD5_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TDE_SHARD5_ACCEPTANCE_SHA256 = 'fca6b1483ad5ad984ff1d88fe0ad05450e15410cce0d6c99789e814f45c18a02'
-const verified = new Set(["06155","06156","06157","06158","06159","06160","06161","06162","06163","06164","06165","06166","06167","06168","06169a","06169b","06170","06171","06173","06175","06176","06177","06178","06179","06180","06181","06182","06183","06184","06185","06186","06187","06189","06190","06194"])
+export const TDE_SHARD5_ACCEPTANCE_SHA256 = '0fded4614e5578700c191fb9e6ab737ebe8cc390a6ba4a1420a0aa1d2dae8e10'
+const verified = new Set(["06155","06156","06157","06158","06159","06160","06161","06162","06163","06164","06165","06166","06167","06168","06169a","06169b","06170","06171","06172","06173","06174","06175","06176","06177","06178","06179","06180","06181","06182","06183","06184","06185","06186","06187","06188","06189","06190","06191","06192","06193","06194"])
 export const tdeShard5CardVerified = code => verified.has(code)

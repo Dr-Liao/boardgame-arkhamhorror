@@ -11,7 +11,6 @@ const traitsOf = (api, code) => (api.cardTraits?.(code) || [])
 export default {
   code: '06136b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api, ctx = {}) {
       const locationId = ctx.location?.id || 'baharna'
       for (const inv of (state.investigators || [])) {

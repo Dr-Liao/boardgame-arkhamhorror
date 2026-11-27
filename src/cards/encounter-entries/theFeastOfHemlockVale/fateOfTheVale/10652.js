@@ -4,8 +4,8 @@
 //
 // 一张卡一个文件：条目只声明身份与规则数据（flags），行为接线在章节 behavior：
 //   · flags.abyssMythosReplacement → behavior.abyssMythosActive / drawEncounterFromAbyss
-//   · flags.cosmicEmissaryGaze → behavior.gazeRule
-//   · flags.backTest → behavior.agendaReveal（议程 1 背面：意志/智识 4，每失败 1 点 → 1 恐惧）
+//   · flags.cosmicEmissaryGaze → behavior.timedEnemyView（房主服务器计时）
+//   · flags.backTest → behavior.agendaReveal（意志或智识 4，每失败 1 点选择恐惧或将顶牌洗入深渊）
 export default {
   code: '10652',
   scope: 'agenda',
@@ -19,6 +19,15 @@ export default {
       penalty: 'horrorOrDeckTopToAbyss',
     },
   },
-  note: 'approximation: 「凝视密使超过 15 秒即疯狂」需要前端计时提示（提示卡），引擎无计时读点，只保留 flags.cosmicEmissaryGaze 供界面/裁决读取；背面「洗牌入深渊」按失败点数取牌库顶。',
-  abilities: [],
+  abilities: [{
+    kind: 'forced',
+    trigger: 'encounterCardWouldDraw',
+    silent: true,
+    label: '改为从深渊底揭示并抽取一张遭遇卡',
+    criteria: ({ state, context }) => state.scenario.id === 'fateOfTheVale' && !context.replaced,
+    resolve: ({ context, api }) => {
+      context.replaced = true
+      api.scenario.resolveScenarioEvent('fateOfTheValeEncounterFromAbyss', { seat: context.seat })
+    },
+  }],
 }

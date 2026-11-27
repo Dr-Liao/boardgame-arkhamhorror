@@ -10,12 +10,7 @@ export default {
   code: '04281', scope: 'agenda',
   agendaRule: {
     onReveal(state, agenda, api) {
-      const zones = (state.scenarioZones ||= {})
-      if (zones.harbingerAside) {
-        zones.pursuit ||= []
-        zones.pursuit.push(zones.harbingerAside)
-        delete zones.harbingerAside
-      }
+      api.transferAsideToPursuit()
       tfaPlacePursuit(state, api)
     },
   },

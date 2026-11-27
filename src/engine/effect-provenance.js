@@ -198,6 +198,7 @@ export function enemyIsSlumbering(state, enemy, { entryOf, isBlanked } = {}) {
  * originOverride 只给引擎内部的合法目标枚举用，绝不从玩家命令字段取值。
  */
 export function enemyEffectAllowed(state, enemy, operation, deps = {}, originOverride = null) {
+  if (enemy?.attachedToAssetId && ['engage', 'autoEngage', 'initiateAttack', 'evadeAction'].includes(operation)) return false
   // 批次 3（60553）：敌人声明「免疫玩家卡牌效果」时，只有玩家卡来源被拒绝，剧本/遭遇照常。
   const immuneEntry = typeof deps.entryOf === 'function' ? deps.entryOf(enemy?.originalCode || enemy?.code) : null
   if (immuneEntry?.enemyRule?.playerCardEffectImmune === true) {

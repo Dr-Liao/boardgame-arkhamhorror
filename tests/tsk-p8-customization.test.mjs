@@ -166,6 +166,31 @@ function jsonRoundtrip(state) {
 
 const deckOf = (state, seat = 0) => state.campaign.investigators[seat]?.deck || []
 
+for (const { code, investigator, optionIndex } of [
+  { code: '09061', investigator: '09008', optionIndex: 6 },
+  { code: '09081', investigator: '09011', optionIndex: 7 },
+]) {
+  test(`09-a-2 ${code}：定制勾满后才能在幕间购买第三张，第四张仍非法`, () => {
+    const state = driveToInterlude(scenarioSetup({ seed: 3, investigator }))
+    awardXp(state, 8)
+    const copies = () => deckOf(state).filter(card => card === code).length
+    const purchase = () => legalMoves(state, 0).find(item => item.action === 'hubPurchase' && item.added === code)
+    while (copies() < 2) {
+      act(state, 0, purchase())
+      act(state, 0, findMove(state, 0, 'hubConfirmUpgrades'))
+    }
+    assert.equal(copies(), 2)
+    for (let check = 0; check < 3; check++) {
+      assert.equal(purchase(), undefined)
+      act(state, 0, customizeMoves(state).find(item => item.code === code && item.optionIndex === optionIndex))
+    }
+    act(state, 0, purchase())
+    act(state, 0, findMove(state, 0, 'hubConfirmUpgrades'))
+    assert.equal(copies(), 3)
+    assert.equal(purchase(), undefined)
+  })
+}
+
 // ---------------------------------------------------------------------------
 // 1. 首章前 scenarioSetup：投影存在、全 0 勾选、无候选（0 XP）
 // ---------------------------------------------------------------------------
@@ -491,12 +516,13 @@ test('P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09
   assert.equal(prop(entry09099, full099, inv).bonus, 2, '勾满 2 格 +1')
 
   // 09079：Eldritch Ink 选择技能 / Vibrancy 加值都要求勾满。
-  const mod = (state) => entry09079.modifiers.find(row => row.target === 'skill:intellect').amount({ state, inv })
+  const mod = state => entry09079.modifiers.find(row => row.target === 'skill:intellect')
+    .amount({ state: { ...state, round: 1 }, inv, source: { id: 'ink', ownerSeat: inv.seat } })
   assert.equal(mod(customState('09079', [3])), 0, 'Eldritch Ink 1/2 格不追加所选技能')
   assert.equal(mod(customState('09079', [3, 3])), 1, '勾满后智力 +1')
 
   // 09119：形态解锁（每形态 2 格）。
-  const formCriteria = entry09119.abilities[2].criteria[0]
+  const formCriteria = entry09119.abilities.at(-1).criteria[0]
   const inv119 = { seat: 0, name: '测试调查员' }
   assert.equal(formCriteria({ state: customState('09119', [0]), inv: inv119 }), false, '1/2 格形态不解锁')
   assert.equal(formCriteria({ state: customState('09119', [0, 0]), inv: inv119 }), true, '勾满 2 格解锁形态')

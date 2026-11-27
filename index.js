@@ -43,6 +43,7 @@ import { handleMusicLibrary } from './src/integration/music-library.js'
 import { cacheWebAsset as cacheImageAsset } from './src/integration/image-cache.js'
 import { cacheMusicAsset } from './src/integration/music-cache.js'
 import { viewState, viewEvents, staticTables } from './src/integration/observation.js'
+import { CARD_VIEW_EXPIRED, timedCardViewRule } from './src/engine/timed-card-view.js'
 import { laneToRoomSeat, laneSeatForRoom } from './src/engine/lane-runtime.js'
 import {
   isParallelState, laneOfSeat, laneStateOf, launchParallelLanes, parallelActingSeats, parallelApplyMove, parallelAutoChoice, parallelDecisionSeat,
@@ -522,6 +523,12 @@ export default {
   },
   validateMove: hostedValidateMove,
   applyMove: hostedApplyMove,
+  isSystemMove: move => move?.action === CARD_VIEW_EXPIRED,
+  cardViewRule(state, seat, enemyId) {
+    if (isParallelState(state) || seatIsWaiting(state, seat)) return null
+    const rule = timedCardViewRule(state, laneSeatOfRoom(state, seat), enemyId)
+    return rule && { ...rule, move: { action: CARD_VIEW_EXPIRED, enemyId, ruleKey: rule.key } }
+  },
 
   // —— 调试控制台（大厅可选钩子，见 lib/mods.js 与 artifacts/debug-console/CONTRACT.md §4）——
   // isDebugMove 让大厅拒绝经由普通 /move、自动代答或批量选择夹带调试动作；

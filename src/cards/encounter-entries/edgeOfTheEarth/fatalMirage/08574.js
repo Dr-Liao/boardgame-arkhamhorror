@@ -1,24 +1,17 @@
 // 08574 黑色岩石
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { partnerShroud } from './_shared.js'
+import { frostPoolRoom } from '../../_shared.js'
 
 export default {
-  code: '08574',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "theBlackStone",
-    "tier": 2,
-    "investigatorShroudBonus": {
-      "partner": "艾弗里·克莱普尔",
-      "amount": -2
+  code: '08574', scope: 'location', implemented: true,
+  flags: { mirageId: 'theBlackStone', tier: 2 },
+  locationRule: { shroudModifier: partnerShroud('08591', '08718') },
+  abilities: [{
+    kind: 'free', actionKind: 'activate', label: '加 1 个寒霜：发现本地点 2 线索',
+    limit: { scope: 'perGame', owner: 'group' },
+    criteria: ({ state, source }) => source.clues > 0 && frostPoolRoom(state) > 0,
+    resolve: ({ inv, source, api }) => {
+      if (api.mechanics.frost.add(1)) api.discoverClue(inv.seat, 2, source.id)
     },
-    "freeFrostForClues": {
-      "clues": 2,
-      "oncePerGame": true
-    }
-  },
+  }],
 }

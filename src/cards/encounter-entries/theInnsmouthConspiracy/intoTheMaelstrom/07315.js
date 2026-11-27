@@ -13,7 +13,8 @@
 //     否则以（深入沉睡）面入场。
 //
 // 引擎读点：
-//   · actRule.objective(state) ← act-agenda.js#checkAct（每次行动后读条目函数分支并推进）。
+//   · actRule.optionalObjective 让满足目标时提供可选的 advanceAct 行动。
+//     引擎执行该行动前再次核验 actRule.objective(state)。
 //     钥匙用 _shared 的 keysHeldByGroup（全队持有的已揭示钥匙；setAside/removed 的不算）。
 //   · actRule.chapterSetup: 'act1Back' ← content entry-rules.actReveal 的数据驱动分派；
 //     content/late-setup.js#chapterActBackSetup 读取 chapter-data.setup.act1Back：
@@ -31,6 +32,7 @@ const REQUIRED_KEYS = ['blue', 'red', 'yellow', 'green']
 export default {
   code: '07315', scope: 'act', implemented: true,
   actRule: {
+    optionalObjective: true,
     objective(state) {
       const gateway = state.locations.find(location => String(originalOf(location)) === GATEWAY)
       if (!gateway) return false

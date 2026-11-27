@@ -16,6 +16,7 @@ export default {
     label: '👁️ 检定意志(4)：本次检定后弃掉「黑夜恐怖」',
     skills: ['willpower'],
     difficulty: 4,
+    discardAfterTest: true,
     target: 'threat',
   },
   encounterResolve(state, inv, card, api) {

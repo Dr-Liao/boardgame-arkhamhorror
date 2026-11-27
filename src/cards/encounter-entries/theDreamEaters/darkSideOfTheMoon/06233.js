@@ -6,7 +6,7 @@
 //
 // 依据 Haskell Treachery/Cards/.../FalseAwakening.hs（开局在密谋牌库旁（Investigator/Scenario Runner 硬编码）、
 // chooseOneM 任意技能 beginSkillTest Fixed (2 + perPlayer 1)、成功 removeFromGame）：
-//   · 开局摆放 → flags.startsNextToAgendaDeck（本章 behavior.preScenarioSetup 读本数据放进 scenarioFlags.agendaAside）；
+//   · 开局摆放 → flags.startsNextToAgendaDeck（本章 behavior 使用公开的 agendaAside 区域摆放）；
 //   · 任意调查员可发动的行动 → treacheryRule.agendaAsideAction 数据，behavior.actions/performAction 统一提供；
 //     成功后从 agendaAside 移除并进 removedFromGame（章节内容层写，条目只声明数据）。
 export default {
@@ -28,5 +28,4 @@ export default {
       anyInvestigator: true,
     },
   },
-  note: '「在密谋牌库旁」用 scenarioFlags.agendaAside 纯数据表达（无 TDE agendaAside 共享区）；其上 1 个毁灭标记是摆放标记，不计入密谋阈值（与参考实现一致）。',
 }

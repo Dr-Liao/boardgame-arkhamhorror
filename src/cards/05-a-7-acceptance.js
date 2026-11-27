@@ -2,7 +2,7 @@
 // Detailed evidence: audit/05-a-7-acceptance.json. Not a promise of all-combination equivalence.
 export const TCU_SHARD7_ACCEPTANCE_PROFILE = {
   "id": "tcu-clutches-of-chaos-2026-11",
-  "scope": "万象无终 05 段 In the Clutches of Chaos（icc，05273–05312）42 条目录记录。33 条通过五维验收；2 条 R1、7 条 [fast] 时机近似未披露暂不切换。",
+  "scope": "万象无终 05 段 In the Clutches of Chaos（icc，05273–05312）42 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TCU_SHARD7_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TCU_SHARD7_ACCEPTANCE_SHA256 = 'f6b7a5e958b3934d26995f401cfecc5bd4e758ad74f1e7112821b1220703e600'
-const verified = new Set(["05273","05274","05276","05277","05278","05280","05281","05282","05283","05284","05285","05286b","05287","05288b","05289","05290","05291","05292","05293","05296","05297","05298","05299","05300","05302","05305","05306","05307","05308","05309","05310","05311","05312"])
+export const TCU_SHARD7_ACCEPTANCE_SHA256 = '9a0f9fbeb5df4c6eb9de135285d590c2dd105b40888fd429cb3492d1a05e8d2d'
+const verified = new Set(["05273","05274","05275","05276","05277","05278","05279","05280","05281","05282","05283","05284","05285","05286a","05286b","05287","05288a","05288b","05289","05290","05291","05292","05293","05294","05295","05296","05297","05298","05299","05300","05301","05302","05303","05304","05305","05306","05307","05308","05309","05310","05311","05312"])
 export const tcuShard7CardVerified = code => verified.has(code)

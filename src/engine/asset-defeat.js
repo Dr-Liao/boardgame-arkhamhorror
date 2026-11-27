@@ -14,20 +14,29 @@
 //
 // 引擎不认卡号：判定只读卡面 health/sanity 与实例上的 damage/horror，窗口只传实体与数值。
 
+import { registeredEntry as assetEntry } from './ability.js'
+
 export const ASSET_DEFEATED_WINDOW = 'assetDefeated'
 
 /** 支援的伤害/恐惧上限（0 表示该类型不能承受）。 */
-export function assetHarmCapacity(def, kind) {
-  const value = kind === 'damage' ? def?.health : def?.sanity
+export function assetHarmCapacity(def, kind, state, asset) {
+  let value = kind === 'damage' ? (asset?.customHealth ?? def?.health) : def?.sanity
+  const flags = kind === 'damage' && asset && state ? assetEntry(asset.code)?.flags : null
+  if (flags?.glyphLine?.length) {
+    const glyphs = (state?.campaign?.records?.discoveredGlyphs || [])
+      .map(glyph => String(glyph).toLowerCase().replace(/^rune_/, ''))
+    if (flags.glyphLine.every(glyph => glyphs.includes(glyph))) value = (value || 0) + (flags.glyphHealthBonus || 0)
+  }
   return Number.isFinite(value) && value > 0 ? value : 0
 }
 
 /** 支援是否已达到被击败条件。 */
-export function isAssetDefeated(def, asset) {
+export function isAssetDefeated(def, asset, state) {
   if (!def || !asset) return false
   const damage = asset.damage || 0
   const horror = asset.horror || 0
-  return (assetHarmCapacity(def, 'damage') > 0 && damage >= assetHarmCapacity(def, 'damage'))
+  const health = assetHarmCapacity(def, 'damage', state, asset)
+  return (health > 0 && damage >= health)
     || (assetHarmCapacity(def, 'horror') > 0 && horror >= assetHarmCapacity(def, 'horror'))
 }
 
@@ -38,7 +47,7 @@ export function isAssetDefeated(def, asset) {
  *         registeredEntry, defeatedAssetRetaliation }
  * 返回是否发生了击败。
  */
-export function checkAssetDefeated(state, owner, asset, events, deps) {
+export function checkAssetDefeated(state, owner, asset, events, deps, { force = false } = {}) {
   const {
     cardDef,
     cardName,
@@ -53,7 +62,8 @@ export function checkAssetDefeated(state, owner, asset, events, deps) {
     shuffleIntoDeck,
   } = deps
   const def = cardDef(asset.code)
-  if (!isAssetDefeated(def, asset)) return false
+  if (!owner.assets.includes(asset) || registeredEntry(asset.code)?.assetRule?.cannotBeDefeated
+    || (!force && !isAssetDefeated(def, asset, state))) return false
   const damage = asset.damage || 0
   const horror = asset.horror || 0
   // 「被击败」本身就是事件：先开窗口再处理去向，反应才有机会把这张卡改成洗回牌库。
@@ -71,14 +81,15 @@ export function checkAssetDefeated(state, owner, asset, events, deps) {
       prompt: `「${cardName(asset.code)}」被击败后`,
     }, events) || {}
     : {}
-  leaveAsset(state, owner, asset, events)
+  if (leaveAsset(state, owner, asset, events, { defeated: true }) === false) return false
+  const originalOwner = state.investigators[asset.ownerSeat] || owner
   if (context.exiledInstead) {
-    exilePlayerCard(state, owner, asset.code, events)
+    exilePlayerCard(state, originalOwner, asset.code, events)
   } else if (context.shuffledIntoDeck) {
-    if (typeof shuffleIntoDeck === 'function') shuffleIntoDeck(owner, asset.code)
-    else owner.deck.push(asset.code)
+    if (typeof shuffleIntoDeck === 'function') shuffleIntoDeck(originalOwner, asset.code)
+    else originalOwner.deck.push(asset.code)
   } else if (!asset.removedFromGame && !asset.returnedToHand) {
-    owner.discard.push(asset.code)
+    originalOwner.discard.push(asset.code)
   }
   if (!context.exiledInstead) {
     info(state, events, context.shuffledIntoDeck
@@ -93,6 +104,6 @@ export function checkAssetDefeated(state, owner, asset, events, deps) {
         prompt: `「${cardName(asset.code)}」在本地点被击败后` }, events)
   }
   const retaliation = registeredEntry(asset.code)?.defeatedDamage
-  if (retaliation) defeatedAssetRetaliation?.(state, owner, retaliation, events)
+  if (retaliation) defeatedAssetRetaliation?.(state, owner, retaliation, events, asset)
   return true
 }

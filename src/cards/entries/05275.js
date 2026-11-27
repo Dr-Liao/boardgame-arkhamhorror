@@ -6,8 +6,7 @@
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
 // 05275 恐怖揭露：发现 3 线索 → 可把任意数量线索交给别人或放到任意地点 → 自我击败并受 1 点精神创伤。
-// 线索转移用调查员实例的 clues 字段（引擎在 applyMove 收尾统一 syncClues），自我击败走通用 api.lethalSelfDamage
-// （与「同归于尽」等自我击败卡同一读点）。
+// 线索转移和卡牌导致的击败都走共享 API。
 
 export default {
   code: '05275',
@@ -50,13 +49,7 @@ export default {
           }
         }
         if (!inv.defeated && !inv.resigned) {
-          // 卡面「你被击败并承受 1 点精神创伤」是确定的（与检定/掷骰无关），因此先记账再结算
-          // 致死伤害：若这是最后一名存活调查员，lethalSelfDamage 触发结局并抛 ScenarioEnded，
-          // 后面的语句不会执行——先写 trauma/defeatCause 才能保证结局按「卡牌效果」而非肉体创伤结算。
-          // 引擎已支持保留预设 defeatCause（harm-threat.js checkDefeated 的 `if (!inv.defeatCause)`）。
-          state.investigators[inv.seat].defeatCause = 'card'
-          api.addTrauma(inv.seat, 'mental', 1)
-          api.lethalSelfDamage(inv.seat)
+          api.defeatWithMentalTrauma(inv.seat, 1)
           api.info(`${inv.name} 被「恐怖揭露」击败，承受 1 点精神创伤。`)
         }
       },

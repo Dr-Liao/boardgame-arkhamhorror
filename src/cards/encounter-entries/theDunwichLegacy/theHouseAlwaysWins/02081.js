@@ -16,7 +16,7 @@ export default {
       const target = state.investigators[seat]
       if (target && !target.defeated && !target.resigned) target.actionsLeft = Math.max(0, target.actionsLeft - 1)
     }
-    api.drawEncounter(inv.seat)
+    api.drawEncounter(inv.seat, { surgeDraw: true })
     return { placed: false, surgeHandled: true }
   },
 }

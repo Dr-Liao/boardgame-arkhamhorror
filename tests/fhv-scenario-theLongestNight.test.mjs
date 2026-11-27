@@ -258,7 +258,8 @@ test('P7 theLongestNight 布置：10 处地点入场、病俘在农庄、乌尔�
   assert.equal(behavior.enemyDeckSize(state), 14)
   assert.equal(state.storyAssets.some(asset => asset.code === BARRIER_TOKENS_CODE), true, '工事参考卡入场')
   // 埃阿斯：谷仓揭示时入场并交给队长（本实现地点开场即揭示）
-  assert.equal(state.storyAssets.some(asset => asset.code === AJAX_CODE), true)
+  assert.equal(state.storyAssets.some(asset => asset.code === AJAX_CODE), false)
+  assert.equal(state.investigators[0].assets.filter(asset => asset.code === AJAX_CODE).length, 1)
   assert.equal(behavior.captivesDamage(state), 0)
   assert.equal(state.investigators.every(inv => inv.clues === 2), true, '有居民相助：每人 2 线索')
 })
@@ -733,13 +734,13 @@ test('P7 theLongestNight 外围农田：查看敌人牌库顶、发现最后线�
 
 test('P7 theLongestNight 谷仓：揭示时埃阿斯入场并由队长控制（codex Ω）', () => {
   const { state } = setup(2)
-  const ajax = state.storyAssets.find(asset => asset.code === AJAX_CODE)
+  const ajax = state.investigators[0].assets.find(asset => asset.code === AJAX_CODE)
   assert.ok(ajax)
-  assert.equal(ajax.location, 'barn')
+  assert.equal(state.storyAssets.some(asset => asset.code === AJAX_CODE), false)
   assert.equal(ajax.controllerSeat, 0)
   assert.equal(state.campaign.records.codex === undefined, true)
   assert.equal(state.scenarioFlags.codexResolved.includes('omega'), true)
-  // 其他调查员在自己地点也能用行动接管。
+  // 未受控剧情支援的章节动作在接管后消失；同地点接管已进入支援自身能力。
   state.investigators[1].location = 'barn'
   const take = behavior.actions(state, state.investigators[1]).find(item => item.rule === 'theLongestNightTakeAjax')
   assert.equal(take, undefined, '已被控制时没有接管行动')

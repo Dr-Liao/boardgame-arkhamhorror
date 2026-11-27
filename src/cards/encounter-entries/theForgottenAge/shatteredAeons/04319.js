@@ -13,32 +13,25 @@ export default {
   code: '04319', scope: 'act',
   actRule: {
     onReveal(state, act, api, hooks) {
-      const flags = hooks.flags()
-      for (const id of hooks.shatteredLocations()) {
-        hooks.removeSetAsideLocation(id)
-        state.explorationDeck = [...(state.explorationDeck || []), id]
-      }
-      hooks.shuffleInPlace()
+      const shattered = hooks.shatteredLocations()
+      for (const id of shattered) hooks.removeSetAsideLocation(id)
+      api.addToExplorationDeck(shattered)
+      const found = []
       for (const inv of hooks.active()) {
-        const index = (state.encounterDiscard || []).findLastIndex(entry =>
-          ALL_CARDS[entry]?.traits?.some(trait => String(trait).toLowerCase() === 'hex'))
-        if (index < 0) continue
-        const [hex] = state.encounterDiscard.splice(index, 1)
-        // 同一张巫术诡计只洗入一次（防重复触发时叠加）。
-        if (!flags.foundHexFromDiscard.includes(hex)) {
-          state.explorationDeck.push(hex)
-          flags.foundHexFromDiscard.push(hex)
-        }
+        const hex = (state.encounterDiscard || []).findLast(code =>
+          ALL_CARDS[code]?.type === 'treachery' && ALL_CARDS[code].traits?.some(trait => String(trait).toLowerCase() === 'hex'))
+        if (!hex || !api.takeEncounterDiscard(hex)) continue
+        found.push(hex)
         api.info?.(`🃏 ${inv.name} 把「${ALL_CARDS[hex]?.nameZh || hex}」洗入探索牌库。`)
       }
-      hooks.shuffleInPlace()
+      api.setScenarioFlag('foundHexFromDiscard', [...(state.scenarioFlags?.foundHexFromDiscard || []), ...found])
+      api.addToExplorationDeck(found)
       if (hooks.records().theRelicIsMissing) {
         const pocket = hooks.byId(hooks.pocket())
         hooks.removeFromSetAside(hooks.relicAgesUnleash())
-        flags.relicCode = hooks.relicAgesUnleash()
+        api.setScenarioFlag('relicCode', hooks.relicAgesUnleash())
         if (pocket) {
-          if (api.moveRelicOfAges) api.moveRelicOfAges({ code: hooks.relicAgesUnleash(), location: pocket.id })
-          else state.relicOfAges = { code: hooks.relicAgesUnleash(), location: pocket.id, seat: null }
+          api.moveRelicOfAges({ code: hooks.relicAgesUnleash(), location: pocket.id })
           api.info?.('🏺 遗物已丢失：放在一边的古代遗物（时光涌流）附属到时间之窗。')
         }
       }

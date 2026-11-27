@@ -6,12 +6,10 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
+import { rememberIchtacasPrey } from '../../_shared.js'
+
 export default { code: '04137b', scope: 'enemy', enemyRule: {"victory":1},
   // 第 118 轮：生成时成为伊塔卡的猎物。
   enemyScript: {
-    onSpawn(state, enemy) {
-      const flags = (state.scenarioFlags ||= {})
-      flags.ichtacasPrey ||= []
-      if (!flags.ichtacasPrey.includes(enemy.id)) flags.ichtacasPrey.push(enemy.id)
-    },
+    onSpawn(state, enemy, api) { rememberIchtacasPrey(state, enemy, api) },
   } }

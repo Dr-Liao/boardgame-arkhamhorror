@@ -11,7 +11,7 @@ import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js
 import { registerCampaignScenarios, scenarioRuntime } from '../src/engine/engine.js'
 import { registerContentBundle, contentRegistry } from '../content/registered.js'
 import { manifest as tskCampaign } from '../content/campaigns/theScarletKeys/manifest.js'
-import { fixture } from './core-fixture.mjs'
+import { asset, fixture } from './core-fixture.mjs'
 import * as chapter from '../content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/index.js'
 import { applyUnsealingKeywords } from '../content/campaigns/theScarletKeys/scenarios/dealingsInTheDark/behavior.js'
 import {
@@ -187,12 +187,15 @@ test('P7 dealingsInTheDark 地点：印刷连接符号与加拉塔码头进入�
   inv.location = LOCATION_IDS.hagiaSophia
   assert.match(chapter.behavior.moveError(state, inv, locationOf(state, LOCATION_IDS.galataDocks)), /只能从/)
   inv.location = LOCATION_IDS.galata
+  assert.match(chapter.behavior.moveError(state, inv, locationOf(state, LOCATION_IDS.galataDocks)), /三枚同类技能图标/)
+  const weapon = asset(state, '01006')
+  inv.hand = ['01093']
   assert.equal(chapter.behavior.moveError(state, inv, locationOf(state, LOCATION_IDS.galataDocks)), null)
-  // 额外费用：弃 1 张手牌（近似）
-  inv.hand = ['01025']
-  const ok = chapter.behavior.beforeMove(state, inv, locationOf(state, LOCATION_IDS.galataDocks), api)
+  const ok = chapter.behavior.beforeMove(state, inv, locationOf(state, LOCATION_IDS.galataDocks), {
+    ...api, choose: spec => spec.options[0].id,
+  })
   assert.equal(ok, true)
-  assert.equal(inv.hand.length, 0, '额外费用弃掉了 1 张手牌')
+  assert.deepEqual(inv.discard.sort(), [weapon.code, '01093'].sort())
 })
 
 test('P7 dealingsInTheDark 幕 1 背面：四地点放一边、六张大巴扎按图形入场、调查员移到入口、共边连接', () => {
@@ -233,7 +236,7 @@ test('P7 dealingsInTheDark 幕 2 背面：密钥入场、地点回场、彰显�
   flags.talismanWinner = 'investigators'
   // 东门放一位调查员（调查员先达成阈值）
   const inv = state.investigators[0]
-  api.moveInvestigator(inv.seat, flags.bazaarEastGate)
+  inv.location = flags.bazaarEastGate
   chapter.behavior.actReveal(state, state.acts[1], api)
   assert.equal(state.agendaIndex, 1, '密谋直接推进到「追逐」')
   assert.equal(codeOf(state.agendas[state.agendaIndex]), CODES.agendaTheChase)
@@ -273,11 +276,13 @@ test('P7 dealingsInTheDark 隐匿：敌人进阴影 → 揭露真身回到地点
   const shops = LOCATION_IDS.bazaarCrowdedShops
   api.place(shops)
   const shopsLocation = locationOf(state, shops)
+  shopsLocation.revealed = true
   shopsLocation.clues = 2
   const decoy = miniCards(state).find(card => card.decoy)
   assert.ok(decoy)
   const concealed = state.scenarioFlags.mechanics.tsk.concealed
   concealed.miniCards.find(card => card.id === decoy.id).locationId = shops
+  state.investigators[0].location = shops
   cultist.location = shops
   cultist.clues = 0
   const decoyResult = chapter.behavior.events.dealingsExpose(state, { seat: 0, locationId: shops }, eventsApi)
@@ -318,7 +323,7 @@ test('P7 dealingsInTheDark 幕目标：教派线索达到阈值推进幕 1；东
   assert.equal(state.scenarioFlags.manuscriptWinner, 'cult')
   // 幕 2：东门调查员线索 ≥ 8×人数
   const eastGate = state.scenarioFlags.bazaarEastGate
-  for (const inv of state.investigators) api.moveInvestigator(inv.seat, eastGate)
+  for (const inv of state.investigators) inv.location = eastGate
   state.investigators[0].clues = 7
   state.investigators[1].clues = 9
   chapter.behavior.checkObjectives(state, api)
@@ -494,9 +499,11 @@ test('P7 dealingsInTheDark 屋顶通道：进入时反应检定、敌人经猎�
   const stub2 = { ...api, resolveHunterMove: () => { hunter += 1 } }
   state.round = 1
   cultist.location = rooftop
-  chapter.behavior.enemyMoved(state, cultist, null, stub2)
+  chapter.behavior.enemyMoved(state, cultist, null, stub2, { cause: 'effect' })
+  assert.equal(hunter, 0)
+  chapter.behavior.enemyMoved(state, cultist, null, stub2, { cause: 'hunter' })
   assert.equal(hunter, 1)
-  chapter.behavior.enemyMoved(state, cultist, null, stub2)
+  chapter.behavior.enemyMoved(state, cultist, null, stub2, { cause: 'patrol' })
   assert.equal(hunter, 1, '同一轮同一敌人只再次结算一次')
 })
 

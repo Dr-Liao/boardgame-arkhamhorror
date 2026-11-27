@@ -2,7 +2,7 @@
 // Detailed evidence: audit/07-a-4-acceptance.json. Not a promise of all-combination equivalence.
 export const TIC_SHARD4_ACCEPTANCE_PROFILE = {
   "id": "tic-devil-reef-2026-11",
-  "scope": "印斯茅斯暗潮 07 段 Devil Reef（def，07152–07188）43 条目录记录。41 条通过五维验收；07165b 数值过度实现、07185 触发条件过宽暂不切换。",
+  "scope": "印斯茅斯暗潮 07 段 Devil Reef（def，07152–07188）43 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TIC_SHARD4_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TIC_SHARD4_ACCEPTANCE_SHA256 = '57e91312d8db710758965a84d6203cf9fc681c70f858b7bdc240ef0216c217e4'
-const verified = new Set(["07152","07153","07154","07155","07156","07157","07158","07159","07160","07161","07162","07163","07164","07164b","07165","07166","07167","07168","07169","07170","07171","07172","07173","07174a","07174b","07175a","07175b","07176a","07176b","07177a","07177b","07178","07179","07180","07181","07182","07183","07184","07186","07187","07188"])
+export const TIC_SHARD4_ACCEPTANCE_SHA256 = '985f9a4d69bbd0511f3efd1f6a190df1e36edc27a43ccc4f3bee25b33e211bf5'
+const verified = new Set(["07152","07153","07154","07155","07156","07157","07158","07159","07160","07161","07162","07163","07164","07164b","07165","07165b","07166","07167","07168","07169","07170","07171","07172","07173","07174a","07174b","07175a","07175b","07176a","07176b","07177a","07177b","07178","07179","07180","07181","07182","07183","07184","07185","07186","07187","07188"])
 export const ticShard4CardVerified = code => verified.has(code)

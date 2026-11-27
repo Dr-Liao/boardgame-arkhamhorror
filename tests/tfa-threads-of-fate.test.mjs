@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import * as fate from '../content/campaigns/theForgottenAge/scenarios/threadsOfFate/index.js'
 import { scenario as definition, ACTS_BY_CODE, SPECIAL_ACT_OBJECTIVES } from '../content/campaigns/theForgottenAge/scenarios/threadsOfFate/definition.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../content/campaigns/theForgottenAge/tfa-chaos.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import { attachLocationCard, locationAttachmentTotal } from '../src/engine/location-attachments.js'
 
 const clone = value => structuredClone(value)
@@ -23,6 +24,7 @@ function makeApi(state, overrides = {}) {
   return {
     log,
     cleanups,
+    setScenarioFlag: scenarioRuntime(state, []).setScenarioFlag,
     info: text => log.push(text),
     random: () => 0.5,
     attachToAgenda(code) {

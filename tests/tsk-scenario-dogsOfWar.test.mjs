@@ -35,6 +35,7 @@ import {
 // ---------------------------------------------------------------------------
 // 条目注册（真实注册期校验：未知字段/未知 kind/未知窗口都会在这里失败）
 // ---------------------------------------------------------------------------
+const { agendaDoom, totalDoom } = await import('../src/engine/rules-state.js')
 const ENTRIES = []
 for (const code of CHAPTER_ENTRY_CODES) {
   const module = await import(`../src/cards/encounter-entries/theScarletKeys/dogsOfWar/${code}.js`)
@@ -180,6 +181,9 @@ function apiFor(state, overrides = {}) {
     addEnemyToVictory: enemy => {
       state.enemies = state.enemies.filter(item => item !== enemy)
       state.victoryDisplay.push({ code: enemy.code, originalCode: enemy.code })
+    },
+    addStoryToVictory: (code, { sourceId }) => {
+      state.victoryDisplay.push({ id: sourceId, code, originalCode: code })
     },
     removeFromGameCards: codes => { state.removedFromGame.push(...codes) },
     harm: (seat, { damage = 0, horror = 0 } = {}) => {
@@ -398,7 +402,7 @@ test('P7 dogsOfWar 清单：playable、7 地点 / 一幕一密谋 / 九个结局
   assert.ok(chapter.scenario.resolutionsEn.resolution8.length > 100)
 })
 
-test('P7 dogsOfWar 混乱标记表：四档共用两套，skull 随钥匙节点再 -2', () => {
+test('P7 dogsOfWar 09635 战争疮痍参考卡：四档共用两套，skull 随钥匙节点再 -2', () => {
   assert.equal(DOGS_OF_WAR_TOKEN_MEANINGS.easy, DOGS_OF_WAR_TOKEN_MEANINGS.standard)
   assert.equal(DOGS_OF_WAR_TOKEN_MEANINGS.hard, DOGS_OF_WAR_TOKEN_MEANINGS.expert)
   assert.equal(DOGS_OF_WAR_TOKEN_MEANINGS.standard.cultist.delta, -3)
@@ -461,7 +465,7 @@ test('P7 dogsOfWar 布置（版本一）：地点入场、四张最后堡垒、�
   assert.equal(catacombs.code, RAW_CODES.catacombsBloodyNexus)
   assert.equal(catacombs.revealed, false)
   assert.equal(catacombs.clues, 0)
-  const loci = keyLociInPlay(state).filter(entry => state.enemies.includes(entry))
+  const loci = keyLociInPlay(state).filter(entry => state.storyAssets.includes(entry))
   assert.equal(loci.length, 4)
   for (const id of LOCUS_SITE_IDS) {
     const locus = keyLocusAt(state, id)
@@ -480,8 +484,14 @@ test('P7 dogsOfWar 布置（版本一）：地点入场、四张最后堡垒、�
   assert.equal(keyBearer(state, state.api).type, 'none')
   assert.equal(chapterState(state).lightOfPharosAttachedTo, 'claretKnight')
   assert.equal(keyControlledByInvestigator(state, state.api), false)
-  // 版本一密谋的「其它卡毁灭扣减」：4 个地点毁灭 → 密谋 -8，净总数 -4。
-  assert.equal(state.doom, -8)
+  assert.equal(state.doom, 0)
+  assert.equal(totalDoom(state), 4)
+  assert.equal(agendaDoom(state), -4)
+  const site = state.locations.find(location => location.doom === 1)
+  state.api.removeDoomFromCard(site, 1)
+  assert.equal(state.doom, 0)
+  assert.equal(totalDoom(state), 3)
+  assert.equal(agendaDoom(state), -3)
 })
 
 test('P7 dogsOfWar 布置（版本二）：敌人面骑士带钥匙、恶兽移除、结社刺客隐匿', () => {
@@ -564,7 +574,7 @@ test('P7 dogsOfWar 地点连接：印刷符号成对双向，共 10 条边', () 
   const error = behavior.investigatorEntryError(v2, bourseV2, v2.investigators[0])
   assert.ok(error && error.includes('重兵把守'), '版本二的证券交易所应禁止进入')
   const loci = keyLociInPlay(v2)
-  for (const locus of loci.slice(1)) v2.enemies = v2.enemies.filter(item => item !== locus)
+  for (const locus of loci.slice(1)) v2.storyAssets = v2.storyAssets.filter(item => item !== locus)
   assert.equal(behavior.investigatorEntryError(v2, bourseV2, v2.investigators[0]), null)
 })
 
@@ -601,7 +611,7 @@ test('P7 dogsOfWar 巡逻：目标是有钥匙节点的最近地点，敌军阶�
   const state = setup(stateFor(2), { choices: ['accept'] })
   const api = state.api
   const keep = keyLocusAt(state, 'windsorPalaceHotel')
-  state.enemies = state.enemies.filter(enemy => enemy === keep || enemy.code !== RAW_CODES.keyLocusLastBastion)
+  state.storyAssets = state.storyAssets.filter(asset => asset === keep || asset.code !== RAW_CODES.keyLocusLastBastion)
   assert.deepEqual(keyLocusLocations(state), ['windsorPalaceHotel'])
   const provocative = api.spawn(RAW_CODES.coterieProvocateur, 'catacombs')
   assert.equal(provocative.location, 'windsorPalaceHotel', '生成 - 有钥匙节点的最近地点')
@@ -632,7 +642,7 @@ test('P7 dogsOfWar 巡逻：目标是有钥匙节点的最近地点，敌军阶�
   assert.equal(behavior.canFightEnemy(state, inv, other), undefined)
 })
 
-test('P7 dogsOfWar 钥匙节点：防御屏障可攻击/进胜利区，最后堡垒治愈/移出游戏', () => {
+test('P7 dogsOfWar 09653a/09653b 钥匙节点：防御屏障进胜利区，最后堡垒作为剧情支援治愈和移出游戏', () => {
   const state = setup(stateFor(2), { choices: ['refuse'] })
   const api = state.api
   const inv = state.investigators[0]
@@ -642,13 +652,13 @@ test('P7 dogsOfWar 钥匙节点：防御屏障可攻击/进胜利区，最后堡
   const action = behavior.actions(state, inv).find(move => move.rule === ACTION_RULES.keyLocusDamage)
   assert.ok(action, '防御屏障应提供「花 1 线索造成 2 伤害」行动')
   behavior.performAction(state, inv, action, api)
-  assert.equal(locus.damageTaken, 2)
+  assert.equal(locus.damage, 2)
   assert.equal(inv.clues, 2, '花费 1 个线索')
   behavior.performAction(state, inv,
     behavior.actions(state, inv).find(move => move.rule === ACTION_RULES.keyLocusDamage), api)
   behavior.performAction(state, inv,
     behavior.actions(state, inv).find(move => move.rule === ACTION_RULES.keyLocusDamage), api)
-  assert.equal(state.enemies.includes(locus), false, '钥匙节点被击败')
+  assert.equal(state.storyAssets.includes(locus), false, '钥匙节点被击败')
   assert.ok(state.victoryDisplay.some(entry => entry.code === RAW_CODES.keyLocusDefensiveBarrier))
   // 版本一：最后堡垒（6 生命）→ 花 1 线索检定治愈；被击败移出游戏。
   const v1 = setup(stateFor(1), { choices: ['accept'] })
@@ -657,16 +667,22 @@ test('P7 dogsOfWar 钥匙节点：防御屏障可攻击/进胜利区，最后堡
   hero.location = 'victoriaCollege'
   hero.clues = 2
   const bastion = keyLocusAt(v1, 'victoriaCollege')
-  bastion.damageTaken = 3
+  assert.ok(v1.storyAssets.includes(bastion))
+  assert.ok(!v1.enemies.some(enemy => enemy.id === bastion.id))
+  bastion.damage = 3
   v1.testResults.push({ success: true, value: 4, difficulty: 2, successBy: 2, failedBy: 0, drawn: [] })
   behavior.performAction(v1, hero,
     behavior.actions(v1, hero).find(move => move.rule === ACTION_RULES.keyLocusHeal), api1)
-  assert.equal(bastion.damageTaken, 0, '治愈 1 + 成功差值 2')
-  const handled = behavior.enemyDefeated(v1, bastion, api1)
-  assert.equal(handled, true, '最后堡垒被击败时返回 handled')
+  assert.equal(bastion.damage, 0, '治愈 1 + 成功差值 2')
+  const beast = v1.enemies.find(enemy => enemy.code === RAW_CODES.beastRavager)
+  beast.location = bastion.location
+  bastion.damage = 5
+  assert.ok(enemyAttacksKeyLoci(v1, api1).some(hit => hit.targetId === bastion.id))
+  assert.ok(!v1.storyAssets.includes(bastion))
+  assert.ok(!v1.victoryDisplay.some(card => card.id === bastion.id))
   assert.ok(v1.removedFromGame.includes(RAW_CODES.keyLocusLastBastion))
   // 场上没有钥匙节点后：暗红骑士算作钥匙节点（版本一）。
-  v1.enemies = v1.enemies.filter(enemy => !enemy.keyLocus)
+  v1.storyAssets = v1.storyAssets.filter(asset => !asset.keyLocus)
   behavior.roundEnded(v1, api1)
   assert.equal(keyLocusEntities(v1).some(entry => entry.countsAsLocus), true, '暗红骑士算作钥匙节点')
   assert.equal(locationHasKeyLocus(v1, 'theBourse'), true)
@@ -675,7 +691,7 @@ test('P7 dogsOfWar 钥匙节点：防御屏障可攻击/进胜利区，最后堡
 // ---------------------------------------------------------------------------
 // 4. 幕 / 密谋推进
 // ---------------------------------------------------------------------------
-test('P7 dogsOfWar 幕背（版本一）：恶兽与每个钥匙节点进胜利区 → 结局 1 → 结局 8', () => {
+test('P7 dogsOfWar 09639 幕背（版本一）：恶兽与钥匙节点进胜利区并进入结局', () => {
   const state = setup(stateFor(2), { choices: ['accept'] })
   const api = state.api
   behavior.actReveal(state, state.acts[0], api)
@@ -689,7 +705,7 @@ test('P7 dogsOfWar 幕背（版本一）：恶兽与每个钥匙节点进胜利�
   assert.equal(state.campaign.records[RECORD_KEYS.time], 3)
 })
 
-test('P7 dogsOfWar 密谋背（版本一）：骑士未败 → 推进幕；骑士被击败 → 结局 3', () => {
+test('P7 dogsOfWar 09636 密谋背（版本一）：骑士未败推进幕，被击败进入结局 3', () => {
   const state = setup(stateFor(2), { choices: ['accept'] })
   behavior.agendaReveal(state, state.agendas[0], state.api)
   assert.equal(state.advanced, 1, '密谋背面推进场景')
@@ -697,7 +713,7 @@ test('P7 dogsOfWar 密谋背（版本一）：骑士未败 → 推进幕；骑�
   // 骑士被击败：先让其它钥匙节点消失（骑士成为唯一钥匙节点），再让恶兽在证券交易所攻击它。
   const second = setup(stateFor(2), { choices: ['accept'] })
   const api2 = second.api
-  second.enemies = second.enemies.filter(enemy => !enemy.keyLocus)
+  second.storyAssets = second.storyAssets.filter(asset => !asset.keyLocus)
   behavior.roundEnded(second, api2)
   assert.equal(knightAsset(second).keyLocus, true, '骑士成为唯一钥匙节点')
   const beast = second.enemies.find(enemy => enemy.code === RAW_CODES.beastRavager)
@@ -711,7 +727,7 @@ test('P7 dogsOfWar 密谋背（版本一）：骑士未败 → 推进幕；骑�
   assert.deepEqual(second.finished, ['resolution3'])
 })
 
-test('P7 dogsOfWar 幕目标（版本二/三）：骑士/恶兽被击败或调查员控制法罗斯之光', () => {
+test('P7 dogsOfWar 09640/09641 幕目标与 09643 证券交易所：获得法罗斯之光或击败首领后推进', () => {
   const v2 = setup(stateFor(2), { choices: ['refuse'] })
   const api2 = v2.api
   assert.equal(behavior.checkObjectives(v2, api2), false)
@@ -738,7 +754,7 @@ test('P7 dogsOfWar 幕目标（版本二/三）：骑士/恶兽被击败或调�
   assert.equal(behavior.checkObjectives(v3, v3.api), true)
 })
 
-test('P7 dogsOfWar 幕背（版本三）：与骑士交易 → 结局 5；帮助西里 → 结局 6', () => {
+test('P7 dogsOfWar 09641 幕背（版本三）：骑士交易进入结局 5，帮助西里进入结局 6', () => {
   const deal = stateFor(1)
   deal.campaign.records[RECORD_KEYS.time] = 20
   setup(deal, { choices: ['accept'] })
@@ -759,7 +775,7 @@ test('P7 dogsOfWar 幕背（版本三）：与骑士交易 → 结局 5；帮助
   assert.equal(keyBearer(sirry, sirry.api).type, 'investigator')
 })
 
-test('P7 dogsOfWar 密谋背（版本二/三）：创伤或撤退 + 翻回 + 10 毁灭', () => {
+test('P7 dogsOfWar 09637/09638 密谋背：选择创伤或撤退，翻回正面并放置 10 毁灭', () => {
   const state = setup(stateFor(2), { choices: ['refuse'] })
   const api = state.api
   state.choices.push('trauma')
@@ -773,7 +789,143 @@ test('P7 dogsOfWar 密谋背（版本二/三）：创伤或撤退 + 翻回 + 10 
   behavior.agendaReveal(resign, resign.agendas[0], resign.api)
   assert.deepEqual(resign.resigned, [0, 1])
   assert.equal(resign.doom, 10)
+  const late = stateFor(2)
+  late.campaign.records[RECORD_KEYS.time] = 20
+  setup(late, { choices: ['refuse'] })
+  assert.equal(late.agendas[0].originalCode, '09638')
+  late.choices.push('trauma')
+  behavior.agendaReveal(late, late.agendas[0], late.api)
+  assert.equal(late.investigators[0].damage, 1)
+  assert.equal(late.reverted, 1)
+  assert.equal(late.doom, 10)
 })
+
+test('P7 dogsOfWar 09647 奎贝堡：调查失败锁住发现线索与揭露，其他失败及下一轮不会锁住', () => {
+  const state = setup(stateFor(1), { choices: ['refuse'] })
+  const inv = state.investigators[0]
+  inv.location = 'qaitbayCitadel'
+  const location = locationOf(state, inv.location)
+  location.revealed = true
+  const [card] = tskConcealed.distributeConcealed(state, {
+    cards: [{ kind: 'testDecoy', decoy: true }], placements: [{ locationId: inv.location, count: 1 }],
+  })
+  const choices = () => behavior.actions(state, inv).find(item => item.miniCardId === card.id)
+  behavior.afterTest(state, inv, { success: false }, state.api, { test: { actionKind: 'fight' } })
+  assert.notEqual(behavior.canDiscoverClues(state, inv, location), false)
+  assert.ok(choices())
+  assert.equal(choices().reason, undefined)
+  behavior.afterTest(state, inv, { success: false }, state.api, { test: { actionKind: 'investigate' } })
+  assert.equal(behavior.canDiscoverClues(state, inv, location), false)
+  assert.ok(choices().reason)
+  state.round += 1
+  assert.notEqual(behavior.canDiscoverClues(state, inv, location), false)
+  assert.equal(choices().reason, undefined)
+})
+
+test('P7 dogsOfWar 09648 滨海大道：成功调查后的本地检定 +2，离开和下一轮恢复', () => {
+  const state = setup(stateFor(1), { choices: ['refuse'] })
+  const inv = state.investigators[0]
+  inv.location = 'theCorniche'
+  const difficulty = () => behavior.testDifficultyModifier(state, inv, {}, 2)
+  assert.equal(difficulty(), 0)
+  behavior.afterTest(state, inv, { success: true }, state.api, { test: { actionKind: 'investigate' } })
+  assert.equal(difficulty(), 2)
+  inv.location = 'qaitbayCitadel'
+  assert.equal(difficulty(), 0)
+  inv.location = 'theCorniche'
+  state.round += 1
+  assert.equal(difficulty(), 0)
+})
+
+test('P7 dogsOfWar 09650 地下陵墓：检定成功且同地调查员共同支付线索后获得法罗斯之光', () => {
+  const state = stateFor(2)
+  state.campaign.records[RECORD_KEYS.time] = 20
+  setup(state, { choices: ['refuse'] })
+  const [inv, partner] = state.investigators
+  inv.location = partner.location = 'catacombs'
+  inv.clues = partner.clues = 1
+  const location = locationOf(state, inv.location)
+  location.revealed = true
+  assert.equal(location.originalCode, '09650')
+  chapterState(state).keyResources = 2
+  const command = behavior.actions(state, inv).find(item => item.rule === ACTION_RULES.keyResource)
+  assert.ok(command)
+  state.testResults.push({ success: false, value: 1, difficulty: 4 })
+  assert.equal(behavior.performAction(state, inv, command, state.api), true)
+  assert.equal(chapterState(state).keyResources, 2)
+  assert.deepEqual([inv.clues, partner.clues], [1, 1])
+  state.testResults.push({ success: true, value: 5, difficulty: 4 })
+  assert.equal(behavior.performAction(state, inv, command, state.api), true)
+  assert.equal(chapterState(state).keyResources, 3)
+  assert.deepEqual([inv.clues, partner.clues], [0, 0])
+  assert.equal(keyBearer(state, state.api).type, 'investigator')
+})
+
+test('P7 dogsOfWar 09654b 暗红骑士：异地调查员可横置，三个资源可分别移到两张支援和资源池', () => {
+  const state = setup(stateFor(2), { choices: ['accept'] })
+  const inv = state.investigators[0]
+  const knight = knightAsset(state)
+  inv.location = 'victoriaCollege'
+  const next = rule => behavior.actions(state, inv).find(item => item.rule === rule)
+  state.choices.push('2')
+  const initial = inv.resources
+  assert.equal(behavior.performAction(state, inv, next(ACTION_RULES.knightToAsset), state.api), true)
+  assert.equal(inv.resources, initial - 2)
+  assert.equal(knight.resources, 2)
+  assert.equal(knight.exhausted, true)
+  assert.equal(next(ACTION_RULES.knightFromAsset), undefined)
+
+  behavior.phaseBegan(state, 'upkeep')
+  assert.equal(knight.exhausted, false)
+  knight.resources = 4
+  const first = { id: 'first', code: '01019', usesType: 'ammo', uses: 0 }
+  const second = { id: 'second', code: '01019', usesType: 'ammo', uses: 0 }
+  inv.assets.push(first, second)
+  state.choices.push('3', first.id, second.id, 'pool')
+  assert.equal(behavior.performAction(state, inv, next(ACTION_RULES.knightFromAsset), state.api), true)
+  assert.equal(knight.resources, 1)
+  assert.equal(first.uses, 1)
+  assert.equal(second.uses, 1)
+
+  knight.exhausted = false
+  state.choices.push('pool')
+  assert.equal(behavior.performAction(state, inv, next(ACTION_RULES.knightFromAsset), state.api), true)
+  assert.equal(knight.resources, 0)
+  assert.equal(inv.resources, initial)
+})
+
+for (const [code, rule, target, normalReward, reducedReward] of [
+  ['09644', ACTION_RULES.commercialResources, 'resources', 4, 2],
+  ['09652', ACTION_RULES.ancientTombDraw, 'hand', 3, 2],
+]) {
+  test(`P7 dogsOfWar ${code}：专属调查可选择难度，本地点的普通调查不替换线索`, () => {
+    const state = stateFor(1)
+    if (code === '09644') state.campaign.records[RECORD_KEYS.time] = 20
+    setup(state, { choices: ['refuse'] })
+    const inv = state.investigators[0]
+    const location = state.locations.find(item => item.originalCode === code)
+    inv.location = location.id
+    location.revealed = true
+    location.shroud = 4
+    inv.deck = ['01020', '01021', '01022', '01023', '01024', '01025']
+    const read = () => target === 'hand' ? inv.hand.length : inv.resources
+    const offered = () => behavior.actions(state, inv).find(item => item.rule === rule)
+    const initial = read()
+    assert.equal(behavior.investigateResult(state, inv, location, { success: true }, state.api), undefined)
+    assert.equal(read(), initial)
+    state.choices.push('normal')
+    assert.equal(behavior.performAction(state, inv, offered(), state.api), true)
+    assert.equal(state.testCalls.at(-1).difficulty, 4)
+    assert.equal(read(), initial + normalReward)
+    assert.equal(offered(), undefined)
+
+    state.round += 1
+    state.choices.push('reduced')
+    assert.equal(behavior.performAction(state, inv, offered(), state.api), true)
+    assert.equal(state.testCalls.at(-1).difficulty, 2)
+    assert.equal(read(), initial + normalReward + reducedReward)
+  })
+}
 
 test('P7 dogsOfWar 地下陵墓（血腥联结）：6 毁灭强制揭示，正面行动自动躲避恶兽', () => {
   const state = setup(stateFor(1), { choices: ['accept'] })
@@ -830,7 +982,7 @@ test('P7 dogsOfWar 法罗斯之光：稳定面以 -3 打出 1 张手牌并翻面
   assert.equal(tskKeys.keyFace(state, LIGHT_OF_PHAROS.id), before, '敌人强制变换不翻面')
 })
 
-test('P7 dogsOfWar 节点脉冲：附属到有钥匙节点的最近地点，钥匙节点消失后弃掉', () => {
+test('P7 dogsOfWar 09658 节点脉冲：附属到有钥匙节点的最近地点，节点消失后弃掉', () => {
   const state = setup(stateFor(2), { choices: ['accept'] })
   const api = state.api
   const entry = registeredEntry(RAW_CODES.locusPulse)
@@ -844,12 +996,12 @@ test('P7 dogsOfWar 节点脉冲：附属到有钥匙节点的最近地点，钥�
   assert.ok(LOCUS_SITE_IDS.includes(attachedLocations[0].id), '附属到[[节点地]]')
   const attached = attachedLocations[0]
   const locus = keyLocusAt(state, attached.id)
-  state.enemies = state.enemies.filter(enemy => enemy !== locus)
+  state.storyAssets = state.storyAssets.filter(asset => asset !== locus)
   behavior.roundEnded(state, api)
   assert.equal((attached.attachments || []).length, 0, '没有钥匙节点后弃掉节点脉冲')
 })
 
-test('P7 dogsOfWar 遭遇卡：节点脉冲的显现伤害/恐惧按地点结算', () => {
+test('P7 dogsOfWar 09658 节点脉冲：显现的伤害和恐惧按地点结算', () => {
   const state = setup(stateFor(2), { choices: ['accept'] })
   const api = state.api
   const entry = registeredEntry(RAW_CODES.locusPulse)
@@ -973,7 +1125,8 @@ test('P7 dogsOfWar 条目：十一条专属卡逐条有可执行声明并已注�
     assert.ok(registered, `${entry.code} 未注册`)
     assert.equal(registered.implemented, true, `${entry.code} 未标 implemented`)
     assert.ok(['enemy', 'treachery', 'storyAsset'].includes(entry.scope), `${entry.code} scope 非法`)
-    assert.ok(String(entry.note || '').length > 10, `${entry.code} 缺 note`)
+    assert.ok(entry.note || entry.abilities?.length || entry.enemyRule || entry.assetRule || entry.encounterResolve,
+      `${entry.code} 缺可执行声明`)
   }
   const byCode = Object.fromEntries(ENTRIES.map(entry => [entry.code, entry]))
   assert.equal(byCode['09653a'].assetRule.keyLocus.face, 'defensiveBarrier')
@@ -982,7 +1135,7 @@ test('P7 dogsOfWar 条目：十一条专属卡逐条有可执行声明并已注�
   assert.equal(byCode['09653b'].assetRule.keyLocus.defeatedRemovedFromGame, true)
   assert.equal(byCode['09654a'].enemyRule.shiftsKeysOnFailedTestAtLocation, true)
   assert.equal(byCode['09654b'].assetRule.resourceShuttle.max, 3)
-  assert.equal(byCode['09655a'].enemyRule.cannotBeDefeatedHealsAndFlees, true)
+  assert.equal(byCode['09655a'].abilities[0].trigger, 'enemyWouldBeDefeated')
   assert.equal(byCode['09655b'].enemyRule.shiftsKeysOnFailedTestAtLocation, true)
   assert.equal(byCode['09656'].enemyRule.locusSiteStatModifier.fight, 2)
   assert.equal(byCode['09657'].enemyRule.blocksOtherAttacksWhileReady, true)
@@ -991,10 +1144,10 @@ test('P7 dogsOfWar 条目：十一条专属卡逐条有可执行声明并已注�
   assert.equal(typeof byCode['09659a'].assetRule.keyShift.resolve, 'function')
   assert.equal(byCode['09659b'].assetRule.keyShift.face, 'unstable')
   assert.equal(typeof byCode['09659b'].assetRule.keyShift.resolve, 'function')
-  for (const code of ['09653a', '09653b', '09654a', '09654b', '09655a', '09657', '09658', '09659a', '09659b']) {
+  for (const code of ['09654a', '09654b', '09657', '09658', '09659a', '09659b']) {
     assert.ok(byCode[code].note.includes('approximation'), `${code} note 必须写明 approximation`)
   }
-  assert.ok(chapter.scenarioApproximations.length >= 8)
+  assert.equal(byCode['09653a'].assetRule.fightAsEnemy, true)
   assert.ok(chapter.scenarioGaps.length >= 2)
   assert.equal(chapter.behavior.scenarioApproximations, chapter.scenarioApproximations)
   assert.equal(KEY_LOCUS_DATA['09653a'].healthPerInvestigator, true)

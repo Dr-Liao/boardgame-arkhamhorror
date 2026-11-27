@@ -74,12 +74,14 @@ function cardTraits(state, code) {
 
 import { playerEffectCanAffect } from './effect-recipient.js'
 import { enemyIsBody } from './enemy-parts.js'
+import { storyFightTargets } from './fight-targets.js'
 
-function candidateList(state, inv, kind) {
+function candidateList(state, inv, kind, actionKind) {
   const location = inv?.location
   switch (kind) {
     case 'enemy':
-      return (state?.enemies || []).filter(enemy => !enemyIsBody(enemy) && enemy.location === location)
+      return [...(state?.enemies || []), ...(actionKind === 'fight' ? storyFightTargets(state) : [])]
+        .filter(enemy => !enemyIsBody(enemy) && enemy.location === location)
         .map(enemy => ({ id: enemy.id, label: enemy.name || enemy.code, kind, entity: enemy }))
     case 'investigator':
       return (state?.investigators || [])
@@ -128,7 +130,7 @@ export function enumerateTargets(state, inv, target, ctx = {}) {
   const immune = slumberingFilter(state, target, ctx)
   const candidates = (target.kind === 'location' && target.range === 'anywhere'
     ? (state.locations || []).map(entity => ({ id: entity.id, label: entity.revealed ? entity.name : entity.unrevealedName || entity.name, kind: 'location', entity }))
-    : candidateList(state, inv, target.kind)).filter(candidate => target.kind !== 'investigator'
+    : candidateList(state, inv, target.kind, ctx.actionKind)).filter(candidate => target.kind !== 'investigator'
     || playerEffectCanAffect(state, candidate.entity.seat, { sourceSeat: inv.seat, sourceCode: ctx.source?.code }))
     .filter(candidate => !immune || immune(candidate))
   if (!target.query) return candidates

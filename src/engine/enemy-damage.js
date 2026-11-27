@@ -1,3 +1,5 @@
+import { registeredEntry } from './ability.js'
+import { enemyTextBlanked } from './card-text.js'
 import { sourceCardDef } from './card-lookup.js'
 import { nextInstanceId } from './rules-state.js'
 import { hasWindowListener } from './window-listeners.js'
@@ -15,6 +17,11 @@ export function increaseEnemyDamage(context, amount) {
   context.amount += amount
   context.damage = context.amount
   return amount
+}
+
+export function enemyDamageRedirectTarget(state, enemy) {
+  return state.enemies.find(candidate => candidate !== enemy && !enemyTextBlanked(state, candidate)
+    && registeredEntry(candidate.originalCode || candidate.code)?.enemyRule?.redirectDamageToSelf?.(state, candidate, enemy)) || null
 }
 
 export function adjustEnemyDamage(state, enemy, amount, seat, source, events, hooks) {

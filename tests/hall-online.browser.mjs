@@ -8,6 +8,7 @@ import { randomUUID } from 'node:crypto'
 import { createRelay } from '../../../relay/server.js'
 import { createServer } from '../../../lib/server.js'
 import { loadMods } from '../../../lib/mods.js'
+import { revealSound } from '../web/card-audio.js'
 
 let relay, relayUrl, halls = [], home, previousHome
 const listen = server => new Promise(r => server.listen(0, '127.0.0.1', () => r(`http://127.0.0.1:${server.address().port}`)))
@@ -39,6 +40,111 @@ test.afterAll(async () => {
   fs.rmSync(home, { recursive: true, force: true })
 })
 test.afterEach(async () => { for (let i = 0; i < 2; i++) await api(i, 'leave', {}) })
+
+test('live host and guest hear a neutral private flip once, then the same surge draw sequence', async ({ browser }) => {
+  test.setTimeout(120000)
+  const created = await api(0, 'create', {
+    relayUrl, modId: 'arkhamhorror', capacity: 2, fillAi: false,
+    settings: { legacyAutoStart: true, seed: 'online-card-audio', campaignId: 'nightOfTheZealot' },
+  })
+  expect(created.ok, created.error).toBe(true)
+  expect((await api(1, 'join', { relayUrl, code: created.room.code })).ok).toBe(true)
+  expect((await api(1, 'ready', { ready: true })).ok).toBe(true)
+  const started = await command(0, 'start')
+  expect(started.ok, started.error).toBe(true)
+  async function advanceChoices() {
+    for (let limit = 0; limit < 25; limit++) {
+      const { session } = await api(0, 'status')
+      const choice = session.state.pendingChoice
+      if (!choice) return
+      const { session: local } = await api(choice.seat, 'status')
+      const moves = local.state.legalMoves.filter(move => move.action === 'choose')
+      const move = moves.find(option => ['done', 'skip', 'self'].includes(option.optionId)) || moves[0]
+      expect(move, choice.kind).toBeTruthy()
+      const result = await command(choice.seat, 'move', { revision: local.state.revision, move })
+      expect(result.ok, result.error).toBe(true)
+    }
+    throw new Error('Unexpected choice loop')
+  }
+  await advanceChoices()
+  const host = await browser.newPage({ viewport: { width: 1440, height: 950 } })
+  const guest = await browser.newPage({ viewport: { width: 390, height: 850 }, reducedMotion: 'reduce', isMobile: true })
+  const pages = [host, guest]
+  const readSounds = page => page.evaluate(() => window.cardSounds)
+  const unlock = page => page.locator('.ah-table').click({ position: { x: 9, y: 9 } })
+  async function observe(page, index) {
+    await page.addInitScript(() => {
+      localStorage.setItem('arkham-presentation', JSON.stringify({ sound: true, fast: true }))
+      window.cardSounds = []
+      window.playedCardSounds = []
+      const play = HTMLMediaElement.prototype.play
+      HTMLMediaElement.prototype.play = function () {
+        const url = this.currentSrc || this.src
+        const tracked = /\/audio\/(?:card-cues\/|card-slide\.ogg)/.test(url)
+        const filename = url.split('/').pop()
+        if (tracked) window.cardSounds.push(filename)
+        const promise = play.call(this)
+        if (tracked) promise.then(() => window.playedCardSounds.push(filename), () => {})
+        return promise
+      }
+    })
+    await page.goto(halls[index].url)
+    await expect(page.locator('.ah-table')).toBeVisible()
+    await unlock(page)
+  }
+  async function debug(text) {
+    const { session } = await api(0, 'status')
+    const result = await command(0, 'debug', { revision: session.state.revision, command: { text } })
+    expect(result.ok, result.error).toBe(true)
+    await advanceChoices()
+    const { session: next } = await api(0, 'status')
+    await expect.poll(async () => (await api(1, 'status')).session.state.revision).toBe(next.state.revision)
+    for (const page of pages) {
+      await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', String(next.state.revision))
+      await expect(page.locator('.ah-table.ah-presenting')).toHaveCount(0, { timeout: 25000 })
+    }
+    return next.events.filter(event => event.seq > Math.max(-1, ...session.events.map(e => e.seq)))
+  }
+  try {
+    await Promise.all(pages.map(observe))
+    await debug('抽遭遇 03340')
+    for (const page of pages) {
+      expect(await readSounds(page)).toEqual(['card-slide.ogg', 'private-reveal.wav'])
+      await expect.poll(() => page.evaluate(() => [...window.playedCardSounds].sort())).toEqual(['card-slide.ogg', 'private-reveal.wav'])
+    }
+
+    const events = await debug('抽遭遇 01136')
+    const flips = events.filter(event => event.presentation?.effect === 'encounter')
+    expect(flips.length).toBeGreaterThanOrEqual(2)
+    expect(flips[0].presentation.code).toBe('01136')
+    const expected = flips.flatMap(event => {
+      const cue = event.presentation
+      const sample = revealSound({ ...cue, eventSeq: event.seq })
+      return [...(cue.surgeDraw ? ['card-surge.wav'] : []), 'card-slide.ogg', `${sample}.wav`]
+    })
+    const expectedFiles = new Set(expected)
+    for (const page of pages) {
+      const afterPrivate = (await readSounds(page)).slice(2).filter(file => expectedFiles.has(file))
+      expect(afterPrivate).toEqual(expected)
+    }
+    expect(expected.filter(file => file === 'card-surge.wav')).toHaveLength(flips.length - 1)
+
+    // A new browser view in the same live room has the complete event history.
+    // It should baseline that history and still hear the following live draw.
+    await guest.reload()
+    await expect(guest.locator('.ah-table')).toBeVisible()
+    await unlock(guest)
+    expect(await readSounds(guest)).toEqual([])
+    await debug('抽遭遇 ancientEvils')
+    expect((await readSounds(guest)).filter(file => file === 'card-doom.wav')).toHaveLength(1)
+    const live = await readSounds(guest)
+    await guest.getByRole('button', { name: '刷新局势' }).click()
+    await expect(guest.locator('.ah-table.ah-presenting')).toHaveCount(0)
+    expect(await readSounds(guest)).toEqual(live)
+  } finally {
+    await Promise.all(pages.map(page => page.close()))
+  }
+})
 
 test('direct Arkham snapshots keep each investigator hand private', async ({ browser }) => {
   const created = await api(0, 'create', { relayUrl, modId: 'arkhamhorror', capacity: 2, fillAi: false,

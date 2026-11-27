@@ -95,7 +95,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -153,7 +153,7 @@
         },
         {
           "path": "src/engine/actions.js",
-          "sha256": "373bb2fa07ac4424ba4dffc4776f465464ec69a7efc204824602d4c473c14377",
+          "sha256": "662f60571bbf2152b88d7ffb8b3fefa1f0051b24349fc0c856404e99b67d3363",
           "exists": true
         },
         {
@@ -206,12 +206,12 @@
       "files": [
         {
           "path": "src/engine/commit-rules.js",
-          "sha256": "a194bd4b7b5083a52fc548bd894448c3e0892b114694d7d36227b790643ae8c0",
+          "sha256": "0cbfbc0e86a29d38fec2407ef8ac2099ccd49eb90c0f5d64ed6d1061cc16efaf",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "c4ca1a838cfd0de062e4fca9cd4f5417e27ce3a3a7779eceec0cdf6e178215e0",
+          "sha256": "1d8226ec7894864043a93e5f40c709b912d8b4d9799df15e96594efa96c8b30c",
           "exists": true
         },
         {
@@ -257,7 +257,7 @@
           "kind": "ctx-api",
           "name": "addEffect",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         }
       ],
       "files": [
@@ -811,7 +811,7 @@
           "kind": "scenario-runtime",
           "name": "counters",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -827,7 +827,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -898,13 +898,13 @@
           "kind": "scenario-runtime",
           "name": "swarming",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
         {
           "path": "src/engine/swarming.js",
-          "sha256": "76b1a7156961a613e9f7910827b82a746e5bb898e3eb182bcfaa407ab7f10b9f",
+          "sha256": "88eac5e1d45994edea773307e9ded9ccae615b4d5a98e113568b4785e2136aad",
           "exists": true
         },
         {
@@ -914,7 +914,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -992,7 +992,7 @@
           "kind": "scenario-runtime",
           "name": "swarm",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1008,7 +1008,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1100,7 +1100,7 @@
           "kind": "scenario-runtime",
           "name": "veiled",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1116,7 +1116,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1200,7 +1200,7 @@
           "kind": "scenario-runtime",
           "name": "tokenBag",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1216,7 +1216,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1300,7 +1300,7 @@
           "kind": "scenario-runtime",
           "name": "verticalChain",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1316,7 +1316,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1400,7 +1400,7 @@
           "kind": "scenario-runtime",
           "name": "bondedLocation",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1416,7 +1416,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1668,7 +1668,7 @@
           "kind": "scenario-runtime",
           "name": "locationDoom",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1684,7 +1684,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1761,7 +1761,7 @@
           "kind": "scenario-runtime",
           "name": "markers",
           "ok": true,
-          "detail": "396 keys"
+          "detail": "410 keys"
         }
       ],
       "files": [
@@ -1777,7 +1777,7 @@
         },
         {
           "path": "src/engine/scenario-runtime.js",
-          "sha256": "4a3706feb0f32a76e4ed306ed1536da66f92293cd525f4d5eb07088b43bdc11b",
+          "sha256": "f83d9b970a6f54cd5af1fcff0b7582deaa60dc2654c1162977f4b4ffd82d62d7",
           "exists": true
         },
         {
@@ -1855,12 +1855,12 @@
       "files": [
         {
           "path": "src/engine/asset-defeat.js",
-          "sha256": "5fb79eddedc67330eec193938edada82613c81e0b3cd5c36cee61450faa03241",
+          "sha256": "c09235609aa2b955b95407c228648696b3f41b5ff6386ba22d2bcf15a51e8de9",
           "exists": true
         },
         {
           "path": "src/engine/enemies.js",
-          "sha256": "10915d9b098abe46dbbfbe64b4755aecb0ade96d4817b2e2de51283bb3a07255",
+          "sha256": "163a5e8437b89ebce3e631dee754cfc8d90b15869fed28fcdd954c7a7ae10653",
           "exists": true
         },
         {
@@ -1929,13 +1929,13 @@
           "kind": "ctx-api",
           "name": "moveHarm",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         },
         {
           "kind": "ctx-api",
           "name": "harmRoomOf",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         }
       ],
       "files": [
@@ -1946,7 +1946,7 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
+          "sha256": "7283a2cbda502fa19d60bd22c84f991cd78a1b076f544c4009610f7a427ece7a",
           "exists": true
         },
         {
@@ -2018,13 +2018,13 @@
           "kind": "ctx-api",
           "name": "addCardCounter",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         },
         {
           "kind": "ctx-api",
           "name": "moveCardCounters",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         }
       ],
       "files": [
@@ -2035,7 +2035,7 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
+          "sha256": "7283a2cbda502fa19d60bd22c84f991cd78a1b076f544c4009610f7a427ece7a",
           "exists": true
         },
         {
@@ -2129,22 +2129,22 @@
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "e828a4f9d9de85f81239a554ca4c4f071a3ca9add052b5706126fef5c31f1533",
+          "sha256": "5bfd5eff22e552a37687c77091fee1d03fde851bb8133fadca343bb78e0a22ce",
           "exists": true
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21",
+          "sha256": "d1ba28d19392de234187cce3662341debdd95af15171226447fdd5f74008af02",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
+          "sha256": "edac983a6cf84b6d4dfe5c0536192abe21a131a3c18a27bc3ed39c432d20d732",
           "exists": true
         },
         {
           "path": "src/engine/table-decisions.js",
-          "sha256": "12ddee03f39ffb25517b77f91ef2cfd6ab9cc105b708a08efd96aa583719d829",
+          "sha256": "f1b7ef001fe584df71ef8b66e77d86fbd59c0c5a358249c32c55cd2ebe621557",
           "exists": true
         },
         {
@@ -2279,7 +2279,7 @@
         },
         {
           "path": "src/engine/ability.js",
-          "sha256": "d4a52470f3e0011e77d218526c0a36a6ce35afa3435a701cf720ee27c688ec87",
+          "sha256": "6da1eda50922207d2f64b1c023705214ed23c7078d20ddbbffb306e5b6b3bb8c",
           "exists": true
         },
         {
@@ -2406,17 +2406,17 @@
       "files": [
         {
           "path": "src/engine/stats.js",
-          "sha256": "1cded6b19ee168fa1c249428b90a94693936f0dc5aeae3eae7e569dec5faafc4",
+          "sha256": "4c9237862fbfae9c0db727192b50f131c44bb243b35dccce33afacf4e3e8e4e7",
           "exists": true
         },
         {
           "path": "src/engine/setup.js",
-          "sha256": "357b4b03436a4e4e5173724da3890be623c7cf13cd43435e3efa00a862bd2d4e",
+          "sha256": "911052ccee265b8835ebb0ad3d29a3ace3a1a2a23c0464395bb145f9b7caf2bf",
           "exists": true
         },
         {
           "path": "src/engine/tests.js",
-          "sha256": "c4ca1a838cfd0de062e4fca9cd4f5417e27ce3a3a7779eceec0cdf6e178215e0",
+          "sha256": "1d8226ec7894864043a93e5f40c709b912d8b4d9799df15e96594efa96c8b30c",
           "exists": true
         },
         {
@@ -2466,7 +2466,7 @@
           "kind": "ctx-api",
           "name": "playCardFromHandFree",
           "ok": true,
-          "detail": "444 keys"
+          "detail": "448 keys"
         },
         {
           "kind": "source-pattern",
@@ -2479,7 +2479,7 @@
       "files": [
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
+          "sha256": "7283a2cbda502fa19d60bd22c84f991cd78a1b076f544c4009610f7a427ece7a",
           "exists": true
         },
         {
@@ -2546,12 +2546,12 @@
         },
         {
           "path": "src/engine/moves.js",
-          "sha256": "f69b0962c94830d6bab71f71bfca8b0d221c5da13f1484ff51cb42baff701e21",
+          "sha256": "d1ba28d19392de234187cce3662341debdd95af15171226447fdd5f74008af02",
           "exists": true
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
+          "sha256": "edac983a6cf84b6d4dfe5c0536192abe21a131a3c18a27bc3ed39c432d20d732",
           "exists": true
         },
         {
@@ -2618,12 +2618,12 @@
         },
         {
           "path": "src/engine/api-misc.js",
-          "sha256": "f7186da281f1888e4783f6cc13167df838939d31b7c8e02eadb7b4c046b05c3b",
+          "sha256": "7283a2cbda502fa19d60bd22c84f991cd78a1b076f544c4009610f7a427ece7a",
           "exists": true
         },
         {
           "path": "src/engine/turn.js",
-          "sha256": "e828a4f9d9de85f81239a554ca4c4f071a3ca9add052b5706126fef5c31f1533",
+          "sha256": "5bfd5eff22e552a37687c77091fee1d03fde851bb8133fadca343bb78e0a22ce",
           "exists": true
         },
         {
@@ -2695,7 +2695,7 @@
         },
         {
           "path": "src/engine/dispatch.js",
-          "sha256": "07b2692d5d1c63f4b83b52d1e45254f5379862acd47bbbd7f38131498d2107d2",
+          "sha256": "edac983a6cf84b6d4dfe5c0536192abe21a131a3c18a27bc3ed39c432d20d732",
           "exists": true
         },
         {

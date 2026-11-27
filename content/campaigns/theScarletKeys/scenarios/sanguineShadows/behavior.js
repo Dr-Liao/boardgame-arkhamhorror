@@ -17,10 +17,10 @@
 //   4. 结局：五个（未达成 / 未达成·见红 / 1 / 2 / 3），记录、时间与恸哭女士归属都在 resolution 里结算。
 import { exposeWithReaction } from '../../concealed.js'
 import { concealedMiniCards, distributeConcealed, exposeMiniCard } from '../../../../../src/engine/tsk-concealed.js'
-import { isPendingChoice } from '../../../../../src/engine/resolution.js'
+import { isPendingChoice } from '../../../../../src/engine/resolution-error.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
-import { assetRuleFor, enemyRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
+import { enemyRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   AVENIDA_DE_MAYO, AVENIDA_SHROUD_BY_DIFFICULTY, CANDIDATE_LOCATION_IDS, CONCEALED_AMOUNTS, DECOY_KIND,
   GATHER_GROUPS, LOCATIONS, LOCATION_SYMBOLS, RAW_CODES, RECORD_READS, RECORD_WRITES, SEEING_RED_ACT,
@@ -735,9 +735,18 @@ function performLookAction(state, inv, api, spec) {
   if ((Number(inv.clues) || 0) < 1) return false
   if (typeof api?.spendClues === 'function') api.spendClues(inv.seat, 1)
   else inv.clues = (Number(inv.clues) || 0) - 1
-  api?.test?.(inv.seat, spec.skill, spec.difficulty, result => {
+  let difficulty = spec.difficulty
+  if (inv.clues >= 1 && choiceFor(api, { kind: 'payment', source: inv.location, seat: inv.seat,
+    prompt: '是否额外花费 1 个线索，使此检定难度降低 2？',
+    options: [{ id: 'skip', label: '不额外花费' }, { id: 'pay', label: '花费 1 线索，难度 -2' }],
+  }) === 'pay') {
+    if (typeof api?.spendClues === 'function') api.spendClues(inv.seat, 1)
+    else inv.clues -= 1
+    difficulty = Math.max(0, difficulty - 2)
+  }
+  api?.test?.(inv.seat, spec.skill, difficulty, result => {
     if (!result?.success) return
-    const extra = Math.floor(Math.max(0, (Number(result.value) || 0) - spec.difficulty) / 2)
+    const extra = Math.floor(Math.max(0, (Number(result.value) || 0) - difficulty) / 2)
     lookAtMiniCards(state, inv, api, 1 + extra)
   }, 0, { type: 'scenario', label: spec.rule, code: inv.location })
   return true
@@ -761,7 +770,7 @@ function performSpendLookAction(state, inv, api, move) {
     if (typeof api?.loseResources === 'function') api.loseResources(inv.seat, cost)
     else inv.resources = Math.max(0, (Number(inv.resources) || 0) - cost)
   } else {
-    if (typeof api?.directHorror === 'function') api.directHorror(inv.seat, x)
+    if (typeof api?.horror === 'function') api.horror(inv.seat, x)
     else inv.horror = (Number(inv.horror) || 0) + x
   }
   lookAtMiniCards(state, inv, api, x)
@@ -809,39 +818,9 @@ export function shiftWeepingLady(state, seat, api = null) {
   const record = state.campaign?.tsk?.keys?.keys?.[WEEPING_LADY_KEY.id]
   if (!record) return null
   const faceCode = record.stable ? record.stableFace : record.unstableFace
-  const rule = assetRuleFor(faceCode)?.shift
-  if (!rule) return null
-  const inv = (state.investigators || []).find(item => item.seat === seat)
-  if (rule.kind === 'discoverClue' && inv) {
-    const targets = [inv.location, ...(locationOf(state, inv.location)?.connections || [])]
-      .filter(id => locationOf(state, id))
-    const picked = choiceFor(api, {
-      kind: 'location', source: faceCode, seat,
-      prompt: '「恸哭女士」：在你所在地点或连接地点发现 1 个线索。',
-      options: targets.map(id => ({ id, label: locationName(state, id) })),
-    })
-    const locationId = locationOf(state, picked) ? picked : inv.location
-    if (typeof api?.discoverClue === 'function') api.discoverClue(seat, 1, locationId)
-    else {
-      const location = locationOf(state, locationId)
-      if (location && (Number(location.clues) || 0) > 0) {
-        location.clues = (Number(location.clues) || 0) - 1
-        inv.clues = (Number(inv.clues) || 0) + 1
-      }
-    }
-    api?.info?.(`💧 「恸哭女士」（稳定面）：在「${locationName(state, locationId)}」发现 1 个线索。`)
-  } else if (rule.kind === 'discardAsset') {
-    for (const owner of aliveInvestigators(state)) {
-      const asset = (owner.assets || [])[0]
-      if (!asset) continue
-      if (typeof api?.discardAsset === 'function') api.discardAsset(owner.seat, asset.id)
-      else owner.assets = owner.assets.filter(item => item !== asset)
-    }
-    api?.info?.('💧 「恸哭女士」（动荡面）：每位调查员弃掉自己控制的一个支援。')
-  }
-  const shifted = typeof api?.mechanics?.tsk?.keys?.shift === 'function'
-    ? api.mechanics.tsk.keys.shift(WEEPING_LADY_KEY.id) : null
-  return { faceCode, kind: rule.kind, stable: shifted?.stable ?? !record.stable }
+  const kind = record.stable ? 'discoverClue' : 'discardAsset'
+  const shifted = api?.mechanics?.tsk?.keys?.shift?.(WEEPING_LADY_KEY.id, { seat })
+  return shifted ? { ...shifted, faceCode, kind } : null
 }
 
 /** 「来访名片」在场时（任意地点）不能花费线索：读条目声明的 blocksClueSpendingEverywhere。 */
@@ -970,6 +949,7 @@ export const behavior = {
       if (!state.scenarioZones.setAside.includes(code)) state.scenarioZones.setAside.push(code)
     }
     setupTargets(state)
+    state.doom = Number(state.numInvestigators) || 1
     data.laChicaRojaTargets = 0
     data.referenceTargets = 0
     drawLaChicaRoja(state)
@@ -1134,6 +1114,7 @@ export const behavior = {
 
   // 09557b 的「在阴影中」：回合开始时把移动过的调查员移回锚点。
   turnBegins(state, inv, api) {
+    if (inv.investigatorShadowAnchor) return api?.mechanics?.tsk?.investigatorShadows?.leave(inv.seat)
     const flags = state.scenarioFlags || {}
     const key = `${SHADOW_ANCHOR_PREFIX}${inv.seat}`
     const anchor = flags[key]

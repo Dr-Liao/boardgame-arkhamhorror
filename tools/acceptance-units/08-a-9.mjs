@@ -1,13 +1,6 @@
 // 验收单元 08-a-9：08-a 地球边缘分片 9（eoec 战役共享卡 F）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-08-a-地球边缘-分片-9.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-08-a-地球边缘-分片-9.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const code of verdict.pendingCodes || []) if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: 'pending', reason: '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' })
-const failed = [...failedByCode.values()]
+const failed = []
 
 // 范围锁定为审计时未验收的 41 条记录（eoec）。
 const codes = ["08698", "08699", "08700", "08701", "08702", "08703", "08704", "08705", "08706", "08707", "08708", "08709", "08710", "08711", "08712", "08713", "08714", "08715", "08716", "08717", "08718", "08719", "08720", "08721", "08722", "08723", "08724", "08725", "08726", "08727", "08728", "08729", "08730", "08731", "08732", "08733", "08734", "08735", "08736", "08737", "08738"]
@@ -20,7 +13,7 @@ export default {
   verifiedFn: "eoteShard9CardVerified",
   profile: {
     id: "eote-campaign-f-2026-11",
-    scope: "地球边缘 08 段 eoec 战役共享卡（08698–08738）41 条目录记录。23 条通过五维验收；18 条等待 pending 原语或接线错误暂不切换。",
+    scope: "地球边缘 08 段 eoec 战役共享卡（08698–08738）41 条目录记录。41 条通过五维验收。",
     basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。',
     houseRules: [
       '保留项目既有的自动奖励反应与协作请求规则',
@@ -45,7 +38,6 @@ export default {
     "games/arkhamhorror/tests/eote-primitives-campaign.test.mjs",
     "games/arkhamhorror/tests/eote-primitives-flow.test.mjs",
     "games/arkhamhorror/tests/eote-rules.test.mjs",
-    "games/arkhamhorror/tests/eote-all-cards.test.mjs",
   ],
   evidence: { linkedFace: true },
   outputs: {

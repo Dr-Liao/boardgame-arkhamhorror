@@ -10,9 +10,7 @@
 // 读点：
 //   · 威胁区入场 = api.threat + 条目 treacheryRule.threatArea（与 01182/07106 同款模板）；
 //   · 「回合结束时检定」= turnEnded 窗口 + api.test；成功后 api.removeThreat（威胁区卡唯一弃置写入口）；
-//   · 缺读点：「不能连续执行同一类型的行动」需要 legalMoves/validateMove 的行动类型限制读点；
-//     引擎已有 trackActionHistory / consecutiveActions 窗口（只有记录与事后窗口，没有禁止读点），
-//     见 primitive-requests/09746.json。
+//   · 连续行动限制读取本回合的行动历史，由 legalMoves 与 validateMove 共用。
 const CODE = '09746'
 const DIFFICULTY = 3
 
@@ -21,7 +19,8 @@ const holderOf = (state, source) => (state.investigators || [])
 
 export default {
   code: CODE, scope: 'treachery', implemented: true,
-  treacheryRule: { threatArea: true },
+  trackActionHistory: true,
+  treacheryRule: { threatArea: true, cannotRepeatActionKind: true },
   encounterResolve(state, inv, card, api) {
     api.threat(inv.seat, CODE)
     api.info?.(`🌀 「理智扭曲」进入 ${inv.name} 的威胁区域。`)
@@ -48,7 +47,4 @@ export default {
       })
     },
   }],
-  note: 'approximation: 「不能连续执行同一类型的行动」缺少 legalMoves 侧的限制读点（引擎只有 '
-    + 'trackActionHistory / consecutiveActions 记录与事后窗口），当前只在 note 披露；'
-    + '回合末检定与弃置已按 turnEnded 窗口实现。请求见 primitive-requests/09746.json。',
 }

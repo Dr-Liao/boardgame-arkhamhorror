@@ -5,9 +5,10 @@ export default {
   code: '11567',
   scope: 'location',
   implemented: true,
+  flags: { drawFromBeneathLostCampsite: true },
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('apiaryPlaceLocation', { code: card.code, seat: inv.seat }) === true
   },
-  note: "data-type（地点从遭遇牌库进入）：显现由 behavior.applyRevelation 结算（放入场地 + 该地点显现效果）。迷失营地（victory 1；[action] 抽取营地底下最上方卡牌）",
+  note: '迷失营地从遭遇牌库入场时由章节结算显现。地点已揭示且牌堆非空时，在此可花费一次行动抽取营地下的顶牌，照常结算其遭遇牌效果。',
   abilities: [],
 }

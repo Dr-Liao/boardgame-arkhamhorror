@@ -4,9 +4,7 @@
 //       如果该调查员选择打出，你抽取一张卡牌并获得该支援印刷费用的资源。
 //
 // 一卡一文件：这张卡的行为只在这里维护。
-// approximation: 引擎没有「把一张手牌交给他人并按如同自己手牌打出」的通道（playCardFromOtherHand
-// 以当前行动者为主角、playCard 只取本人手牌）。这里用「先置入自己控制、再 api.giveAsset 移交给
-// 该调查员」近似，且不代收打出费用（费用差额记在报告）。主效果（揭示/另一方决定/抽1/得费用资源）正确。
+// 由受邀调查员选择并按自己的正常费用打出，卡牌所有权保持不变。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const isItemAsset = code => {
@@ -44,25 +42,14 @@ export default {
             options: others.map(other => ({ id: String(other.seat), label: other.name })) }))
         const other = state.investigators[otherSeat]
         if (!other) return
-        // approximation：AI 座位的选择由引擎自动决定，测试/单机环境下改为由打出者确认
-        // （「另一位调查员的决定」在多人真人局仍应由该座位选择，见报告 approximation）。
-        const answer = api.choice({ kind: 'reaction', source: '08051', seat: inv.seat, canSkip: true,
-          prompt: `是否让 ${other.name} 打出你揭示的「${api.cardName(picked)}」（如同其手牌）？`,
-          options: [{ id: 'play', label: `让 ${other.name} 打出` }, { id: 'skip', label: '不打出' }] })
-        if (answer !== 'play') {
-          api.info(`「不当交易」：${other.name} 选择不打出「${api.cardName(picked)}」。`)
-          return
-        }
-        const asset = api.putIntoPlay(inv.seat, picked)
-        if (!asset) {
-          api.info(`「不当交易」：「${api.cardName(picked)}」未能置入场上。`)
-          return
-        }
-        api.giveAsset(asset, otherSeat)
+        const answer = api.choice({ kind: 'effect', source: '08051', seat: otherSeat, canSkip: true,
+          prompt: `是否打出 ${inv.name} 展示的「${api.cardName(picked)}」？`,
+          options: [{ id: 'play', cardCode: picked, label: '支付费用打出' }, { id: 'skip', label: '不打出' }] })
+        if (answer !== 'play' || !api.playerTools.playCardForSeat(otherSeat, inv.seat, picked, { noAction: true })) return
         api.drawCards(inv.seat, 1)
         const printedCost = Number(ALL_CARDS[picked]?.cost) || 0
         if (printedCost) api.gainResources(inv.seat, printedCost)
-        api.info(`🤝 「不当交易」：${other.name} 打出了「${asset ? api.cardName(picked) : ''}」；${inv.name} 抽取 1 张并获得 ${printedCost} 资源。`)
+        api.info(`🤝 「不当交易」：${other.name} 打出了「${api.cardName(picked)}」；${inv.name} 抽取 1 张并获得 ${printedCost} 资源。`)
       },
     },
   ],

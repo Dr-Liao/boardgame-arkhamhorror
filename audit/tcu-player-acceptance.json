@@ -22,12 +22,12 @@
     "basicWeaknesses": 2,
     "verified": 87,
     "unverified": 0,
-    "testsPassed": 185
+    "testsPassed": 187
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-      "sha256": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e"
+      "sha256": "3060b7f0ae68fa7e7e7a17cf08bdacb01619ebc89421526dde2f9d68f2cb96c2"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
@@ -35,7 +35,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+      "sha256": "85c6b1dc87868ef22313c167a02a4cd2ba50013809527855b7c089e23dd09ff5"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
@@ -53,19 +53,19 @@
     },
     {
       "file": "games/arkhamhorror/src/campaign/campaign.js",
-      "sha256": "35fba162a89e65dd695062f0f9c4b5c30e52c661108ea6e049f0acad2cd7d71f"
+      "sha256": "1772f4a2ce4e7c3792c33a03c1666bc0b723db21b4333bddffa49b314f399114"
     },
     {
       "file": "games/arkhamhorror/src/cards/entries/_shared.js",
-      "sha256": "68335ec099a4c0e211fbf71d5f976ce54bb7a07e75308ce43f80954e35ac434e"
+      "sha256": "1d330b47d1b1b73c93a4ab73f8cd8d6d35b0c60b15538c4b48bac947479fc809"
     },
     {
       "file": "games/arkhamhorror/tests/suites.mjs",
-      "sha256": "e43b5e77113865fad1d537a732c9ce650cf3c48ab69591d119b728d3cc186710"
+      "sha256": "1be6603b3aa403363b44e5f486d14cecc715cf9fc2632c6b778cdfb031ffa267"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-      "sha256": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e"
+      "sha256": "3060b7f0ae68fa7e7e7a17cf08bdacb01619ebc89421526dde2f9d68f2cb96c2"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
@@ -73,7 +73,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+      "sha256": "85c6b1dc87868ef22313c167a02a4cd2ba50013809527855b7c089e23dd09ff5"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
@@ -108,17 +108,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 182,
+          "line": 184,
           "test": "TCU 05021 劫数延后 快速打出可附属同地点队友；受伤害/恐惧时弃掉并真实离场"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 212,
+          "line": 214,
           "test": "TCU 05021 劫数延后 神话阶段结束：资源≥2 可支付保留（附属来源）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 227,
+          "line": 229,
           "test": "TCU 05021 劫数延后 神话阶段结束：资源不足或选择弃掉时弃掉附属"
         }
       ]
@@ -134,7 +134,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 247,
+          "line": 249,
           "test": "TCU 05022 坚定不移 剩余生命+神志 ≥5 / ≥10 时追加意志与战斗图标"
         }
       ]
@@ -150,12 +150,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 312,
+          "line": 314,
           "test": "TCU 05023 宝剑王牌 塔罗槽 +1 战斗；开局 [reaction] 可选放置入场"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 336,
+          "line": 338,
           "test": "TCU 05023 宝剑王牌 塔罗槽已满时开局 [reaction] 不放置入场（保留手牌）"
         }
       ]
@@ -171,12 +171,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 350,
+          "line": 352,
           "test": "TCU 05024 指纹采集工具 横置花补给调查：+1 智识且成功额外发现 1 线索"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 370,
+          "line": 372,
           "test": "TCU 05024 指纹采集工具 补给耗尽后仍在场（卡面没有弃置句）"
         }
       ]
@@ -192,7 +192,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 388,
+          "line": 390,
           "test": "TCU 05025 串联线索 发现最后线索后从手牌反应：发现低隐藏值地点 2 线索"
         }
       ]
@@ -208,7 +208,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 263,
+          "line": 265,
           "test": "TCU 05026 好奇心 手牌 ≥4 / ≥7 时追加意志与智识图标"
         }
       ]
@@ -224,7 +224,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 423,
+          "line": 425,
           "test": "TCU 05027 死神·XIII 塔罗槽 +1 智识并在开局入场"
         }
       ]
@@ -240,7 +240,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 465,
+          "line": 467,
           "test": "TCU 05028 良好人脉 横置获得每 5 资源 +1 技能值，且每位调查员仅限 1 张"
         }
       ]
@@ -256,7 +256,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 488,
+          "line": 490,
           "test": "TCU 05029 金钱万能 检定开始时打出：改为资源技能检定（基础值 floor(资源/2)，只吃万能图标）"
         }
       ]
@@ -272,7 +272,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 275,
+          "line": 277,
           "test": "TCU 05030 狡猾 资源 ≥5 / ≥10 时追加智识与敏捷图标"
         }
       ]
@@ -288,7 +288,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 432,
+          "line": 434,
           "test": "TCU 05031 月亮·XVIII 塔罗槽 +1 敏捷并在开局入场"
         }
       ]
@@ -304,37 +304,37 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 525,
+          "line": 527,
           "test": "TCU 05032 否决存在 同时受到 2 伤害 2 恐惧时只能整体忽略一项（不提供拆分点数）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 549,
+          "line": 551,
           "test": "TCU 05032 否决存在 只有单项伤害时直接整体忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 566,
+          "line": 568,
           "test": "TCU 05032 否决存在 遭遇卡使随机弃手牌时可忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 579,
+          "line": 581,
           "test": "TCU 05032 否决存在 敌人攻击时弃手牌（伊斯观察者「攻击时随机弃 1 张」）可忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 592,
+          "line": 594,
           "test": "TCU 05032 否决存在 遭遇卡使失去资源/失去行动时可忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 607,
+          "line": 609,
           "test": "TCU 05032 否决存在 弱点显现（失忆）的弃手牌可忽略"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 618,
+          "line": 620,
           "test": "TCU 05032 否决存在 玩家卡自伤不能取消（source=other）"
         }
       ]
@@ -350,17 +350,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 635,
+          "line": 637,
           "test": "TCU 05033 恐怖灵感 取消凋零术的符号效果"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 659,
+          "line": 661,
           "test": "TCU 05033 恐怖灵感 让凋零术的符号效果再结算一次"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 689,
+          "line": 691,
           "test": "TCU 05033 恐怖灵感 auto_fail 窗口也能打出（凋零术不因 auto_fail 产生修正）"
         }
       ]
@@ -376,7 +376,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 286,
+          "line": 288,
           "test": "TCU 05034 预见未来 场上毁灭 ≥3 / ≥6 时追加万能图标"
         }
       ]
@@ -392,7 +392,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 441,
+          "line": 443,
           "test": "TCU 05035 圣杯四 塔罗槽 +1 意志并在开局入场"
         }
       ]
@@ -408,7 +408,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 716,
+          "line": 718,
           "test": "TCU 05036 钉鞋 +1 敏捷；移动后横置敏捷(3)检定，成功再移动到连接地点"
         }
       ]
@@ -424,12 +424,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 741,
+          "line": 743,
           "test": "TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害，成功获得 X 资源"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 758,
+          "line": 762,
           "test": "TCU 05037 绝望之举 从手牌弃掉手部道具：获得 +X 战斗但不返还资源"
         }
       ]
@@ -445,7 +445,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 297,
+          "line": 299,
           "test": "TCU 05038 体格强健 控制[[道具]] ≤2 / ≤1 时追加战斗与敏捷图标"
         }
       ]
@@ -461,7 +461,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 450,
+          "line": 452,
           "test": "TCU 05039 星币五 塔罗槽 +1 生命上限 +1 神智上限并在开局入场"
         }
       ]
@@ -477,7 +477,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 777,
+          "line": 781,
           "test": "TCU 05040 权杖王牌 流放自身换额外 1 行动；该次行动期间每项技能 +2"
         }
       ]
@@ -493,12 +493,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 810,
+          "line": 814,
           "test": "TCU 05041 第十三幻象 显现进入威胁区域并用[action][action]弃掉"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-          "line": 826,
+          "line": 830,
           "test": "TCU 05041 第十三幻象 技能值等于难度时检定改为失败（本人 + 同地点队友）"
         }
       ]
@@ -1045,6 +1045,11 @@
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
           "line": 166,
           "test": "TCU 05188 秘密卷轴 查看牌库底 3 张：可弃 1、可拿 1、其余逐张任意顺序放顶/底"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "line": 197,
+          "test": "TCU 05188/05189 秘密卷轴：遭遇牌从指定一端移动，保留同号副本且不提供拿到手牌"
         }
       ]
     },
@@ -1059,7 +1064,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 197,
+          "line": 218,
           "test": "TCU 05189 秘密卷轴 查看任意牌库顶或底 1 张，然后弃/拿/放顶/放底"
         }
       ]
@@ -1075,17 +1080,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 219,
+          "line": 240,
           "test": "TCU 05190 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗 +1 伤害"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 230,
+          "line": 251,
           "test": "TCU 05190 田纳西酸麦芽威士忌 诡计卡牌检定 +3 意志（横置并花 1 补给）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 249,
+          "line": 270,
           "test": "TCU 05190 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）"
         }
       ]
@@ -1101,17 +1106,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 274,
+          "line": 295,
           "test": "TCU 05191 田纳西酸麦芽威士忌 弃掉：攻击 +3 战斗，命中非精英敌人后自动躲避"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 286,
+          "line": 307,
           "test": "TCU 05191 田纳西酸麦芽威士忌 诡计卡牌意志检定 +2 意志（横置并花 1 补给）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 306,
+          "line": 327,
           "test": "TCU 05191 田纳西酸麦芽威士忌 非意志的诡计检定不提供能力（不白扣补给）"
         }
       ]
@@ -1127,7 +1132,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 331,
+          "line": 352,
           "test": "TCU 05192 附魔剑 成功花 1 充能附魔 +1 伤害，附魔击杀后抽 1 治愈 1 恐惧"
         }
       ]
@@ -1143,7 +1148,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 351,
+          "line": 372,
           "test": "TCU 05193 附魔剑 额外花 2 充能：+2 战斗 +2 伤害"
         }
       ]
@@ -1159,12 +1164,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 365,
+          "line": 386,
           "test": "TCU 05194 恐怖图腾 投入后横置：投入卡再获得 1 个图标，检定成功抽 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 387,
+          "line": 408,
           "test": "TCU 05194 恐怖图腾 可选非匹配图标：可选择但不改变检定值"
         }
       ]
@@ -1180,12 +1185,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 412,
+          "line": 433,
           "test": "TCU 05195 恐怖图腾 投入后横置：检定失败时把投入的卡牌返回手牌"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 433,
+          "line": 454,
           "test": "TCU 05195 恐怖图腾 可选非匹配图标：不加值、失败仍返回手牌"
         }
       ]
@@ -1201,17 +1206,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 465,
+          "line": 486,
           "test": "TCU 05196 委员会的保险箱 双行动检定任意技能移除锁头，无锁时全队免费打出并放逐"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 491,
+          "line": 512,
           "test": "TCU 05196 委员会的保险箱 同地点队友可激活：费用由激活者支付、能力读写真实资产 uses"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 522,
+          "line": 543,
           "test": "TCU 05196 委员会的保险箱 非队友支援/异地队友不可激活"
         }
       ]
@@ -1227,7 +1232,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 545,
+          "line": 566,
           "test": "TCU 05229 鸣枪示警 花 1 子弹把所在地点所有非精英敌人赶去连接地点"
         }
       ]
@@ -1243,22 +1248,22 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 572,
+          "line": 593,
           "test": "TCU 05230 瞄准镜 快速附属到[[枪械]]支援（引擎已支持手槽过滤；附属期能力见条目 note）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 611,
+          "line": 632,
           "test": "TCU 05230 瞄准镜 对与你交战的敌人：所附属枪械不出现在攻击列表，直接结算也被拦截"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 627,
+          "line": 648,
           "test": "TCU 05230 瞄准镜 反应横置写回宿主 attachments 实体（不能反复触发）"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 665,
+          "line": 686,
           "test": "TCU 05230 瞄准镜 本地无敌人：所附属枪械的攻击入口仍出现，反应改指连接地点的非精英敌人"
         }
       ]
@@ -1274,7 +1279,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 690,
+          "line": 711,
           "test": "TCU 05231 知识就是力量 结算所选[[书籍]]支援的[行动]能力（忽略费用）"
         }
       ]
@@ -1290,7 +1295,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 707,
+          "line": 728,
           "test": "TCU 05232 绝密地图集 花秘密横置移动到距离正好为 2 的已揭示地点"
         }
       ]
@@ -1306,7 +1311,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 728,
+          "line": 749,
           "test": "TCU 05233 投资 横置放置补给（上限 10），兑现时把全部补给换成资源"
         }
       ]
@@ -1322,12 +1327,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 755,
+          "line": 776,
           "test": "TCU 05234 诱敌 自动躲避非精英敌人；可支付 +2 资源改为最多 2 个"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 775,
+          "line": 796,
           "test": "TCU 05234 诱敌 修复：没有可躲避的非精英敌人时打不出（含连接地点判定）"
         }
       ]
@@ -1343,7 +1348,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 796,
+          "line": 817,
           "test": "TCU 05235 蠕虫的秘密 横置并放 1 毁灭：从弃牌堆免费-1 费打出法术/洞察事件，之后移出游戏"
         }
       ]
@@ -1359,12 +1364,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 827,
+          "line": 848,
           "test": "TCU 05236 指路鬼魂 +1 智慧；非直接恐惧必须先分给它，因恐惧离场时移出游戏"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 863,
+          "line": 884,
           "test": "TCU 05236 沉静：其他己方支援也可先分恐惧，但必须排在调查员卡之前"
         }
       ]
@@ -1380,12 +1385,17 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 886,
+          "line": 907,
           "test": "TCU 05237 幸运或是注定 毁灭放到卡上时反应取消 1 点并放逐自身；每场游戏最多 1 张"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 919,
+          "line": 940,
+          "test": "TCU 05237 幸运或是注定：玩家支援获得毁灭时不提供反应，遭遇敌人可以触发"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "line": 956,
           "test": "TCU 05237 幸运或是注定 密谋毁灭也能取消（addDoom 的 doomPlaced 窗口）"
         }
       ]
@@ -1401,7 +1411,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 936,
+          "line": 973,
           "test": "TCU 05273 MK1手榴弹 命中后对所在地点每个敌人造成 2 点伤害，补给耗尽后弃置"
         }
       ]
@@ -1417,12 +1427,12 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 958,
+          "line": 995,
           "test": "TCU 05274 特工支援 两条[快速]能力：对敌人 1 伤害 / 发现 1 线索"
         },
         {
           "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-          "line": 977,
+          "line": 1014,
           "test": "TCU 05274 特工支援 可以替同地点其他调查员承伤"
         }
       ]

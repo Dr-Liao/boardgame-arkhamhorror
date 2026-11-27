@@ -73,6 +73,7 @@ export function createTskInteractions(state, deps = {}) {
       }))
       const id = chooseOne(state, seat, { operation: 'tskConcealed', stage: 'items', prompt: '选择要揭露的隐匿迷你卡', candidates, optional })
       if (id == null) return false
+      if (deps.exposeScarletMiniCard) return deps.exposeScarletMiniCard(id, { seat })
       const result = exposeMiniCard(state, id)
       deps.exposed?.(state, { ...result, location: result.locationId ?? null, seat })
       return result
@@ -110,6 +111,7 @@ export function createTskInteractions(state, deps = {}) {
       })
       const chosen = chooseOne(state, seat, { operation: 'tskKey', stage: 'keys', prompt: '选择要变换（翻面）的绯红密钥', candidates, optional })
       if (chosen == null) return false
+      if (deps.shiftScarletKey) return deps.shiftScarletKey(chosen, { seat })
       const result = shiftKey(state, chosen)
       deps.keyShifted?.(state, {
         keyId: result.id, from: result.from, to: result.to, face: result.to,

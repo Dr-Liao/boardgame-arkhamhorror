@@ -19,6 +19,6 @@ export default {
     },
     back: 'resolution3',
   },
-  note: '近似：谈判成功用 behavior.residentParley（api.test）；「可花费 1/人 线索使其横置入场」简化为谈判成功即横置入场。',
+  note: '章节结算谈判检定。成功后调查员可为每名入场居民支付线索，使其横置入场。',
   abilities: [],
 }

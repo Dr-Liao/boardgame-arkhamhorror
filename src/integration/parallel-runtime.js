@@ -191,10 +191,23 @@ function remapTableStateSeats(tableState, roomSeats) {
 function remapEventSeats(event, roomSeats) {
   const copy = { ...event }
   if (Number.isInteger(copy.seat)) copy.seat = remapIndexedSeat(roomSeats, copy.seat)
-  if (Number.isInteger(copy.privateSeat)) copy.privateSeat = remapIndexedSeat(roomSeats, copy.privateSeat)
+  // info/privateInfo already use roomSeatForEvent. Only the presentation
+  // payload and its snapshot still speak in lane-local coordinates.
   if (copy.tableState) copy.tableState = remapTableStateSeats(copy.tableState, roomSeats)
-  if (copy.presentation?.tableState) {
-    copy.presentation = { ...copy.presentation, tableState: remapTableStateSeats(copy.presentation.tableState, roomSeats) }
+  if (copy.kind === 'cardOutcome') {
+    copy.effects = copy.effects.map(effect => ({
+      ...effect,
+      ...(Number.isInteger(effect.seat) ? { seat: remapIndexedSeat(roomSeats, effect.seat) } : {}),
+      ...(effect.targets ? { targets: effect.targets.map(target => ({ ...target, seat: remapIndexedSeat(roomSeats, target.seat) })) } : {}),
+    }))
+  }
+  if (copy.presentation) {
+    const cue = copy.presentation
+    copy.presentation = {
+      ...cue,
+      ...(Number.isInteger(cue.seat) ? { seat: remapIndexedSeat(roomSeats, cue.seat) } : {}),
+      ...(cue.tableState ? { tableState: remapTableStateSeats(cue.tableState, roomSeats) } : {}),
+    }
   }
   return copy
 }

@@ -20,11 +20,11 @@ export default {
     "fight": 2,
     "evade": 3,
     "health": 3,
+    "healthPerInvestigator": true,
     "damage": 2,
     "horror": 0,
     "victory": 0,
     "revealEffect": "attacksHere"
   },
-  "abilities": [],
-  "note": "近似：「+N [per_investigator] 生命」只在数据里声明（引擎当前没有敌人-地点按人加生命的读点）；揭示强制效果按 revealEffect 在 behavior 里分派。"
+  "abilities": []
 }

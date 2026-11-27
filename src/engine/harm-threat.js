@@ -1,10 +1,14 @@
+import { filterHand } from './hand-icons.js'
+import { attachmentTextBlanked } from './attachment-rules.js'
+import { consumeHarmBonus } from './effect-state.js'
+import { canLeaveControlledAsset } from './asset-departure.js'
 import { putInHand } from './hand-entry.js'
 // harm-threat.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 伤害 / 恐惧 / 威胁区 / 击败与淘汰：assignHarm 是唯一承伤入口。
 // 读点：combat 与 api 的伤害接口、威胁区的强制效果、弱点与淘汰判定。
 import { playerEffectCanAffect } from './effect-recipient.js'
 import { keysOnExit } from './scenario-keys.js'
-import { payLocationActionCost } from './location-action-cost.js'
+import { locationExploreExtraActions, payLocationActionCost } from './location-action-cost.js'
 import { vehicleOf, leaveVehicle } from './vehicles.js'
 import { mechanicState } from './mechanic-state.js'
 import { roadDistance } from './map-graph.js'
@@ -13,6 +17,7 @@ import { chooseTdcArtifactRecipient, earnedTdcArtifacts, tdcInteractionSpec } fr
 import { hasWindowListener } from './window-listeners.js'
 import { hasTrait } from './matcher.js'
 import { hiddenScenarioExperience } from './hidden-rules.js'
+import { emitCardAudio } from './presentation-events.js'
 import { effectSourceIsPlayer } from './effect-provenance.js'
 import { assetRegulationEnabled, assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { concealedAt, exposeLimitPerInvestigator, exposuresThisRound, setAsideRemainingDecoys } from './tsk-concealed.js'
@@ -20,6 +25,7 @@ import { concealedAt, exposeLimitPerInvestigator, exposuresThisRound, setAsideRe
 export function createHarmThreat(deps) {
   const {
     abilityApi,
+    exileExitAssets,
     campaignState,
     ALL_TREACHERIES,
     EFFECTS,
@@ -80,7 +86,8 @@ export function createHarmThreat(deps) {
     })
   }
 
-  function getThreatEffect(cardOrCode) {
+  function getThreatEffect(cardOrCode, state = null) {
+    if (state ? attachmentTextBlanked(state, cardOrCode) : cardOrCode?.textBlankTurn != null) return null
     if (cardOrCode && typeof cardOrCode === 'object' && cardOrCode.threatEffect) {
       return cardOrCode.threatEffect
     }
@@ -96,19 +103,20 @@ export function createHarmThreat(deps) {
 
   function availableThreatAbilities(state, inv) {
     return state.investigators.filter(owner => !owner.defeated && !owner.resigned && owner.location === inv.location)
-      .flatMap(owner => owner.threat.filter(card => owner.seat === inv.seat || getThreatEffect(card)?.sameLocationAction))
+      .flatMap(owner => owner.threat.filter(card => owner.seat === inv.seat || getThreatEffect(card, state)?.sameLocationAction))
   }
 
-  function assetsCannotReady(inv, round = null) {
+  function assetsCannotReady(inv, round = null, state = null) {
     // 「蟒蛇」（04079）：下个补给阶段不能重整（标记写在调查员身上）。
     const noReadyRound = campaignState.cannotReadyRound(inv)
     if (noReadyRound != null && (round == null || noReadyRound === round)) return true
-    return inv.threat.some(card => getThreatEffect(card)?.preventReady)
+    return inv.threat.some(card => getThreatEffect(card, state)?.preventReady)
   }
 
   function drawBlocked(state, inv) {
-    if (capabilityBlocked(state, inv, 'draw')) return true
-    return (inv.threat || []).some(card => card.noDrawAction === true || getThreatEffect(card)?.noDrawAction === true)
+    if (capabilityBlocked(state, inv, 'draw') || capabilityBlocked(state, inv, 'drawCards')) return true
+    return (inv.threat || []).some(card => !attachmentTextBlanked(state, card)
+      && (card.noDrawAction === true || getThreatEffect(card, state)?.noDrawAction === true))
   }
 
   function removeThreat(state, inv, threatCard, events, { seat = state._resolvingSeat, discard: shouldDiscard = true, force = false } = {}) {
@@ -138,15 +146,16 @@ export function createHarmThreat(deps) {
 
   const HARM_STRATEGIES = Object.freeze(['distribute', 'self', 'assetsFirst', 'soakFirst', 'assetsOnly', 'fillOne'])
 
-  function assignHarm(state, inv, amount, kind, events, direct, assetsFirst = false, strategy = null, priorAssignments = null) {
+  function assignHarm(state, inv, amount, kind, events, direct, assetsFirst = false, strategy = null, priorAssignments = null,
+    playerEffect = effectSourceIsPlayer(state) && !state._enemyAttackResolving) {
     if (strategy != null && !HARM_STRATEGIES.includes(strategy)) {
       throw new Error(`未知伤害分配策略 ${JSON.stringify(strategy)}（可选：${HARM_STRATEGIES.join(' / ')}）`)
     }
     if (strategy === 'self') return new Map([[inv, amount]])
     const preferAssets = assetsFirst || strategy === 'assetsFirst' || strategy === 'soakFirst' || strategy === 'assetsOnly'
     const assignments = new Map()
+    const assetsInControl = [...inv.assets, ...(state.storyAssets || []).filter(asset => asset.controlledByAll)]
     const capacity = kind === 'damage' ? 'health' : 'sanity'
-    const playerEffect = effectSourceIsPlayer(state) && !state._enemyAttackResolving
     const traitLimits = inv.assets.filter(asset => !assetTextBlanked(asset, inv))
       .map(asset => registeredEntry(asset.code)?.assetRule?.harmAssignmentTraitLimit).filter(Boolean)
     const voluntaryForbidden = inv.assets.filter(asset => assetRegulationEnabled(state, inv, asset))
@@ -175,6 +184,7 @@ export function createHarmThreat(deps) {
           const passive = assetEffect(other, asset)?.passive?.assignHarmAtLocation
           const connected = assetEffect(other, asset)?.passive?.assignHarmConnections
             && state.locations.find(loc => loc.id === other.location)?.connections?.includes(inv.location)
+          if (kind === 'damage' && asset.soakDamageAtLocation && !assetTextBlanked(asset, other, state)) return asset.location === inv.location
           return (other.location === inv.location || connected) && (passive === true || passive === kind)
         })
         .map(asset => ({ asset, owner: other })))
@@ -188,7 +198,7 @@ export function createHarmThreat(deps) {
       // 「先把一张卡填满再分配下一张」（03088 毕宿五的野兽）。
       if (strategy === 'fillOne' && locked) {
         const stillOpen = locked === inv
-          || (harmAssignable(locked) && assetCapacityValue(locked, capacity) > (locked[kind] || 0) + (assignments.get(locked) || 0))
+          || (harmAssignable(locked) && assetCapacityValue(locked, capacity, state) > (locked[kind] || 0) + (assignments.get(locked) || 0))
         if (stillOpen) {
           assignments.set(locked, (assignments.get(locked) || 0) + 1)
           continue
@@ -199,11 +209,11 @@ export function createHarmThreat(deps) {
       const directSoaks = direct
         ? inv.assets.filter(asset => assetPassiveData(asset.code)?.assignDirectHarm
           && harmAssignable(asset)
-          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+          && assetCapacityValue(asset, capacity, state) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         : []
       let assets = direct ? directSoaks
-        : inv.assets.filter(asset => harmAssignable(asset)
-          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+        : assetsInControl.filter(asset => (!asset.soakDamageAtLocation || asset.location === inv.location)
+          && harmAssignable(asset) && assetCapacityValue(asset, capacity, state) > (asset[kind] || 0) + (assignments.get(asset) || 0))
       // Phase 5（5b-7）：「沉静」与「redirectOneHorrorToSelf」也可以写在能力层条目上（读点走 assetEffect）。
       // P6（08056/08081）：「非直接伤害/恐惧都必须先分配给该支援」——沉静从「仅恐惧」扩展到伤害。
       // 声明放在条目 `flags.composureDamage: true`（flags 是注册表白名单里的通用透传字段，
@@ -213,7 +223,7 @@ export function createHarmThreat(deps) {
       // composureDamage 支援作为候选（不提供 self / 其它支援）；其余点数恢复正常分配。
       const forcedFirst = kind === 'damage' && !direct && !composureDamageSatisfied
         ? inv.assets.filter(asset => composureDamage(asset) && harmAssignable(asset, true)
-          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+          && assetCapacityValue(asset, capacity, state) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         : []
       if (forcedFirst.length) assets = forcedFirst
       const mandatory = assets.filter(asset => (kind === 'horror' && (assetEffect(inv, asset)?.composure
@@ -222,7 +232,7 @@ export function createHarmThreat(deps) {
       // 2026-10-25 第七轮修复 05236：不再把候选收窄到「沉静」支援本身——其他己方支援也可先承接，
       // 只需保证在调查员卡之前（mandatory 存在时不提供「由调查员承受」选项）。
         const availableSoaks = (forcedFirst.length ? [] : soaks).filter(({ asset }) => harmAssignable(asset)
-          && assetCapacityValue(asset, capacity) > (asset[kind] || 0) + (assignments.get(asset) || 0))
+          && assetCapacityValue(asset, capacity, state) > (asset[kind] || 0) + (assignments.get(asset) || 0))
         const availableInvestigators = forcedFirst.length ? [] : investigators.filter(other =>
           (kind === 'damage' ? getMaxHealth(other) : getMaxSanity(other)) > (other[kind] || 0) + (assignments.get(other) || 0))
         const candidates = assets.length || availableSoaks.length || availableInvestigators.length
@@ -246,7 +256,7 @@ export function createHarmThreat(deps) {
   function triggerThreatForced(state, inv, when, events, depth = 0) {
     if (depth > 4 || inv.defeated || inv.resigned) return
     for (const t of inv.threat.slice()) {
-      const th = getThreatEffect(t)
+      const th = getThreatEffect(t, state)
       const fx = th && th.forced && th.forced[when]
       if (fx) applyThreatForced(state, inv, t, fx, events, depth)
     }
@@ -254,14 +264,20 @@ export function createHarmThreat(deps) {
 
   function applyThreatForced(state, inv, t, fx, events, depth = 0) {
     if (state.scenario?.mechanics?.protectInvestigators) return
+    const playHarm = (sound, damage, horror) => emitCardAudio(state, events, {
+      kind: 'cardOutcome', effects: [{ sound, targets: [{ seat: inv.seat, damage, horror, selfDamage: damage, selfHorror: horror }] }],
+    })
     if (fx.damage && !inv.defeated && !inv.resigned) {
+      const themed = deps.presentCardDamage?.(state, inv, null, fx.damage, events, { code: t.code, assetId: t.id, sourceSeat: inv.seat })
       inv.damage += fx.damage
+      if (!themed) playHarm('injury', fx.damage, 0)
       info(state, events, `💥 「${cardName(t.code)}」强制：${inv.name} 受到 ${fx.damage} 点直接伤害。`)
       checkDefeated(state, inv.seat, events)
       if (!inv.defeated && !inv.resigned) triggerThreatForced(state, inv, 'onDamage', events, depth + 1)
     }
     if (fx.horror && !inv.defeated && !inv.resigned) {
       inv.horror += fx.horror
+      playHarm('fright', 0, fx.horror)
       info(state, events, `😱 「${cardName(t.code)}」强制：${inv.name} 受到 ${fx.horror} 点直接恐惧。`)
       checkDefeated(state, inv.seat, events)
       if (!inv.defeated && !inv.resigned) triggerThreatForced(state, inv, 'onHorror', events, depth + 1)
@@ -270,19 +286,23 @@ export function createHarmThreat(deps) {
 
   function unpaidExtraActionThreats(state, inv, kind) {
     return inv.threat.filter(card => {
-      const effect = getThreatEffect(card)
+      const effect = getThreatEffect(card, state)
       return effect?.extraActionCost?.includes(kind) && card.extraActionPaidRound !== state.round
     })
   }
 
   function payActionCost(state, inv, kind, events) {
-    if (state._actionPaid) return
-    spendAction(state, inv)
-    for (const threat of unpaidExtraActionThreats(state, inv, kind)) {
+    if (state._actionPaid) return true
+    const extra = kind === 'explore' ? locationExploreExtraActions(state, inv) : 0
+    const threats = unpaidExtraActionThreats(state, inv, kind)
+    if (kind === 'explore' && inv.actionsLeft < 1 + extra + threats.length) return false
+    for (let index = 0; index <= extra; index++) spendAction(state, inv)
+    for (const threat of threats) {
       spendAction(state, inv)
       threat.extraActionPaidRound = state.round
       info(state, events, `⏳ ${inv.name} 受「${cardName(threat.code)}」影响，本次${kind === 'move' ? '移动' : kind === 'fight' ? '攻击' : '躲避'}额外消耗 1 行动。`)
     }
+    return true
   }
 
   function defeatAll(state, events) {
@@ -294,6 +314,8 @@ export function createHarmThreat(deps) {
   }
 
   function eliminateInvestigator(state, inv, events) {
+    if (inv.doom) delete inv.doom
+    exileExitAssets?.(state, inv, events)
     const record = state.campaign?.investigators?.[inv.seat]
     if (inv.defeated && !inv.resigned && registeredEntry(record?.code)?.campaignDeck?.killedOnDefeat) {
       record.status = 'killed'
@@ -314,7 +336,7 @@ export function createHarmThreat(deps) {
     for (const code of [...(inv.hand || [])]) {
       const entry = registeredEntry(code)
       if (!entry?.darkPactForced || !entry.replacementCode) continue
-      inv.hand = inv.hand.filter(item => item !== code)
+      filterHand(inv, item => item !== code)
       inv.deck = (inv.deck || []).filter(item => item !== code)
       inv.deck.push(entry.replacementCode)
       info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
@@ -496,9 +518,9 @@ export function createHarmThreat(deps) {
     } })
   }
 
-  function concealedDamageTargets(state, seat, locationId) {
+  function concealedTargetsForEffect(state, seat, locationId) {
     const inv = state.investigators[seat]
-    if (!inv || capabilityBlocked(state, inv, 'dealEnemyDamage')) return []
+    if (!inv || inv.defeated || inv.resigned) return []
     if (!state.locations.some(location => location.id === locationId)) return []
     const limit = exposeLimitPerInvestigator(state)
     if (limit && exposuresThisRound(state, seat) >= limit) return []
@@ -506,9 +528,15 @@ export function createHarmThreat(deps) {
     return candidates.filter(card => !card.flipped)
   }
 
-  function exposeConcealedInsteadOfDamage(state, seat, locationId, id, events) {
+  function concealedDamageTargets(state, seat, locationId) {
     const inv = state.investigators[seat]
-    if (inv?.defeated || inv?.resigned || !concealedDamageTargets(state, seat, locationId).some(card => card.id === id)) return false
+    if (!inv || capabilityBlocked(state, inv, 'dealEnemyDamage')) return []
+    return concealedTargetsForEffect(state, seat, locationId)
+  }
+
+  function exposeConcealedByEffect(state, seat, locationId, id, events) {
+    const inv = state.investigators[seat]
+    if (!concealedTargetsForEffect(state, seat, locationId).some(card => card.id === id)) return false
     const behavior = scenarioBehavior(state)
     const runtime = scenarioRuntime(state, events)
     if (behavior.exposeConcealedByEffect) {
@@ -524,8 +552,14 @@ export function createHarmThreat(deps) {
       return Boolean(result) || !concealedAt(state, locationId).some(card => card.id === id && !card.flipped)
     }
     const revealed = abilityApi(state, events).tsk.concealed.expose(id, { seat })
+    if (!revealed || revealed.cancelled) return false
     behavior.concealedCombatResolved?.(state, revealed, seat, 'fightConcealed', runtime)
-    return !!revealed
+    return true
+  }
+
+  function exposeConcealedInsteadOfDamage(state, seat, locationId, id, events) {
+    if (!concealedDamageTargets(state, seat, locationId).some(card => card.id === id)) return false
+    return exposeConcealedByEffect(state, seat, locationId, id, events)
   }
 
   function dealDamageAll(state, seat, effect, events) {
@@ -606,11 +640,20 @@ export function createHarmThreat(deps) {
 
   function returnAssetToHand(state, seat, effect, events) {
     const inv = state.investigators[seat]
-    const asset = effect.assetId ? inv.assets.find(item => item.id === effect.assetId) : null
-    if (!asset) return
-    leaveAsset(state, inv, asset)
-    if (!asset.removedFromGame) putInHand(state, inv, asset.code)
-    info(state, events, `${inv.name} 将「${cardName(asset.code)}」返回手牌。`)
+    const api = abilityApi(state, events)
+    const candidates = inv.assets.filter(asset => (effect.trait
+      ? api.effectiveTraits(asset).some(trait => trait.toLowerCase() === effect.trait.toLowerCase())
+      : asset.id === effect.assetId)
+      && canLeaveControlledAsset(state, inv, asset))
+    if (!candidates.length) return
+    const id = candidates.length === 1 ? candidates[0].id : requestChoice(state, {
+      kind: 'card', source: effect.source, seat, prompt: '选择要返回手牌的支援。',
+      options: candidates.map(asset => ({ id: asset.id, cardCode: asset.code, label: cardName(asset.code) })),
+    })
+    const asset = candidates.find(item => item.id === id)
+    if (asset && api.returnAssetToHand(seat, asset, { toOwner: true })) {
+      info(state, events, `${inv.name} 将「${cardName(asset.code)}」返回手牌。`)
+    }
   }
 
   function shuffleIntoEncounter(state, seat, effect, events) {
@@ -753,6 +796,12 @@ export function createHarmThreat(deps) {
     return healed
   }
 
+  function healOverflow(state, target, healerSeat, amount, harmKind, events) {
+    if (amount > 0 && hasWindowListener(state, 'healOverflow')) reactionWindow(state, 'healOverflow', {
+      when: 'healOverflow', seat: healerSeat, targetSeat: target.seat, location: target.location, amount, harmKind,
+    }, events, { allowNested: true })
+  }
+
   function healHorrorFrom(state, target, amount, events, options = {}) {
     const healedAmount = Math.max(0, Math.floor(Number(amount) || 0))
     if (!target || !healedAmount) return 0
@@ -796,7 +845,9 @@ export function createHarmThreat(deps) {
     }
     if (sink && !isInvestigator) return 0
     const before = target.horror || 0
-    const healed = Math.min(before, healedAmount)
+    const offered = healedAmount + (before > 0 ? consumeHarmBonus(state, target, 'heal') : 0)
+    const healed = Math.min(before, offered)
+    if (isInvestigator) healOverflow(state, target, healerSeat, offered - healed, 'horror', events)
     if (!healed) return 0
     target.horror = before - healed
     if (options.log !== false) info(state, events, `💚 ${targetLabel()} 治疗了 ${healed} 点恐惧。`)
@@ -879,8 +930,17 @@ export function createHarmThreat(deps) {
     const owner = isInvestigator ? target : options.owner
     if (!owner) return 0
     const healerSeat = options.healerSeat ?? (Number.isInteger(state._resolvingSeat) ? state._resolvingSeat : owner.seat)
-    const sink = (owner.threat || []).find(card => registeredEntry(card.code)?.flags?.threatDamageSink === true)
-    if (sink && !options.ignoreSink && (sink.counters || 0) > 0) {
+    const sink = (owner.threat || []).find(card => !attachmentTextBlanked(state, card) && (card.counters || 0) > 0
+      && registeredEntry(card.code)?.flags?.threatDamageSink === true)
+    const optional = sink && registeredEntry(sink.code)?.redirectHeal?.optional === true
+    let redirect = sink && !options.ignoreSink && (!optional || isInvestigator)
+    if (redirect && optional && target.damage > 0) {
+      redirect = requestChoice(state, { kind: 'target', source: sink.code, seat: healerSeat,
+        prompt: '选择治疗诡计或调查员身上的伤害。',
+        options: [{ id: 'treachery', label: `治疗「${cardName(sink.code)}」` }, { id: 'investigator', label: `治疗${owner.name}` }],
+      }) === 'treachery'
+    }
+    if (redirect) {
       const healed = Math.min(sink.counters, healedAmount)
       sink.counters -= healed
       if (options.log !== false) info(state, events, `💚 ${owner.name} 治疗了「${cardName(sink.code)}」上的 ${healed} 点伤害（剩 ${sink.counters}）。`)
@@ -892,7 +952,9 @@ export function createHarmThreat(deps) {
       return healed
     }
     const before = target.damage || 0
-    const healed = Math.min(before, healedAmount)
+    const offered = healedAmount + (before > 0 ? consumeHarmBonus(state, target, 'heal') : 0)
+    const healed = Math.min(before, offered)
+    if (isInvestigator) healOverflow(state, target, healerSeat, offered - healed, 'damage', events)
     if (!healed) return 0
     target.damage = before - healed
     if (options.log !== false) {
@@ -935,6 +997,6 @@ export function createHarmThreat(deps) {
     return doInvestigate(state, seat, { baseValue: 4 }, events, true)
   }
 
-  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, concealedDamageTargets, exposeConcealedInsteadOfDamage, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
+  return { hasTomeAsset, getThreatEffect, availableThreatAbilities, assetsCannotReady, drawBlocked, removeThreat, HARM_STRATEGIES, assignHarm, triggerThreatForced, applyThreatForced, unpaidExtraActionThreats, payActionCost, defeatAll, eliminateInvestigator, checkDefeated, checkOutcome, disengageAll, canDisengage, targetedTest, investigateForResources, dealDamageAll, concealedTargetsForEffect, exposeConcealedByEffect, concealedDamageTargets, exposeConcealedInsteadOfDamage, dealDamageExhausted, blankEnemy, ignoreChaos, returnAssetToHand, shuffleIntoEncounter, moveHorrorToInvestigator, damagedTargetsAtLocation, healDamageAtLocation, recordResearch, researchSolution, healHorrorNearby, healHorrorFrom, extendHealHorror, healDamageFrom, extendHealDamage, dukeInvestigate }
 }
 import { investigatorsWhoCanAbsorbHarm } from './harm-assignment.js'

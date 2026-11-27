@@ -31,6 +31,7 @@ function isPlainObject(value) {
 }
 
 // 注册期校验：剧本数据里的 storyInvestigators 写错时在装配内容时失败。
+import { replaceHand } from './hand-icons.js'
 export function normalizeStoryInvestigatorConfig(raw, origin = 'scenario.storyInvestigators') {
   if (raw == null) return null
   if (!isPlainObject(raw)) fail(origin, '必须是对象')
@@ -185,7 +186,7 @@ export function prepareStoryInvestigator(inv, { setupCards = [] } = {}) {
   inv.storyInvestigator = true
   inv.noDeck = true
   inv.deck = []
-  inv.hand = []
+  replaceHand(inv, [])
   inv.discard = []
   inv.hiddenCards = []
   inv.beneath = []

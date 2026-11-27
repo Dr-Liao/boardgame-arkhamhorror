@@ -21,10 +21,7 @@ export default {
     },
   },
   encounterResolve(state, inv, card, api) {
-    const dusk = typeof api?.isDarkLocationHere === 'function'
-      ? api.isDarkLocationHere(inv)
-      : false
-    return api.resolveScenarioEvent('lostSisterReclaimedByNature', { seat: inv.seat, night: dusk }) === true
-  },
-  note: '近似：昼夜按「调查员所在地点是否黑暗」判定（本关规则），不是战役时间标记；events 读点在 behavior。',
+    api.resolveScenarioEvent('lostSisterReclaimedByNature', { seat: inv.seat })
+    return true
+  }
 }

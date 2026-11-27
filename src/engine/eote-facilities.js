@@ -22,6 +22,8 @@
 // 读点不初始化容器；写点先整体校验再落笔，非法游戏状态返回 false（不产生部分写入）。
 import { eoteScenarioState, assertEoteObject, assertEoteFields } from './eote-state.js'
 import { investigatorAt, integer, locationAt } from './mechanic-state.js'
+import { registeredEntry } from './ability.js'
+import { enemyTextBlanked } from './card-text.js'
 
 const FORBIDDEN_IDS = Object.freeze(['__proto__', 'constructor', 'prototype'])
 const FACILITY_FIELDS = Object.freeze(['kind', 'activated', 'destroyed', 'activatedBy'])
@@ -165,6 +167,12 @@ export function towerState(state, id) {
   }
 }
 
+export function towerDamagePrevented(state, towerId) {
+  return (state.enemies || []).some(enemy => enemy.location === towerId && !enemy.exhausted
+    && !enemyTextBlanked(state, enemy)
+    && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.protectsTowerWhileReady === true)
+}
+
 /**
  * 攻击高塔：`spec = { towerId, amount, source? }`。
  * 伤害夹取到线索值生命；打满标记坍塌并返回结算结果；已坍塌/未初始化返回 false（不写入）。
@@ -179,7 +187,7 @@ export function damageTower(state, spec) {
   }
   const record = registeredTower(state, towerId)
   if (!record) return false
-  if (record.collapsed) return false
+  if (record.collapsed || towerDamagePrevented(state, towerId)) return false
   const health = towerHealthOf(state, towerId, record)
   const damage = Math.min(health, record.damage + spec.amount)
   record.damage = damage

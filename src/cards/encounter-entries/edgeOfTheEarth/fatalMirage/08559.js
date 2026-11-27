@@ -1,17 +1,27 @@
 // 08559 大学礼堂
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { ALL_CARDS } from '../../_shared.js'
+import { entryByCode as registeredEntry } from '../../_lookup.js'
 
 export default {
-  code: '08559',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "universityHalls",
-    "tier": 1,
-    "forcedReveal": "millDeckForTekeliliWeaknesses"
+  code: '08559', scope: 'location', implemented: true,
+  flags: { mirageId: 'universityHalls', tier: 1 },
+  locationRule: {
+    onMirageFlip(state, location, contributions, api) {
+      for (const inv of state.investigators) {
+        const spent = Number(contributions[inv.seat]) || 0
+        if (spent <= 0) continue
+        const discarded = api.discardTop(inv.seat, spent * 3)
+        const otherWeaknesses = []
+        for (const code of discarded) {
+          if (!['weakness', 'basicweakness'].includes(ALL_CARDS[code]?.subtype)) continue
+          if (!api.takeDiscardCard(inv.seat, code)) continue
+          if (registeredEntry(code)?.flags?.tekelili) api.resolveTekeliWeakness(inv.seat, code)
+          else otherWeaknesses.push(code)
+        }
+        if (!otherWeaknesses.length) continue
+        for (const code of otherWeaknesses) api.putOnTopOfDeck(inv.seat, code)
+        api.shuffleDeck(inv.seat)
+      }
+    },
   },
 }

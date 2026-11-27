@@ -3,8 +3,8 @@
   "unit": "11-a-1",
   "profile": {
     "id": "tdc-player-a-2026-11",
-    "scope": "沉没之城 11 段 tdcp 调查员与玩家卡（11001–11044）44 条目录记录。43 条通过五维验收；11010 缺 cost.action 暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcp 调查员与玩家卡（11001–11044）44 条目录记录。44 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 44,
-    "verified": 43,
-    "unverified": 1,
+    "verified": 44,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 195
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard1.test.mjs",
-      "sha256": "b4304dfb6828c64fcec1e6fb05657f19d0b7ecce2755e318f71b02dcf6d86deb"
+      "sha256": "e2b6d705b08aee2b1711139b49ed6464ac6eb80228cf20f099f7ae41c75aab2d"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-investigators.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
-      "sha256": "c91d87a07b11731203bc3fc16236a3781b4a59e957de300deae6ede9e66084d1"
+      "sha256": "5f204028a5c4b6a6d1c62db48eaee410ad985c38b2270370078d265b24d2250e"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
@@ -177,9 +177,13 @@
       "code": "11010",
       "name": "窥看虚空",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「虚空一瞥」的 `[action]：将这张弱点洗回牌库` 描述子只有 `kind: action`，缺 `cost: { action: true }`；真实引擎探针（tests/acceptance-11-a-shard1.test.mjs）：legalMoves 会枚举出「将这张弱点洗回牌库」，但执行后行动点不变（20→20）、弱点仍留在威胁区、也没有洗回牌库 → 行动空转、不可用。对照同批弱点 11003（discardHand 费用）/11006（trigger+limit）均有完整 cost/trigger。修法：补 `cost: { action: true }`，并核对实体行动管线是否因缺 cost 跳过结算；补真实引擎回归后重验。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard1.test.mjs",
+          "test": "TDC 11010 虚空一瞥：额外揭示 1 标记；消耗 1 行动从威胁区洗回牌库"
+        }
+      ]
     },
     {
       "code": "11011",

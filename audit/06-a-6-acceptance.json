@@ -3,7 +3,7 @@
   "unit": "06-a-6",
   "profile": {
     "id": "tde-dark-side-of-the-moon-2026-11",
-    "scope": "食梦者 06 段 Dark Side of the Moon（dsm，06195–06233）40 条目录记录。33 条通过五维验收；7 条因规则键未接线或交互选择缺失暂不切换。",
+    "scope": "食梦者 06 段 Dark Side of the Moon（dsm，06195–06233）40 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 40,
-    "verified": 33,
-    "unverified": 7,
+    "verified": 40,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 390
+    "testsPassed": 391
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
-      "sha256": "4bacfb6f35f5bc9098ec09f40e5c4e64519e57e2894b4497cf9d58511278a271"
+      "sha256": "529976fc78dac0f1d77c6675df6f9b780fdf007328daa1d555717eb77a1a7e41"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-darkSideOfTheMoon.test.mjs",
-      "sha256": "ae73ed971266d09ce86aa71695a28e499419ef2d5ee03a0a02cb79b152a6a9e4"
+      "sha256": "55a5df4ea10d9ffd517c4f1e5f8f9fe29feb7807cb0d724a36e708404a0309a2"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-2.test.mjs",
@@ -149,9 +149,17 @@
       "code": "06203",
       "name": "月石",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「你不能从手牌中打出月石，也不能将其从手牌中投入检定」只实现了前半：条目用 playCondition:false 阻止打出，但没有声明引擎的投入过滤读点 `cannotLeaveHand`（src/engine/tests.js:464 明确按该字段过滤可投入手牌），也没有等价 commitProfile/playCondition 读点，因此月石仍可从手牌投入检定。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06203 月石：不能投入检定，作为手牌仍可弃置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-player-m2-3.test.mjs",
+          "test": "TDE 06203 月石 不能从手牌打出；弃掉后支付费用打出，其余牌仍弃掉"
+        }
+      ]
     },
     {
       "code": "06204",
@@ -181,9 +189,17 @@
       "code": "06206",
       "name": "月之暗面",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "场景卡 [cultist]「再揭示一个标记」未实现：`dsmChaosToken` 对 cultist 返回 null（chaos.js:21-22），章节 tokenMeanings 的 cultist 只有 text/delta 而无 `drawAnother`（definition.js:126/132），引擎 resolveSpecialToken 因此不会追加揭示；TDE 其他章节点（如 pointOfNoReturn）用 `{delta:0, drawAnother:true}` 实现。cultist 的「失败且警报>修正技能值→抽遭遇牌库顶」已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06206 月之暗面：混乱标记取值与失败后果，cultist 追加一次揭示"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06206 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06207",
@@ -237,9 +253,21 @@
       "code": "06210",
       "name": "月兽腹地",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "背面「选择位于月兽之城的一位调查员控制维吉尔·格雷」没有玩家选择：`resolveVirgilRescue` 直接取 `candidates[0]`（behavior.js:120-129），缺少 api.choose 的控制者选择；且「所有者将放在一边的伦道夫·卡特放入手牌」实现为从该所有者**牌库**取卡（behavior.js:130-143），`preScenarioSetup` 只打印「把他的剧情支援放在一边」并未真正放入 setAside（behavior.js:248），属未披露的近似（`scenarioApproximations` 为空，behavior.js:224）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06210 月兽腹地：月兽之城团队 3×人数线索推进；背面把放在一边的维吉尔·格雷交给月兽之城调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06210 已验收 · act 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-darkSideOfTheMoon.test.mjs",
+          "test": "月之暗面：06210「及时救援」将维吉尔交给在月兽之城的调查员，被俘伦道夫回到所有者手牌"
+        }
+      ]
     },
     {
       "code": "06211",
@@ -261,9 +289,17 @@
       "code": "06212",
       "name": "月之核心",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「黑暗月核的线索只能通过调查成功来发现，其他方式均不能发现」只声明了 `actRule.cannotDiscoverCluesExceptInvestigation`（06212.js:25），该键在全仓库没有任何读点（grep 仅出现在条目自身；dsm behavior 无 canDiscoverClues 实现，TDE 共享 encounter-rules 也未读它），属「声明了没人读」，规则未生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06212 月之核心：仅成功调查可发现黑暗月核线索；满足推进目标后放置三个地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06212 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06213",
@@ -325,9 +361,17 @@
       "code": "06215",
       "name": "月兽之城",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「隐藏值 X = 所有调查员中最高的警报等级」未生效：条目 `locationRule.shroudModifier` 通过 `api.counters.highestOf` 取值，但 behavior 调用该钩子时**不传 api**（behavior.js:482 `rule.shroudModifier?.(state, location, inv)`），api 为 undefined → 可选链回落到 0，隐藏值恒为印刷 0。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06215 月兽之城：帷幕等于最高警报；轮末敏捷(2)失败者警报 +1"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06215 已验收 · location 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06216",
@@ -509,9 +553,17 @@
       "code": "06227",
       "name": "月之拜亚基",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「猎物 - 警报等级最高（并且至少为 3）」未实现：TDE 定义把印刷英文原句整段存进 `prey`（card-data.js:76,317 → 值形如 \"Highest alarm level (and at least 3)\"），引擎 `PREY_RANK` 无该键、darkSideOfTheMoon behavior 无 `preyRank` 钩子，猎物并列裁决退化为队长任选；已实现的只有「忽略/不能交战警报 ≤2」（huntIgnoresAlarmBelow）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06227 月之拜亚基：生成在最近的[[月面]]地点；忽略/不能交战警报 ≤2 的调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06227 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06228",
@@ -597,9 +649,17 @@
       "code": "06233",
       "name": "卡达斯",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "两条印刷/交互缺口：①「每场游戏开始时……在其上放置 1 个毁灭标记」：条目 flags.doomOnStart=1（06233.js:18）无任何读点，behavior.preScenarioSetup/setupLocations 只把卡号放进 `scenarioFlags.agendaAside`（behavior.js:243,254），并未放置毁灭标记；②该「密谋牌库旁」用私有 `scenarioFlags.agendaAside` 表达，而观察投影只公开引擎的 `state.agendaAside`（observation.js:356-358、presentation-state.js:68-70），玩家在牌桌上看不到卡达斯与它的毁灭标记。行动本身（任意技能 2+1×人数、成功移除）已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard6.test.mjs",
+          "test": "06233 卡达斯：公开旁置并有 1 毁灭；其他座位也能行动，成功移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06233 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
     }
   ]
 }

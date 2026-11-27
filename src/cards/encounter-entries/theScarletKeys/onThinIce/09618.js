@@ -1,11 +1,19 @@
 // 09618 费尔班克斯 · 地点（onThinIce）
-// 印刷数据由章节 definition 的 location() 从卡表读取；地点能力由章节 behavior 承接。
-// approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）
 export default {
   code: '09618',
   scope: 'location',
   implemented: true,
-  flags: { printedShroud: 2, printedClues: 0, },
-  note: 'approximation: P7 数据型条目（地点/幕/议程/剧情/密钥数据由章节 definition 与 behavior 承接，逐卡动作/显现由场景测试与 P8 逐卡验收覆盖）',
-  abilities: [],
+  flags: { printedShroud: 2, printedClues: 0 },
+  abilities: [{
+    kind: 'reaction', trigger: 'encounterDrawn',
+    label: '花费 2 个资源取消在费尔班克斯抽到的[[危险]]诡计',
+    cost: { resources: 2 },
+    criteria: ({ inv, source, context, helpers }) => {
+      const card = helpers.cardDef(context.cardCode)
+      return inv.location === source.id && context.location === source.id
+        && context.cannotCancel !== true && !context.cancelled && (!context.peril || context.seat === inv.seat)
+        && card?.type === 'treachery' && card.traits?.includes('Hazard')
+    },
+    resolve: ({ context }) => { context.cancelled = true },
+  }],
 }

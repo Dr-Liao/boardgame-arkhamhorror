@@ -652,9 +652,10 @@ function residentAssetsAt(state, id) {
     && (hasTrait(asset, 'Resident') || hasTrait(asset, 'Ally')))
 }
 
-function dealDirectToResidents(state, id, kind, amount, api = {}) {
+function dealDirectToResidents(state, id, kind, amount, api = {}, presentation = null) {
   for (const asset of residentAssetsAt(state, id)) {
     const key = kind === 'horror' ? 'horror' : 'damage'
+    if (presentation && key === 'damage') api.presentAssetDamage?.(asset, amount, presentation)
     asset[key] = (Number(asset[key]) || 0) + amount
     safeCall(api, key === 'horror' ? 'assetHorror' : 'assetDamage', asset, amount)
   }
@@ -1372,7 +1373,13 @@ export function performAction(state, inv, move, api = {}) {
     const shard = (state.storyAssets || []).find(asset => entryFlag(asset, 'prismaticShard')
       || codeOf(asset) === PRISMATIC_SHARD_CODE)
     if (!shard || shard.location !== inv.location) return false
-    shard.controllerSeat = inv.seat
+    const uses = entryOf(codeOf(shard))?.uses ?? entryOf(codeOf(shard))?.flags?.uses
+    if (api.claimUncontrolledStoryAsset) {
+      if (!api.claimUncontrolledStoryAsset(inv.seat, shard, { uses, usesType: entryOf(codeOf(shard))?.usesType })) return false
+    } else {
+      shard.controllerSeat = inv.seat
+      shard.uses = uses
+    }
     info(api, `${inv.name} 取得「棱柱碎片」。`)
     return true
   }
@@ -1539,12 +1546,13 @@ export function enemyAttackResolved(state, enemy, inv, api = {}) {
   if (!enemy || !inv) return
   if (!(entryFlag(enemy, 'attackSplash') || codeOf(enemy) === FRENZIED_MINER_CODE)) return
   const location = inv.location
+  const presentation = { code: codeOf(enemy), sourceEnemyId: enemy.id }
   for (const other of activeInvestigators(state)) {
     if (other.seat === inv.seat || other.location !== location) continue
-    if (typeof api.damage === 'function') api.damage(other.seat, 1)
+    if (typeof api.damage === 'function') api.damage(other.seat, 1, presentation)
     else other.damage = (Number(other.damage) || 0) + 1
   }
-  dealDirectToResidents(state, location, 'damage', 1, api)
+  dealDirectToResidents(state, location, 'damage', 1, api, presentation)
   info(api, '发狂矿工：攻击后，同地点的其他调查员与居民各承受 1 点伤害。')
 }
 
@@ -1935,6 +1943,7 @@ function finishResolution6(state, api = {}) {
   const shard = (state.storyAssets || []).find(asset => entryFlag(asset, 'prismaticShard')
     || codeOf(asset) === PRISMATIC_SHARD_CODE)
   records.prismaticShardToDeck = Boolean(shard && shard.controllerSeat != null)
+    || (state.investigators || []).some(inv => inv.assets?.some(asset => codeOf(asset) === PRISMATIC_SHARD_CODE))
   records.areaNorthPointMineSurveyed = true
   info(api, `结局 6：${helpedRiver ? '你帮助了瑞玟' : '未帮助瑞玟'}；棱柱碎片${records.prismaticShardToDeck ? '加入调查员牌库' : '未取得'}；北角矿坑记入已勘察区域。`)
   return bonus

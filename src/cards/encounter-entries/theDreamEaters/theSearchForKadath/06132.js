@@ -8,8 +8,8 @@ export default {
   locationRule: {
     afterTest(state, location, inv, result, api) {
       if (String(result.source?.label || '') !== '调查') return
-      const token = String(result.token || '')
-      if (token !== 'skull' && token !== 'cultist') return
+      const revealed = result.drawn ?? [result.token]
+      if (!revealed.some(token => token === 'skull' || token === 'cultist')) return
       const assets = (inv.assets || []).filter(asset => api.canDiscardAsset(inv.seat, asset.id))
       if (!assets.length) return
       const answer = api.choose?.({

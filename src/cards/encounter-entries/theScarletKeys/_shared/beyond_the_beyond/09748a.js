@@ -4,25 +4,9 @@
 // 背面：隐匿 1。强制 - 揭露此地点：左边受到 1 点伤害；右边受到 1 点恐惧。
 // 读点：move 窗口（movement.js 移动后 triggerReaction，context { seat, location, from }）；
 //   方向判定用 api.map.position（grid-map 坐标）；检定走 api.test；tskExposed 结算背面。
-// 近似：① 坐标不存在（非网格章节）时不结算方向检定；② 异界牌库顶的私人查看没有读点，只记旗标。
+import { alienFrontierLook } from './_shared.js'
+
 const CODE = '09748a'
-
-const miniCards = state => state?.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || []
-
-function lookAtShadowOrOtherworld(state, inv, api) {
-  const cards = miniCards(state).filter(card => !card.flipped)
-  const options = [
-    ...cards.map(card => ({ id: 'mini:' + card.id, label: '阴影中的地点（' + card.locationId + '）' })),
-    { id: 'otherworld', label: '异界牌库顶牌' },
-  ]
-  const picked = options.length === 1 ? options[0].id : String(api.choice({
-    kind: 'effect', source: CODE, seat: inv.seat,
-    prompt: '选择要查看已揭示面的目标（阴影中的地点，或异界牌库顶牌）。', options,
-  }))
-  api.setScenarioFlag?.('tskLooked:' + picked, true)
-  api.info?.('「异星边境」：查看' + (picked.startsWith('mini:') ? '阴影中一张地点的' : '异界牌库顶牌的') + '已揭示面（仅该调查员可见）。')
-  return true
-}
 
 export default {
   code: CODE,
@@ -50,18 +34,7 @@ export default {
         },
       })
     },
-  }, {
-    kind: 'action',
-    actionKind: 'activate',
-    label: '[action] 受到 1 点恐惧：查看阴影地点或异界牌库顶的已揭示面（团队每场游戏一次）',
-    cost: { action: 1, horror: 1 },
-    resolve: ({ state, inv, api }) => {
-      if (api.scenarioFlag?.('alienFrontierLookUsed') === true) return false
-      const done = lookAtShadowOrOtherworld(state, inv, api)
-      if (done) api.setScenarioFlag?.('alienFrontierLookUsed', true)
-      return done
-    },
-  }, {
+  }, alienFrontierLook(CODE), {
     kind: 'forced',
     trigger: 'tskExposed',
     label: '揭露此地点：左边受到 1 点伤害，右边受到 1 点恐惧',
@@ -79,6 +52,4 @@ export default {
       }
     },
   }],
-  note: 'approximation: 左右方向用地图坐标同一行近似；坐标缺失时不结算检定；异界牌库顶私人查看'
-    + '只记场景旗标（primitive-requests/09748a.json）。',
 }

@@ -236,10 +236,10 @@ export function generatedModule(report) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const { report, summary } = buildPlayerAcceptance()
   if (process.argv.includes('--write')) {
+    if (report.status !== 'verified') throw new Error(`eote player 门禁未全真：${json(report.gates)}`)
     writeFileSync(modulePath, generatedModule(report))
     emit('player-acceptance', report)
     console.log(`eote player: ${summary.verified}/${summary.total} verified，可构筑 ${summary.buildable}，基础弱点 ${summary.basicWeaknesses}，testsPassed ${summary.testsPassed}`)
-    if (report.status !== 'verified') throw new Error(`eote player 门禁未全真：${json(report.gates)}`)
   } else if (process.argv.includes('--check')) {
     if (!existsSync(modulePath)) throw new Error('src/cards/eote-player-acceptance.js 不存在：先 --write')
     if (readFileSync(modulePath, 'utf8') !== generatedModule(report)) throw new Error('src/cards/eote-player-acceptance.js 与实跑测试不一致：先审阅再 --write')

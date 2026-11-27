@@ -1,13 +1,17 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { createHash } from 'node:crypto'
 import { fixture, enemy, asset, play, use } from './core-fixture.mjs'
-import { damageEnemy, applyDamage, applyMove, executeDescriptor, campaignCardDrawReaction } from '../src/engine/engine.js'
+import { damageEnemy, applyDamage, applyMove, executeDescriptor, campaignCardDrawReaction, scenarioRuntime } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { withEffectSource } from '../src/engine/effect-provenance.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { DIRECT_DAMAGE_STYLES } from '../content/presentation/direct-damage-styles.js'
+import { CARD_DAMAGE_STYLES } from '../content/presentation/card-damage-styles.js'
+import { directDamageSource } from '../src/integration/direct-damage.js'
+import { CARD_DAMAGE_SOUNDS } from '../web/direct-damage-fx.js'
 import { publicSequence } from '../web/table-presentation.js'
 import { viewEvents } from '../src/integration/observation.js'
 
@@ -68,6 +72,8 @@ test('no damage cue for zero, negative, immune, absent target or unrelated attac
   })
   withEffectSource(state,{kind:'playerCard',code:'03153'},()=>damageEnemy(state,target,1,0,events))
   assert.equal(cues(events).length,0,'existing storm attacks must not gain duplicate direct hits')
+  withEffectSource(state,{kind:'playerCard',code:'09034'},()=>applyDamage(state,state.investigators[0],1,events,true))
+  assert.equal(cues(events).length,0,'outgoing-only cards must not claim investigator harm')
 })
 
 test('implemented reprint aliases reuse canonical feedback while retaining printed source code', () => {
@@ -75,6 +81,64 @@ test('implemented reprint aliases reuse canonical feedback while retaining print
   withEffectSource(state,{kind:'playerCard',code:'01518',sourceId:'reprint'},()=>damageEnemy(state,target,1,0,events))
   assert.equal(cues(events)[0]?.code,'01518')
   assert.equal(cues(events)[0]?.style,'impact')
+})
+
+test('audited damage sources resolve to playable profiles with bundled ElevenLabs samples', () => {
+  const state = { investigators: [], enemies: [] }
+  for (const [code, style] of Object.entries(CARD_DAMAGE_STYLES)) {
+    assert.ok(ALL_CARDS[code], code)
+    assert.ok(CARD_DAMAGE_SOUNDS[style], code)
+    const origin = directDamageSource(state, null, { code })
+    assert.equal(origin?.style, style, code)
+    assert.equal(origin?.audio, 'cardDamage', code)
+  }
+  const manifest = JSON.parse(fs.readFileSync(new URL('../web/audio/card-damage-elevenlabs.json', import.meta.url)))
+  assert.equal(manifest.provider, 'ElevenLabs')
+  assert.equal(manifest.files.length, new Set(Object.values(CARD_DAMAGE_SOUNDS)).size)
+  for (const file of manifest.files) {
+    const bytes = fs.readFileSync(new URL('../web/audio/' + file.file, import.meta.url))
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256)
+    assert.equal(bytes.length, file.bytes)
+  }
+})
+
+test('Guard Dog bites back and Drain Essence applies damage independently of an attack cue', () => {
+  for (const code of ['09034', '10094']) {
+    const state = fixture(), target = enemy(state)
+    const card = code === '09034' ? asset(state, code) : { id: code, code }
+    state.investigators[0].damage = 1
+    const events = run(state, (s, _seat, _move, e) => {
+      const inv = s.investigators[0]
+      const source = inv.assets.find(a => a.id === card.id) || card
+      const foe = s.enemies.find(enemy => enemy.id === target.id)
+      const descriptor = registeredEntry(code).abilities[code === '09034' ? 1 : 0]
+      executeDescriptor(s, { inv, source, descriptor: { ...descriptor, code },
+        context: { enemy: foe, seat: 0, damagedAssetIds: [source.id] },
+        events: e, ignoreCosts: true, alreadyPaid: true })
+    })
+    assert.equal(state.enemies.find(enemy => enemy.id === target.id).damageTaken, 1, code)
+    assert.equal(publicSequence(events).some(event => event.kind === 'attack'), false, code)
+    assert.deepEqual(cues(events).map(cue => [cue.code, cue.targets[0].enemyId, cue.damage, cue.audio]),
+      [[code, target.id, 1, 'cardDamage']])
+  }
+})
+
+test('enemy card damage targets its actual recipients and captures a lethal asset before it leaves', () => {
+  const state = fixture()
+  const source = enemy(state, { code: '08711', originalCode: '08711', engagedSeat: null })
+  const ally = asset(state, '01021', { damage: 2 })
+  const events = run(state, (s, _seat, _move, e) => {
+    scenarioRuntime(s, e).damageAsset(0, ally.id, 1, { direct: true, presentation: {
+      code: source.code, sourceEnemyId: source.id,
+    } })
+  })
+  assert.ok(!state.investigators[0].assets.some(asset => asset.id === ally.id))
+  const [cue] = cues(events)
+  assert.equal(cue.sourceEnemyId, source.id)
+  assert.equal(cue.targets[0].assetId, ally.id)
+  assert.equal(cue.tableState.investigators[0].assets.find(asset => asset.id === ally.id).damage, 2)
+  assert.equal(cue.damage, 1)
+  assert.ok(!publicSequence(events).some(event => event.kind === 'enemyHarm'))
 })
 
 test('legacy played damage and evade damage preserve their real source through choices', () => {

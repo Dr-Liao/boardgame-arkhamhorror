@@ -3,7 +3,7 @@
   "unit": "05-a-8",
   "profile": {
     "id": "tcu-before-the-black-throne-2026-11",
-    "scope": "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。33 条通过五维验收；1 条（05322）同类规则第 4 次手写暂不切换。",
+    "scope": "万象无终 05 段 Before the Black Throne（bbt，05313–05346）34 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 34,
-    "verified": 33,
-    "unverified": 1,
+    "verified": 34,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 425
   },
@@ -229,9 +229,33 @@
       "code": "05322",
       "name": "第六感",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "「连接次数不超过 2 的地点」查询是同一句卡文模板的第四次逐卡手写（05111:16、05234:16、05277:16、05322:21），未上收原语、也未登记 escape；违反 docs/arkham-content-migration.md §4.3「同句规则只写一次 / 第三张停止写卡补原语」与 AGENTS.md 对应条款。行为本身可执行，但原语维度不合格。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05322 第六感 未揭示符号标记时不做双地点调查"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05322 第六感 没有 2 次连接内的已揭示地点时符号窗口不提供双地点调查"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05322 第六感 用意志代替智力调查并 +2 意志"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05322 第六感 符号后双地点调查可选原隐藏值分支"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard8.test.mjs",
+          "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（可选新隐藏值）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05322 第六感 符号后同时在 2 次连接内的已揭示地点调查（新隐藏值分支）"
+        }
+      ]
     },
     {
       "code": "05323",

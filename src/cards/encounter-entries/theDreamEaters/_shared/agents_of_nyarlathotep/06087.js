@@ -12,9 +12,8 @@ export default {
   scope: 'treachery',
   implemented: true,
   hiddenRule: {
-    cannotPlayOddCost: true,
-    cannotTriggerOddCost: true,
-    discardEvenCostAction: true,
+    parity: { play: 'cost', trigger: 'cost' },
+    discard: { even: 'cost' },
   },
   // TDE card-data.encounterDefinitions 已合并条目 hiddenRule：隐藏牌的费用奇偶限制由引擎 hidden-rules 读点解释。
 }

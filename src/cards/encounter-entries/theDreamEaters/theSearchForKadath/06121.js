@@ -6,7 +6,6 @@
 export default {
   code: '06121', scope: 'agenda', implemented: true,
   agendaRule: {
-    portResign: true,
     onReveal(state, agenda, api) {
       api.info?.('⛓️ 「被俘！」：每位存活的调查员被击败。')
       api.defeatAll?.()

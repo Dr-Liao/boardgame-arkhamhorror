@@ -1,3 +1,7 @@
+import { spliceHand } from './hand-icons.js'
+import { assetHarmCapacity } from './asset-defeat.js'
+import { attachmentTextBlanked } from './attachment-rules.js'
+import { hiddenDiscardCandidates, hiddenParityBlocks } from './hidden-rules.js'
 import { discardPlayerCards } from './player-zones.js'
 import { rememberScenarioDeckAttachment } from './scenario-decks.js'
 import { availableResources } from './resource-bank.js'
@@ -79,9 +83,9 @@ export function createActionsExtra(deps) {
     const def = cardDef(code)
     if (!inv || !def || def.type !== 'asset' || isWeaknessCard(def)) return '该卡牌不是可打出的支援'
     if (!runtimeCardAvailable(state, inv, code) || !lolaCanUseCard(inv, code)) return '当前调查员不能打出该支援'
-    if (cannotPlayTypes(inv).has(def.type)
+    if (cannotPlayTypes(inv, state).has(def.type)
       || scenarioBehavior(state).canPlayCard?.(state, inv, def) === false
-      || playTypeBlocked(state, inv, def.type)) {
+      || playTypeBlocked(state, inv, def.type) || hiddenParityBlocks(state, inv, def, 'play')) {
       return '当前效果禁止打出支援'
     }
     if (availablePlayResources(state, inv, def) < playCost(state, inv, def)) return '资源不足'
@@ -114,6 +118,7 @@ export function createActionsExtra(deps) {
         if (asset.code === code) return false
         // Phase 2（C2）：特性判定走 effectiveTraits，运行期授予的特性也能当附件目标。
         if (spec.trait && !cardHasTrait(state, owner, asset, spec.trait)) return false
+        if (spec.traitsAny?.length && !spec.traitsAny.some(trait => cardHasTrait(state, owner, asset, trait))) return false
         // 2026-10-25：05230 瞄准镜「附属到一张占用 2 个手部槽位的[[枪械]]支援」由
         // attachTo.handSlots 声明；按目标卡印刷槽位过滤。
         if (spec.handSlots) {
@@ -149,6 +154,7 @@ export function createActionsExtra(deps) {
     if (spec.kind === 'location') return state.locations.filter(location => location.inPlay !== false)
     if (spec.kind === 'enemy') {
       return state.enemies.filter(enemy => !enemy.defeated
+        && (!spec.atOwnLocation || enemy.location === inv.location)
         && (!spec.trait || (enemy.traits || []).some(trait => String(trait).toLowerCase() === spec.trait.toLowerCase()))
         && (!spec.nonElite || !enemy.elite))
     }
@@ -164,9 +170,9 @@ export function createActionsExtra(deps) {
     return attachment
   }
 
-  function assetCapacityValue(asset, capacity) {
+  function assetCapacityValue(asset, capacity, state) {
     if (registeredEntry(asset.code)?.assetRule?.harmCapacity === 'unlimited') return Infinity
-    let value = cardDef(asset.code)?.[capacity] || 0
+    let value = assetHarmCapacity(cardDef(asset.code), capacity === 'health' ? 'damage' : 'horror', state, asset)
     for (const entry of asset.attachments || []) {
       const passive = registeredEntry(entry.code)?.passive
       if (!passive) continue
@@ -192,8 +198,9 @@ export function createActionsExtra(deps) {
     const inv = state.investigators[seat]
     spendAction(state, inv)
     if (scenarioBehavior(state).canGainResources?.(state, inv) === false) return
-    inv.resources += 1
-    info(state, events, `${inv.name} 获得 1 资源（当前 ${inv.resources}）。`)
+    if (resourceBank.gainResource(state, inv, 1, events, { basicAction: true }) > 0) {
+      info(state, events, `${inv.name} 获得 1 资源（当前 ${inv.resources}）。`)
+    }
   }
 
   function doFreeAction(state, seat, events) {
@@ -212,7 +219,7 @@ export function createActionsExtra(deps) {
       const index = requestChoice(state, { kind: 'discard', source: skids.freeAction.id, seat, prompt: '选择弃掉的手牌。',
         options: inv.hand.flatMap((code, i) => isWeaknessCode(code) || !canDiscardFromHand(inv, code)
           ? [] : [{ id: String(i), label: cardName(code) }]) })
-      const code = inv.hand.splice(Number(index), 1)[0]
+      const code = spliceHand(inv, Number(index), 1)[0]
       discardPlayerCards(state, inv, code)
       afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
     }
@@ -230,6 +237,20 @@ export function createActionsExtra(deps) {
     const rule = hiddenRule(state, move.cardId)
     const discard = rule?.discard
     if (!discard || !hasHiddenCard(inv, move.cardId)) return
+    if (discard.even) {
+      const candidates = hiddenDiscardCandidates(inv, discard, cardDef)
+      if (!candidates.length) return
+      const choice = requestChoice(state, {
+        kind: 'discard', source: move.cardId, seat,
+        prompt: '选择一张符合条件的玩家卡牌弃掉。',
+        options: candidates.map(({ code, index }) => ({ id: String(index), cardCode: code, label: cardName(code) })),
+      })
+      const paid = candidates.find(candidate => String(candidate.index) === String(choice))
+      if (!paid) return
+      const [code] = spliceHand(inv, paid.index, 1)
+      discardPlayerCards(state, inv, code)
+      afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
+    }
     resourceBank.spendFromPool(inv, discard.resources || 0, state)
     if (discard.damageInvestigator) {
       const target = state.investigators.find(other => other.seat === move.targetSeat
@@ -423,7 +444,9 @@ export function createActionsExtra(deps) {
   }
 
   function canSpendClues(state, inv) {
-    return !engagedWithClueBlocker(state, inv)
+    return !engagedWithClueBlocker(state, inv) && !(state.locations || []).some(location =>
+      (location.attachments || []).some(card => !attachmentTextBlanked(state, card)
+        && registeredEntry(card.originalCode || card.code)?.treacheryRule?.blocksClueSpending))
   }
 
   function locationAbilityAvailable(state, loc, inv) {

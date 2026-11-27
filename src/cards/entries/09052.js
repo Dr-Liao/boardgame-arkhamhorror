@@ -45,7 +45,7 @@ export default {
         const difficulty = Math.max(0, 8 - otherCards)
         api.info(`🌀 「存在之谜」：${inv.name} 与「${enemy.name}」谈判（难度 8 - ${otherCards} = ${difficulty}）。`)
         api.test(inv.seat, skill === 'intellect' ? 'intellect' : 'willpower', difficulty, {
-          source: { code: CODE, label: '谈判', name: '存在之谜' },
+          source: { code: CODE, label: '谈判', name: '存在之谜', enemyId: enemy.id },
           resolve: result => {
             if (!result.success) return
             api.autoEvadeEnemy(enemy)

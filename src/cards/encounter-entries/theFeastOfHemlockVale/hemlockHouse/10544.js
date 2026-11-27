@@ -14,6 +14,5 @@ export default {
     "nightRetaliate": true,
     "floorHealthBonus": true,
     "floorHealthMinimum": 1
-  },
-  "note": "近似：卡面是「(Night) Retaliate」——由 enemySpawned 按当时昼/夜写实例 retaliate；本关没有昼/夜切换，生成后不再改。"
+  }
 }

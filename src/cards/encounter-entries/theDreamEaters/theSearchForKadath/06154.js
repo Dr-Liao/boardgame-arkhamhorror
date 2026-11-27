@@ -9,7 +9,6 @@
 export default {
   code: '06154', scope: 'treachery', implemented: true,
   treacheryRule: {
-    attachedToLocation: true,
     shroudModifier: -2,
     afterInvestigateSuccess: { horror: 1, doom: 1, discard: true },
   },
@@ -17,7 +16,7 @@ export default {
     const location = (state.locations || []).find(item => item.id === inv?.location)
     if (!location || (location.clues || 0) === 0) {
       api.info?.('🌾 「奇妙平原」：此地点没有线索，弃掉本卡并获得涌动（再抽 1 张遭遇卡）。')
-      api.drawEncounter?.(inv.seat)
+      api.drawEncounter?.(inv.seat, { surgeDraw: true })
       return false
     }
     api.attachEncounterToLocation?.('06154', location.id)

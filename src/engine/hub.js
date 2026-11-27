@@ -8,6 +8,7 @@
 
 import { isDraftMode, draftLegalMoves, draftDecksReady, draftDeckStatus } from '../deck/draft-mode.js'
 import { contentRegistry } from '../../content/registered.js'
+import { registerScenarioCards } from './scenario-card-index.js'
 import { cardPoolContext } from '../deck/card-pool.js'
 import { investigatorIdentity } from '../deck/investigator-identity.js'
 import { alternateInvestigatorFamily } from '../deck/alternate-investigator-build.js'
@@ -16,7 +17,7 @@ import { assignSeatPart, campaignPartsManifest, laneBalance, modeOptions } from 
 // P8：世界地图启程（《绯红密钥》）——只读地图原语；图/目的地/阈值全部由 manifest 传入。
 import { embarkOptions, forcedDestination, mapTime, statusReportState } from './tsk-map.js'
 // P8：定制升级卡（Customizable）的关间勾选候选（勾选/经验结算仍走 tsk-customizable 原语）。
-import { customizationChoiceSetup, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
+import { customizationChoiceSetup, customizationEffect, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat } from './tsk-customizable.js'
 // 2026-11-16 P2-3：exceptional 定制卡每格 2 XP（与 mechanic-view 的 xpPerCheck 同口径）。
 import { cardDef } from './card-lookup.js'
 // 2026-11-13 P1-17：战役禁用卡（02310 等）与存在抹除名单必须参与升级池过滤；
@@ -24,12 +25,13 @@ import { cardDef } from './card-lookup.js'
 import { invalidCampaignCards } from './tsk-hollow.js'
 
 /** 升级/换牌共用的卡池上下文：在牌池范围之上叠加本战役禁用卡名单（无战役扩展时零变化）。 */
-function upgradePoolContext (state) {
-  const context = cardPoolContext(state)
-  if (!context) return context
-  const invalid = invalidCampaignCards(state)
-  if (invalid.length) context.invalidCards = invalid
-  return context
+export function upgradePoolContext(state, seat = null) {
+  const scope = cardPoolContext(state)
+  const invalidCards = invalidCampaignCards(state)
+  if (seat == null && !invalidCards.length) return scope
+  return { ...scope, invalidCards,
+    ...(seat == null ? {} : { cardCopyLimit: code => customizationEffect(state, seat, code, 'deckLimit') }),
+  }
 }
 
 // Phase 6（6d-29）：contentRegistry 是 `let`（registerContentBundle 会重新赋值），
@@ -216,9 +218,7 @@ function registerCampaignScenarios(campaignId) {
   for (const entry of contentRegistry.listScenarios(campaignId)) {
     const scenario = contentRegistry.getScenarioData(entry.id)
     SCENARIOS[entry.id] = scenario
-    Object.assign(ALL_ENEMIES, scenario.enemies || {})
-    Object.assign(ALL_TREACHERIES, scenario.treacheries || {})
-    Object.assign(ALL_STORY_ASSETS, scenario.storyAssets || {})
+    registerScenarioCards(scenario)
   }
 }
 
@@ -274,7 +274,8 @@ function runInterlude(state, nextIndex, events) {
   }
   const resume = () => resolutionCheckpoint(state, inv.seat, { action: 'interlude', nextIndex })
   const record = campaign.investigators[inv.seat]
-  const cards = campaign.upgradesAllowed === false ? [] : availablePurchases(record, campaign.records, poolContext)
+  const purchaseContext = upgradePoolContext(state, inv.seat)
+  const cards = campaign.upgradesAllowed === false ? [] : availablePurchases(record, campaign.records, purchaseContext)
   const answer = requestChoice(state, { kind: 'interlude', source: record.id, seat: inv.seat,
     prompt: `${inv.name}：未花费 ${record.xp} XP。可调整牌组，或保留经验进入下一关。候选卡按构筑限制、经验和替换后的完整牌组筛选。`,
     options: [{ id: 'done', label: '完成关间准备，保留剩余 XP' }, ...(cards.length ? [{ id: 'upgrade', label: '购买或替换一张卡牌' }] : [])],
@@ -287,11 +288,11 @@ function runInterlude(state, nextIndex, events) {
   if (added === 'cancel') resume()
   const removed = requestChoice(state, { kind: 'upgradeRemove', source: { type: 'upgrade', cardCode: added, id: record.id }, seat: inv.seat,
     prompt: '选择被替换的普通玩家卡；签名、弱点与剧情卡不能以此方式移除。', canSkip: true,
-    options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records, poolContext).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
+    options: [{ id: 'cancel', label: '取消购买' }, ...replacementOptions(record, added, campaign.records, purchaseContext).map(item => ({ id: item.code, label: `替换${cardName(item.code)}，支付 ${item.cost} XP` }))],
   })
   if (removed === 'cancel') resume()
   const purchase = purchaseCard(campaign, inv.seat, added, removed, {
-    ...poolContext, choosePurchaseEffect: spec => requestChoice(state, spec),
+    ...purchaseContext, choosePurchaseEffect: spec => requestChoice(state, spec),
   })
   info(state, events, `${inv.name} 完成一次牌组调整，支付 ${purchase.cost} XP。`)
   resume()
@@ -710,7 +711,7 @@ function hubLegalMoves(state, seat = decisionSeat(state)) {
   if (state.uiState === 'interlude' && record?.status === 'active' && (legacy || !replacement)
       && state.campaign.upgradesAllowed !== false) {
     const effective = upgradeRecord(record)
-    const poolContext = upgradePoolContext(state)
+    const poolContext = upgradePoolContext(state, seat)
     for (const added of availablePurchases(effective, state.campaign.records, poolContext)) {
       for (const option of replacementOptions(effective, added, state.campaign.records, poolContext)) moves.push({ action: 'hubPurchase', added, removed: option.code,
         ...(option.keepLower ? { keepLower: true } : {}),

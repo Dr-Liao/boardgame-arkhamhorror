@@ -29,17 +29,32 @@ export function playDiscardCostChoices(state, inv, spec) {
   return [...hand, ...play]
 }
 
+export function canPayPlayDiscardCost(state, inv, code, spec, sourceIndex = inv.hand.indexOf(code)) {
+  const choices = playDiscardCostChoices(state, inv, spec)
+  const available = spec.count ? choices.filter(card => card.from !== 'hand' || card.index !== sourceIndex) : choices
+  return available.length >= (spec.count ?? 1)
+}
+
 export function payPlayDiscardCost(state, inv, source, spec, events, deps) {
   const choices = playDiscardCostChoices(state, inv, spec)
   if (!choices.length) return null
   const id = deps.requestChoice(state, {
     kind: 'card', source: { type: 'cost', kind: 'discard', code: source },
-    seat: inv.seat, prompt: spec.upTo ? '支付额外费用：选择一张手牌弃掉，或结束支付。' : '支付额外费用：选择并弃掉一张符合条件的支援。',
+    seat: inv.seat, prompt: spec.upTo ? '支付额外费用：选择一张手牌弃掉，或结束支付。'
+      : spec.count ? '支付额外费用：选择一张手牌弃掉。' : '支付额外费用：选择并弃掉一张符合条件的支援。',
     options: [...(spec.upTo ? [{ id: 'done', label: '结束支付' }] : []),
       ...choices.map(row => ({ id: row.id, cardCode: row.code,
         label: deps.cardName(row.code) + (row.from === 'hand' ? '（手牌）' : '（场上）') }))],
   })
   const chosen = choices.find(row => row.id === id)
+  if (chosen?.from === 'play' && spec.allowReturn?.({ state, inv })) {
+    const asset = inv.assets.find(card => card.id === chosen.assetId)
+    const option = deps.requestChoice(state, { kind: 'payment', source, seat: inv.seat, prompt: '选择支付支援的额外费用。',
+      options: [{ id: 'discard', label: '弃掉这张支援' }, { id: 'return', label: '把这张支援放回拥有者的手牌' }],
+    })
+    if (option === 'return') return deps.abilityApi(state, events).returnAssetToHand(inv.seat, asset, { toOwner: true })
+      ? { code: chosen.code, from: 'play' } : null
+  }
   const costDeps = { ...deps, afterHandDiscard, canDiscardControlledAsset, discardPlayerCards }
   const paid = chosen?.from === 'hand'
     ? discardOneHandCardAsCost(state, inv, chosen.index, chosen.code, events, costDeps)

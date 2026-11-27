@@ -1,14 +1,13 @@
 // 10-a 铁杉谷盛宴 · 分片 6（10536b–10571）独立验收证据。
 //
 // 逐卡证据：标题含卡号；真实执行条目数据/能力、章节 definition 数据读取与 behavior 读点检查。
-// 失败卡同样以真实断言记录当前实现与卡面的差距（数据声明存在但无 behavior/引擎消费方）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 
-import '../src/engine/engine.js'
-import { registeredEntry } from '../src/engine/ability.js'
-import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { createGameState, discardRandomFromHand, newPlayerAssetInstance, scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as hh from '../content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/index.js'
 import * as hhDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/definition.js'
 import * as sh from '../content/campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/index.js'
@@ -16,11 +15,25 @@ import * as shDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/the
 import * as ls from '../content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/index.js'
 import * as lsDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/definition.js'
 
+import silentHeathReference from '../src/cards/encounter-entries/theFeastOfHemlockVale/theSilentHeath/10549.js'
+import lostSisterReference from '../src/cards/encounter-entries/theFeastOfHemlockVale/theLostSister/10569.js'
+
+for (const reference of [silentHeathReference, lostSisterReference]) {
+  if (!registeredEntry(reference.code)) registerCardAbilities([reference])
+}
+
 const HH_SRC = fs.readFileSync(new URL('../content/campaigns/theFeastOfHemlockVale/scenarios/hemlockHouse/behavior.js', import.meta.url), 'utf8')
 const SH_SRC = fs.readFileSync(new URL('../content/campaigns/theFeastOfHemlockVale/scenarios/theSilentHeath/behavior.js', import.meta.url), 'utf8')
 const LS_SRC = fs.readFileSync(new URL('../content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/behavior.js', import.meta.url), 'utf8')
 const entryOf = code => registeredEntry(code)
 const contains = (src, token) => src.includes(token)
+
+function liveState(seed) {
+  const state = createGameState({ seed, playerInvestigator: '10001' }, [{ seat: 0, role: 'human' }])
+  state.pendingChoice = null
+  state.continuation = null
+  return state
+}
 
 function stateFor(count = 1, extra = {}) {
   return {
@@ -28,7 +41,7 @@ function stateFor(count = 1, extra = {}) {
       seat, name: `调查员${seat + 1}`, location: null, damage: 0, horror: 0, clues: 0, resources: 5,
       assets: [], hand: [], deck: [], discard: [], engaged: [], defeated: false, resigned: false, actionsLeft: 3,
     })),
-    locations: [], enemies: [], encounterDeck: [], encounterDiscard: [], scenarioFlags: {},
+    locations: [], enemies: [], encounterDeck: [], encounterDiscard: [], scenarioFlags: {}, log: [],
     scenarioZones: { setAside: [], setAsideLocations: [] },
     campaign: { leadSeat: 0, records: {}, completedSteps: [], partners: {} },
     victoryDisplay: [], doom: 0, chaosBag: [], difficulty: 'standard', numInvestigators: count,
@@ -58,28 +71,38 @@ for (const [code, token, label] of [
   })
 }
 
-for (const [code, revealEffect] of Object.entries(hhDef.ENEMY_LOCATION_REVEAL_EFFECTS).filter(([code]) => String(code).startsWith('1055') || /^1053[6-9]b$|^1054[0-3]b$/.test(code))) {
-  test(`${code} 活的房间（敌人-地点）：揭示强制效果 ${revealEffect} 由 behavior 分派，但「+N 每人生命」无读点`, () => {
-    const entry = entryOf(code)
-    assert.equal(entry.flags.enemyLocation, true)
-    assert.equal(entry.flags.revealEffect, revealEffect)
-    assert.equal(hhDef.ENEMY_LOCATION_REVEAL_EFFECTS[code], revealEffect)
-    assert.equal(contains(HH_SRC, 'applyEnemyLocationReveal'), true, '揭示强制分派读点')
-    assert.equal(contains(HH_SRC, 'revealEffectOf'), true, 'revealEffect 条目读点')
-    // 差距：卡面「+N [per_investigator] 生命」只在条目/definition 数据里，引擎/内容层无读点。
-    assert.equal(contains(HH_SRC, 'healthPerInvestigator'), false, 'behavior 不读每人生命加成')
-    assert.equal(contains(fs.readFileSync(new URL('../src/engine/enemy-location.js', import.meta.url), 'utf8'), 'healthPerInvestigator'), false, '引擎敌人-地点不读每人生命')
+for (const [code, healthFor] of [
+  ['10536b', n => 3 * n], ['10537b', n => 3 * n], ['10538b', n => 3 * n],
+  ['10539b', n => 4 + n], ['10540b', n => 4 + n], ['10541b', n => 3 + 2 * n],
+  ['10542b', n => 4 + 2 * n], ['10543b', n => 3 * n],
+]) {
+  test(code + ' 活的房间：翻面后根据印刷的每人生命公式计算生命值', () => {
+    const [id] = Object.entries(hhDef.ENEMY_LOCATION_FACES).find(([, face]) => face.code === code)
+    for (const count of [1, 2, 4]) {
+      const room = { ...structuredClone(hhDef.LOCATIONS[id]), revealed: true, clues: 0 }
+      const state = stateFor(count, { locations: [room] })
+      const enemy = hh.behavior.flipToEnemySide(state, room.id, scenarioRuntime(state, []))
+      assert.ok(enemy)
+      assert.equal(enemy.health, healthFor(count))
+      assert.equal(enemy.location, room.id)
+    }
   })
 }
 
-test('10544 紧锢孽种：猎人/反击为数据关键词，但「+X 楼层生命」与「（黑夜）反击」无读点', () => {
-  const entry = entryOf('10544')
-  assert.equal(entry.flags.hunter, true)
-  assert.equal(entry.flags.nightRetaliate, true)
-  assert.equal(entry.flags.floorHealthBonus, true)
-  assert.equal(/Hunter\./.test(ALL_CARDS['10544'].text || ''), true, '猎手由卡文解析')
-  assert.equal(contains(HH_SRC, 'floorHealthBonus'), false, '楼层生命加成无 behavior 读点')
-  assert.equal(contains(HH_SRC, 'nightRetaliate'), false, '（黑夜）反击无 behavior 读点')
+test('10544 紧锢孽种按当前位置增加生命，且只在黑夜获得反击', () => {
+  const upper = { id: 'upper', floor: 3 }
+  const basement = { id: 'basement', floor: 0 }
+  const state = stateFor(2, { locations: [upper, basement] })
+  const enemy = { code: '10544', location: upper.id }
+  assert.equal(hh.behavior.enemyStatModifier(state, enemy, 'health'), 3)
+  enemy.location = basement.id
+  assert.equal(hh.behavior.enemyStatModifier(state, enemy, 'health'), 1)
+  assert.equal(hh.behavior.enemyStatModifier(state, enemy, 'fight'), 0)
+  hh.behavior.enemySpawned(state, enemy)
+  assert.equal(enemy.retaliate, false)
+  state.scenarioFlags.hemlockHouseNight = true
+  hh.behavior.enemySpawned(state, enemy)
+  assert.equal(enemy.retaliate, true)
 })
 
 test('10545 墙外奇物：显现检定成功后三条分支由 behavior.outOfTheWallsFailure 结算', () => {
@@ -117,33 +140,107 @@ test('10546 拖离正道：无敌人-地点时获得涌动，否则战斗(4)失�
   assert.equal(calls[1][2], 4)
 })
 
-test('10547 失形地窖：单面敌人-地点，调查失败攻击/无线索进胜利区有读点，但生命 X/人数无读点', () => {
-  const entry = entryOf('10547')
-  assert.equal(entry.flags.enemyLocation, true)
-  assert.equal(entry.flags.attacksOnFailedInvestigation, true)
-  assert.equal(entry.flags.victoryWhenNoClues, true)
-  assert.equal(contains(HH_SRC, 'attacksOnFailedInvestigation'), true)
-  assert.equal(contains(HH_SRC, 'victoryWhenNoClues'), true)
-  assert.equal(hhDef.CELLAR_ENEMY_FACE.health, 5, '地窖静态生命 5（不按人数）')
-  assert.equal(ALL_CARDS['10547'].healthPerInvestigator, true, '卡面生命为每人生命')
+test('10547 失形地窖进场时每位调查员计 5 点生命', () => {
+  for (const count of [1, 2, 4]) {
+    const state = stateFor(count)
+    const location = hh.behavior.placeCellar(state)
+    const [cellar] = state.enemies
+    assert.equal(cellar.id, location.id)
+    assert.equal(cellar.health, 5 * count)
+    assert.equal(location.clues, 3)
+    assert.equal(cellar.enemyLocation, true)
+  }
 })
 
-test('10548 小西尔维：两张 [reaction]（弃牌时打出 / 横置救回弃牌）的 flags 无任何读点', () => {
-  const entry = entryOf('10548')
-  assert.equal(entry.flags.playWhenDiscarded, true)
-  assert.equal(entry.flags.exhaustToSaveDiscard, true)
-  assert.equal(contains(HH_SRC, 'playWhenDiscarded'), false)
-  assert.equal(contains(HH_SRC, 'exhaustToSaveDiscard'), false)
+for (const [zone, zoneName] of [['hand', '手牌'], ['deck', '牌库']]) {
+  const discard = (state, seat, move, events) => {
+    const api = scenarioRuntime(state, events)
+    return zone === 'hand' ? api.discardRandom(seat, 1) : api.discardTop(seat, 1)
+  }
+
+  test('10548 小西尔维从' + zoneName + '被弃掉后可支付费用打出', () => {
+    const state = liveState('10548-' + zone)
+    const inv = state.investigators[0]
+    inv[zone] = ['10548']
+    inv.resources = 3
+    resolveTransaction(state, 0, { action: '10548-test-discard' }, discard)
+    const choice = state.pendingChoice
+    const play = choice?.options.find(option => option.cardCode === '10548')
+    assert.ok(play)
+    resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: play.id }, discard)
+    assert.equal(state.investigators[0].resources, 2)
+    assert.equal(state.investigators[0].assets.some(asset => asset.code === '10548'), true)
+    assert.equal(state.investigators[0].discard.includes('10548'), false)
+  })
+
+  test('10548 小西尔维横置，把将从' + zoneName + '弃掉的牌留在牌库顶', () => {
+    const state = liveState('10548-replace-' + zone)
+    const inv = state.investigators[0]
+    inv.hand = zone === 'hand' ? ['01016'] : []
+    inv.deck = zone === 'hand' ? ['01017'] : ['01017', '01016']
+    inv.discard = []
+    inv.assets = [newPlayerAssetInstance(state, inv, '10548')]
+    resolveTransaction(state, 0, { action: '10548-test-discard' }, discard)
+    const choice = state.pendingChoice
+    const replace = choice?.options.find(option => option.cardCode === '10548')
+    assert.ok(replace)
+    resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: replace.id }, discard)
+    assert.equal(state.investigators[0].assets[0].exhausted, true)
+    assert.deepEqual(state.investigators[0].deck, ['01017', '01016'])
+    assert.deepEqual(state.investigators[0].hand, [])
+    assert.deepEqual(state.investigators[0].discard, [])
+  })
+}
+
+test('10548 替代批量弃牌中的牌库顶一张，其余卡牌仍弃掉', () => {
+  const state = liveState('10548-discard-two')
+  const inv = state.investigators[0]
+  inv.deck = ['01016', '01017', '01019']
+  inv.discard = []
+  inv.assets = [newPlayerAssetInstance(state, inv, '10548')]
+  const discard = (current, seat, move, events) => scenarioRuntime(current, events).discardTop(seat, 2)
+  resolveTransaction(state, 0, { action: '10548-test-discard-two' }, discard)
+  const choice = state.pendingChoice
+  const replace = choice?.options.find(option => option.cardCode === '10548')
+  assert.ok(replace)
+  resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: replace.id }, discard)
+  assert.deepEqual(state.investigators[0].deck, ['01016', '01019'])
+  assert.deepEqual(state.investigators[0].discard, ['01017'])
+})
+
+test('10548 小西尔维不能用横置替代普通原因造成的弃牌', () => {
+  const state = liveState('10548-other-source')
+  const inv = state.investigators[0]
+  inv.hand = ['01016']
+  inv.deck = ['01017']
+  inv.discard = []
+  inv.assets = [newPlayerAssetInstance(state, inv, '10548')]
+  const discard = (current, seat, move, events) =>
+    discardRandomFromHand(current, current.investigators[seat], 1, events)
+  resolveTransaction(state, 0, { action: '10548-test-normal-discard' }, discard)
+  assert.equal(state.pendingChoice, null)
+  assert.equal(state.investigators[0].assets[0].exhausted, false)
+  assert.deepEqual(state.investigators[0].discard, ['01016'])
 })
 
 // ---------------------------------------------------------------------------
 // 寂静荒野（theSilentHeath）10549–10568
 // ---------------------------------------------------------------------------
-test('10549 寂静荒野（剧本参考卡）：TSK/FHV 约定剧本参考卡不建条目，内容层提供标记表', () => {
-  assert.equal(registeredEntry('10549'), null)
+test('10549 寂静荒野参考卡处理标准面和困难面的图符，巢穴触发自动失败', () => {
+  const state = stateFor(1, {
+    difficulty: 'hard',
+    enemies: [{ traits: ['Insect'] }, { traits: ['Insect'] }, { traits: ['Insect'] }],
+    locations: [{ id: 'lair', traits: ['Lair'] }],
+  })
+  const inv = state.investigators[0]
+  inv.location = 'lair'
   assert.equal(sh.manifest.referenceCode, '10549')
-  assert.equal(typeof sh.behavior.resolveChaosToken, 'function')
-  assert.ok(JSON.stringify(sh.scenario?.tokenMeanings || {}).length > 2, '章节数据提供混乱标记表')
+  assert.equal(entryOf('10549').scope, 'scenario')
+  assert.equal(sh.behavior.resolveChaosToken(state, inv, 'skull').delta, -3)
+  assert.equal(sh.behavior.testAutoFail(state, inv, { drawn: ['elderthing'] }), true)
+  state.difficulty = 'standard'
+  assert.equal(sh.behavior.resolveChaosToken(state, inv, 'skull').delta, -2)
+  assert.equal(sh.behavior.testAutoFail(state, inv, { drawn: ['elderthing'] }), false)
 })
 
 for (const [code, token] of [['10550', 'skullOrAutoFail'], ['10551', 'symbol'], ['10552', 'symbol']]) {
@@ -156,14 +253,23 @@ for (const [code, token] of [['10550', 'skullOrAutoFail'], ['10551', 'symbol'], 
   })
 }
 
-test('10552 荒芜（版本二）：失去冷漠/获得猎手已接线，但「失去巡逻」无读点（条目已披露）', () => {
-  const entry = entryOf('10552')
-  assert.equal(entry.flags.insectsLoseAloof, true)
-  assert.equal(entry.flags.insectsGainHunter, true)
-  assert.equal(entry.flags.insectsLosePatrol, true)
-  assert.equal(contains(SH_SRC, 'insectsLoseAloof'), true)
-  assert.equal(contains(SH_SRC, 'insectsGainHunter'), true)
-  assert.equal(contains(SH_SRC, 'insectsLosePatrol'), false, '失去巡逻无 behavior 读点')
+test('10552 荒芜生效时重整的族群兵虫停止巡逻', () => {
+  const start = { id: 'start', name: '巢外', connections: ['cave'], traits: [] }
+  const cave = { id: 'cave', name: '洞穴', connections: ['start'], traits: ['Cave'], clues: 1 }
+  const state = liveState('10552')
+  state.scenario = sh.scenario
+  state.locations = [start, cave]
+  const insect = { id: 'patroller', code: '10564', name: '族群兵虫', location: start.id,
+    traits: ['Insect'], exhausted: false, engagedSeat: null, attachments: [] }
+  state.enemies = [insect]
+  state.agendas = [{ code: '10551' }, { code: '10552' }]
+  state.agendaIndex = 0
+  assert.equal(scenarioRuntime(state, []).runEnemyPatrol(insect), true)
+  assert.equal(insect.location, cave.id)
+  insect.location = start.id
+  state.agendaIndex = 1
+  assert.equal(scenarioRuntime(state, []).runEnemyPatrol(insect), false)
+  assert.equal(insect.location, start.id)
 })
 
 for (const [code, token] of [['10553', 'warrensBack'], ['10554', 'laidToRest']]) {
@@ -203,11 +309,39 @@ test('10559 幼虫隧道：成功躲避后的暗堆抽取以幕 2 暗堆行动�
   assert.equal(contains(SH_SRC, 'silentHeathDrawBeneath'), true, '暗堆抽取行动读点')
 })
 
-test('10560 水晶温床：「结束回合后受 1 直接恐惧再抽取」无逐地点读点（当前只保留暗堆行动）', () => {
-  const entry = entryOf('10560')
-  assert.equal(entry.flags.codex, 'crystalNursery')
-  assert.equal(contains(SH_SRC, 'crystalNurseryTurnEnd'), false, '没有回合结束强制反应读点')
-  assert.equal(/crystalNursery[\s\S]{0,200}horror/.test(SH_SRC), false, '水晶温床没有恐惧结算读点')
+test('10560 水晶温床结束回合时可付 1 直接恐惧抽暗牌，团队每轮一次', () => {
+  const state = stateFor(2, {
+    locations: [{ id: 'crystalNursery', code: '10560', name: '水晶温床', clues: 1, revealed: true }],
+    scenarioZones: { beneathStacks: { crystalNursery: [
+      { kind: 'asset', code: '10566' }, { kind: 'asset', code: '10567' },
+    ] } },
+  })
+  const [first, second] = state.investigators
+  first.location = second.location = 'crystalNursery'
+  let accept = false
+  const api = {
+    choose: choice => (accept ? choice.options.find(option => option.id !== 'skip').id : 'skip'),
+    directHorror: (seat, amount) => { state.investigators[seat].horror += amount },
+    giveAsset: (seat, code) => {
+      const asset = { code }
+      state.investigators[seat].assets.push(asset)
+      return asset
+    },
+  }
+  sh.behavior.turnEnded(state, first, api)
+  assert.equal(first.horror, 0)
+  assert.equal(first.assets.length, 0)
+  accept = true
+  sh.behavior.turnEnded(state, first, api)
+  assert.deepEqual(first.assets.map(asset => asset.code), ['10566'])
+  assert.equal(first.horror, 1)
+  sh.behavior.turnEnded(state, second, api)
+  assert.equal(second.horror, 0)
+  assert.equal(second.assets.length, 0)
+  state.round++
+  sh.behavior.turnEnded(state, second, api)
+  assert.deepEqual(second.assets.map(asset => asset.code), ['10567'])
+  assert.equal(second.horror, 1)
 })
 
 for (const [code, event] of [['10561', 'silentHeathCommandingResonance'], ['10562', 'silentHeathDefendTheNest']]) {
@@ -256,11 +390,21 @@ for (const [code, effect] of [['10566', 'child'], ['10567', 'father'], ['10568',
 // ---------------------------------------------------------------------------
 // 消失的姐妹（theLostSister）10569–10571
 // ---------------------------------------------------------------------------
-test('10569 消失的姐妹（剧本参考卡）：剧本参考卡不建条目，内容层提供标记表', () => {
-  assert.equal(registeredEntry('10569'), null)
+test('10569 消失的姐妹参考卡按难度结算洞穴修正和异形自动失败', () => {
+  const state = stateFor(1, {
+    difficulty: 'hard',
+    enemies: [{ location: 'cave', traits: ['Abomination'] }],
+    locations: [{ id: 'cave', traits: ['Cave'], revealed: true }],
+  })
+  const inv = state.investigators[0]
+  inv.location = 'cave'
   assert.equal(ls.manifest.referenceCode, '10569')
-  assert.equal(typeof ls.behavior.resolveChaosToken, 'function')
-  assert.ok(JSON.stringify(ls.scenario?.tokenMeanings || {}).length > 2, '章节数据提供混乱标记表')
+  assert.equal(entryOf('10569').scope, 'scenario')
+  assert.equal(ls.behavior.resolveChaosToken(state, inv, 'tablet').delta, -6)
+  assert.equal(ls.behavior.testAutoFail(state, inv, { drawn: ['elderthing'] }), true)
+  state.difficulty = 'standard'
+  assert.equal(ls.behavior.resolveChaosToken(state, inv, 'tablet').delta, -4)
+  assert.equal(ls.behavior.testAutoFail(state, inv, { drawn: ['elderthing'] }), false)
 })
 
 test('10570 深入洞穴：背面生成虾类混种/黑暗地点弃牌/按天数放毁灭（agendaReveal 读点）', () => {

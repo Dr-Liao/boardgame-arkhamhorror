@@ -15,9 +15,10 @@
 //      环绕悖逆重力之阶的迷你卡必须按 左 → 中 → 右 揭露才能进入睥睨众生之巅。
 //   4. 结局：1「域外来客遭到阻止」（+5 奖励经验、2/2 创伤）；2「特别小组成为空洞」（战役失败，
 //      空洞卡写入存在抹除名单）。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { exposeWithReaction } from '../../concealed.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { isPendingChoice } from '../../../../../src/engine/resolution.js'
+import { isPendingChoice } from '../../../../../src/engine/resolution-error.js'
 import {
   concealedMiniCards, distributeConcealed, exposeMiniCard, setInShadows,
 } from '../../../../../src/engine/tsk-concealed.js'
@@ -419,6 +420,9 @@ export function resolveKeyShift(state, seat, api, keyId, { by = 'investigator' }
     effect = shift.face || 'declared'
   } else if (shift?.effect) {
     effect = applyDeclaredKeyEffect(state, seat, api, keyId, shift.effect)
+  } else if (typeof legacy === 'function') {
+    // The current-face resolver runs function descriptors when the key API shifts it.
+    effect = 'declared'
   } else if (legacy) {
     effect = applyLegacyKeyShift(state, seat, api, keyId, legacy)
   } else if (flagShift) {
@@ -427,16 +431,14 @@ export function resolveKeyShift(state, seat, api, keyId, { by = 'investigator' }
     effect = 'noDeclaration'
   }
   const flipMode = shift?.flip || null
-  const shouldFlip = by === 'enemy'
-    ? flipMode === 'always' && record.stable === true
-    : true
+  const shouldShift = by !== 'enemy' || typeof legacy === 'function' || (flipMode === 'always' && record.stable === true)
   let flipped = false
-  if (shouldFlip) {
+  if (shouldShift) {
     try {
-      keys.shift(keyId, { force: by === 'enemy' })
-      flipped = true
-    } catch {
-      flipped = false
+      keys.shift(keyId, { force: by === 'enemy', by, seat })
+      flipped = keys.get(keyId).stable !== record.stable
+    } catch (error) {
+      if (isPendingChoice(error) || !/本轮已经变换过/.test(error?.message || '')) throw error
     }
   }
   return { keyId, by, effect, flipped }
@@ -468,7 +470,7 @@ function applyDeclaredKeyEffect(state, seat, api, keyId, effect = {}) {
       try {
         if (hollow) hollow.hollow({ code, source: keyId, scope: 'investigator', seat: owner.seat })
         const index = owner.hand.lastIndexOf(code)
-        if (index >= 0) owner.hand.splice(index, 1)
+        if (index >= 0) spliceHand(owner, index, 1)
         hollowed.push(code)
       } catch { /* 已在空洞区 */ }
     }

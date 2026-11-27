@@ -94,7 +94,9 @@ test('卡型与描述子 kind 匹配：事件必须有 played，支援不得只�
     // 2026-10-25：带 attachTo 的事件（05152/05230）由 doPlay 的附属通道打出，没有 played 描述子。
     const handReaction = abilities.some(ability => ability.fromHand === true
       && (ability.kind === 'reaction' || ability.kind === 'forced'))
-    if (card.type === 'event' && !weakness && !kinds.has('played') && !handReaction && !entry.attachTo) {
+    const attachmentOnly = entry.playRestriction === 'attachmentOnly'
+      && entry.assetRule?.enemyAttachmentRule?.bondedReturn === true
+    if (card.type === 'event' && !weakness && !kinds.has('played') && !handReaction && !entry.attachTo && !attachmentOnly) {
       problems.push(`${entry.code}（事件）缺少 kind:'played'：${[...kinds].join('/')}`)
     }
     if (card.type === 'asset' && kinds.size === 1 && kinds.has('played')) {
@@ -131,7 +133,7 @@ const printedExemptKinds = card => Object.entries(EXEMPT_DESIGNATORS)
   .filter(([, labels]) => labels.some(label => hasDesignator(card.text, label) || hasDesignator(card.textZh, label)))
   .map(([kind]) => kind)
 const isExemptKind = kind => ['fight', 'evade', 'parley', 'resign'].includes(kind)
-const declaredKinds = ability => [ability.countsAs, ability.effect?.kind, ability.effect?.type].filter(Boolean)
+const declaredKinds = ability => [ability.actionKind, ability.countsAs, ability.effect?.kind, ability.effect?.type].filter(Boolean)
 
 test('卡面「攻击/躲避/谈判/撤退」指示必须在描述子上声明（借机攻击豁免）', () => {
   const problems = []
@@ -156,7 +158,10 @@ test('带豁免类行动指示的事件卡：打出预览不出现借机攻击',
   const problems = []
   for (const entry of CARD_ABILITY_ENTRIES) {
     const card = ALL_CARDS[entry.code]
-    if (!card || card.type !== 'event' || !printedExemptKinds(card).length) continue
+    if (!card || card.type !== 'event') continue
+    const playText = { text: card.text?.split('\n').filter(line => !line.includes('[action]')).join('\n'),
+      textZh: card.textZh?.split('\n').filter(line => !line.includes('[action]')).join('\n') }
+    if (!printedExemptKinds(playText).length) continue
     const state = fixture()
     state.investigators[0].hand = [entry.code]
     state.investigators[0].resources = 30

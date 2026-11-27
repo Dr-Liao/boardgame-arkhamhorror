@@ -1,6 +1,7 @@
 import { contentRegistry } from '../../content/registered.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { registeredEntry } from '../engine/ability.js'
+import { assetHarmCapacity } from '../engine/asset-defeat.js'
 import { HIDDEN_LOCATION_ART, PRIVATE_DOORWAY_NAMES, hiddenPathBack } from '../../content/campaigns/thePathToCarcosa/presentation.js'
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
@@ -68,15 +69,24 @@ export function attachCardAttachments(cards = [], byCard = {}) {
 // agendaAside（放在密谋牌库旁的卡）是桌面公开区：演出重绘快照必须带着它，否则
 // 演出期间这张卡会从牌桌消失一瞬。
 const FIELDS = ['status','currentSeat','turnSeat','moveCount','round','phase','actIndex','agendaIndex','doom','clues','actClues','victory','locations','enemies','storyAssets','agendaAside','encounterDiscard','turnsTaken','log']
-const INV_FIELDS = ['seat','code','name','nameEn','klass','willpower','intellect','combat','agility','health','sanity','baseHealth','baseSanity','maxHealth','damage','horror','resources','clues','actionsLeft','discard','assets','threat','location','engaged','defeated','resigned','testBonus','phaseStatBonus']
+const INV_FIELDS = ['seat','code','name','nameEn','klass','willpower','intellect','combat','agility','health','sanity','baseHealth','baseSanity','maxHealth','damage','horror','resources','clues','markers','doom','actionsLeft','discard','assets','threat','location','engaged','defeated','resigned','testBonus','phaseStatBonus']
 const pick = (value, keys) => Object.fromEntries(keys.filter(k => Object.hasOwn(value, k)).map(k => [k, structuredClone(value[k])]))
 export function publicCardInstance(card) {
   const visible = structuredClone(card)
-  if (visible.capturedCards) { visible.capturedCardCount = visible.capturedCards.length; delete visible.capturedCards }
+  if (Array.isArray(visible.capturedCards)) visible.capturedCardCount = visible.capturedCards.length
+  delete visible.capturedCards
   if (visible.code === 'xcourage') {
     delete visible.underlyingCode
     delete visible.originalCode
   }
+  return visible
+}
+
+export function publicControlledAsset(state, asset) {
+  const visible = publicCardInstance(asset)
+  const printed = ALL_CARDS[asset.originalCode || asset.code]
+  const health = assetHarmCapacity(printed, 'damage', state, asset)
+  if (health > 0 && health !== printed?.health) visible.health = health
   return visible
 }
 // 第 125 轮（第 8 批）：隐藏地点的背面图案分组表在内容层（`content/campaigns/thePathToCarcosa/presentation.js`）。
@@ -208,7 +218,7 @@ export function captureTableState(state, getStat, getMaxSanity, enemyReadouts = 
     agendaDoom: agendaDoom(state),
     totalDoom: totalDoom(state),
     investigators: state.investigators.map(inv => ({ ...pick(inv, INV_FIELDS),
-      assets: attachCardAttachments((inv.assets || []).map(publicCardInstance), attachments.assets),
+      assets: attachCardAttachments((inv.assets || []).map(asset => publicControlledAsset(state, asset)), attachments.assets),
       threat: attachCardAttachments((inv.threat || []).map(publicCardInstance), attachments.assets),
       hand: [...inv.hand], handSize: inv.hand.length, deck: [], deckSize: inv.deck.length,
       // 压在调查员底下的牌（黛安娜／赛菲娜）与手牌同为本人私有区：演出快照里必须带走，

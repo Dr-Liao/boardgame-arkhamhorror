@@ -424,13 +424,21 @@ function localTurnLocationIntoEnemy(state, location, face, { ready = false } = {
 }
 
 /** 把地点翻到敌人-地点面（封印/单面/已翻面的情形拒绝）。 */
+function scaledEnemyLocationFace(state, face) {
+  const flags = entryOf(face.code)?.flags || {}
+  const players = investigatorCount(state)
+  const printedHealth = flags.healthPerInvestigator === true ? face.health * players : face.health
+  return { ...face, health: printedHealth + (flags.healthPerInvestigatorBonus || 0) * players }
+}
+
 export function flipToEnemySide(state, locationOrId, api = {}, { ready = false } = {}) {
   const location = typeof locationOrId === 'string' ? locationOf(state, locationOrId) : locationOrId
   if (!location || isEnemyLocation(location)) return null
   if (location.cannotBeFlipped === true || location.enemyLocationOnly === true) return null
   if (isSealed(location) || sealForbidden(location)) return null
-  const face = ENEMY_LOCATION_FACES[location.id]
-  if (!face) return null
+  const printed = ENEMY_LOCATION_FACES[location.id]
+  if (!printed) return null
+  const face = scaledEnemyLocationFace(state, printed)
   let enemy = null
   if (typeof api?.turnLocationIntoEnemy === 'function') {
     enemy = api.turnLocationIntoEnemy(location.id, face, { ready })
@@ -569,7 +577,7 @@ export function placeCellar(state, api = {}) {
       id: CELLAR_ID, code: SHAPELESS_CELLAR_CODE, originalCode: SHAPELESS_CELLAR_CODE,
       name: CELLAR_ENEMY_FACE.name, traits: [...CELLAR_ENEMY_FACE.traits], location: CELLAR_ID,
       enemyLocation: true, fight: CELLAR_ENEMY_FACE.fight, evade: CELLAR_ENEMY_FACE.evade,
-      health: CELLAR_ENEMY_FACE.health, damage: CELLAR_ENEMY_FACE.damage,
+      health: scaledEnemyLocationFace(state, CELLAR_ENEMY_FACE).health, damage: CELLAR_ENEMY_FACE.damage,
       horror: CELLAR_ENEMY_FACE.horror, victory: CELLAR_ENEMY_FACE.victory,
       retaliate: true, alert: false, elite: true, massive: true, immobile: true,
       engagedSeat: null, exhausted: false, damageTaken: 0, doom: 0, clues: 0, attachments: [],
@@ -1366,15 +1374,16 @@ export function afterInvestigate(state, inv, location, result, api = {}) {
 
 export function enemyStatModifier(state, enemy, stat) {
   if (!enemy) return 0
-  const code = codeOf(enemy)
-  if (code !== GRAPPLING_SPAWN_CODE) return 0
-  if (stat === 'health') return Math.max(1, floorOf(state, enemy.location))
+  const flags = entryOf(codeOf(enemy))?.flags
+  if (stat === 'health' && flags?.floorHealthBonus) {
+    return Math.max(flags.floorHealthMinimum ?? 1, floorOf(state, enemy.location))
+  }
   return 0
 }
 
 export function enemySpawned(state, enemy, api = {}) {
   if (!enemy) return
-  if (codeOf(enemy) !== GRAPPLING_SPAWN_CODE) return
+  if (entryOf(codeOf(enemy))?.flags?.nightRetaliate !== true) return
   // 「Hunter.（Night [night]）Retaliate.」——只在夜晚获得报复。
   enemy.retaliate = isNight(state)
   info(api, `紧锢孽种${enemy.retaliate ? '（夜晚）获得报复。' : '（白天）没有报复。'}`)

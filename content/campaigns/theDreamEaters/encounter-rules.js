@@ -524,7 +524,7 @@ export const encounterRules = Object.freeze({
       api?.shuffleIntoEncounterDeck?.([String(code)], { shuffle: true })
       api?.info?.(`🔄 「${ALL_CARDS[original(code)]?.nameZh || code}」生成失败：洗回遭遇牌库。`)
     }
-    if (flags.surge && engagedSeat != null) api?.drawEncounter?.(engagedSeat)
+    if (flags.surge && engagedSeat != null) api?.drawEncounter?.(engagedSeat, { surgeDraw: true })
   },
 
   // 蜂拥头领清空前不能被击败（引擎读点：hidden-rules.js 的 enemyCanBeDefeated）。
@@ -838,7 +838,7 @@ export const encounterRules = Object.freeze({
       }
       const skills = rule.skills || [rule.skill || 'willpower']
       const runTest = skill => api.test?.(inv.seat, skill, rule.difficulty ?? 3, result => {
-        if (result.success) {
+        if (result.success || rule.discardAfterTest) {
           api.removeThreat?.(card)
           api.info?.(`摆脱了「${card?.name || move.rule}」。`)
           applyFollowUp()

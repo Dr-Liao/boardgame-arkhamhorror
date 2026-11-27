@@ -19,23 +19,17 @@
 //   · 「检定失败 → 返回手牌」：api.returnAssetToHand(seat, card)（api-misc.js：leaveAsset + putInHand，
 //     支援离场钩子照常结算的唯一返回手牌原语）。
 //
-// 显式简化（simplified，见 note）：
-//   「疑点」在印刷上是「卡上的资源」，引擎唯一的卡上计数原语 `counter.card` 目前只白名单
-//   bounty / evidence / hollow（card-counters.js#CARD_COUNTER_IDS），没有可扩展的具名计数器，
-//   也没有「在支援上放资源」的能力面 API，因此本卡把疑点存在卡实例的 `uses` 上
-//   （api.addUses / api.setAssetUses，读点即本卡自己的 difficulty 计算）。见 primitive-requests/10082.json。
+// 疑点由具名卡牌资源计数器记录。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const CODE = '10082'
 
 const nameOf = code => ALL_CARDS[code]?.name || code
-const suspicionOf = card => Math.max(0, Number(card?.uses) || 0)
+const suspicionOf = card => Math.max(0, Number(card?.useTokens?.suspicion ?? card?.uses) || 0)
 
 export default {
   code: CODE,
   name: 'Fake Credentials',
-  simplified: true,
-  note: 'simplified: 「疑点」（印刷为卡上的资源）暂存在卡实例 uses 上——引擎的 counter.card 只白名单 bounty/evidence/hollow，且没有「在支援上放资源」的能力面 API；难度计算与放置/读取都走 api.addUses，见 primitive-requests/10082.json',
   abilities: [
     {
       kind: 'action',
@@ -56,7 +50,7 @@ export default {
         }
         const suspicion = suspicionOf(card)
         const result = api.test(inv.seat, 'intellect', suspicion, {
-          source: { type: 'effect', label: `假证（${nameOf(CODE)}）` },
+          source: { type: 'effect', enemyId: picked.id, code: CODE, label: `假证（${nameOf(CODE)}）` },
           actionKind: 'parley',
         })
         const summary = result?.summary || {}
@@ -79,7 +73,7 @@ export default {
         // 「If you did not succeed by 2 or more, place 1 resource on Fake Credentials, as suspicion.」
         if (!summary.success || Number(summary.successBy) < 2) {
           const next = suspicion + 1
-          api.addUses(card, 1)
+          api.placeUse(card, 'suspicion', card.useTokens?.suspicion == null ? next : 1)
           api.info(`🪪 「假证」：在它上面放置 1 个疑点（当前 ${next}，之后每次检定难度 +${next}）。`)
         }
         if (!summary.success) {

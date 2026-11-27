@@ -1,6 +1,6 @@
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import {
-  encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
+  encounterResolveCampaignsFor, encounterResolveFor, treacheryScriptFor, enemyScriptFor, enemySpawnRuleFor, enemyStatRuleFor,
   isPoisonThreat, threatActionByRule, threatActionFor, vengeanceWhileFor,
   resolveDeclarativeTreacheryTest, treacheryTestFor,
 } from '../../../src/cards/card-rules.js'
@@ -283,14 +283,14 @@ export const encounterRules = {
   },
 
   // ---- 共享诡计 ----
-  resolveEncounter(state, inv, t, api) {
+  resolveEncounter(state, inv, t, api, context) {
     const code = original(t)
     const location = here(state, inv)
     const entryResolve = encounterResolveFor(code)
     const campaigns = encounterResolveCampaignsFor(code)
     // 第 120 轮：04092 也走条目（条目里的选项 id/顺序与旧分支一致，选择恢复凭据不变）。
     if (entryResolve && (!campaigns.length || campaigns.includes('tfa'))) {
-      return entryResolve(state, inv, t, api, { location })
+      return entryResolve(state, inv, t, api, { ...context, location })
     }
     // 声明式「显现 - 检定」（treacheryRule.test）：与旧 DSL 同口径，读点在 card-rules.js。
     const declarative = treacheryTestFor(code)
@@ -386,9 +386,8 @@ export const encounterRules = {
     // 04094 一片漆黑「强制 - 轮末从场上弃掉 1 张」由条目声明
     // `treacheryRule.discardOneAtRoundEnd`，引擎 phases.js 的旁置卡轮末扫描结算。
     for (const location of state.locations) {
-      for (const attachment of attachmentsWithCode(location, '04076').slice()) {
-        // 疯狂生长只在探索限制期间持续；不自动弃掉。
-        void attachment
+      for (const attachment of [...(location.attachments || [])]) {
+        treacheryScriptFor(original(attachment))?.onAttachedLocationRoundEnd?.(state, location, attachment, api)
       }
     }
   },

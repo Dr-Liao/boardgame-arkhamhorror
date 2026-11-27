@@ -8,8 +8,10 @@ export default {
   code: '11693',
   scope: 'location',
   implemented: true,
-  locationRule: { floodBounds: { max: 2 } },
-  flags: { ruined: true },
-  note: '数据型条目：数值由 definition.location() 读卡表；废墟交换在 behavior.agendaReveal → swapToRuined。',
+  flags: {
+    ruined: true,
+    enemyEntryReaction: { trait: 'Star Spawn', resourceCost: 3, effect: 'autoEvade' },
+  },
+  note: '星之眷族进入时，同地点调查员可支付 3 资源自动躲避。读点为本章敌人进入地点的反应。',
   abilities: [],
 }

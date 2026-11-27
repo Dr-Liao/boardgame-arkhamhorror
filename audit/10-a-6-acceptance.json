@@ -3,7 +3,7 @@
   "unit": "10-a-6",
   "profile": {
     "id": "fhv-campaign-b-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10536b–10571）43 条目录记录。28 条通过五维验收；15 条敌人地点每人生/参考卡结构缺口暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10536b–10571）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 28,
-    "unverified": 15,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 175
+    "testsPassed": 180
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-      "sha256": "729b0387b145b862aca0b89aaaed2d3ecad756b5962b73399b06646779791705"
+      "sha256": "26674c094c37d95af8559dae93c7ce42954f9b6ed6468b33efc8aab1e3c45c60"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-writtenInRock.test.mjs",
@@ -57,7 +57,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
-      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+      "sha256": "09746297943b9125717640adf59f5158ea8eaee91141902a2fae2f7a64dc2b0f"
     }
   ],
   "entries": [
@@ -65,9 +65,13 @@
       "code": "10536b",
       "name": "活的盥洗室",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的盥洗室」生命值为每人生命（卡表 healthPerInvestigator），但敌人-地点生成用静态 face.health（engine/enemy-location.js#turnLocationIntoEnemy 只收整数），behavior/definition 无每人生命读点；条目 note 已披露该声明无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10536b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10537",
@@ -81,7 +85,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10537b 活的房间（敌人-地点）：揭示强制效果 attacksHereIfClues 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10537b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -89,9 +93,13 @@
       "code": "10537b",
       "name": "活的盥洗室",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的盥洗室」每人生命未按人数缩放（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10537b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10538",
@@ -105,7 +113,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10538b 活的房间（敌人-地点）：揭示强制效果 discardRandomPerClue 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10538b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -113,9 +121,13 @@
       "code": "10538b",
       "name": "活的盥洗室",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的盥洗室」每人生命未按人数缩放（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10538b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10539",
@@ -129,7 +141,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10539b 活的房间（敌人-地点）：揭示强制效果 loseResources 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10539b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -137,9 +149,13 @@
       "code": "10539b",
       "name": "活的藏书室",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的藏书室得到 +1[per_investigator] 生命」：条目 flags.healthPerInvestigatorBonus 无 behavior/引擎读点，生成用静态 health 4。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10539b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10540",
@@ -153,7 +169,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10540b 活的房间（敌人-地点）：揭示强制效果 horror 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10540b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -161,9 +177,13 @@
       "code": "10540b",
       "name": "活的藏书室",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的藏书室得到 +1[per_investigator] 生命」无读点（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10540b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10541",
@@ -177,7 +197,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10541b 活的房间（敌人-地点）：揭示强制效果 attacksHere 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10541b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -185,9 +205,13 @@
       "code": "10541b",
       "name": "活的客厅",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的客厅得到 +2[per_investigator] 生命」无读点（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10541b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10542",
@@ -201,7 +225,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10542b 活的房间（敌人-地点）：揭示强制效果 predationTest 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10542b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -209,9 +233,13 @@
       "code": "10542b",
       "name": "活的餐厅",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的餐厅得到 +2[per_investigator] 生命」无读点（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10542b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10543",
@@ -225,7 +253,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
-          "test": "10543b 活的房间（敌人-地点）：揭示强制效果 attacksHere 由 behavior 分派，但「+N 每人生命」无读点"
+          "test": "10543b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
         }
       ]
     },
@@ -233,17 +261,25 @@
       "code": "10543b",
       "name": "活的门厅",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「活的门厅」每人生命未按人数缩放（同上）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10543b 活的房间：翻面后根据印刷的每人生命公式计算生命值"
+        }
+      ]
     },
     {
       "code": "10544",
       "name": "紧锢孽种",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「紧锢孽种得到 +X 生命，X 为其当前层数（最少 +1）」与「（黑夜）反击」：flags.floorHealthBonus / nightRetaliate 无任何 behavior/引擎读点（仅猎手由卡文解析、基础反击由敌人定义生效）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10544 紧锢孽种按当前位置增加生命，且只在黑夜获得反击"
+        }
+      ]
     },
     {
       "code": "10545",
@@ -273,25 +309,57 @@
       "code": "10547",
       "name": "失形地窖",
       "type": "enemy_location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「失形地窖」生命值为每人生命（卡表 healthPerInvestigator:true），placeCellar 使用 CELLAR_ENEMY_FACE.health=5 静态值，无每人生命读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10547 失形地窖进场时每位调查员计 5 点生命"
+        }
+      ]
     },
     {
       "code": "10548",
       "name": "小西尔维",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "小西尔维两张 [reaction]（从手牌/牌库被弃时打出；横置改为放回牌库顶）的 flags.playWhenDiscarded / exhaustToSaveDiscard 无任何读点（条目 note 称由引擎弃牌窗口覆盖，但当前无消费方）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 小西尔维不能用横置替代普通原因造成的弃牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 小西尔维从手牌被弃掉后可支付费用打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 小西尔维从牌库被弃掉后可支付费用打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 小西尔维横置，把将从手牌弃掉的牌留在牌库顶"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 小西尔维横置，把将从牌库弃掉的牌留在牌库顶"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10548 替代批量弃牌中的牌库顶一张，其余卡牌仍弃掉"
+        }
+      ]
     },
     {
       "code": "10549",
       "name": "寂静荒野",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 均建了 scenario 条目），标记表/失败追加只写在内容层 chaos/behavior，无 scenarioRule 条目读点，违反一卡一文件与声明即接线，无法逐卡入账。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10549 寂静荒野参考卡处理标准面和困难面的图符，巢穴触发自动失败"
+        }
+      ]
     },
     {
       "code": "10550",
@@ -321,9 +389,17 @@
       "code": "10552",
       "name": "荒芜(版本二)",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每个[[昆虫]]敌人失去巡逻」：条目 flags.insectsLosePatrol 无 behavior/引擎读点（仅 definition 声明；巡逻仍按静态目标移动；失去冷漠/获得猎手已接线）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10552 荒芜生效时重整的族群兵虫停止巡逻"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10552 议程：毁灭放置时揭示标记并可能生成族群虫后（doomPlaced 读点）"
+        }
+      ]
     },
     {
       "code": "10553",
@@ -417,9 +493,17 @@
       "code": "10560",
       "name": "水晶温床",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「你在水晶温床结束自己回合后，受到 1 点直接恐惧：抽取暗堆顶（团队每轮一次）」无逐地点回合结束读点/恐惧成本/团队限次；当前只有幕 2 的通用暗堆抽取行动（条目 note 已披露近似，但印刷强制与成本未实现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10560 水晶温床结束回合时可付 1 直接恐惧抽暗牌，团队每轮一次"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10560 洞穴地点：法典/揭示入场与暗堆读点（crystalNursery）"
+        }
+      ]
     },
     {
       "code": "10561",
@@ -521,9 +605,13 @@
       "code": "10569",
       "name": "消失的姐妹",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 均建了 scenario 条目），标记表/失败追加只写在内容层 chaos/behavior，无 scenarioRule 条目读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard6.test.mjs",
+          "test": "10569 消失的姐妹参考卡按难度结算洞穴修正和异形自动失败"
+        }
+      ]
     },
     {
       "code": "10570",

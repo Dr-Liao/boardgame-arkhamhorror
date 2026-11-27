@@ -11,7 +11,15 @@
 // 全量自动生成会与测试的 test-only 条目撞号，也会把「未实现」误登记成「已实现」。
 // 文件放在 entries/ 下是因为硬编码守卫只允许卡号出现在 entries/**、encounter-entries/** 与
 // cards-data.js；本文件不 import 任何模块，卡文件与索引生成器把它当 _shared.js 一样忽略。
+// 这些遭遇卡在上游卡表缺失双向重印关系，由卡表生成器补齐。
+export const ENCOUNTER_REPRINT_ALIASES = Object.freeze({
+  '02090': Object.freeze(['05266', '12166']),
+  '02091': Object.freeze(['05268', '12167']),
+  '02221': Object.freeze(['05269']),
+})
+
 export const REPRINT_ALIASES = Object.freeze({
+  ...ENCOUNTER_REPRINT_ALIASES,
   '12062': Object.freeze(['60460']),
   '12059': Object.freeze(['60459']),
   '12019': Object.freeze(['60155']),
@@ -91,6 +99,14 @@ export const REPRINT_ALIASES = Object.freeze({
   '60227': Object.freeze(['01685']),
   '51007': Object.freeze(['01689']),
 })
+
+export function reprintEntry(entry, code) {
+  return {
+    ...entry, code, reprintOf: entry.code,
+    // 遭遇别名仅登记已验收的完整规则。原条目的历史章节定义仍按原有字段投影。
+    ...(ENCOUNTER_REPRINT_ALIASES[entry.code]?.includes(code) ? { implemented: true } : {}),
+  }
+}
 
 export function reprintAliasesFor(code) {
   return REPRINT_ALIASES[code] || null

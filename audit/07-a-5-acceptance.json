@@ -3,7 +3,7 @@
   "unit": "07-a-5",
   "profile": {
     "id": "tic-horror-in-high-gear-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 Horror in High Gear（hhg，07189–07219）42 条目录记录。41 条通过五维验收；07189 附魔护甲伤害分配被写死为护甲所有者暂不切换。",
+    "scope": "印斯茅斯暗潮 07 段 Horror in High Gear（hhg，07189–07219）42 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 42,
-    "verified": 41,
-    "unverified": 1,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 385
   },
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-      "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
+      "sha256": "dd1374f20f16558dec9eaedbe6ce082992d8c4bdb81b252089cda0a988506957"
     },
     {
       "file": "games/arkhamhorror/tests/tic-hybrid-assassin.test.mjs",
@@ -69,7 +69,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-enemy-outcomes.test.mjs",
-      "sha256": "e052c99b022bd077b89799b47effb6c29a9ccf2bc4ce532f1a9b6dd51dfb9463"
+      "sha256": "77085f74c7104b64befad15759c8cb5bd07adcf52e1734ae304d11f0aac4c52f"
     },
     {
       "file": "games/arkhamhorror/tests/tic-interactions.test.mjs",
@@ -89,7 +89,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -121,9 +121,13 @@
       "code": "07189",
       "name": "附魔护甲",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「如果检定失败，弃掉附魔护甲并将刚刚放置在上面的伤害和/或恐惧分配到别处」被写死为回到护甲所有者：`api.playerTools.testAssignedHarm` 失败分支固定 `api().harm(owner, …)`，没有提供任何承受者/目标选择；伤害由同地点其他调查员放到护甲上时（多人数常见），会被错误地转给所有者而不是由原分配者另选目标。现有用例 `tests/tic-player-guardian-seeker.test.mjs:134-137` 正是按「回到 owner」写期望，属把错误行为固化成期望。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
+          "test": "P6 07189 附魔护甲由所有者检定，失败后由原承受者重新分配新标记"
+        }
+      ]
     },
     {
       "code": "07190",

@@ -17,6 +17,5 @@ export default {
     parleyOnDay1Or2: true,
     lookAtCavernsTop: 3,
     coastal: true,
-  },
-  note: '谈判印刷为「看过之后按任意顺序放回」，本实现按原顺序放回（重排面板留给 P8），已在 behavior 披露。',
+  }
 }

@@ -90,6 +90,35 @@ export function createBonded(deps) {
     return created
   }
 
+  function poolForCode(state, inv, code, initialize = false) {
+    const group = inv && groupOf(code)
+    if (!group) return null
+    if (initialize) return setFor(state, inv, group.main)
+    return state.bondedSets?.[bondedSetKey(state, group.main, inv.seat)] || null
+  }
+
+  function has(state, inv, code) {
+    const pool = poolForCode(state, inv, code)
+    if (pool) return pool.cards.includes(code)
+    return !!inv && bondedCardList(ALL_CARDS[groupOf(code)?.main]).some(copy => copy.code === code)
+  }
+
+  function take(state, inv, code) {
+    const pool = poolForCode(state, inv, code, true)
+    const index = pool?.cards.indexOf(code) ?? -1
+    if (index < 0) return false
+    pool.cards.splice(index, 1)
+    pool.retrieved = true
+    return true
+  }
+
+  function store(state, inv, code) {
+    const pool = poolForCode(state, inv, code, true)
+    if (!pool) return false
+    pool.cards.push(code)
+    return true
+  }
+
   // 主卡入场：把场外副本全部取出，1 张入手，其余洗回持有者牌库。
   function retrieve(state, inv, mainCode, options = {}) {
     const { handCount = 1 } = options
@@ -207,7 +236,7 @@ export function createBonded(deps) {
     return total
   }
 
-  return { groupOf, retrieve, shuffleCopyIntoDeck, returnToSet, returnAll, projection, setFor }
+  return { groupOf, retrieve, shuffleCopyIntoDeck, returnToSet, returnAll, projection, setFor, has, take, store }
 }
 
 // 公开读数：场外集合内容（副本身份与数量是桌面公开信息）。纯函数：观察投影直接引用。

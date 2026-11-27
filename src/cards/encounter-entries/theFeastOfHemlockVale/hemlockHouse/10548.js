@@ -5,16 +5,41 @@
 // 手牌或牌堆的卡时：横置本卡；把那张卡放到你的牌堆顶。
 // 读点：behavior.placeResidents / resolution（Resolution 2「找到小西尔维」的奖励）。
 
+const CODE = '10548'
+
 export default {
-  "code": "10548",
-  "scope": "storyAsset",
-  "implemented": true,
-  "flags": {
-    "littleSylvie": true,
-    "controlledBy": "investigator",
-    "playWhenDiscarded": true,
-    "exhaustToSaveDiscard": true,
-    "foundByRecord": "foundLittleSylvie"
+  code: CODE,
+  scope: 'storyAsset',
+  implemented: true,
+  controlledAsset: true,
+  scenarioPlayable: true,
+  flags: {
+    littleSylvie: true,
+    controlledBy: 'investigator',
+    playWhenDiscarded: true,
+    exhaustToSaveDiscard: true,
+    foundByRecord: 'foundLittleSylvie',
   },
-  "note": "approximation: P7 数据型条目——两张 [reaction] 的逐次交互（弃牌时打出、横置救回弃牌）由引擎弃牌窗口/能力层覆盖，本关 behavior 只负责放置与「找到小西尔维」的奖励记录。"
+  abilities: [
+    {
+      kind: 'reaction',
+      trigger: ['handCardDiscarded', 'deckCardDiscarded'],
+      label: '弃掉小西尔维后，支付费用打出它',
+      criteria: [({ inv, context, helpers }) => context.seat === inv.seat && context.cardCode === CODE
+        && inv.discard.includes(CODE) && helpers.availableResources() >= 1],
+      resolve: ({ inv, api }) => api.playCardFromDiscard(inv.seat, CODE, { exileAfter: false }),
+    },
+    {
+      kind: 'reaction',
+      trigger: 'wouldDiscardPlayerCard',
+      label: '横置小西尔维，把将被剧本弃掉的卡牌放到牌库顶',
+      cost: { exhaust: true },
+      criteria: [({ inv, source, context }) => context.seat === inv.seat && !context.discardDestination
+        && context.source?.kind === 'encounter' && ['hand', 'deck'].includes(context.from)
+        && inv.assets.includes(source)],
+      resolve: ({ context }) => {
+        context.discardDestination = 'deckTop'
+      },
+    },
+  ],
 }

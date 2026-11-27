@@ -11,6 +11,7 @@ export default {
   scope: 'storyAsset',
   implemented: true,
   flags: {
+    lanternRules: { suppressForestReveal: true },
     "lantern": true,
     "version": "boon",
     "face": "lit",
@@ -24,6 +25,5 @@ export default {
     ],
     "singleInvestigatorNoSlot": true
   },
-  note: "近似：提灯用剧情资产 + lantern 记录表达（「控制者/所在地点/点燃」三件事）；引擎没有双面剧情资产实例的通用翻面读点，翻面由 behavior.flipLantern 同步 code/lit/location。",
   abilities: [],
 }

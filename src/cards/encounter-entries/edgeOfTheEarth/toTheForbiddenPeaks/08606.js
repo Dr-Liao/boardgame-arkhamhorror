@@ -18,7 +18,8 @@ export default {
     },
     onReveal: {
       effect: "placeCluesPerInvestigator",
-      amount: 1
+      amount: 1,
+      height: 0
     },
     blocksUntilBelowClear: true
   }

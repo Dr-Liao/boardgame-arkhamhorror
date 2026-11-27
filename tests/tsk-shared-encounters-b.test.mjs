@@ -17,7 +17,8 @@ import { pathToFileURL } from 'node:url'
 
 import { fixture } from './core-fixture.mjs'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { scenarioRuntime } from '../src/engine/engine.js'
+import { defeatEnemy, scenarioRuntime, spawnEnemy } from '../src/engine/engine.js'
+import { enemyIsAloof } from '../src/engine/enemy-aloof.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { hollowCard, hollowCards, hollowCount } from '../src/engine/tsk-hollow.js'
@@ -547,7 +548,7 @@ test('P7 shared B agentsOfTheOutside：常态颠扑者回合末空洞与 3 张�
   const result = callEncounter(inversion, '09738')
   assert.deepEqual(result, { placed: true })
   const host = inversion.enemies.find(item => item.id === outsider.id)
-  assert.equal(host.aloof, false, '09738：附属的敌人失去冷漠')
+  assert.equal(enemyIsAloof(inversion, host), false, '09738：附属的敌人失去冷漠')
   setAsideHollow(inversion, '01020')
   callAbility(inversion, '09738', 0, 0, { source: { id: (host.attachments || [])[0].id }, enemy: host })
   assert.equal(inversion.investigators[0].hand.includes('01020'), true, '09738：成功躲避后抽取 1 张空洞')
@@ -560,8 +561,7 @@ test('P7 shared B agentsOfYuggoth：密使在阴影中的线索强制；阴晦�
   assert.equal(registeredEntry('09739')?.enemyRule?.concealed, 2)
   const state = sharedState(1)
   const here = state.investigators[0].location
-  placeEnemyMini(state, '09739', here)
-  const emissary = spawnAt(state, '09739', here)
+  const emissary = spawnEnemy(state, '09739', here, null)
   const before = state.investigators[0].horror
   callAbility(state, '09739', 0, 0, { source: { id: emissary.id }, seat: 0, location: here })
   assert.equal(state.investigators[0].horror - before, 1, '09739：在阴影中时发现线索后攻击你')
@@ -597,10 +597,11 @@ test('P7 shared B outsiders：无端存在交战时空洞、天启噩兆入场�
   const apocalypse = spawnAt(presage, '09732', at)
   callAbility(presage, '09732', 0, 0, { source: { id: apocalypse.id }, enemy: presage.enemies.find(item => item.id === apocalypse.id) })
   assert.equal(hollowCount(presage, { scope: 'team' }), 2, '09732：入场时每位调查员各设 1 张空洞')
-  callAbility(presage, '09732', 1, 0, {
-    source: { id: apocalypse.id }, enemy: presage.enemies.find(item => item.id === apocalypse.id),
-  }, pending => pending.options.find(option => option.id !== 'done')?.id)
+  presage.humanSeats = [0, 1]
+  transaction(presage, 0, draft => defeatEnemy(draft, draft.enemies.find(item => item.id === apocalypse.id), [], { seat: 0 }),
+    pending => pending.options.find(option => option.label?.includes('选择至多 3 张空洞') || option.id === '01020')?.id)
   assert.ok(hollowCount(presage, { scope: 'team' }) < 2, '09732：被击败后回收空洞到所有者手牌')
+  assert.ok(presage.encounterDiscard.includes('09732'))
 
   const veneer = sharedState(1)
   veneer.investigators[0].hand = ['01020', '01030']

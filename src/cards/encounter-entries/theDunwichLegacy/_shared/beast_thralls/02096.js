@@ -12,7 +12,7 @@ export default {
   encounterResolve(state, inv, card, api) {
     const code = card.originalCode || card.code
     const enemies = state.enemies.filter(enemy => enemy.traits?.includes('Abomination'))
-    if (!enemies.length) { api.drawEncounter(inv.seat); return false }
+    if (!enemies.length) { api.drawEncounter(inv.seat, { surgeDraw: true }); return false }
     const enemyId = enemies.length === 1 ? enemies[0].id : api.choose({
       kind: 'target', source: code, seat: inv.seat, prompt: '选择一只憎恶，治疗其全部伤害并附属变异野兽。',
       options: enemies.map(enemy => ({ id: enemy.id, label: enemy.name })) })

@@ -4,7 +4,8 @@
 // 第 2 层直接 import 单卡条目（06223/06228/06230/06232 等）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { fixture } from './core-fixture.mjs'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/index.js'
 import { behavior } from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/behavior.js'
 import { scenario as definition } from '../content/campaigns/theDreamEaters/scenarios/darkSideOfTheMoon/definition.js'
@@ -190,13 +191,17 @@ test('月之暗面：manifest 身份 / 遭遇组 / 参考卡 / 结局', () => {
   assert.match(chapter.scenario.intro, /查看战役日志/)
 })
 
-test('月之暗面：setup 区域（4 张入场、10 张放在一边、卡达斯在密谋牌库旁）', () => {
+test('月之暗面：setup 区域（4 张入场、9 张放在一边、卡达斯在密谋牌库旁）', () => {
   const state = createState()
   behavior.preScenarioSetup(state, [], createApi(state))
   const placed = behavior.setupLocations(state, [], { info: () => {} })
   assert.deepEqual(placed, ['cityOfTheMoonBeasts', 'templeOfTheMoonLizard', 'moonForest', 'theDarkCrater'])
-  assert.equal(state.scenarioZones.setAside.length, 10)
-  assert.deepEqual(state.scenarioFlags.agendaAside, ['06233'])
+  assert.equal(state.scenarioZones.setAside.length, 9)
+  assert.ok(!state.scenarioZones.setAside.includes('06233'))
+  const production = fixture()
+  behavior.afterChaosBagSetup(production, [], scenarioRuntime(production, []))
+  assert.equal(production.agendaAside[0].code, '06233')
+  assert.equal(production.agendaAside[0].doom, 1)
   assert.deepEqual(state.scenarioFlags.pendingSetupReveals, placed)
 })
 
@@ -237,17 +242,27 @@ test('月之暗面：议程 III 背面「杀戮时刻」重置密谋 3a 并放 2
   assert.equal(state.investigators[0].horror, 1)
 })
 
-test('月之暗面：幕 I 背面「及时救援」交给维吉尔·格雷；伦道夫被俘时入手', () => {
-  const state = createState()
-  placeScenarioLocations(state)
+test('月之暗面：06210「及时救援」将维吉尔交给在月兽之城的调查员，被俘伦道夫回到所有者手牌', () => {
+  const state = fixture('01001', 2)
+  state.scenario = CLONE(definition)
+  state.acts = CLONE(definition.acts)
+  state.locations = []
+  state.scenarioZones = { setAside: ['06224'] }
   state.campaign.records.randolphWasCaptured = true
-  const randolph = Object.values(chapter.scenario.storyAssets || {}).length >= 0
-    ? null : null
-  void randolph
-  const api = createApi(state)
-  const handled = behavior.actReveal(state, state.acts[0], api)
-  assert.equal(handled, true)
+  placeScenarioLocations(state)
+  state.investigators[0].location = 'cityOfTheMoonBeasts'
+  state.investigators[1].location = 'moonForest'
+  state.investigators[1].deck.push('06059')
+  const api = scenarioRuntime(state, [])
+  behavior.afterChaosBagSetup(state, [], api)
+  assert.ok(!state.investigators[1].deck.includes('06059'))
+  assert.deepEqual(state.setAside.filter(card => card.code === '06059'), [{ code: '06059', ownerSeat: 1 }])
+  assert.equal(behavior.actReveal(state, state.acts[0], api), true)
   assert.ok(state.investigators[0].assets.some(asset => asset.code === '06224'))
+  assert.ok(!state.scenarioZones.setAside.includes('06224'))
+  assert.ok(!state.investigators[0].hand.includes('06059'))
+  assert.ok(state.investigators[1].hand.includes('06059'))
+  assert.ok(!state.setAside.some(card => card.code === '06059'))
 })
 
 test('月之暗面：幕目标——月兽之城团队 3×人数线索推进', () => {

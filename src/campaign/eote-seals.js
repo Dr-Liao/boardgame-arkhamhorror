@@ -123,6 +123,21 @@ export function initializeSeals(state, spec = {}) {
   return kinds.length
 }
 
+// 新章节按日志重建控制权，清除旧章节的地点引用。
+export function assignSealsForChapter(state, assignments) {
+  const data = requireSealsData(state)
+  const byKind = new Map()
+  for (const { kind, seat, active } of assignments) {
+    requireEntry(state, kind)
+    requireSeat(state, seat)
+    if (typeof active !== 'boolean' || byKind.has(kind)) throw new TypeError('无效或重复的封印分配')
+    byKind.set(kind, { seat, active })
+  }
+  data.entries = data.entries.map(({ kind }) => ({
+    kind, active: byKind.get(kind)?.active ?? false, placedBySeat: byKind.get(kind)?.seat ?? null, locationId: null,
+  }))
+}
+
 // 读取单枚封印；未初始化或本战役没有该种类时返回 null。
 export function sealState(campaignOrState, kind) {
   sealKind(kind)

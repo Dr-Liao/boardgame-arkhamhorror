@@ -1,4 +1,6 @@
-import { investigatorRule, scenarioPlayableFor } from '../cards/card-rules.js'
+import { customizationEffect } from './tsk-customizable.js'
+import { liveLocationAttachmentRules } from './attachment-rules.js'
+import { enemyStatRuleFor, investigatorRule, scenarioPlayableFor } from '../cards/card-rules.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 import { commitBaseSkillValue } from './commit-rules.js'
 import { describeLimitShort, limitUsed } from './limits.js'
@@ -8,6 +10,8 @@ import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { beneathCards } from './commit-origins.js'
 import { attachedAbilityCards } from './attachment-rules.js'
 import { handAbilitySources } from './ability.js'
+import { modifierTotal } from './modifiers.js'
+import { collectionLoanPrintedCode } from './collection-loans.js'
 // stats.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 属性与「卡面给什么」的读点：技能值、图标、特质/关键词、手牌位与行动数、
 // 生命力/神智上限，以及 assetEffect（旧 passive + 条目字段 + 描述子 shim 的合并结果）。
@@ -27,6 +31,7 @@ export function createStats(deps) {
     doAbility,
     doPlay,
     getThreatEffect,
+    enemyTextBlanked,
     isCardAvailable,
     legalMoves,
     playFlag,
@@ -38,10 +43,10 @@ export function createStats(deps) {
     statPipeline,
   } = deps
 
-  function assetEffect(inv, asset) {
+  function assetEffect(inv, asset, state = null) {
     // 文本空白（宿主逐张空白 / 04099 毒蛇灾厄的道具 / 02088 的盟友）：旧 DSL 能力与修正一起清空。
     // 判定与 modifiers.sourceBlanked、ability-rules.descriptorUsable 共用 card-text.js 的同一份。
-    if (assetTextBlankedExceptForced(asset) || assetTextBlanked(asset, inv)) return {}
+    if (assetTextBlankedExceptForced(asset) || assetTextBlanked(asset, inv, state)) return {}
     // Phase 5（D2）：使用次数元数据（uses / usesType / discardWhenEmpty）可以整组搬到
     // 注册表条目上；这里与描述子一起合并，读点（补充弹药、充能耗尽、界面文字）不需要
     // 知道自己拿到的是旧 DSL 还是新条目。
@@ -145,6 +150,7 @@ export function createStats(deps) {
   }
 
   function runtimeCardAvailable(state, inv, code) {
+    if (collectionLoanPrintedCode(code)) return Boolean(state.collectionLoans?.includes(code))
     const signatures = cardDef(code)?.signatureFor || []
     // P2-4：重印别名号与 canonical 是同一张印刷卡（cards-data 的 duplicateOfCode）。
     // canonical 已实现并可用时，别名号在运行时也视为可用；构筑/牌池可用性仍在 deck 层判定。
@@ -182,9 +188,17 @@ export function createStats(deps) {
     const resolvingAsset = inv.assets.find(asset => asset.id === state._resolvingAssetId)
     if (resolvingAsset?.triggeredSkillBonus?.round === state.round) v += resolvingAsset.triggeredSkillBonus.amount
     if (floor != null) v = Math.max(v, floor)
+    for (const enemy of state.enemies || []) {
+      if (enemyTextBlanked?.(state, enemy)) continue
+      const rule = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule
+      v += Number(rule?.investigatorSkillModifier?.(state, enemy, inv, skill)) || 0
+      const aura = enemyStatRuleFor(enemy.originalCode || enemy.code)?.skillAura
+      if (aura && (!aura.locationBound || enemy.location === inv.location)) v += Number(aura.amount) || 0
+    }
     v += scenarioBehavior(state).statModifier?.(state, inv, skill) || 0
+    for (const rule of liveLocationAttachmentRules(state, inv.location)) v += Number(rule.investigatorSkillModifier) || 0
     const substitute = inv.skillSubstitute
-    if (!skipSubstitute && substitute && substitute.round === state.round
+    if (!skipSubstitute && substitute && !substitute.optional && substitute.round === state.round
         && substitute.from.includes(skill) && !dependentSkills.includes(substitute.to)) {
       v = Math.max(v, getStat(state, inv, substitute.to, true, [...dependentSkills, substitute.to]))
     }
@@ -234,7 +248,7 @@ export function createStats(deps) {
   function handSize(state, inv) {
     const base = investigatorRule(inv?.code)?.handSizeFromBeneath && !deps.investigatorBlanked(state, inv)
       ? beneathCards(state, inv.seat, inv.code).length : HAND_SIZE_BASE
-    let v = base + (scenarioBehavior(state).handSizeModifier?.(state, inv) || 0)
+    let v = base + (scenarioBehavior(state).handSizeModifier?.(state, inv) || 0) + modifierTotal(state, inv, 'handSize')
     // P6（食梦者）：调查员卡面的手牌上限修正（派翠丝·海瑟薇「你的手牌上限减少 3 张」）。
     v += Number(investigatorRule(inv?.code)?.handSizeModifier || 0)
     // Phase 5（5a-4）：议程的手牌上限惩罚在内容层数据里。
@@ -301,7 +315,8 @@ export function createStats(deps) {
     const list = profile?.conditionalIcons
     const test = state.skillTest
     const custom = profile?.iconBonus?.({ state, inv, owner: inv, code,
-      skill: [].concat(skill), test, baseSkillValue: test ? commitBaseSkillValue(state, test, baseStatValue, state.investigators[test.seat] || inv) : null }) || 0
+      skill: [].concat(skill), test, getStat: name => getStat(state, inv, name, true),
+      baseSkillValue: test ? commitBaseSkillValue(state, test, baseStatValue, state.investigators[test.seat] || inv) : null }) || 0
     if (!Array.isArray(list) || !list.length) return custom
     let matched = null
     for (const item of list) {
@@ -354,10 +369,11 @@ export function createStats(deps) {
 
   function cardKeyword(state, inv, code, keyword) {
     if (!state || !inv) return false
-    return collectGrants(state, inv, 'keyword', { code }).has(keyword)
+    return (keyword === 'fast' && customizationEffect(state, inv.seat, code, 'fast') === true)
+      || collectGrants(state, inv, 'keyword', { code }).has(keyword)
   }
 
-  function commitIcons(state, inv, code, skill) {
+  function commitIcons(state, inv, code, skill, extraIcons = []) {
     const weights = state?.skillTest?.iconWeights
     const base = weights ? Object.entries(cardDef(code)?.icons || {}).reduce((sum, [name, amount]) => sum + amount * (weights[name] || 0), 0)
       : iconValue(code, skill)
@@ -368,8 +384,12 @@ export function createStats(deps) {
       state, inv, asset, committedCode: code, test: state.skillTest,
         api: { locationShroud: (id, seat = inv.seat) => scenarioRuntime(state, []).locationShroud(id, seat) },
     }) || 0), 0)
-    const total = base + assetBonus + (wanted.some(name => granted.has(name)) ? 1 : 0) + conditionalCommitIcons(state, inv, code, skill)
-    return commitProfile(code)?.subtractIcons === true ? -total : total
+    const extra = extraIcons.reduce((sum, name) => sum + (weights ? (weights[name] || 0)
+      : Number(name === 'wild' || wanted.includes(name))), 0)
+    const total = base + assetBonus + extra + (wanted.some(name => granted.has(name)) ? 1 : 0) + conditionalCommitIcons(state, inv, code, skill)
+    const reduction = (inv.hand || []).reduce((sum, card) => sum + (registeredEntry(card)?.handCommitIconReduction || 0), 0)
+    const adjusted = reduction > 0 ? Math.max(0, total - reduction) : total
+    return commitProfile(code)?.subtractIcons === true ? -adjusted : adjusted
   }
 
   function enemyStatMods(state) {

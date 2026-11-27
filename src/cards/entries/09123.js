@@ -11,17 +11,20 @@
 //   · 贡品 = 本卡实例上的 uses（usesType 'offerings'）；「花费 1 贡品」是描述子 cost.uses；
 //   · 本次检定 +2：api.addTestValue；每次检定最多 2 次用 limit { scope:'perTest' }；
 //   · fast 时机：free 描述子 + test.beforeCommit / test.afterCommit 玩家窗口（performTest 内开窗）。
-// approximation: 「治愈超过当前伤害/恐惧的点数额外放置贡品」没有读点——引擎治疗一律截断到
-//   当前伤害/恐惧（harm-threat.js#healDamageFrom/healHorrorFrom 不保留溢出量），无法判断「超量治愈」。
-//   因此本卡只能靠其它效果/测试向实例放置贡品；见 primitive-request 09123.json。
+// 超量治疗在实际伤害或恐惧治疗窗口发放贡品。
 const code = '09123'
 
 export default {
   code,
   uses: 0,
   usesType: 'offerings',
-  note: 'approximation: 「超量治愈 → 放置贡品」缺治疗溢出读点（primitive-request 09123.json）；「花费 1 贡品 +2 技能值」已实现。',
   abilities: [
+    {
+      kind: 'forced', trigger: 'healOverflow', silent: true,
+      label: '每超量治愈 1 点，在此支援上放置 1 贡品',
+      criteria: [({ inv, context }) => context.seat === inv.seat && context.amount > 0],
+      resolve: ({ source, context, api }) => api.addUses(source, context.amount),
+    },
     {
       kind: 'free',
       trigger: ['test.beforeCommit', 'test.afterCommit'],

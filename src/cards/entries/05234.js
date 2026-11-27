@@ -10,25 +10,15 @@
 // 窗口内把选择记到 inv.playUpgrades05234 并累加 context.costIncrease（引擎在支付前加费）；
 // played 的 resolve 只读该选择决定躲避数量/目标范围，不再在 resolve 内补付资源。
 
-const UPGRADE_COST = 2
+import { connectedLocationsWithin } from './_shared.js'
 
-// 与 fromId 相距不超过 2 次连接的地点（含直接连接与二段连接），不含自身。
-function locationsWithinTwo(state, fromId) {
-  const connectionsOf = id => state.locations.find(location => location.id === id)?.connections || []
-  const direct = connectionsOf(fromId)
-  const out = []
-  for (const id of [...direct, ...direct.flatMap(connectionsOf)]) {
-    if (id === fromId || out.includes(id)) continue
-    if (!state.locations.some(location => location.id === id)) continue
-    out.push(id)
-  }
-  return out
-}
+const UPGRADE_COST = 2
+const nearbyIds = (state, inv) => connectedLocationsWithin(state.locations, inv.location, 2).map(location => location.id)
 
 const localTargets = (state, inv) => state.enemies.filter(enemy =>
   !enemy.defeated && !enemy.elite && enemy.location === inv.location)
 const nearTargets = (state, inv) => {
-  const near = locationsWithinTwo(state, inv.location)
+  const near = nearbyIds(state, inv)
   return state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && near.includes(enemy.location))
 }
 
@@ -85,7 +75,7 @@ export default {
         const upgrades = context?.playCost?.playUpgrades || {}
         const upToTwo = Boolean(upgrades.pair)
         const far = Boolean(upgrades.far)
-        const nearIds = locationsWithinTwo(state, inv.location)
+        const nearIds = nearbyIds(state, inv)
         let candidates
         if (far) {
           const withEnemies = nearIds.filter(id => state.enemies.some(enemy =>

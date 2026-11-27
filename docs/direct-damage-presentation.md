@@ -37,3 +37,14 @@ Validation: `tests/direct-damage-presentation.test.mjs` covers all 30 source sty
 actual card descriptors, legacy draw/evade paths, optional and skipped branches,
 lethal damage, privacy and area assignment. `tests/attack-animation.browser.mjs`
 covers desktop/mobile playback, samples, reduced motion, mute, fast mode and reset.
+
+The expanded profiles in `content/presentation/card-damage-styles.js` use the same
+cue for damage to enemies, investigators and assets. The cue names the actual
+recipient, including redirection and damage paid on an asset. A snapshot taken
+before placement keeps a defeated recipient available during playback. Legacy
+costs and scenario hooks pass presentation-only source identities at their
+existing damage entry points. Ordinary attacks continue through their own cues.
+
+The expanded profiles use nine short ElevenLabs SFX v3 samples, documented in
+`web/audio/card-damage-elevenlabs.json`. The browser plays the bundled MP3s
+locally. Claw, drain, splash and backlash marks are drawn in CSS.

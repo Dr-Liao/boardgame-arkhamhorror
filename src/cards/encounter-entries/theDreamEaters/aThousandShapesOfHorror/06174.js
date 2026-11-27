@@ -6,9 +6,9 @@
 // 依据 Haskell Location/Cards/.../BurialGround.hs：
 //   · 生成改道 → locationRule.spawnRedirectTrait（behavior.spawnLocation 按数据把所有带 Ghoul 特性的敌人改到此地点）；
 //   · [fast] 团队线索行动 → locationRule.actions/performAction（behavior.actions / fastActions 分派），
-//     「记住」走 encounter-entries/_shared.js 的 rememberFact（scenarioFlags.remembered），
+//     「记住」走 api.remember（scenarioFlags.remembered），
 //     供不可名状之物的 enemyStatRule.rememberedFacts 读取。
-import { activeInvestigators, rememberFact } from '../../_shared.js'
+import { activeInvestigators } from '../../_shared.js'
 
 const BURIAL_GROUND = '06174'
 const FACT = 'noticedTheMissingBones'
@@ -43,7 +43,7 @@ export default {
       const required = state.numInvestigators
       if (!location || groupCluesAt(state, location) < required) return false
       api.payClues?.(required, location.id)
-      rememberFact(state, FACT)
+      api.remember?.(FACT)
       api.info?.(`🦴 坟地：调查员记住了「发现了缺失的骨头」（不可名状之物 -1 攻击 / -1 躲避）。`)
       return true
     },

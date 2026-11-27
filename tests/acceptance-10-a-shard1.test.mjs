@@ -1,8 +1,7 @@
 // 验收 10-a 分片 1：The Feast of Hemlock Vale 10001–10033（fhvp，35 张）逐卡验收证据。
 //
 // 缺口：10002 / 10003 / 10005b / 10006 / 10007 没有标题含卡号的真实测试；
-// 另 10016a/10016b 有已知 P1-12 缺陷（反应无 per-window limit，同一窗口重复结算 12 次），
-// 本文件用真实引擎探针把该缺陷固定为证据（测试通过 = 缺陷仍存在，报告判失败）。
+// 10016a/10016b 用真实伤害分配和反应窗口验证每次放置只结算一次。
 // 规程：docs/test/ACCEPTANCE-ORDER.md §3 五维。
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -183,7 +182,7 @@ test('FHV 10007 Aetheric Current（幽嘶）：躲避搬运支援线索；成功
 })
 
 // ---------------------------------------------------------------------------
-// 10016a/10016b：P1-12 缺陷固定（测试通过 = 缺陷仍在，报告判失败）
+// 10016a/10016b：同一放置窗口只结算一次
 // ---------------------------------------------------------------------------
 
 function reactionRepeatProbe(code, harm) {
@@ -191,6 +190,7 @@ function reactionRepeatProbe(code, harm) {
   const inv = state.investigators[0]
   inv.code = code
   inv.hand = []
+  inv.resources = 5
   inv.deck = Array(30).fill('01088')
   const execute = draft => applyHarm(draft, draft.investigators[0], harm.damage || 0, harm.horror || 0, [], false, null, true)
   resolveTransaction(state, 0, { action: 'probe10016' }, execute)
@@ -209,19 +209,20 @@ function reactionRepeatProbe(code, harm) {
       : choice.options.some(option => option.id === 'skip') ? 'skip' : choice.options[0]?.id
     resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, execute)
   }
-  return offers
+  assert.equal(state.pendingChoice, null)
+  return { offers, inv: state.investigators[0] }
 }
 
-test('FHV 10016a 汉克坚毅面：恐惧放置后抽 1 —— 已知 P1-12 反应无 per-window limit，窗口重复提供 12 次', () => {
-  const reaction = e10016a.abilities.find(descriptor => descriptor.kind === 'reaction')
-  assert.equal(reaction.limit, undefined, '当前无 limit（缺口记录）')
-  const offers = reactionRepeatProbe('10016a', { horror: 1 })
-  assert.ok(offers > 1, `同一 horrorPlaced 窗口重复提供反应 ${offers} 次（full-scan P1-12）`)
+test('FHV 10016a 汉克坚毅面：恐惧放置后在同一窗口只抽 1 张', () => {
+  const { offers, inv } = reactionRepeatProbe('10016a', { horror: 1 })
+  assert.equal(offers, 1)
+  assert.equal(inv.horror, 1)
+  assert.equal(inv.hand.length, 1)
 })
 
-test('FHV 10016b 汉克坚毅面：伤害放置后得 2 资源 —— 已知 P1-12 反应无 per-window limit，窗口重复提供 12 次', () => {
-  const reaction = e10016b.abilities.find(descriptor => descriptor.kind === 'reaction')
-  assert.equal(reaction.limit, undefined, '当前无 limit（缺口记录）')
-  const offers = reactionRepeatProbe('10016b', { damage: 2 })
-  assert.ok(offers > 1, `同一 harmAssigned 窗口重复提供反应 ${offers} 次（full-scan P1-12）`)
+test('FHV 10016b 汉克坚毅面：放置 2 点伤害后在同一窗口只获得 2 资源', () => {
+  const { offers, inv } = reactionRepeatProbe('10016b', { damage: 2 })
+  assert.equal(offers, 1)
+  assert.equal(inv.damage, 2)
+  assert.equal(inv.resources, 7)
 })

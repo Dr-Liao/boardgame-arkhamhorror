@@ -1,14 +1,15 @@
 // 08580 无法述说的恶魔之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
+import { tekeliDeckSize } from '../../_shared.js'
 
 export default {
-  code: '08580',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"alert":true,"retaliate":true,"preyPartner":"08588","parleyShuffle3Damage3":true,"flipOnDefeat":true} },
+  code: '08580', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08588' },
+  abilities: [{
+    kind: 'action', actionKind: 'parley', cost: { action: 2 },
+    label: '洗入 3 张忒咳哩-哩：谈判，对它造成 3 伤害',
+    criteria: ({ state }) => tekeliDeckSize(state) >= 3,
+    resolve: ({ inv, source, api }) => {
+      if (api.mechanics.tekeli.shuffleIn(inv.seat, 3)?.length === 3) api.damageEnemy(source, 3, inv.seat)
+    },
+  }],
 }

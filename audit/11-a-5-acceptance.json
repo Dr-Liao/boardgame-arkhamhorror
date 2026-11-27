@@ -3,8 +3,8 @@
   "unit": "11-a-5",
   "profile": {
     "id": "tdc-campaign-b-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11539–11577）43 条目录记录。39 条通过五维验收；4 条声明未接线/翻面替代暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11539–11577）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,23 +17,23 @@
   },
   "summary": {
     "total": 43,
-    "verified": 39,
-    "unverified": 4,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 276
+    "testsPassed": 278
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
-      "sha256": "bd461eedd8f0e99be12ab2503334511dad301280d84f4fa8e388925847a33f6e"
+      "sha256": "34e0c7cd78ce68403032b26707ade204d2ec729b77259fa2289f9b87f62f9ba1"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
-      "sha256": "508f9a5ad4fea368d10588105951505a3826817eca5cd86a772282d51a78b1b6"
+      "sha256": "8e1fcdf97af6f280a34270237687a57f23c95af1a7a1072d9293dcaa85030539"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
-      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+      "sha256": "96393288155306c3ab1fe357ca841ae49f8fe72c58993dd14c8738aaa70f6ca1"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
@@ -53,7 +53,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
-      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+      "sha256": "02f8b0fa009ed20e6c9927b708aed09bc68c2676b5831b100953825a2af88236"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-rules.test.mjs",
@@ -277,9 +277,25 @@
       "code": "11550",
       "name": "黑曜石遗物[tdc_rune_y]",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「如果你成功，将本卡牌翻面并结算其文本（符文 Y + 胜利区）」；实现是检定成功后把 11550 实例离场、由章节 `assetLeftPlay` 把故事卡 11550b 加入胜利区并记录符文 Y，**实例面不翻**（条目 note 披露引擎 `applyPhysicalFace` 拒绝 asset→story 跨类型翻面）。结局效果等价，但玩家看不到故事面文本/翻面动画，按「声明即接线 + 卡面动作」判失败。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11550 黑曜石遗物：智力(8) 成功后同一实体以故事面加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11550b 黑曜石遗物（故事面）：记录符文 Y「知识」并加入胜利区"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11550 受控剧情资产：合法动作 + 真实智力(8) 结算 + 图标翻倍 + 离场故事面"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：受控剧情资产可声明 action/free 能力并进入行动窗口（11550/11581/11582/11611/11612 系列）"
+        }
+      ]
     },
     {
       "code": "11550b",
@@ -309,9 +325,17 @@
       "code": "11552",
       "name": "屏障节点",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「符文 q/x/g/k/s 集齐时屏障节点 +2 生命」；条目只声明 `flags.glyphLine/glyphHealthBonus`，引擎与章节均无读点（note 亦披露「没有可观测数值差异」），按声明即未接线计。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11552 屏障节点：五符文加 2 生命，回合开始可选治疗 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
+          "test": "P7 theDrownedQuarter 11552 屏障节点：五符文加生命、不能击败或弃置、可选回合治疗"
+        }
+      ]
     },
     {
       "code": "11553",
@@ -533,9 +557,21 @@
       "code": "11567",
       "name": "迷失营地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[action]：抽取迷失营地下方最上方的卡牌」；`theApiary/behavior.js`/`definition.js` 全无 beneath/迷失营地摸牌动作，`actions()` 也不产出该行动（数据型条目 note 声称已接线，实际没有读点）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11567 养育场地点：显现放置入场并结算该地点显现效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11567 迷失营地：支付一行动抽取营地下方顶牌并生成敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theApiary.test.mjs",
+          "test": "P7 theApiary 11567 读取旧存档时把营地牌和后来计分的卡分开"
+        }
+      ]
     },
     {
       "code": "11568",
@@ -617,9 +653,17 @@
       "code": "11572",
       "name": "中央腔室",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「强制 - 你的回合结束时，如果你位于本地点：检定敏捷(1)，失败则移动到一处连接地点或主母攻击你」；`theApiary/behavior.js` 没有 `turnEnded` 钩子（导出函数与 behavior 对象均无），该强制与二选一未实现（动态连接本身已接线）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11572 中央腔室：回合末敏捷(1)，失败选择相连地点或受真实主母攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard5.test.mjs",
+          "test": "11-a-5 11572 养育场地点：显现放置入场并结算该地点显现效果"
+        }
+      ]
     },
     {
       "code": "11573",

@@ -482,6 +482,11 @@ export const behavior = {
     api.setCampaignRecord?.(forced.record, true)
     api.info?.('🌲 幕 4 正面强制：入梦者偏离了道路（记录到战役日志）。')
   },
+  locationShroudModifier(state, location) {
+    const woods = locationRuleFor(codeOf(location))?.shroudPerUnrevealedEnchantedWoods?.originalCodes
+    return woods ? state.locations.filter(card => !card.revealed && woods.includes(codeOf(card))).length : 0
+  },
+
   investigationError(state, inv, location) {
     return locationRuleFor(codeOf(location))?.investigationError?.(state, location, inv)
   },

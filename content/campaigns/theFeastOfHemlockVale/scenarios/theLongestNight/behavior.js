@@ -1111,18 +1111,17 @@ function moveDefenseBetweenLocations(state, inv, type, api) {
 
 export function takeControlOfAjax(state, seat, api = {}) {
   const ajax = captivesAjax(state)
-  if (!ajax) return false
-  if (typeof api.giveAsset === 'function') {
-    const asset = api.giveAsset(seat, AJAX_CODE)
-    if (asset) return true
-  }
-  ajax.controllerSeat = seat
   const inv = state.investigators?.[seat]
-  if (inv && Array.isArray(inv.assets)) {
-    inv.assets.push({ id: ajax.id, code: AJAX_CODE, originalCode: AJAX_CODE,
-      exhausted: false, damage: 0, horror: 0, storyAsset: true })
+  if (!ajax || !inv || ajax.controllerSeat != null) return false
+  if (api.claimUncontrolledStoryAsset) {
+    return Boolean(api.claimUncontrolledStoryAsset(seat, ajax, { ignoreLocation: true }))
   }
-  info(api, `${inv?.name || `座位 ${seat}`} 控制埃阿斯（不占盟友槽）。`)
+  state.storyAssets.splice(state.storyAssets.indexOf(ajax), 1)
+  delete ajax.location
+  ajax.controllerSeat = seat
+  ajax.ownerSeat = seat
+  inv.assets.push(ajax)
+  info(api, `${inv.name} 控制埃阿斯（不占盟友槽）。`)
   return true
 }
 
@@ -1693,7 +1692,8 @@ function applyResolution4(state, api = {}) {
   records[RECORD_KEYS.drMarquezHasAPlan] = true
   records[RECORD_KEYS.areasSurveyedSouthernFields] = true
   const ajax = captivesAjax(state)
-  if (ajax && ajax.controllerSeat != null) records.ajaxJoinedTheInvestigators = true
+  if ((ajax && ajax.controllerSeat != null) || state.investigators.some(inv =>
+    inv.assets.some(asset => codeOf(asset) === AJAX_CODE))) records.ajaxJoinedTheInvestigators = true
   records.drMarquezJoinedTheInvestigators = true
   const bonus = victoryXp(state)
   info(api, `结局 4：记录「马奎兹医生有计划」并勾选「南部农田」；胜利显示区经验 ${bonus}。`)

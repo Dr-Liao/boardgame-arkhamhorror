@@ -2,7 +2,7 @@
 // Detailed evidence: audit/06-a-9-acceptance.json. Not a promise of all-combination equivalence.
 export const TDE_SHARD9_ACCEPTANCE_PROFILE = {
   "id": "tde-weaver-of-the-cosmos-2026-11",
-  "scope": "食梦者 06 段 Weaver of the Cosmos（woc，06323–06354）32 条目录记录。25 条通过五维验收；7 条因冗余/未接线死声明或 actRule 被行为卡号分支绕过暂不切换。",
+  "scope": "食梦者 06 段 Weaver of the Cosmos（woc，06323–06354）32 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TDE_SHARD9_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TDE_SHARD9_ACCEPTANCE_SHA256 = '7243feb61aa9cdbcb27c187cd16c4fc5c0272763703aafb301d4e77e50c2c718'
-const verified = new Set(["06323","06324","06325","06326","06327","06328","06329","06330","06331","06332","06333","06340","06341","06342","06343","06344","06345","06346","06347","06348","06349","06350","06351","06352","06354"])
+export const TDE_SHARD9_ACCEPTANCE_SHA256 = '05f81d90fcfba60ca8181735278fa70eb06818b638d32be884bab119bb0c70c1'
+const verified = new Set(["06323","06324","06325","06326","06327","06328","06329","06330","06331","06332","06333","06334","06335","06336","06337","06338","06339","06340","06341","06342","06343","06344","06345","06346","06347","06348","06349","06350","06351","06352","06353","06354"])
 export const tdeShard9CardVerified = code => verified.has(code)

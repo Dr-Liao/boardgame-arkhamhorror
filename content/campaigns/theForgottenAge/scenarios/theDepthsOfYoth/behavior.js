@@ -1,12 +1,13 @@
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { tfaPlacePursuit as placePursuitEnemies } from '../../../../../src/cards/encounter-entries/_shared.js'
 import { encounterRules, isPoisoned } from '../../encounter-rules.js'
-import { agendaRuleFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { agendaRuleFor, locationRuleFor, treacheryRuleFor } from '../../../../../src/cards/card-rules.js'
 import { nonPlayerEntryFor } from '../../../../../src/cards/encounter-abilities.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import {
   DEPTH_LOCATIONS, STEPS_OF_YOTH, RELIC_OF_AGES, HARBINGER, YIG, PIT_WARDEN,
-  EATER_OF_THE_DEPTHS, CHILDREN_OF_VALUSIA, agendaCodesFor,
+  EATER_OF_THE_DEPTHS, agendaCodesFor,
 } from './definition.js'
 
 // 幽嘶深渊：深度等级（depth level）驱动的连续下降 + 伊格之怒。
@@ -140,7 +141,6 @@ export const behavior = {
     zones.removed = []
     zones.locationPool = [...plan.setAsideLocations]
     zones.pursuit = []
-    zones.childrenOfValusia = []
     delete zones.harbingerAside
     flags.depthLevel = 1
     flags.depthStartLocation = plan.startLocation
@@ -392,25 +392,6 @@ export const behavior = {
   },
 
   // -------------------------------------------------------------------------
-  // 遭遇卡（04299–04302）
-  // -------------------------------------------------------------------------
-
-  resolveEncounter(state, inv, t, api) {
-    const code = original(t)
-    const location = here(state, inv)
-    if (code === CHILDREN_OF_VALUSIA) {
-      // 瓦卢西亚之子：放在密谋牌库旁，每个蛇族敌人 +1 攻击 +1 躲避。
-      const zones = zonesFor(state)
-      zones.childrenOfValusia ||= []
-      zones.childrenOfValusia.push(CHILDREN_OF_VALUSIA)
-      api.info?.('瓦卢西亚之子被放在密谋牌库旁：每个蛇族敌人 +1 攻击值、+1 躲避值。')
-      return true
-    }
-    // 第 114 轮：蛇族的愤怒（04302）已迁到遭遇条目（encounterResolve）。
-    return encounterRules.resolveEncounter(state, inv, t, api)
-  },
-
-  // -------------------------------------------------------------------------
   // 敌人
   // -------------------------------------------------------------------------
 
@@ -426,9 +407,10 @@ export const behavior = {
 
   enemyStatModifier(state, enemy, stat) {
     let value = encounterRules.enemyStatModifier?.(state, enemy, stat) || 0
-    // 瓦卢西亚之子：**每张**在密谋牌库旁的副本都给蛇族 +1 攻击值、+1 躲避值。
-    const children = (state.scenarioZones?.childrenOfValusia || []).length
-    if (isSerpent(enemy) && children && (stat === 'fight' || stat === 'evade')) value += children
+    for (const card of state.agendaAside || []) {
+      const modifier = treacheryRuleFor(original(card))?.agendaAsideEnemyStat
+      if (modifier && hasTrait(enemy, modifier.trait)) value += modifier[stat] || 0
+    }
     // 深渊吞噬者：「X 为当前深度等级」——只补躲避值，生命值保持印刷 6（04298）。
     if (original(enemy) === EATER_OF_THE_DEPTHS && stat === 'evade') value += depthOf(state)
     return value
@@ -545,26 +527,20 @@ export const behavior = {
     }
   },
 
-  // -------------------------------------------------------------------------
-  // 轮末
-  // -------------------------------------------------------------------------
+  needsSaveRepair(state) {
+    return (state.scenarioZones?.childrenOfValusia || []).length > 0 || encounterRules.needsSaveRepair(state)
+  },
 
-  roundEnded(state, api) {
-    encounterRules.roundEnded?.(state, api)
-    const flags = flagsFor(state)
-    const zones = zonesFor(state)
-    // 瓦卢西亚之子：轮末从场上弃掉 1 张（每轮最多一次）。
-    const children = zones.childrenOfValusia || []
-    if (children.length && flags.childrenDiscardedRound !== state.round) {
-      flags.childrenDiscardedRound = state.round
-      const code = children.pop()
-      if (code) state.encounterDiscard.push(code)
-      api.info?.('瓦卢西亚之子：轮末从场上弃掉 1 张。')
-    }
-    const agenda = state.agendas?.[state.agendaIndex]
-    // 赤红深渊（04283）的强制已改由引擎的 doomPlaced 钩子逐次结算，
-    // 不再在轮末补一次脉冲（见本文件的 doomPlaced）。
-    void agenda
+  saveRepairNoteFor(state) {
+    return state.scenarioZones?.childrenOfValusia?.length
+      ? '把「瓦卢西亚之子」恢复为密谋牌库旁的真实卡牌'
+      : encounterRules.saveRepairNote
+  },
+
+  repairSavedState(state, api) {
+    if (encounterRules.needsSaveRepair(state)) encounterRules.repairSavedState(state, api)
+    for (const code of state.scenarioZones?.childrenOfValusia || []) api.putNextToAgenda(code)
+    if (state.scenarioZones) delete state.scenarioZones.childrenOfValusia
   },
 
   // 04284 复仇：神话阶段「检查毁灭阈值」步骤结束时，场上每点毁灭让调查员按玩家
@@ -726,43 +702,12 @@ function suppliesOf(state, seat) {
   return state.campaign.supplies[seat]
 }
 
-function pursuitEvade(state, entry) {
-  const printed = Number(state.scenario.enemies?.[entry.code]?.evade || 0)
-  return entry.code === EATER_OF_THE_DEPTHS ? printed + depthOf(state) : printed
-}
-
 // 追击区域：放在场外、保留伤害的敌人（原卡：追击区域）。
 export function pursuitEnemies(state) {
   return [...(zonesFor(state).pursuit || [])]
 }
 
-export function placePursuitEnemies(state, api) {
-  const pursuit = zonesFor(state).pursuit || []
-  if (!pursuit.length) return null
-  const best = Math.max(...pursuit.map(entry => pursuitEvade(state, entry)))
-  const candidates = pursuit.filter(entry => pursuitEvade(state, entry) === best)
-  const chosen = candidates.length === 1 || typeof api?.choose !== 'function'
-    ? candidates[0]
-    : candidates[Number(api.choose({
-      kind: 'enemy', source: 'theDepthsOfYoth', seat: state.campaign.leadSeat,
-      prompt: '选择一位躲闪值最高的追击敌人入场。',
-      options: candidates.map((entry, index) => ({
-        id: String(index), label: state.scenario.enemies?.[entry.code]?.name || entry.code,
-      })),
-    }))] || candidates[0]
-  const index = pursuit.indexOf(chosen)
-  if (index >= 0) pursuit.splice(index, 1)
-  const start = state.scenarioFlags?.depthStartLocation
-  const enemy = api.spawn(chosen.code, start)
-  if (!enemy) {
-    pursuit.push(chosen)
-    return null
-  }
-  enemy.damageTaken = chosen.damageTaken || 0
-  if (chosen.code === HARBINGER && chosen.resources) enemy.harbingerResources = chosen.resources
-  api.info?.(`追击中的「${enemy.name}」在「${start}」现身。`)
-  return enemy
-}
+export { placePursuitEnemies }
 
 function placeRandomSetAsideLocation(state, api) {
   const zones = zonesFor(state)

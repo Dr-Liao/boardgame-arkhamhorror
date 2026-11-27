@@ -12,9 +12,8 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: {
-    actions({ moves, state }) {
-      // 卡面不要求此处有裂口，但要求遭遇牌库有牌可弃。
-      if ((state.encounterDeck || []).length) {
+    actions({ moves, state, location }) {
+      if ((state.encounterDeck || []).length || location.breaches > 0) {
         moves.push({ rule: 'locSouthsideDiscard', label: '🎴 弃遭遇牌库顶 3 张：如可能结算其中 1 张力量诡计的显现；移除 1 个裂口并移到当前幕', actions: 0, fast: true })
       }
     },
@@ -25,6 +24,7 @@ export default {
       const discarded = api.discardEncounterTop?.(3, { reshuffle: false }) || []
       const powers = discarded.filter(isPower)
       api.info?.(`🎴 弃掉遭遇牌库顶 ${discarded.length} 张：${discarded.map(code => ALL_CARDS[code]?.nameZh || code).join('、') || '（空）'}。`)
+      api.moveBreachesToAct?.(location.id, 1)
       if (powers.length) {
         const chosen = powers.length === 1 ? powers[0] : api.choose?.({
           kind: 'card', source: '05294', seat: inv.seat, prompt: '选择 1 张力量诡计结算其显现能力。',
@@ -34,7 +34,6 @@ export default {
         // 卡面是「结算其显现能力」而不是「抽这张牌」：在弃牌堆就地结算。
         api.replayEncounterRevelation?.(inv.seat, code)
       }
-      api.moveBreachesToAct?.(location.id, 1)
       return true
     },
   },

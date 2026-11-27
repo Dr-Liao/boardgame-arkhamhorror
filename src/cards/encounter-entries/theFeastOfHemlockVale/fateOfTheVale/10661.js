@@ -19,7 +19,9 @@ export default {
     handSizeValueMax: 5,
     oldMemoryCode: '10661b',
     elderSignDelta: 2,
+    elderSignDraw: 1,
+    commitIconMultiplier: 2,
   },
-  note: 'approximation: [reaction]「投入卡牌的技能图标翻倍」与旧印的「可以抽取 1 张卡牌」缺少条目级窗口/收益读点，只实现手牌上限、X 技能与旧印 +2；破碎自我被击败 → 疯狂按阵亡处理。',
+  note: '翻倍反应与旧印抽牌由章节的调查员形态规则结算。',
   abilities: [],
 }

@@ -10,6 +10,7 @@
 //                  victorianHallsActionUsed, monsterSetAside, beneathEntryHall, interludeKey
 //
 // 规则事实源：参考实现 `AtDeathsDoorstep.hs` 与 Cards 目录下的逐卡文件；中文卡文是文案事实源。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { entryFlags } from '../../../../../src/cards/card-rules.js'
 import { encounterRules, discardEncounterTop, nearestEnemyWithTrait, parleyDifficultyBonus } from '../../encounter-rules.js'
@@ -889,7 +890,7 @@ export const behavior = {
       }
       flagsFor(state).balconyParleyUsed = true
       for (const picked of [...chosen].sort((left, right) => right.index - left.index)) {
-        inv.hand.splice(picked.index, 1)
+        spliceHand(inv, picked.index, 1)
         ;(inv.discard ||= []).push(picked.code)
       }
       api?.gainClues?.(inv.seat, 2)

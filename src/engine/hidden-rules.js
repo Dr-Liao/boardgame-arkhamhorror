@@ -1,4 +1,7 @@
+import { enemyIsMassive } from './enemy-keyword-movement.js'
+import { spliceHand } from './hand-icons.js'
 import { registeredEntry } from './ability.js'
+import { enemyTextBlanked } from './card-text.js'
 import { vehicleOf } from './vehicles.js'
 import { barrierCount } from './edge-barriers.js'
 import { enemyIsAloof } from './enemy-aloof.js'
@@ -16,6 +19,45 @@ export function hiddenScenarioExperience(inv) {
     total + (isHiddenPlayerWeakness(code) ? registeredEntry(code).hiddenRule.scenarioXpModifier || 0 : 0), 0)
 }
 
+function hiddenDefinition(state, code) {
+  const definition = state.scenario?.treacheries?.[code]
+  return definition?.hidden ? definition : null
+}
+
+function hiddenRule(state, code) {
+  return hiddenDefinition(state, code)?.hiddenRule
+    || (isHiddenPlayerWeakness(code) ? registeredEntry(code).hiddenRule : null)
+}
+
+function activeHiddenRules(state, inv) {
+  return (inv.hiddenCards || []).map(code => ({ code, rule: hiddenRule(state, code) }))
+    .filter(item => item.rule)
+}
+
+function printedParity(def, property) {
+  if (!def) return null
+  if (property === 'cost') return Number.isInteger(def.cost) && def.cost >= 0 ? def.cost % 2 : null
+  if (property === 'icons') return Object.values(def.icons || {}).reduce((sum, count) => sum + count, 0) % 2
+  if (property === 'title') return def.name?.trim().split(/\s+/).length % 2
+  return null
+}
+
+export function hiddenParityBlocks(state, inv, def, action) {
+  return activeHiddenRules(state, inv).some(({ rule }) => {
+    const property = rule.parity?.[action]
+    return property && printedParity(def, property) === 1
+  })
+}
+
+export function hiddenDiscardCandidates(inv, discard, cardDef) {
+  if (!discard?.even) return []
+  return inv.hand.map((code, index) => ({ code, index })).filter(({ code }) => {
+    const def = cardDef(code)
+    return !inv.hiddenCards?.includes(code) && !def?.encounterCode && def?.type !== 'treachery'
+      && !registeredEntry(code)?.cannotLeaveHand && printedParity(def, discard.even) === 0
+  })
+}
+
 export function createHiddenRules(deps) {
   const {
     capabilityBlocked,
@@ -26,16 +68,6 @@ export function createHiddenRules(deps) {
     privateInfo,
     scenarioBehavior,
   } = deps
-
-  function hiddenDefinition(state, code) {
-    const definition = state.scenario?.treacheries?.[code]
-    return definition?.hidden ? definition : null
-  }
-
-  function hiddenRule(state, code) {
-    return hiddenDefinition(state, code)?.hiddenRule
-      || (isHiddenPlayerWeakness(code) ? registeredEntry(code).hiddenRule : null)
-  }
 
   function hasHiddenCard(inv, code = null) {
     return (inv.hiddenCards || []).some(hidden => code == null || hidden === code)
@@ -53,7 +85,7 @@ export function createHiddenRules(deps) {
   function discardHiddenCard(state, inv, code, events) {
     const handIndex = inv.hand.indexOf(code)
     if (handIndex < 0 || !hasHiddenCard(inv, code)) return false
-    inv.hand.splice(handIndex, 1)
+    spliceHand(inv, handIndex, 1)
     removeHiddenMarker(inv, code)
     if (isHiddenPlayerWeakness(code)) discardPlayerCards(state, inv, code)
     else state.encounterDiscard.push(code)
@@ -68,7 +100,7 @@ export function createHiddenRules(deps) {
     if (!isHiddenPlayerWeakness(definition.code)) info(state, events, `${inv.name} 秘密将一张隐私遭遇卡加入手牌。`)
     privateInfo(state, events, inv.seat, `你秘密将「${definition.name}」加入手牌：${definition.text || ''}`, {
       kind: 'automatic', phase: state.phase, round: state.round, text: `你获得隐私牌「${definition.name}」`,
-      code: definition.originalCode || definition.code, name: definition.name, effect: 'encounter', seat: inv.seat,
+      code: definition.originalCode || definition.code, name: definition.name, effect: 'privateEncounter', seat: inv.seat,
     })
   }
 
@@ -100,11 +132,6 @@ export function createHiddenRules(deps) {
       round: state.round,
       count: hiddenCommitCount(state, inv) + 1,
     }
-  }
-
-  function activeHiddenRules(state, inv) {
-    return (inv.hiddenCards || []).map(code => ({ code, rule: hiddenRule(state, code) }))
-      .filter(item => item.rule)
   }
 
   // 隐私牌的「不能打出某类卡」限制（03084d 疑惑：你不能打出事件）。
@@ -181,12 +208,8 @@ export function createHiddenRules(deps) {
       && enemy.location === inv.location && !enemy.defeated && !enemyTextBlanked(state, enemy))
   }
 
-  function enemyTextBlanked(state, enemy) {
-    const blank = enemy && enemy.textBlanked
-    return !!(blank && blank.round === state.round && blank.phase === state.phase)
-  }
-
   function enemyCannotAttack(state, enemy) {
+    if (!enemyTextBlanked(state, enemy) && registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.cannotAttack) return true
     if (entityRuleActive(state, enemy, 'cannot:attack')) return true
     return scenarioBehavior(state).enemyCannotAttack?.(state, enemy) === true
   }
@@ -195,6 +218,7 @@ export function createHiddenRules(deps) {
     if (enemy.global) return true
     if (seat != null && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)
       && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.bearerCannotFightDamageDefeat) return true
+    if (!enemyTextBlanked(state, enemy) && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.cannotBeAttacked) return true
     if (entityRuleActive(state, enemy, 'cannot:beAttacked')) return true
     return scenarioBehavior(state).enemyCannotBeAttacked?.(state, enemy) === true
   }
@@ -207,11 +231,12 @@ export function createHiddenRules(deps) {
     if (!enemy || options.ignoreAloof === true) return false
     if (!enemyIsAloof(state, enemy, { isBlanked: enemyTextBlanked })) return false
     if (enemy.engagedSeat != null) return false
-    if (enemy.massive && enemy.location === inv?.location) return false
+    if (enemyIsMassive(state, enemy) && enemy.location === inv?.location) return false
     return true
   }
 
   function enemyCanOpportunityAttack(state, enemy) {
+    if (enemy?.attachedToAssetId) return false
     if (entityRuleActive(state, enemy, 'cannot:opportunityAttack')) return false
     return scenarioBehavior(state).canOpportunityAttack?.(state, enemy) !== false
   }
@@ -222,6 +247,7 @@ export function createHiddenRules(deps) {
     if (seat != null && enemy.bearerSeat === seat && !enemyTextBlanked(state, enemy)
       && registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.bearerCannotFightDamageDefeat) return false
     if (enemy?.cannotBeDefeated) return false
+    if (!enemyTextBlanked(state, enemy) && registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule?.cannotBeDefeated) return false
     if (entityRuleActive(state, enemy, 'cannot:beDefeated')) return false
     return scenarioBehavior(state).enemyCanBeDefeated?.(state, enemy, source, seat) !== false
   }

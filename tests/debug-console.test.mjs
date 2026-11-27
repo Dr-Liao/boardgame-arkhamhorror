@@ -231,13 +231,16 @@ test('消灭：空场 / 同名多类型歧义 / 未知目标报错', () => {
   const state = newGame()
   assert.throws(() => parse(state, '消灭 食尸鬼爪牙'), /场上没有找到敌人/)
   assert.throws(() => parse(state, '消灭全部'), /场上没有敌人/)
-  // 02090 与 05266 都叫「夜鹰」：同名不同卡时列出候选（带 code）。
+  // 夜鹰为同一印刷卡的重印。同名异文的赛斯·毕晓普仍须列出候选。
   run(state, '生成 02090')
   run(state, '生成 05266')
-  assert.throws(() => parse(state, '消灭 夜鹰'), error => {
+  assert.doesNotThrow(() => parse(state, '消灭 夜鹰'))
+  run(state, '生成 02293')
+  run(state, '生成 51056')
+  assert.throws(() => parse(state, '消灭 赛斯·毕晓普'), error => {
     assert.match(error.message, /不唯一/)
-    assert.ok(error.message.includes('02090'))
-    assert.ok(error.message.includes('05266'))
+    assert.ok(error.message.includes('02293'))
+    assert.ok(error.message.includes('51056'))
     return true
   })
 })

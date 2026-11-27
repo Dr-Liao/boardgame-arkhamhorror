@@ -1,7 +1,14 @@
-// 10-a-11（FHV · fhvc 10707a–10743）补证/缺陷复现测试。
+// 10-a-11（FHV · fhvc 10707a–10743）验收测试。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { asset, enemy, fixture, legalMoves, move, settle, validateMove } from './core-fixture.mjs'
+import {
+  discardRandomFromHand, drawCards, enemyAttack, enemyHealth, getStat, reactionWindow,
+  relocateEnemy, relocateInvestigator, scenarioRuntime,
+} from '../src/engine/engine.js'
+import { assetTextBlanked } from '../src/engine/card-text.js'
+import { enemyHasAttackKeyword } from '../src/engine/enemy-keyword-movement.js'
 
 import chapelFront from '../src/cards/encounter-entries/theFeastOfHemlockVale/_shared/the_vale/10707a.js'
 import chapelBack from '../src/cards/encounter-entries/theFeastOfHemlockVale/_shared/the_vale/10707b.js'
@@ -82,24 +89,202 @@ test('验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/1
   assert.ok(text.includes("FIRE_CODE = '10743'"), '10743 FIRE_CODE 常量存在')
 })
 
-test('验收 10719/10721/10724/10727/10732/10734/10736/10739/10740/10741/10743 缺陷复现：印刷子句未接线（仅 flags/近似不等价）', () => {
-  const cases = [
-    ['10719', /不会阻止该次移动|no.*前置读点|前置读点/],
-    ['10721', /未接线|留待 P8/],
-    ['10724', /逐张触发|可能多攻击/],
-    ['10727', /没有.*行动枚举入口|flags\.escapeAction/],
-    ['10732', /没有运行期读点|留待 P8/],
-    ['10734', /没有引擎读点|留待 P8/],
-    ['10736', /留给 P8|未接线/],
-    ['10739', /留给 P8|只落 flags/],
-    ['10740', /留给 P8|未冒充已实现/],
-    ['10741', /只落 flags|无读点/],
-    ['10743', /只落 flags|没有地点附属的轮末窗口/],
-  ]
-  for (const [code, pattern] of cases) assert.match(readNote(code), pattern, `${code} note 披露未接线子句`)
-  // 引擎确实没有这些读点：法术技能光环、敌人伤害值修正、地点附属轮末窗口。
-  const engine = fs.readdirSync('src/engine').filter(f => f.endsWith('.js')).map(f => fs.readFileSync('src/engine/' + f, 'utf8')).join('\n')
-  for (const key of ['attackDamageBonusFor', 'skillModifierAura', 'attachedTreacheryRoundEnd']) {
-    assert.equal(engine.includes(key), false, `${key} 读点不存在`)
+function connectedTable() {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const here = state.locations.find(location => location.id === inv.location)
+  const next = { id: 'trail', name: '连接地点', revealed: true, connections: [here.id], shroud: 1, clues: 0 }
+  here.connections = [next.id]
+  state.locations.push(next)
+  return { state, inv, here, next }
+}
+
+test('10719 蔓生隧道：有线索时必须先支付离开的额外行动', () => {
+  const { state, inv, here, next } = connectedTable()
+  Object.assign(here, { originalCode: '10719', clues: 1 })
+  const destination = { action: 'move', locationId: next.id }
+  inv.actionsLeft = 1
+  assert.ok(validateMove(state, inv.seat, destination))
+  assert.equal(inv.location, here.id)
+  inv.actionsLeft = 2
+  move(state, destination)
+  settle(state)
+  assert.equal(state.investigators[0].location, next.id)
+  assert.equal(state.investigators[0].actionsLeft, 0)
+})
+
+test('10721 水晶寄生虫：黑夜每两点已受伤害使本次攻击多造成一点伤害', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const parasite = enemy(state, { code: '10721', damage: 1, damageTaken: 4 })
+  state.campaign.records.time = 'Night'
+  enemyAttack(state, parasite, inv, [])
+  assert.equal(inv.damage, 3)
+  assert.equal(parasite.damageTaken, 4)
+})
+
+test('10724 瘴气之影：同批弃掉多张手牌只攻击一次，下一批可以再次攻击', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  inv.hand = ['01090', '01091', '01092']
+  const shadow = enemy(state, { code: '10724', aloof: true, engagedSeat: null, damage: 1 })
+  discardRandomFromHand(state, inv, 2, [])
+  assert.equal(inv.hand.length, 1)
+  assert.equal(inv.damage, 1)
+  assert.equal(shadow.engagedSeat, inv.seat)
+  discardRandomFromHand(state, inv, 1, [])
+  assert.equal(inv.damage, 2)
+})
+
+test('10727 真菌感染：附属使道具文本空白，调查员可检定战斗弃掉附属', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const item = asset(state, '01016')
+  const attached = scenarioRuntime(state, []).attachToAsset(0, item.id, '10727')
+  assert.equal(assetTextBlanked(item, inv, state), true)
+  const escape = legalMoves(state, 0).find(candidate => candidate.action === 'entityAbility'
+    && candidate.entityId === attached.id)
+  assert.ok(escape)
+  move(state, escape)
+  settle(state)
+  const survivingItem = state.investigators[0].assets.find(card => card.id === item.id)
+  assert.equal(assetTextBlanked(survivingItem, state.investigators[0], state), false)
+  assert.ok(state.encounterDiscard.includes('10727'))
+})
+
+test('10727 真菌感染：检定失败时调查员受伤，宿主仍然空白', () => {
+  const state = fixture()
+  const item = asset(state, '01016')
+  const attached = scenarioRuntime(state, []).attachToAsset(0, item.id, '10727')
+  state.chaosBag = ['autofail']
+  const escape = legalMoves(state, 0).find(candidate => candidate.entityId === attached.id)
+  move(state, escape)
+  settle(state)
+  const inv = state.investigators[0]
+  assert.equal(inv.damage, 1)
+  assert.equal(assetTextBlanked(inv.assets.find(card => card.id === item.id), inv, state), true)
+  assert.ok(!state.encounterDiscard.includes('10727'))
+})
+
+test('10732 毒花：轮末累计疯长，攻击伤害按疯长数提高', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  state.campaign.records.time = 'day'
+  const flower = enemy(state, { code: '10732', damage: 0, health: 3 })
+  for (let i = 0; i < 2; i += 1) {
+    reactionWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, [])
+    state.round += 1
   }
+  assert.equal(enemyHealth(state, flower), 5)
+  enemyAttack(state, flower, inv, [])
+  assert.equal(inv.damage, 2)
+})
+
+test('10734 螺旋牡鹿：神话阶段在本地及连接地点的调查员技能值减二', () => {
+  const { state, inv, here, next } = connectedTable()
+  enemy(state, { code: '10734', location: next.id, engagedSeat: null })
+  const initial = getStat(state, inv, 'willpower')
+  state.phase = 'mythos'
+  assert.equal(getStat(state, inv, 'willpower'), initial - 2)
+  inv.location = next.id
+  assert.equal(getStat(state, inv, 'willpower'), initial - 2)
+  next.connections = []
+  inv.location = here.id
+  assert.equal(getStat(state, inv, 'willpower'), initial)
+})
+
+test('10736 荆棘之墙：白日进入受二伤并弃掉，黑夜进出各受一伤', () => {
+  for (const period of ['day', 'night']) {
+    const { state, inv, here, next } = connectedTable()
+    state.campaign.records.time = period
+    scenarioRuntime(state, []).attachToLocation(next.id, { code: '10736' })
+    relocateInvestigator(state, inv.seat, next.id, [])
+    assert.equal(inv.damage, period === 'day' ? 2 : 1)
+    assert.equal(next.attachments.length, period === 'day' ? 0 : 1)
+    relocateInvestigator(state, inv.seat, here.id, [])
+    assert.equal(inv.damage, 2)
+  }
+})
+
+test('10739 尸苔：日间无法移动、没有警戒，夜间可以移动并具备警戒', () => {
+  const { state, here, next } = connectedTable()
+  const lichen = enemy(state, { code: '10739', engagedSeat: null, location: here.id, hunter: true, alert: true })
+  state.campaign.records.time = 'day'
+  assert.equal(enemyHasAttackKeyword(state, lichen, 'alert', lichen.alert), false)
+  relocateEnemy(state, lichen, next.id, [])
+  assert.equal(lichen.location, here.id)
+  state.campaign.records.time = 'night'
+  assert.equal(enemyHasAttackKeyword(state, lichen, 'alert', lichen.alert), true)
+  relocateEnemy(state, lichen, next.id, [])
+  assert.equal(lichen.location, next.id)
+})
+
+test('10740 迷神孢子：每轮仅首批抽牌受直接恐惧，可支付直接恐惧自动通过智力检定', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  state.campaign.id = 'theFeastOfHemlockVale'
+  drawCards(state, inv, 1, [])
+  const spores = scenarioRuntime(state, []).threat(inv.seat, '10740')
+  drawCards(state, inv, 1, [])
+  assert.equal(inv.horror, 0, '本轮第一次抽牌发生在孢子入场前')
+  state.round += 1
+  drawCards(state, inv, 2, [])
+  assert.equal(inv.horror, 1)
+  drawCards(state, inv, 1, [])
+  assert.equal(inv.horror, 1)
+  state.round += 1
+  drawCards(state, inv, 1, [])
+  assert.equal(inv.horror, 2)
+  state.chaosBag = ['autofail']
+  const attempt = legalMoves(state, inv.seat).find(candidate => candidate.assetId === spores.id
+    || candidate.entityId === spores.id)
+  assert.ok(attempt)
+  move(state, attempt)
+  settle(state, choice => choice.options.find(option => option.id === 'horror')?.id)
+  assert.equal(state.investigators[0].horror, 3)
+  assert.ok(!state.investigators[0].threat.some(card => card.id === spores.id))
+  assert.equal(state.lastTestResult.success, true)
+})
+
+test('10740 迷神孢子：同地点队友可替威胁区所有者清除', () => {
+  const state = fixture('01001', 2)
+  const spores = scenarioRuntime(state, []).threat(1, '10740')
+  const attempt = legalMoves(state, 0).find(candidate => candidate.entityId === spores.id)
+  assert.ok(attempt)
+  move(state, attempt)
+  settle(state, choice => choice.options.find(option => option.id === 'horror')?.id)
+  assert.equal(state.investigators[0].horror, 1)
+  assert.equal(state.investigators[1].horror, 0)
+  assert.ok(!state.investigators[1].threat.some(card => card.id === spores.id))
+})
+
+test('10741 骤然突变：宿主被击败，跳过诡计并生成遇到的第一张敌人', () => {
+  const state = fixture()
+  const host = enemy(state, { health: 1 })
+  const runtime = scenarioRuntime(state, [])
+  assert.ok(runtime.attachEncounterToEnemy('10741', host.id))
+  state.encounterDeck = ['01159', '01160', '01167']
+  const fight = legalMoves(state, 0).find(candidate => candidate.action === 'fight' && candidate.enemyId === host.id)
+  assert.ok(fight)
+  move(state, fight)
+  settle(state)
+  assert.ok(state.encounterDiscard.includes('01167'))
+  assert.deepEqual(state.encounterDeck, ['01159'])
+  assert.ok(state.enemies.some(target => target.originalCode === '01160' && target.location === host.location))
+})
+
+test('10743 着火了：轮末仅伤及附属地点有生命值的每张卡牌', () => {
+  const { state, inv, here, next } = connectedTable()
+  scenarioRuntime(state, []).attachToLocation(here.id, { code: '10743' })
+  const companion = asset(state, '01018')
+  const target = enemy(state, { engagedSeat: null })
+  const elsewhere = enemy(state, { engagedSeat: null, location: next.id })
+  const ajax = { id: 'ajax', code: '10642', location: here.id, controllerSeat: null, damage: 0 }
+  state.storyAssets.push(ajax)
+  reactionWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, [])
+  assert.equal(inv.damage, 1)
+  assert.equal(companion.damage, 1)
+  assert.equal(target.damageTaken, 1)
+  assert.equal(elsewhere.damageTaken, 0)
+  assert.equal(ajax.damage, 1)
 })

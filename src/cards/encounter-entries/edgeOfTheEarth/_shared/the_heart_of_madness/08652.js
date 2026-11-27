@@ -17,7 +17,6 @@ export default {
   abilities: [{
     kind: 'action', actionKind: 'activate',
     label: '控制封印 B：检定 intellect(3)，成功后共同花费线索激活该封印',
-    limit: { scope: 'perGame', owner: 'instance' },
     criteria: ({ state, inv }) => sealHeldBy(state, inv.seat),
     resolve: ({ state, inv, source, api }) => {
       const runtime = api.scenario || api
@@ -43,7 +42,10 @@ export default {
           return
         }
         api.info('🔯 「寇斯图书馆（Library of Kós）」：封印 B 被激活。')
-        api.info('「寇斯图书馆」：查看同一环形上所有未揭示地点的已揭示面（由章节地图数据结算）。');
+        const slots = state.scenario.rings?.find(group => group.includes(source.slot)) || []
+        for (const location of state.locations.filter(item => !item.revealed && slots.includes(item.slot))) {
+          runtime.peekLocation(inv.seat, location.id)
+        }
       } })
     },
   }],

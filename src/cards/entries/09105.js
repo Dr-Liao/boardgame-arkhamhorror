@@ -17,8 +17,6 @@
 //   · 弃掉敌人：api.discardEnemy；精英走 api.autoEvadeEnemy + api.damageEnemy。
 //   enemy 目标：test.target.id（声明 trackTestTarget 时）→ 回落 test.source.enemyId（攻击/躲避的
 //   检定来源始终带 enemyId）。
-// approximation: 引擎没有「替换本次检定的通常效果」的写点——自动成功之后攻击/躲避的通常效果仍会
-//   结算（对非精英而言敌人在伤害结算前已离场，通常无影响；对精英会额外再吃一次攻击伤害）。
 const code = '09105'
 
 const ACTION_LABEL = { 攻击: 'fight', 躲避: 'evade' }
@@ -39,7 +37,6 @@ const inPosition = ({ state, inv }) => {
 
 export default {
   code,
-  note: 'approximation: 自动成功之后本次攻击/躲避的通常效果仍会结算（引擎没有「取代检定通常效果」写点）；精英分支因此可能多结算一次攻击伤害。',
   playCondition: [{ when: inPosition, message: '「直击弱点」只能在难度为 0 的攻击/躲避检定、揭示标记前打出' }],
   abilities: [
     {
@@ -52,16 +49,16 @@ export default {
         const test = state.skillTest
         const targetId = test?.target?.id ?? test?.source?.enemyId ?? null
         const enemy = targetId != null ? state.enemies.find(item => item.id === targetId) : null
+        if (!enemy) return
+        api.replaceNormalTestEffect(() => {
+          if (enemy.elite === true) {
+            api.autoEvadeEnemy(enemy)
+            api.damageEnemy(enemy, 3, inv.seat, { code })
+          } else {
+            api.discardEnemy(enemy)
+          }
+        })
         api.setTestAutoSuccess()
-        if (!enemy) { api.info('「直击弱点」：本次检定自动成功，但没有可弃掉的敌人。'); return }
-        if (enemy.elite === true) {
-          api.autoEvadeEnemy(enemy)
-          api.damageEnemy(enemy, 3, inv.seat, null)
-          api.info(`🎯 「直击弱点」：${inv.name} 自动躲避「${enemy.name}」并对其造成 3 点伤害。`)
-        } else {
-          api.discardEnemy(enemy)
-          api.info(`🎯 「直击弱点」：${inv.name} 弃掉「${enemy.name}」。`)
-        }
       },
     },
   ],

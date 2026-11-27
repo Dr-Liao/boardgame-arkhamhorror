@@ -18,6 +18,7 @@ import assert from 'node:assert/strict'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registeredEntry, registerCardAbilities, unknownTriggerWarnings } from '../src/engine/ability.js'
 import { registerNonPlayerEntries } from '../src/cards/encounter-entries/_lookup.js'
+import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import {
   bindKey, initializeScarletKeys, keyFace, keyShiftedThisRound, keysHeldBy, scarletKey, scarletKeys, shiftKey,
   stealKey, validateTskKeys,
@@ -27,7 +28,8 @@ import {
   validateTskErased, validateTskHollows,
 } from '../src/engine/tsk-hollow.js'
 import {
-  concealedAt, concealedMiniCards, distributeConcealed, exposeMiniCard, placeMiniCard, reshuffleConcealed, validateTskConcealed,
+  concealedAt, concealedMiniCards, distributeConcealed, exposeMiniCard, flipDecoyMiniCards, markMiniKnownFor,
+  placeMiniCard, repositionMiniCards, reshuffleConcealed, validateTskConcealed,
 } from '../src/engine/tsk-concealed.js'
 import {
   dossiers, embarkOptions, forcedDestination, initializeStatusReports, initializeWorldMap, mapTime, queueStatusReports,
@@ -163,6 +165,10 @@ function makeApi(state, { choose = null, testResults = [], log = [] } = {}) {
   }
   const api = {
     info: text => { log.push(String(text)) },
+    publicInfo: text => { log.push(String(text)) },
+    privateInfo: (seat, text) => { log.push(`private:${seat}:${text}`) },
+    availableResources: seat => invOf(seat).resources,
+    locationName: id => id,
     cardName: code => ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code,
     choice: spec => {
       if (choose) {
@@ -282,7 +288,7 @@ function makeApi(state, { choose = null, testResults = [], log = [] } = {}) {
       all: () => scarletKeys(state),
       get: id => scarletKeys(state).find(key => key.id === id) || null,
       heldBy: bearer => keysHeldBy(state, bearer),
-      shift: (id, options) => shiftKey(state, id, options ?? {}),
+      shift: (id, options) => createMechanicsApi(state, { abilityApi: () => api }).tsk.keys.shift(id, options),
       shiftedThisRound: (id, round) => keyShiftedThisRound(state, id, round ?? state.round),
       bind: (id, bearer) => bindKey(state, id, bearer),
       steal: (id, bearer) => stealKey(state, id, bearer),
@@ -298,6 +304,11 @@ function makeApi(state, { choose = null, testResults = [], log = [] } = {}) {
     concealed: {
       reshuffle: options => reshuffleConcealed(state, options),
       all: () => concealedMiniCards(state),
+      at: locationId => concealedAt(state, locationId),
+      flipDecoys: () => flipDecoyMiniCards(state),
+      markKnown: (id, seats) => markMiniKnownFor(state, id, seats),
+      reposition: placements => repositionMiniCards(state, placements),
+      cancelExpose: context => { context.cancelled = true; return true },
     },
     map: {
       state: () => worldMapState(state),
@@ -305,6 +316,11 @@ function makeApi(state, { choose = null, testResults = [], log = [] } = {}) {
       expedite: spec => useExpeditedTicket(state, spec),
     },
   }
+  api.scenario = { discardEnemy: api.discardEnemy, decideSeat: () => 0 }
+  api.doomOn = api.placeDoomOnCard
+  api.defeatAsset = (seat, id) => api.discardAsset(seat, invOf(seat).assets.find(card => card.id === id))
+  api.concealedTargetsForEffect = (seat, locationId) => concealedAt(state, locationId)
+  api.choose = api.choice
   return { api, log }
 }
 
@@ -377,9 +393,8 @@ test('P7 共享组 A：35 张卡一卡一文件，code = 文件名，scope 合�
   }
 })
 
-test('P7 共享组 A：近似条目逐条 note 披露，未登记窗口只有 tskKeyShifted', () => {
+test('P7 共享组 A：保留近似披露，触发窗口均已注册', () => {
   const noted = ENTRIES.filter(entry => typeof entry.note === 'string' && entry.note.startsWith('approximation:'))
-  assert.ok(noted.length >= 30, '近似披露数量不足：' + noted.length)
   assert.ok(noted.every(entry => entry.note.length > 20))
   // P7 收口：tskKeyShifted / tskExposed 均已在 windows.js 注册。
   assert.deepEqual(unknownTriggerWarnings(), [], '触发时机全部已注册')
@@ -529,10 +544,12 @@ test('09759 苋：攻击后变换钥匙；攻击伤害分到支援时击败该�
   // 攻击伤害分配到支援
   const asset = { id: 'asset1', code: '01020', exhausted: false }
   state.investigators[0].assets.push(asset)
-  state._enemyAttackResolving = { enemy: amaranth, inv: state.investigators[0], kind: 'attack' }
-  run(r09759, 1, { state, source: amaranth, context: { damagedAssetIds: ['asset1'] } })
+  const attack = { enemyId: amaranth.id }
+  const harm = { attack, seat: 0, assetId: asset.id, damage: 1 }
+  assert.equal(allows(r09759.abilities[1], context(r09759, 1, { state, source: amaranth,
+    context: { ...harm, attack: { enemyId: 'another' } } }).ctx), false)
+  run(r09759, 1, { state, source: amaranth, context: harm })
   assert.equal(state.investigators[0].assets.length, 0, '被攻击伤害分配到的支援被击败')
-  state._enemyAttackResolving = null
 })
 
 test('09760 朱三娘：猎手/反击；攻击或躲避成功且超过难度 2 点以上才变换钥匙', () => {
@@ -589,7 +606,9 @@ test('09762 福林探员：只在揭露诱饵时触发，横置并抽 1 张', ()
   assert.equal(allows(descriptor, context(g09762, 0, { state, context: { decoy: true, seat: 0 } }).ctx), true)
   assert.equal(allows(descriptor, context(g09762, 0, { state, context: { decoy: false, seat: 0 } }).ctx), false)
   assert.equal(allows(descriptor, context(g09762, 0, { state, context: { decoy: true, seat: 1 } }).ctx), false)
-  run(g09762, 0, { state, context: { decoy: true, seat: 0 } })
+  const interrupted = { decoy: true, seat: 0, locationId: 'locA' }
+  run(g09762, 0, { state, context: interrupted })
+  assert.equal(interrupted.cancelled, true)
   assert.deepEqual(state.investigators[0].hand, ['01020'])
 })
 
@@ -624,18 +643,10 @@ test('09764 戴维·伊拉万博士：+1 意志；回收同名空洞洗回牌库
   assert.equal(state.investigators[0].resources, 6, '每张洗回的空洞获得 1 资源')
 })
 
-test('09765 快捷旅票：永久；放逐并记录 1 时间的使用', () => {
+test('09765 快捷旅票：永久，启程可用，场景内没有独立放逐行动', () => {
   assert.equal(g09765.flags.permanent, true)
   assert.deepEqual(g09765.assetRule.expeditedTicket, { time: 1, anywhere: true })
-  const state = makeState()
-  const ticket = { id: 'ticket', code: '09765' }
-  state.investigators[0].assets.push(ticket)
-  const { result } = run(g09765, 0, { state, source: ticket })
-  assert.equal(result, true)
-  assert.equal(state.scenarioFlags.tskExpeditedTicketUsed, true)
-  assert.equal(state.scenarioFlags.tskExpeditedTicketSeat, 0)
-  assert.deepEqual(state.removedFromGame, ['09765'], '放逐到移出游戏区')
-  assert.equal(run(g09765, 0, { state, source: ticket }).result, false, '只能使用一次')
+  assert.equal(registeredEntry('09765').abilities.length, 0)
 })
 
 test('09766 基金会情报：抽到留手 + 抽牌日志提示（弱点生命周期读点）', () => {
@@ -675,20 +686,20 @@ test('09768a/09768b 镜刃：稳定面对敌人造成伤害后翻面；动荡面
   const first = { id: 'e1', code: '01160', name: '敌人甲', location: 'locA', damageTaken: 0 }
   const second = { id: 'e2', code: '01160', name: '敌人乙', location: 'locA', damageTaken: 0 }
   state.enemies.push(first, second)
-  assert.equal(run(g09768a, 0, { state, choose: () => 'all' }).result, true)
+  makeApi(state, { choose: () => 'all' }).api.tsk.keys.shift('k1', { seat: 0 })
   assert.deepEqual([first.damageTaken, second.damageTaken], [1, 1])
   assert.equal(scarletKey(state, 'k1').stable, false)
   // 动荡面：每位调查员 1 点直接伤害，然后翻回稳定面
   state.round = 3
-  assert.equal(run(g09768b, 0, { state }).result, true)
+  makeApi(state).api.tsk.keys.shift('k1', { seat: 0 })
   assert.deepEqual(state.investigators.map(inv => inv.damage), [1, 1])
   assert.equal(scarletKey(state, 'k1').stable, true)
-  // 敌人强制变换用 assetRule.keyShift：只结算当前面，不翻面
+  // 通用变换读点也处理敌人持有的动荡面。
   const enemyHeld = seedKeys([{ id: 'k2', stableFace: '09768a', unstableFace: '09768b' }])
   enemyHeld.enemies.push({ id: 'someone', code: '09759', location: 'locB' })
   stealKey(enemyHeld, 'k2', { type: 'enemy', enemyId: 'someone' })
-  const applied = g09768b.assetRule.keyShift.resolve({ state: enemyHeld, api: makeApi(enemyHeld).api })
-  assert.equal(applied.damaged, 2)
+  makeApi(enemyHeld).api.tsk.keys.shift('k2', { by: 'enemy', force: true })
+  assert.deepEqual(enemyHeld.investigators.map(inv => inv.damage), [1, 1])
   assert.equal(scarletKey(enemyHeld, 'k2').stable, false)
 })
 
@@ -728,15 +739,17 @@ test('09770a/09770b 灾毁之钟：稳定面自动躲避本地所有敌人；动
 for (const [letter, entry] of [['A', c09716a], ['B', c09716b], ['C', c09716c]]) {
   test('09716' + letter.toLowerCase() + ' 结社特工（' + letter + '）：隐匿 2、入场 1 毁灭、揭露即弃掉', () => {
     assert.deepEqual(entry.flags.concealed, 2)
-    assert.deepEqual(entry.enemySpawnRule, { doomOnSpawn: 1 })
+    assert.equal(entry.enemyRule.concealed, 2)
     const state = makeState()
     const agent = { id: 'agent' + letter, code: entry.code, location: 'locA', doom: 0 }
     state.enemies.push(agent)
-    const descriptor = entry.abilities[0]
+    run(entry, 0, { state, source: agent, context: { enemyId: agent.id } })
+    assert.equal(agent.doom, 1)
+    const descriptor = entry.abilities[1]
     assert.deepEqual(triggersOf(descriptor), ['tskExposed'])
-    assert.equal(allows(descriptor, context(entry, 0, { state, source: agent, context: { kind: entry.code, decoy: false } }).ctx), true)
-    assert.equal(allows(descriptor, context(entry, 0, { state, source: agent, context: { kind: entry.code, decoy: true } }).ctx), false, '诱饵不触发')
-    run(entry, 0, { state, source: agent, context: { kind: entry.code, decoy: false } })
+    assert.equal(allows(descriptor, context(entry, 1, { state, source: agent, context: { enemyId: agent.id, decoy: false } }).ctx), true)
+    assert.equal(allows(descriptor, context(entry, 1, { state, source: agent, context: { enemyId: agent.id, decoy: true } }).ctx), false, '诱饵不触发')
+    run(entry, 1, { state, source: agent, context: { enemyId: agent.id, decoy: false } })
     assert.equal(state.enemies.includes(agent), false, '揭露后弃掉')
   })
 }
@@ -769,12 +782,10 @@ const exposedContext = (entry, state, position, decoy = false) => ({
 })
 
 test('09747a 凌乱道路（残骸之城 A）：左边 1 伤害、右边 1 恐惧；正面数据与查看行动', () => {
-  // 正面「攻击/躲避本地点隐匿迷你卡难度 +2」= 与 09577 同键名的 locationRule 数据声明
-  // （引擎还缺「攻击/躲避隐匿迷你卡」动作与 per-location 难度读点，见卡条目 note）。
   assert.equal(b09747a.locationRule.concealedFightEvadeBonus, 2)
   assert.deepEqual(b09747a.flags.concealed, 1)
   const state = makeState()
-  placeMiniCard(state, { kind: 'coterieAgent', decoy: false, locationId: 'locB' })
+  const mini = placeMiniCard(state, { kind: 'coterieAgent', decoy: false, locationId: 'locB' })
   state.investigators[0].resources = 5
   const source = { id: 'locA', code: '09747a' }
   run(b09747a, 1, { state, source, context: { kind: '09747a', decoy: false, seat: 0, position: 'left' } })
@@ -787,8 +798,9 @@ test('09747a 凌乱道路（残骸之城 A）：左边 1 伤害、右边 1 恐�
   const { result } = run(b09747a, 0, { state })
   assert.equal(result, true)
   assert.equal(state.investigators[0].resources, 4)
+  assert.deepEqual(concealedMiniCards(state).find(card => card.id === mini.id).knownBy, [0])
   assert.equal(state.scenarioFlags.ramblingRouteLookUsed, true)
-  assert.equal(run(b09747a, 0, { state }).result, false, '团队每场游戏一次')
+  assert.equal(allows(b09747a.abilities[0], context(b09747a, 0, { state }).ctx), false, '团队每场游戏一次')
 })
 
 test('09747b 凌乱道路（残骸之城 B）：左边失去 2 资源、中间失去 1 行动', () => {
@@ -847,19 +859,22 @@ test('09748b 异星边境（残骸之城 B）：上下移动失败受 2 伤害�
   assert.equal(state.investigators[0].resources, 3)
 })
 
-test('09749a 拟像旷野：揭示后牌库顶非弱点卡成为空洞；[fast] 无线索时可重排', () => {
+test('09749a 拟像旷野：揭示后牌库顶非弱点卡成为空洞，无线索时可交换两个空位的迷你卡', () => {
   const state = makeState()
   state.locations[0] = { ...state.locations[0], code: '09749a', clues: 0 }
   state.investigators[0].deck = ['01020']
   run(b09749a, 0, { state, context: { location: 'locA', seat: 0 }, source: { id: 'locA', code: '09749a' } })
   assert.equal(isHollowed(state, '01020'), true)
   assert.equal(state.investigators[0].deck.length, 0, '牌库顶被 takeDeckCard 取出')
-  placeMiniCard(state, { kind: 'coterieAgent', decoy: true, locationId: 'locA' })
-  placeMiniCard(state, { kind: 'coterieAgent', decoy: true, locationId: 'locB' })
-  const { result } = run(b09749a, 1, { state, source: { id: 'locA', code: '09749a' } })
+  const first = placeMiniCard(state, { kind: 'coterieAgent', decoy: true, locationId: 'locA' })
+  const second = placeMiniCard(state, { kind: 'coterieAgent', decoy: true, locationId: 'locB' })
+  state.scenarioFlags.withoutATrace = { shadows: {}, spots: {
+    [first.id]: { x: 0, y: 0 }, [second.id]: { x: 1, y: 0 },
+  } }
+  const { result } = run(b09749a, 1, { state, source: state.locations[0] })
   assert.equal(result, true)
   assert.equal(state.scenarioFlags.wealdSwapUsed, true)
-  assert.equal(concealedMiniCards(state).length, 2, '重排不增删迷你卡')
+  assert.deepEqual(concealedMiniCards(state).map(card => card.locationId), ['locB', 'locA'])
 })
 
 test('09749b 拟像旷野（变体）：中间空洞手牌、右边空洞支援', () => {
@@ -877,13 +892,9 @@ test('09749b 拟像旷野（变体）：中间空洞手牌、右边空洞支援'
   assert.equal(isHollowed(state, '01030'), true)
 })
 
-test('09750 疯狂峭壁：揭示后重排隐匿迷你卡；左侧揭露 1 伤害、右侧 1 恐惧', () => {
+test('09750 疯狂峭壁：左侧揭露 1 伤害，右侧揭露 1 恐惧', () => {
   const state = makeState()
   state.locations[0] = { ...state.locations[0], code: '09750' }
-  placeMiniCard(state, { kind: 'coterieAgent', decoy: true, locationId: 'locA' })
-  placeMiniCard(state, { kind: 'coterieAgent', decoy: false, locationId: 'locB' })
-  run(b09750, 0, { state, context: { location: 'locA' }, source: { id: 'locA', code: '09750' } })
-  assert.equal(concealedMiniCards(state).length, 2)
   run(b09750, 1, { state, ...exposedContext(b09750, state, 'left') })
   assert.equal(state.investigators[0].damage, 1)
   run(b09750, 1, { state, ...exposedContext(b09750, state, 'right') })

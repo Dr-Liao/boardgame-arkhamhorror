@@ -3,6 +3,7 @@
 // 参考：Scenario/Scenarios/EdgeOfTheEarth/IceAndDeathPart2.hs#HasChaosTokenValue + FailedSkillTest。
 // 与第 I 部分同一套符号数值：[skull] = 当前地点庇护值的一半（向上取整；困难/专家取全额）；
 // [cultist] = -2（失败：忒咳哩-哩洗入牌库，困难/专家按失败差值）；[tablet] = -3/-4（失败弃牌库顶）。
+import { iceAndDeathTokenValue } from '../iceAndDeathPart1/chaos.js'
 import { locationShelter } from '../../../../../src/engine/eote-shelter.js'
 
 export const PART2_TOKEN_MEANINGS = Object.freeze({
@@ -43,13 +44,7 @@ export function shelterValueOf(state, locationId) {
 }
 
 export function part2ChaosTokenValue(state, tokenFace, inv) {
-  const shelter = shelterValueOf(state, inv?.location)
-  switch (tokenFace) {
-    case 'skull': return hardSide(state) ? shelter : Math.ceil(shelter / 2)
-    case 'cultist': return -2
-    case 'tablet': return hardSide(state) ? -4 : -3
-    default: return null
-  }
+  return iceAndDeathTokenValue(tokenFace, shelterValueOf(state, inv?.location), hardSide(state))
 }
 
 export function part2ChaosFailureSpec(state, tokenFace, failedBy) {

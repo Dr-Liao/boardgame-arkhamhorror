@@ -1,3 +1,4 @@
+import { attachmentTextBlanked } from './attachment-rules.js'
 // 通用谈判（Parley）原语 —— 第 12 步 P2.7。
 //
 // 印刷规则：带「谈判 - ……」的**敌人 / 地点 / 剧情资产**可以在其卡面上声明一次行动；
@@ -32,11 +33,22 @@ export function activeStageEntities(state) {
   // [state.acts[state.actIndex], state.agendas[state.agendaIndex]] 完全一致。
   return [...actsInPlay(state), state.agendas?.[state.agendaIndex]].filter(Boolean)
 }
+function hasSharedThreatAction(source) {
+  const rule = registeredEntry(source.originalCode || source.code)?.treacheryRule
+  return rule?.requiredFirstAction || rule?.sharedThreatAction
+}
+
+function controlledAssets(state) {
+  return (state.investigators || []).flatMap(investigator => investigator.assets || [])
+}
+
 export function actionEntityById(state, id) {
   return [...(state.enemies || []), ...(state.locations || []), ...(state.storyAssets || []),
     ...(state.locations || []).flatMap(location => location.attachments || []),
     ...(state.storyAssets || []).flatMap(host => host.attachments || []),
     ...(state.enemies || []).flatMap(host => host.attachments || []),
+    ...controlledAssets(state).flatMap(host => host.attachments || []),
+    ...(state.investigators || []).flatMap(owner => (owner.threat || []).filter(hasSharedThreatAction)),
     ...activeStageEntities(state), scenarioReferenceEntity(state)].filter(Boolean).find(entity => entity.id === id)
 }
 // 附属实体（07299 石障 / 07099 机械故障）：附属对象本身没有 location 字段，宿主由归属扫描得到。
@@ -49,7 +61,7 @@ export function locationOfAttachment(state, attachment) {
   if (storyHost) return storyHost.location ?? null
   const enemyHost = (state.enemies || []).find(item => (item.attachments || []).includes(attachment))
   if (enemyHost) return enemyHost.location ?? null
-  return null
+  return state.investigators?.find(inv => inv.assets?.some(asset => asset.attachments?.includes(attachment)))?.location ?? null
 }
 export const PARLEY_ACTION_KIND = 'parley'
 
@@ -85,6 +97,9 @@ export function hostActionsSuppressed(state, entity) {
 }
 
 export function entityAbilityInRange(state, inv, entity, descriptor) {
+  if (attachmentTextBlanked(state, entity)) return false
+  if (entity.hostEnemyId && isParleyDescriptor(descriptor)
+    && parleyForbidden(state, inv, state.enemies.find(enemy => enemy.id === entity.hostEnemyId))) return false
   if (descriptor.range === 'anywhere') return true
   const location = state.locations.includes(entity) ? entity.id : entity.location
     ?? locationOfAttachment(state, entity)
@@ -165,10 +180,19 @@ export function parleyMovesFor(state, inv, usable = null) {
     }
   }
   // 剧情支援/敌人身上的附属卡自身行动（07099 机械故障的「[action] 智力(3) 弃掉本卡」）。
-  for (const host of [...(state.storyAssets || []), ...(state.enemies || [])]) {
+  for (const host of [...(state.storyAssets || []), ...(state.enemies || []), ...controlledAssets(state)]) {
     for (const attachment of host.attachments || []) {
-      if (!registeredEntry(attachment.originalCode || attachment.code)?.treacheryRule?.attachmentAbilities?.length) continue
+      const entry = registeredEntry(attachment.originalCode || attachment.code)
+      if (!entry?.treacheryRule?.attachmentAbilities?.length && !entry?.assetRule?.enemyAttachmentActions) continue
+      if (entry?.assetRule?.enemyAttachmentActions && attachment.ownerSeat !== inv.seat) continue
       out.push(...parleyMoves(state, inv, attachment, 'encounterAttachment', usable))
+    }
+  }
+  for (const owner of state.investigators || []) {
+    if (owner.location !== inv.location) continue
+    for (const source of owner.threat || []) {
+      if (!hasSharedThreatAction(source)) continue
+      out.push(...parleyMoves(state, inv, source, 'threat', usable))
     }
   }
   const reference=scenarioReferenceEntity(state)

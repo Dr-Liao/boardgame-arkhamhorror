@@ -4,14 +4,11 @@
 //       [reaction] 你在水晶温床结束自己回合后，受到 1 点直接恐惧：抽取水晶温床底下一堆卡牌中
 //       最顶上的一张。（团队每轮仅限一次。）
 // 印刷：shroud 3、每调查员 2 条线索、特性 [[Cave]][[Lair]][[Blight]]、单面。
-// 读点：behavior.revealCave 读 codex（Φ）→ 生成暗堆；暗堆行动与结束回合反应共用幕 2 的
-//       silentHeathDrawBeneath 读点。
+// 读点：behavior.revealCave 用法典 Φ 生成暗堆，behavior.turnEnded 结算回合结束的抽取反应。
 export default {
   code: '10560',
   scope: 'location',
   implemented: true,
-  flags: { codex: 'crystalNursery', lair: true },
-  note: 'approximation：「结束回合后受 1 点直接恐惧再抽取」的强制反应没有逐地点读点，'
-    + '当前只保留暗堆抽取行动（恐惧/每轮限次未单独结算）。',
+  flags: { codex: 'crystalNursery', lair: true, crystalNurseryTurnEnd: { directHorror: 1, groupLimit: 'perRound' } },
   abilities: [],
 }

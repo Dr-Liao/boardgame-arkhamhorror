@@ -4,7 +4,7 @@ import { ALL_CARDS, INVESTIGATORS } from '../src/cards/cards-data.js'
 import { buildDeck, buildDeckFromList, drawBasicWeaknesses, expandedPlayablePool, matchesDeckOptions } from '../src/deck/deckbuilding.js'
 import { canSelectInvestigator, getAvailability } from '../src/deck/availability.js'
 import { applyStartingDeckExperience, awardExperience, campaignDeckLocked, availablePurchases, campaignCardChange, finishUpgradeDraft, purchaseCard, replacementOptions, stagePurchase } from '../src/campaign/campaign.js'
-import { createGameState, drawCards, drawEncounter, performTest, phaseBeginningWindow } from '../src/engine/engine.js'
+import { cardDef, createGameState, drawCards, drawEncounter, embeddedCardDefs, performTest, phaseBeginningWindow } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { adoptInvestigatorIdentity } from '../src/engine/investigator-form.js'
 import { registeredEntry } from '../src/engine/ability.js'
@@ -237,10 +237,12 @@ test('11080 支付特殊经验费用后记下法术名，拒绝再次购买同�
   assert.deepEqual(replacementOptions(current, '01060', campaign.records), [])
 })
 
-test('11125 成功时免费打出收藏卡，技能移出游戏，战役牌组保持原状', () => {
+test('11125 免费打出收藏卡，结局按实体归还，保留牌库和弃牌堆的同卡号自有副本', () => {
   const state = fixture('11007')
   const inv = investigator(state)
   inv.hand = ['11125']
+  inv.deck.push('01016')
+  inv.discard.push('01016')
   const resources = inv.resources
   const deck = [...record(state).deck]
   const investigate = legalMoves(state).find(command => command.action === 'investigate')
@@ -252,8 +254,29 @@ test('11125 成功时免费打出收藏卡，技能移出游戏，战役牌组�
     return null
   })
   assert.ok(state.removedFromGame.includes('11125'))
-  assert.ok(investigator(state).assets.some(card => card.code === '01016'))
+  const loan = investigator(state).assets.find(card => state.collectionLoans.includes(card.code))
+  assert.ok(loan)
+  assert.equal(cardDef(loan.code).originalCode, '01016')
+  assert.equal(embeddedCardDefs(state, state.campaign.id, { observerSeat: null })[loan.code].originalCode, '01016')
   assert.equal(investigator(state).resources, resources)
+  assert.deepEqual(record(state).deck, deck)
+  const inPlay = JSON.parse(JSON.stringify(state))
+  const end = current => {
+    current.hubFlow = true
+    move(current, { action: 'debug', kind: 'endScenario', resolutionKey: 'noResolution' })
+    settle(current)
+  }
+  end(inPlay)
+  assert.ok(!investigator(inPlay).assets.some(card => card.id === loan.id))
+  assert.ok(!inPlay.collectionLoans?.length)
+  assert.ok(investigator(inPlay).deck.includes('01016'))
+  assert.deepEqual(investigator(inPlay).discard, ['01016'])
+  assert.deepEqual(record(inPlay).deck, deck)
+  investigator(state).assets = investigator(state).assets.filter(card => card.id !== loan.id)
+  investigator(state).discard.push(loan.code)
+  end(state)
+  assert.ok(!state.collectionLoans?.length)
+  assert.deepEqual(investigator(state).discard, ['01016'])
   assert.deepEqual(record(state).deck, deck)
 })
 

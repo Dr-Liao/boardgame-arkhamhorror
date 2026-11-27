@@ -319,41 +319,33 @@ test('P7 deadHeat 议程 2 背面：全员 1 点肉体创伤，按拉辛在场�
 // ---------------------------------------------------------------------------
 
 test('P7 deadHeat 阿玛兰斯：攻击分配给支援时击败支援并变换末绽之花', () => {
-  const api = quietApi()
-  api.attack = () => {}
-  api.discardAsset = (seat, assetId) => {
-    const inv = state.investigators[seat]
-    const asset = inv.assets.find(item => item.id === assetId)
-    if (!asset) return null
-    inv.assets.splice(inv.assets.indexOf(asset), 1)
-    inv.discard.push(asset.code)
-    return asset.code
+  const source = { id: 'amaranth' }
+  const context = { attack: { enemyId: source.id }, seat: 0, assetId: 'asset-1', damage: 1 }
+  const descriptor = registeredEntry(AMARANTH_FRONT_CODE).abilities[0]
+  const calls = []
+  const api = {
+    defeatAsset: (seat, id) => calls.push(['defeat', seat, id]),
+    tsk: { keys: { heldBy: () => [KEY_SPEC.id], shift: (id, options) => calls.push(['shift', id, options.by]) } },
   }
-  const { state } = setup(2, 15, api)
-  const amaranth = chapter.behavior.amaranthInPlay(state)
-  state.investigators[0].location = amaranth.location
-  state.investigators[0].assets = [{ id: 'asset-1', code: '01001', damage: 0, horror: 0 }]
-  chapter.behavior.enemyAttackStarted(state, amaranth, state.investigators[0], api)
-  state.investigators[0].assets[0].damage = 1
-  const before = chapter.behavior.lastBlossom(state).stable
-  chapter.behavior.enemyAttackResolved(state, amaranth, state.investigators[0], api)
-  assert.equal(state.investigators[0].assets.length, 0, '伤害分配给支援 → 击败该支援')
-  assert.equal(state.investigators[0].discard.includes('01001'), true)
-  assert.notEqual(chapter.behavior.lastBlossom(state).stable, before, '阿玛兰斯变换其附属密钥')
+  assert.ok(descriptor.trigger.includes('assetHarmPlaced'))
+  assert.ok(descriptor.criteria({ source, context }))
+  descriptor.resolve({ source, context, api })
+  assert.deepEqual(calls, [['defeat', 0, 'asset-1'], ['shift', KEY_SPEC.id, 'enemy']])
 })
 
 test('P7 deadHeat 拉辛：密钥变换后横置则重整，否则即时攻击', () => {
-  const api = quietApi()
-  api.attack = () => { api.attacks = (api.attacks || 0) + 1 }
-  const { state } = setup(2, 15, api)
-  const razin = chapter.behavior.spawnDeadHeatEnemy(state, RAZIN_CODE, 'bahiaPalaceGardens', api, { unique: true })
-  razin.exhausted = true
-  razin.engagedSeat = 0
-  chapter.behavior.shiftLastBlossom(state, api, { by: 'enemy' })
-  assert.equal(razin.exhausted, false, '横置的拉辛被重整')
-  state.round = 2
-  chapter.behavior.shiftLastBlossom(state, api, { by: 'enemy' })
-  assert.equal(api.attacks, 1, '未横置 → 立即攻击交战调查员')
+  const source = { exhausted: true, engagedSeat: 0 }
+  const descriptor = registeredEntry(RAZIN_CODE).abilities[0]
+  const attacks = []
+  const api = {
+    readyEnemy: enemy => { enemy.exhausted = false },
+    enemyAttackByCard: (enemy, _label, seat) => attacks.push([enemy, seat]),
+  }
+  assert.ok(descriptor.trigger.includes('tskKeyShifted'))
+  descriptor.resolve({ source, api })
+  assert.equal(source.exhausted, false)
+  descriptor.resolve({ source, api })
+  assert.deepEqual(attacks, [[source, 0]])
 })
 
 test('P7 deadHeat 古代劫掠者攻击后杀害 1 名平民；哈立德入场搬走相邻敌人/平民', () => {
@@ -370,7 +362,11 @@ test('P7 deadHeat 古代劫掠者攻击后杀害 1 名平民；哈立德入场�
   const civilians = chapter.behavior.civiliansAt(state, 'jemaaElFnaaSquare')
   const neighborBefore = LOCATIONS.jemaaElFnaaSquare.connections
     .reduce((sum, id) => sum + chapter.behavior.civiliansAt(state, id), 0)
-  chapter.behavior.khalidEnteredPlay(state, khalid, api)
+  chapter.behavior.khalidEnteredPlay(state, khalid, {
+    ...api,
+    choose: request => request.options[0].id,
+    moveEnemy: (enemy, destination) => { enemy.location = destination },
+  })
   assert.equal(state.enemies.find(enemy => enemy.id === 'other-enemy').location !== 'jemaaElFnaaSquare', true)
   assert.equal(chapter.behavior.civiliansAt(state, 'jemaaElFnaaSquare'), 0)
   const neighborAfter = LOCATIONS.jemaaElFnaaSquare.connections
@@ -420,30 +416,33 @@ test('P7 deadHeat 奴仆：每轮第一张获得涌动；快速躲避失败时�
   api.attack = () => { api.attacked = true }
   const inv = state.investigators[0]
   const thrall = chapter.behavior.spawnDeadHeatEnemy(state, THRALL_CODE, inv.location, api, { engagedSeat: 0 })
-  const move = chapter.behavior.actions(state, inv).find(item => item.rule === `deadHeatThrallEvade:${thrall.id}`)
-  assert.ok(move, '奴仆的快速躲避行动存在')
-  api.test = (seat, skill, difficulty, resolve) => resolve({ success: false, difficulty, value: difficulty - 1 })
-  chapter.behavior.performAction(state, inv, move, api)
-  assert.equal(api.attacked, true, '躲避失败 → 奴仆攻击')
-  assert.equal(chapter.behavior.actions(state, inv).some(item => item.rule === `deadHeatThrallEvade:${thrall.id}`), false,
-    '每回合一次')
+  const descriptor = registeredEntry(THRALL_CODE).abilities[0]
+  assert.equal(descriptor.kind, 'free')
+  assert.equal(descriptor.limit.scope, 'perTurn')
+  const calls = []
+  descriptor.resolve({ inv, source: thrall, api: { evade: (seat, options) => calls.push([seat, options]) } })
+  assert.deepEqual(calls, [[inv.seat, { enemyId: thrall.id, ignoreEngagement: true, grantAlert: true, sourceCode: THRALL_CODE }]])
 })
 
 test('P7 deadHeat 饥荒：放在议程旁 +1 费用，轮末弃置并恢复；围困！失败二选一', () => {
   const api = quietApi()
   const { state } = setup(2, 0, api)
   // 条目 encounterResolve → api.resolveScenarioEvent → behavior.events（与引擎读点同一条桥）。
+  api.putNextToAgenda = (code, fields) => {
+    const card = { id: 'famine', code, originalCode: code, ...fields }
+    state.agendaAside ||= []
+    state.agendaAside.push(card)
+    return card
+  }
   const bridge = extra => ({
     ...extra,
     resolveScenarioEvent: (id, payload) => chapter.behavior.events[id](state, payload, { ...api, ...extra }),
   })
   assert.equal(entryFamine.encounterResolve(state, state.investigators[0], {}, bridge({})), true)
   assert.equal(state.agendaAside.length, 1)
-  assert.equal(state.locations.every(location => location.playCostIncrease === 1), true)
-  chapter.behavior.roundEnded(state, api)
-  assert.equal(state.agendaAside.length, 0)
-  assert.equal(state.locations.every(location => !location.playCostIncrease), true)
-  assert.equal(state.encounterDiscard.includes(FAMINE_CODE), true)
+  assert.equal(chapter.behavior.playCostIncrease(state, state.investigators[0]), 1)
+  assert.equal(chapter.behavior.playCostIncrease(state, state.investigators[1]), 0)
+  assert.equal(entryFamine.treacheryRule.discardAtRoundEnd, true)
 
   const inv = state.investigators[0]
   inv.location = 'jemaaElFnaaSquare'

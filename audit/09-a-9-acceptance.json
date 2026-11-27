@@ -3,7 +3,7 @@
   "unit": "09-a-9",
   "profile": {
     "id": "tsk-campaign-f-2026-11",
-    "scope": "绯红密钥 09 段 tskc 战役卡（09696–09736）45 条目录记录。39 条通过五维验收；6 条原语复用债务/实现缺口暂不切换。",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09696–09736）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,31 +17,27 @@
   },
   "summary": {
     "total": 45,
-    "verified": 39,
-    "unverified": 6,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 160
+    "testsPassed": 162
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
-      "sha256": "65822b7944c5088dce450f5c952bd9b9a856d1a729c161c65d7d44f14a3373d8"
+      "sha256": "a61cb48da7939daa3b257b3ee902d8cd95f0f4b1433e8fda9e275af0c5a06892"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-congressOfTheKeys.test.mjs",
-      "sha256": "479100d083f3a0b6c4345cc26d5e1b605fa6c01b9eaad11717efa212eed921c3"
+      "sha256": "954f09503b4527897315c18be24447f45594c7c9ce2af1fb5c4017de89af27c2"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
-      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+      "sha256": "4619d620fe9cfa9762ac046136e1031986faba8ba06edb9b2e7a18528ed1c65d"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
-      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+      "sha256": "5a81bdb3f14c6c0414ba8fb77e2d1c68ddb606904e659ee84438e3198958a84a"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
@@ -49,7 +45,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
@@ -317,25 +313,53 @@
       "code": "09716a",
       "name": "结社特工(A)",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "与 09716b/c 同一印刷文本，三份条目各自手写同一套揭露/弃置实现（full-scan 登记应上收共享实现，fix-plan P2 未完成）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09716a 结社特工（A）：隐匿 2、入场 1 毁灭、揭露即弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09716a 疯星乱舞：旧式迷你卡揭露时呈现场上真身，可触发弃置反应且不会重新隐匿"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09716a 结社特工：共同入阴影流程只放 1 毁灭，揭露可弃掉真身"
+        }
+      ]
     },
     {
       "code": "09716b",
       "name": "结社特工(B)",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同上（三份独立实现之一）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09716b 结社特工（B）：隐匿 2、入场 1 毁灭、揭露即弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09716b 结社特工：共同入阴影流程只放 1 毁灭，揭露可弃掉真身"
+        }
+      ]
     },
     {
       "code": "09716c",
       "name": "结社特工(C)",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同上（三份独立实现之一）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09716c 结社特工（C）：隐匿 2、入场 1 毁灭、揭露即弃掉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09716c 结社特工：共同入阴影流程只放 1 毁灭，揭露可弃掉真身"
+        }
+      ]
     },
     {
       "code": "09717",
@@ -381,9 +405,17 @@
       "code": "09720",
       "name": "结社代表",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「重整时本地点的隐匿迷你卡不能被玩家卡牌效果揭露」缺 expose-block 读点（note 自述 primitive request）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p0-regressions.test.mjs",
+          "test": "P0-6 苦痛之影遭遇牌库的 09720/09721 已注册，真实抽取不再「未知遭遇卡」"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09720 结社代表：重整时拒绝同地玩家卡揭露，仍允许普通揭露或横置后的玩家卡揭露"
+        }
+      ]
     },
     {
       "code": "09721",
@@ -517,9 +549,13 @@
       "code": "09729",
       "name": "身染猩红",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「本地点每个敌人得到 +1 攻击/躲避」缺实时修正读点（note 披露 primitive request）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09729 身染猩红：附属时宿主攻击和躲避各 +1，移除附属后恢复"
+        }
+      ]
     },
     {
       "code": "09730",
@@ -549,9 +585,13 @@
       "code": "09732",
       "name": "天启噩兆",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「被击败时不加入胜利区，改为弃掉」击败去向覆盖读点未交付（note 自述 primitive-requests/09732.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard9.test.mjs",
+          "test": "验收 09732 天启噩兆：选用反应时弃掉敌人并回收空洞，跳过反应时加入胜利区"
+        }
+      ]
     },
     {
       "code": "09733",

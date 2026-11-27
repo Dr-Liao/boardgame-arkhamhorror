@@ -9,7 +9,7 @@ export default {
   code: '02099', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
     const enemies = state.enemies.filter(enemy => enemy.engagedSeat == null && enemy.traits?.includes('Criminal'))
-    if (!enemies.length) api.drawEncounter(inv.seat)
+    if (!enemies.length) api.drawEncounter(inv.seat, { surgeDraw: true })
     for (const enemy of enemies) {
       api.moveEnemy(enemy, api.stepToward(enemy.location, inv.location))
       if (enemy.engagedSeat === inv.seat) api.attack(enemy, inv)

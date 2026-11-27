@@ -1,16 +1,12 @@
-// 08588 丹佛斯
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 伙伴（坚毅）形态：由 battle.choosePartner 交给调查员；技能/费用数值取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08588 丹佛斯 · 坚毅伙伴
 export default {
-  code: '08588',
-  scope: 'storyAsset',
-  implemented: true,
-  uses: 5,
-  usesType: 'secrets',
-  abilities: [],
-  flags: { partner: true, resolute: true, usesType: 'secrets', partnerRules: {"reaction":"afterTekeliliResolvedDraw3DiscardWeaknesses"} },
+  code: '08588', scope: 'storyAsset', implemented: true,
+  flags: { partner: true, resolute: true },
+  uses: 5, usesType: 'secrets',
+  abilities: [{
+    kind: 'reaction', trigger: 'tekeliResolved', label: '横置并花费 1 秘密：该调查员抽 3 张；跳过抽到的忒咳哩-哩的显现',
+    cost: { exhaust: true, uses: 1 },
+    criteria: ({ inv, context }) => context.location === inv.location && Number.isInteger(context.seat),
+    resolve: ({ api, context }) => api.drawCards(context.seat, 3, { skipTekeli: true }),
+  }],
 }

@@ -799,7 +799,7 @@ test('P7 withoutATrace 失败路线：所有调查员被击败时结束为 noRes
 // ---------------------------------------------------------------------------
 // 7. 进入未揭示地点的额外费用
 // ---------------------------------------------------------------------------
-test('P7 withoutATrace 额外费用：线索不足时 moveError 拒绝；进入后由出发点团队共同支付', () => {
+test('P7 withoutATrace 额外费用：线索不足时拒绝；离开出发点之前由同地队员共同支付', () => {
   const { state, api } = setupState(2)
   // 一张未揭示的异界地点与起点相邻。
   const inv = state.investigators[0]
@@ -813,16 +813,26 @@ test('P7 withoutATrace 额外费用：线索不足时 moveError 拒绝；进入�
   state.investigators[0].clues = 1
   state.investigators[1].clues = 1
   assert.equal(behavior.moveError(state, inv, target), null)
-  // 进入（模拟引擎顺序：reveal → locationEntered → beforeMove → locationLeft）。
+  api.canSpendClues = () => true
+  api.payGroupClues = (amount, { atLocation }) => {
+    assert.equal(amount, 2)
+    assert.equal(inv.location, START_LOCATION)
+    assert.equal(atLocation, START_LOCATION)
+    const contributions = state.investigators.map(member => {
+      api.spendClues(member.seat, 1)
+      return { seat: member.seat, amount: 1 }
+    })
+    return { contributions }
+  }
+  behavior.beforeMove(state, inv, target, api)
   target.revealed = true
-  state.lastLocationRevealed = { id: target.id, round: state.round, turnSerial: state.turnSerial }
   inv.location = target.id
-  behavior.locationEntered(state, inv, target, api)
-  behavior.locationLeft(state, inv, byId(state, START_LOCATION), api)
   assert.equal(state.investigators[0].clues, 0)
   assert.equal(state.investigators[1].clues, 0)
   // 已揭示的地点不再收费。
   assert.equal(behavior.moveError(state, inv, target), null)
+  behavior.beforeMove(state, inv, target, api)
+  assert.equal(withoutATraceFlags(state).entryCharges.length, 1)
 })
 
 // ---------------------------------------------------------------------------

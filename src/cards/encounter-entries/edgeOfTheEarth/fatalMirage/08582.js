@@ -1,14 +1,11 @@
-// 08582 翻译异星文字之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08582 翻译异星文字之记忆：被击败时，翻开并结算记忆剧情。
 export default {
-  code: '08582',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"alert":true,"preyPartner":"08594","reactionExhaustedWithAttachmentDamage4":true,"flipOnDefeat":true} },
+  code: '08582', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08594' },
+  abilities: [{
+    kind: 'reaction', trigger: 'enemyExhausted', label: '它于有附属牌的地点横置后：对它造成 4 伤害',
+    criteria: ({ state, context, source }) => context.enemy === source
+      && state.locations.find(location => location.id === source.location)?.attachments?.length > 0,
+    resolve: ({ inv, source, api }) => api.damageEnemy(source, 4, inv.seat),
+  }],
 }

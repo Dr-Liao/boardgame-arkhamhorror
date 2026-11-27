@@ -1,17 +1,14 @@
 // 08564 河景剧院
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
 export default {
-  code: '08564',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "riverviewTheatre",
-    "tier": 2,
-    "forcedTekeliliDraw": "doubleEffectThenDiscoverClue"
-  },
+  code: '08564', scope: 'location', implemented: true,
+  flags: { mirageId: 'riverviewTheatre', tier: 2 },
+  abilities: [{
+    kind: 'forced', trigger: 'tekeliWouldResolve', label: '额外结算一次忒咳哩-哩',
+    criteria: ({ inv, source, context }) => context.seat === inv.seat && context.location === source.id,
+    resolve: ({ context, api }) => api.addTekeliResolution(context),
+  }, {
+    kind: 'forced', trigger: 'tekeliResolved', label: '忒咳哩-哩结算后，发现剧院的 1 个线索',
+    criteria: ({ inv, source, context }) => context.seat === inv.seat && context.location === source.id,
+    resolve: ({ inv, source, api }) => api.discoverClue(inv.seat, 1, source.id),
+  }],
 }

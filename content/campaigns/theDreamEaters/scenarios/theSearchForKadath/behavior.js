@@ -125,7 +125,7 @@ function spawnFromSetAside(state, api, code, locationId) {
 
 // 区域设置前把黑暗夜魇收进「放在一边」快照；结算后在领队选择的[[城市]]地点放回。
 function setNightgauntsAside(state, api) {
-  const nightgaunts = (state.enemies || []).filter(enemy => codeOf(enemy) === TENEBROUS_NIGHTGAUNT)
+  const nightgaunts = (state.enemies || []).filter(enemy => enemyRuleFor(codeOf(enemy))?.setAsideDuringActSetup)
   if (!nightgaunts.length) return
   const snapshots = []
   for (const enemy of nightgaunts) {
@@ -387,7 +387,35 @@ export const behavior = {
 
   // ---- 幕 / 议程分派 ----
   actReveal(state, act, api) {
-    const handled = actRuleFor(codeOf(act))?.onReveal?.(state, act, api)
+    const rule = actRuleFor(codeOf(act))
+    if (rule?.regionOptions) {
+      for (const code of rule.removeFromGameCodes || []) {
+        while (api.takeEncounterDeckCard?.(code) || api.takeEncounterDiscard?.(code)) {}
+        for (const enemy of state.enemies.filter(enemy => codeOf(enemy) === code && !enemy.hostId)) {
+          api.removeEnemyFromGame?.(enemy)
+        }
+        api.removeFromGameCards?.(code)
+      }
+      const restored = []
+      for (const code of rule.setAsideIntoEncounterDeck || []) {
+        while (api.takeFromSetAside?.(code) === true) restored.push(code)
+      }
+      if (restored.length) api.shuffleIntoEncounterDeck?.(restored, { shuffle: false })
+      api.shuffleDiscard?.()
+      const visited = readFlag(state, 'regionsVisited') || []
+      const options = rule.regionOptions.filter(id => !visited.includes(id))
+        .map(id => ({ id, label: REGION_BY_ID[id].label }))
+      if (!options.length) api.finish?.('resolution1')
+      else {
+        const chosen = options.length === 1 ? options[0].id : api.choose?.({
+          kind: 'location', source: codeOf(act), seat: state.campaign?.leadSeat ?? 0,
+          prompt: '选择尚未造访的区域。', options,
+        }) ?? options[0].id
+        runRegionSetup(state, api, chosen)
+      }
+      return true
+    }
+    const handled = rule?.onReveal?.(state, act, api)
     const pendingRegion = api.scenarioFlag?.('pendingRegion')
     if (pendingRegion) {
       api.setScenarioFlag?.('pendingRegion', null)
@@ -462,7 +490,7 @@ export const behavior = {
         const skill = skills.includes(String(answer)) ? String(answer) : skills[0]
         api.test?.(inv.seat, skill, rule.difficulty ?? 4, result => {
           if (!result.success) return
-          api.detachLocationAttachment?.(location.id, attachment.id)
+          api.detachEncounterAttachmentById?.(attachment.id)
           api.info?.(`🐦 成功摆脱了「${api.cardName?.(codeOf(attachment)) || codeOf(attachment)}」。`)
         })
         return true
@@ -546,7 +574,7 @@ export const behavior = {
         if (!rule) continue
         api.horror?.(inv.seat, rule.horror || 1)
         api.addDoom?.(rule.doom || 1)
-        api.detachLocationAttachment?.(location.id, attachment.id)
+        api.detachEncounterAttachmentById?.(attachment.id)
         api.info?.(`🌾 「奇妙平原」：成功调查附着地点——受到 1 点恐惧、放 1 毁灭并弃掉本卡。`)
       }
     }
@@ -555,7 +583,7 @@ export const behavior = {
   locationShroudModifier(state, location, inv) {
     if (!location) return 0
     let value = 0
-    if ((location.attachments || []).some(attachment => codeOf(attachment) === RAW.c06154)) value -= 2
+    for (const attachment of location.attachments || []) value += treacheryRuleFor(codeOf(attachment))?.shroudModifier || 0
     const rule = locationRuleFor(codeOf(location))
     if (Number.isFinite(rule?.shroudPerPriest)) {
       const priests = (state.enemies || []).filter(enemy =>
@@ -600,6 +628,12 @@ export const behavior = {
       }
     }
     return value
+  },
+
+  enemyAttackKeyword(state, enemy, keyword) {
+    const signs = Number(state.markerCounts?.reference) || 0
+    return enemyRuleFor(codeOf(enemy))?.signsOfTheGodsBonuses
+      ?.some(tier => tier.atSigns <= signs && tier[keyword] === true)
   },
 
   enemyAttackModifier(state, enemy, inv) {
@@ -687,18 +721,9 @@ export const behavior = {
       if (!rule) continue
       api.horror?.(inv.seat, rule.horror || 1)
       api.addDoom?.(rule.doom || 1)
-      api.detachLocationAttachment?.(prevLoc.id, attachment.id)
+      api.detachEncounterAttachmentById?.(attachment.id)
       api.info?.(`🐦 离开「${prevLoc.name}」：受到 1 点恐惧、放 1 毁灭并弃掉「麦格鸟之歌」。`)
     }
-  },
-
-  // ---- 剧情支援离场 ----
-  assetLeftPlay(state, inv, asset, api) {
-    if (codeOf(asset) !== VIRGIL_GRAY) return
-    asset.removedFromGame = true
-    state.removedFromGame ||= []
-    if (!state.removedFromGame.includes(VIRGIL_GRAY)) state.removedFromGame.push(VIRGIL_GRAY)
-    api.info?.('📖 强制：维吉尔·格雷离场——移出游戏。')
   },
 
   // ---- 结局 ----

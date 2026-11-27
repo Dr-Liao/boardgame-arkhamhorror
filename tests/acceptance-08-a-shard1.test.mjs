@@ -2,15 +2,15 @@
 //
 // 缺口：08011b/08012b/08013b/08014b（Lily Chen 四张 Broken 演武面）没有标题含卡号的真实测试；
 // 其余 42 张由既有 EOTE 逐卡测试提供含卡号标题的真实断言（本轮实跑核对，见报告 §4）。
-// 另：08008 的 R1 直写（whip.exhausted）为账本已知存量违规，本文件以「记录缺口」测试固定证据。
+// 08008 通过真实攻击行动验证可选的横置与伤害。
 // 规程：docs/test/ACCEPTANCE-ORDER.md §3 五维。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { existsSync, readFileSync } from 'node:fs'
+import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { fixture, asset, move } from './core-fixture.mjs'
+import { fixture, asset, enemy, legalMoves, move, settle } from './core-fixture.mjs'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
@@ -117,17 +117,17 @@ test('08-a-1 接线：46 张均有条目文件；5 位调查员可选；玩家�
   for (const code of playerCards) assert.equal(getAvailability(code).availability, 'strict', `${code} 可构筑`)
 })
 
-test('08-a-1 合规：审计基线只命中 08008（R1 直写存量），且无其它 08 段卡号', () => {
-  const compliance = JSON.parse(readFileSync(path.join(ROOT, 'audit/card-entry-compliance.json'), 'utf8'))
-  const overlaps = {}
-  for (const rule of ['directStateWrite', 'reprintDuplicate', 'playConditionGap']) {
-    overlaps[rule] = (compliance.baseline?.[rule] || []).filter(code => CODES.includes(code))
-  }
-  assert.deepEqual(overlaps.directStateWrite, ['08008'], 'R1 基线应只含 08008（存量违规，见 §3）')
-  assert.deepEqual(overlaps.reprintDuplicate, [])
-  assert.deepEqual(overlaps.playConditionGap, [])
-  const source = readFileSync(path.join(ROOT, 'src/cards/entries/08008.js'), 'utf8')
-  assert.match(source, /\.exhausted\s*=\s*true/, '08008 仍直接写支援 exhausted（R1 缺口记录）')
+test('08008 可靠的长鞭：合法攻击成功时可横置，让实际伤害增加 1', () => {
+  const state = fixture('08007')
+  const whip = asset(state, '08008')
+  const target = enemy(state, { fight: 0, health: 5 })
+  const attack = legalMoves(state, 0).find(option => option.action === 'ability'
+    && option.assetId === whip.id && option.targetId === target.id)
+  assert.ok(attack, '长鞭攻击应出现在合法行动中')
+  move(state, attack)
+  settle(state, choice => choice.options.find(option => option.id === 'damage')?.id)
+  assert.equal(invOf(state).assets.find(item => item.id === whip.id).exhausted, true)
+  assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 2)
 })
 
 // ---------------------------------------------------------------------------

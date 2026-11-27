@@ -1,3 +1,4 @@
+import { currentEffectSource } from './effect-provenance.js'
 // card-defs.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 卡定义与实例构造：卡面视图（含声明式展示加成）、剧本常量表、卡池、
 // 实例 id 生成，以及议程毁灭阈值。引擎其余部分只经这里拿卡定义。
@@ -14,6 +15,7 @@ import { CORE2026_INVESTIGATOR_CODES, CORE2026_BASIC_WEAKNESS_CODES, CORE2026_PL
 import { assetTextBlanked, assetTextBlankedExceptForced } from './card-text.js'
 import { hasTrait } from './matcher.js'
 import { choiceOptionsFor, choiceSeats } from './resolution.js'
+import { collectionLoanPrintedCode } from './collection-loans.js'
 
 export function createCardDefs(deps) {
   const {
@@ -128,6 +130,8 @@ export function createCardDefs(deps) {
   function allCardDefs({ runtimeOnly = false, campaignId = null, playerCodes = null } = {}) {
     const out = {}
     const selected = playerCodes && new Set(playerCodes)
+    const loans = selected ? [...selected].filter(code => collectionLoanPrintedCode(code)) : []
+    for (const loan of loans) selected.add(collectionLoanPrintedCode(loan))
     for (const [code, c] of Object.entries(ALL_CARDS)) {
       // 传入具体卡号集合时，它就是「本局嵌入了哪些卡」的唯一口径：这些卡已经在手牌、牌组或场上，
       // 即使目录可用性是 catalog-only（如 02040 亨利·阿米蒂奇博士这类剧情奖赏卡），也必须带
@@ -182,6 +186,14 @@ export function createCardDefs(deps) {
       if (restrictedAllySlots) copy.allySlotsForNonUnique = restrictedAllySlots
       out[code] = copy
     }
+    for (const loan of loans) {
+      const printed = collectionLoanPrintedCode(loan)
+      if (out[printed]) out[loan] = { ...out[printed], code: loan, originalCode: printed }
+    }
+    for (const loan of loans) {
+      const printed = collectionLoanPrintedCode(loan)
+      if (!playerCodes.has(printed)) delete out[printed]
+    }
     const ruleCodes = campaignId ? campaignRuleCodes(campaignId)
       : [...Object.keys(ALL_ENEMIES), ...Object.keys(ALL_TREACHERIES), ...Object.keys(ALL_STORY_ASSETS)]
     for (const code of ruleCodes) {
@@ -205,6 +217,7 @@ export function createCardDefs(deps) {
   // 04037 背包的 attachedCards、05279 宿主附属的 attachments、调查员的 beneath（压牌）、
   // 直觉牌库的 hunchDeck/hunchRevealed、地点附属的 attachments/playerLocationAttachments。
   // 漏一类，读档重建展示表后前端就只能显示裸卡号（详见 tests/cards-under-ui.test.mjs）。
+  // capturedCards 只公开张数，面朝下的卡号无需进入嵌入定义。
   function embeddedCardDefs(state, campaignId, options = {}) {
     const filtered = Object.hasOwn(options, 'observerSeat')
     const seatVisible = seat => !filtered || seat === options.observerSeat
@@ -342,7 +355,9 @@ export function createCardDefs(deps) {
     const asset = newCardInstance(state, code, { exhausted: false, enteredRound: state.round, ...fields })
     // 「强制 - 入场后放置 1 个毁灭」（01063 新晋术士）：所有入场路径共用同一实例创建点。
     if (asset.doom == null && abilityEntry?.onPlayDoom != null) asset.doom = abilityEntry.onPlayDoom
-    const uses = effect.uses ?? abilityEntry?.uses
+    const eventUses = abilityEntry?.assetRule?.startingUsesDuringEvent
+    const uses = eventUses != null && cardDef(currentEffectSource(state)?.code)?.type === 'event'
+      ? eventUses : effect.uses ?? abilityEntry?.uses
     const usesType = effect.usesType ?? abilityEntry?.usesType
     if (uses != null && asset.uses == null) {
       asset.uses = uses

@@ -434,7 +434,7 @@ test('act 1（v.I）背面：放[[山谷]]地点、移出 Ghouls/Striking Fear�
   assert.ok(state.scenarioZones.removed.includes('01160'))
 })
 
-test('act 1（v.II）背面：额外把皮克曼交给队长', () => {
+test('act 1（v.II）背面：队长为皮克曼选择一位控制者', () => {
   const state = stateFor()
   placeStarter(state)
   state.scenarioFlags.actOneVariant = 'v2'

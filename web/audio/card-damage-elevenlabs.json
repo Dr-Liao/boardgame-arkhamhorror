@@ -1,0 +1,71 @@
+{
+  "provider": "ElevenLabs",
+  "model": "eleven_text_to_sound_v3",
+  "format": "mp3_44100_128",
+  "promptInfluence": 0.55,
+  "files": [
+    {
+      "file": "card-damage-arcane.mp3",
+      "bytes": 15925,
+      "sha256": "4ca295606dc22ba2a687ae5ee3b288b62949ac1f1b37649959c16a7cfffb503b",
+      "durationSeconds": 0.95,
+      "prompt": "One brief occult card-game spell impact: bright crystalline resonance, an electrical crack, then a rapidly descending whisper of energy. Clean isolated cue, no dialogue, no music, no room ambience."
+    },
+    {
+      "file": "card-damage-backlash.mp3",
+      "bytes": 12581,
+      "sha256": "87c5ac63e8af45ad093f9adc6916a7d3aa151bfe6892c3a2e3947b4abe74ae79",
+      "durationSeconds": 0.75,
+      "prompt": "One tiny ominous sharp heartbeat with a close dry cloth snap, like paying a painful magical cost in a tabletop game. Clear single pulse, fast decay, moderate and legible, no ambient bed or voices."
+    },
+    {
+      "file": "card-damage-blast.mp3",
+      "bytes": 15925,
+      "sha256": "da54a6a61f9ecdbfb6d63623628e7dff791da444547793be5a6775b963d08d32",
+      "durationSeconds": 0.95,
+      "prompt": "Single small stylized dark board-game explosion impact, a crisp crack, compact low pressure and a quick scattering of sparks, abrupt clean tail. No ambience, no music, no repeated impacts."
+    },
+    {
+      "file": "card-damage-creature.mp3",
+      "bytes": 14671,
+      "sha256": "962dfc8895528046aef90e60f31aa45a69ad2cea249640811369158035b92977",
+      "durationSeconds": 0.85,
+      "prompt": "An unnaturally quick creature claw rakes across a hard wooden surface with a sharp three-note scratch into a heavy muted bump. One action, dry, short, eerie, no roar or background."
+    },
+    {
+      "file": "card-damage-drain.mp3",
+      "bytes": 15925,
+      "sha256": "4f6c5704cfc0115a4b290cb063155af068ea90ee7b55aa6a69f27821e8bf3a00",
+      "durationSeconds": 0.95,
+      "prompt": "One short reverse-suction sound, an otherworldly breathless pull from left to right ending in a deep compact pulse. A dark-fantasy life-transfer game effect, dry clean master, no voices or music."
+    },
+    {
+      "file": "card-damage-impact.mp3",
+      "bytes": 12163,
+      "sha256": "d017ee5151b89a8699cbdbd49e9ecbe199042d3521710b298ad5f0b7052d63e6",
+      "durationSeconds": 0.7,
+      "prompt": "A single tight, dry, low physical impact for a dark tabletop card game. A short leather-wrapped thud and a subtle wooden click together, clean attack, immediate decay, no voices, music, ambience or reverb."
+    },
+    {
+      "file": "card-damage-shot.mp3",
+      "bytes": 12581,
+      "sha256": "e8bc2c3e5f70c860f394687b3e11bc8787cc48589df118ec1cd8e11f25b33a57",
+      "durationSeconds": 0.75,
+      "prompt": "One stylized antique firearm discharge for a tabletop board game, a sharply defined crack and a very short dry wallop immediately afterwards. Isolated short game cue, no echoes, no ambience, no voices."
+    },
+    {
+      "file": "card-damage-slash.mp3",
+      "bytes": 14671,
+      "sha256": "ebcdcbee86be2f5450cae67d0a4f13488605a6e72c2bd64e6428c7dc163d9a37",
+      "durationSeconds": 0.85,
+      "prompt": "One brief cutting swipe through air followed immediately by a crisp dry card-game hit. Subtle steel edge, clear transient, short decay. Dark and tactile, no music, no voices or background."
+    },
+    {
+      "file": "card-damage-splash.mp3",
+      "bytes": 15089,
+      "sha256": "29740c1af0f7b5ad8bf9e00acef782ad6d2c4b830d7deed742f349c9f972eaef",
+      "durationSeconds": 0.9,
+      "prompt": "One compact heavy lashing impact against a damp stone surface with a brief wet scatter and low tightly controlled thud. Dark board game cue, fast tail, no ambience, no speech or music."
+    }
+  ]
+}

@@ -11,6 +11,6 @@ export default {
   code: '08546',
   scope: 'act',
   implemented: true,
-  actRule: {},
+  actRule: { grantsVictory: { trait: 'Eidolon', points: 0 } },
   flags: { campResign: true },
 }

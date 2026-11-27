@@ -5,7 +5,6 @@
 //   未揭示面：除非「七百级台阶」上的全部线索都被发现，否则你不能进入「楼梯底部」。
 // 读点：onEnter.effect（引擎 movement.js 直接读 locationRule.onEnter.effect）；
 //   entryError（引擎 investigatorEntryError 直接读，只对未揭示面生效）。
-// 简化：X 用进入时的即时手牌数（引擎难度在检定开始时固定；投入后的手牌数没有二次难度读点）——见报告 simplified。
 import { activeInvestigators, originalOf } from '../../_shared.js'
 
 const CODE = '06048'
@@ -43,7 +42,7 @@ export default {
             if (answer === 'discard') api.discardFromHand?.(inv.seat, code)
             else api.horror?.(inv.seat, 1)
           }
-        })
+        }, { recomputeDifficulty: (state, owner) => owner.hand.length })
       },
     },
   },

@@ -17,6 +17,15 @@ export default {
     },
     interlude: 'fateOfTheVale',
   },
-  note: 'approximation: 同 10655；幕间四选项的条件读战役记录（behavior.interludeOptions），[fast] +2 未接线。',
-  abilities: [],
+  note: '洞穴目标和四项幕间分支由章节结算。',
+  abilities: [{
+    kind: 'free',
+    actionKind: 'activate',
+    range: 'anywhere',
+    trigger: ['test.beforeCommit', 'test.afterCommit'],
+    label: '花费 1 个线索：本次技能检定得到 +2 技能值',
+    cost: { action: false, clues: 1 },
+    duringOwnSkillTest: true,
+    resolve: ({ api }) => api.addTestPendingBonus(2),
+  }],
 }

@@ -14,6 +14,7 @@ function playUseSources(state, inv, def) {
       if (!rule || (rule.cardType && rule.cardType !== def.type)
         || (asset.usesType != null && asset.usesType !== entry.usesType)
         || (rule.scope === 'self' && owner !== inv) || (rule.trait && !hasTrait(def, rule.trait))
+        || (rule.traitsAny && !rule.traitsAny.some(trait => hasTrait(def, trait)))
         || assetTextBlanked(asset, owner) || assetTextBlankedExceptForced(asset)) return []
       const candidates = rule.usesFrom === 'controlled'
         ? owner.assets.filter(candidate => (candidate.usesType ?? registeredEntry(candidate.code)?.usesType) === entry.usesType)

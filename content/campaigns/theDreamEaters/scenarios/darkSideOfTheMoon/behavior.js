@@ -15,6 +15,7 @@ const ALARM = 'alarmLevel'
 const codeOf = card => original(card)
 const COLD_WASTES_RECORD = 'theInvestigatorsWereCarriedToTheColdWastes'
 const TRAVELED_RECORD = 'theInvestigatorsTraveledToTheColdWastes'
+const RANDOLPH_DREAMER = '06059'
 const RANDOLPH_LOST_RECORD = 'randolphCarterDidNotSurviveTheVoyage'
 const RANDOLPH_SURVIVED_RECORD = 'randolphSurvivedTheVoyage'
 const EVIDENCE_RECORD = 'evidenceOfKadath'
@@ -94,6 +95,14 @@ function hunterMoveForRule(state, enemy, api) {
   }
   const origin = locationOf(state, enemy.location)
   if (!origin) return true
+  if (rule.preyHighestAlarm) {
+    const distances = distancesFrom(state, origin.id)
+    const nearest = Math.min(...targets.map(inv => distances.get(inv.location) ?? Infinity))
+    const nearby = targets.filter(inv => distances.get(inv.location) === nearest)
+    if (!nearby.length || nearest === 0) return true
+    const highest = Math.max(...nearby.map(inv => alarmOf(state, inv.seat)))
+    targets = nearby.filter(inv => alarmOf(state, inv.seat) === highest)
+  }
   let candidates = [...(origin.connections || [])].filter(id => locationOf(state, id))
   if (rule.huntOnlyCaveLocations) {
     candidates = candidates.filter(id => {
@@ -119,27 +128,21 @@ function hunterMoveForRule(state, enemy, api) {
 // --- 幕 I 背面「及时救援」 ---
 function resolveVirgilRescue(state, act, api) {
   const city = inPlayByCode(state, CITY_OF_THE_MOON_BEASTS)
-  const candidates = activeInvestigators(state).filter(inv => !city || inv.location === city.id)
-  const lead = candidates[0] || activeInvestigators(state)[0] || null
-  const virgilDefinition = Object.values(state.scenario?.storyAssets || {}).find(card => String(codeOf(card)) === VIRGIL_GRAY)
-  if (virgilDefinition && lead) {
-    takeFromSetAside(state, VIRGIL_GRAY)
-    api.giveAsset?.(lead.seat, VIRGIL_GRAY)
-    api.info?.(`📜 ${lead.name} 控制了维吉尔·格雷（文思泉涌）。`)
+  const candidates = activeInvestigators(state).filter(inv => city && inv.location === city.id)
+  const seat = candidates.length === 1 ? candidates[0].seat : candidates.length ? api.choose?.({
+    kind: 'investigator', source: codeOf(act), seat: state.campaign?.leadSeat ?? 0,
+    prompt: '选择一位位于月兽之城的调查员控制剧情支援。',
+    options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
+  }) ?? candidates[0].seat : null
+  const chosen = candidates.find(inv => String(inv.seat) === String(seat))
+  if (chosen && api.takeFromSetAside?.(VIRGIL_GRAY)) {
+    api.giveAsset?.(chosen.seat, VIRGIL_GRAY)
+    api.info?.(`📜 ${chosen.name} 控制了维吉尔·格雷（文思泉涌）。`)
   }
-  // 伦道夫被俘：把场外的伦道夫·卡特（梦境专家）放入其所有者手牌。
   if (state.campaign?.records?.randolphWasCaptured) {
-    const randolph = Object.values(ALL_CARDS).find(card => /^Randolph Carter/i.test(String(card.name))
-      && card.type === 'asset' && card.pack === 'tde')
-    if (randolph) {
-      const owner = (state.investigators || []).find(inv => (inv.deck || []).includes(randolph.code)) || lead
-      if (owner) {
-        const deckIndex = (owner.deck || []).indexOf(randolph.code)
-        if (deckIndex >= 0) owner.deck.splice(deckIndex, 1)
-        owner.hand.push(randolph.code)
-        api.info?.(`📜 伦道夫·卡特（梦境专家）被放入 ${owner.name} 的手牌。`)
-      }
-    }
+    const captured = state.setAside?.find(card => card.code === RANDOLPH_DREAMER)
+    if (captured) api.moveCard?.({ seat: captured.ownerSeat, ownerSeat: captured.ownerSeat,
+      code: RANDOLPH_DREAMER, from: 'setAside', to: 'hand' })
   }
   return true
 }
@@ -240,7 +243,6 @@ export const behavior = {
   preScenarioSetup(state, events, api) {
     state.scenarioFlags ||= {}
     state.scenarioFlags.capturedSeats = capturedSeats(state)
-    state.scenarioFlags.agendaAside = [FALSE_AWAKENING]
     state.scenarioFlags.introResolved = true
     api.info?.(state.scenarioFlags.capturedSeats.length
       ? `⛓️ 有 ${state.scenarioFlags.capturedSeats.length} 位调查员被俘：从月兽帆船上开始游戏。`
@@ -251,16 +253,28 @@ export const behavior = {
   setupLocations(state, events, helper = {}) {
     const zones = (state.scenarioZones ||= {})
     const flags = (state.scenarioFlags ||= {})
-    flags.agendaAside = [FALSE_AWAKENING]
     const placed = ['cityOfTheMoonBeasts', 'templeOfTheMoonLizard', 'moonForest', 'theDarkCrater']
     zones.setAside = [
-      MOON_LIZARD, VIRGIL_GRAY, THE_CAPTAIN, FALSE_AWAKENING,
+      MOON_LIZARD, VIRGIL_GRAY, THE_CAPTAIN,
       MOON_BEAST_GALLEY, CAVERNS_BENEATH_THE_MOON_DARK_SIDE, THE_BLACK_CORE,
       CAVERNS_BENEATH_THE_MOON_LIGHT_SIDE, LIGHT_SIDE_OF_THE_MOON, THE_WHITE_SHIP,
     ]
     flags.pendingSetupReveals = ['cityOfTheMoonBeasts', 'templeOfTheMoonLizard', 'moonForest', 'theDarkCrater']
     helper.info?.(state, events, '🌑 月之暗面：月兽之城、月蜥神庙、月之森林、漆黑深坑入场；其余地点放在一边。')
     return placed
+  },
+
+  afterChaosBagSetup(state, events, api) {
+    const doom = entryFlags(FALSE_AWAKENING)?.doomOnStart || 0
+    api.putNextToAgenda?.(FALSE_AWAKENING, { doom })
+    if (!state.campaign?.records?.randolphWasCaptured) return
+    for (const owner of state.investigators) {
+      const from = ['deck', 'hand', 'discard'].find(zone => owner[zone]?.includes(RANDOLPH_DREAMER))
+      if (from) {
+        api.moveCard?.({ seat: owner.seat, ownerSeat: owner.seat, code: RANDOLPH_DREAMER, from, to: 'setAside' })
+        break
+      }
+    }
   },
 
   afterDeckSetup(state, events, helper = {}) {
@@ -389,8 +403,7 @@ export const behavior = {
       })
     }
     // 卡达斯（06233）：在密谋牌库旁时，任意调查员可发动。
-    const aside = state.scenarioFlags?.agendaAside || []
-    if (aside.includes(FALSE_AWAKENING)) {
+    if (state.agendaAside?.some(card => codeOf(card) === FALSE_AWAKENING)) {
       const rule = treacheryRuleFor(FALSE_AWAKENING)?.agendaAsideAction
       if (rule) moves.push({ action: 'scenarioAction', rule: rule.rule, actions: 1, label: rule.label })
     }
@@ -445,7 +458,8 @@ export const behavior = {
       return undefined
     }
     // 卡达斯：任意技能（2 + 1[per_investigator]），成功从游戏中移除。
-    const awakeningRule = treacheryRuleFor(FALSE_AWAKENING)?.agendaAsideAction
+    const asideCard = state.agendaAside?.find(card => codeOf(card) === FALSE_AWAKENING)
+    const awakeningRule = asideCard && treacheryRuleFor(FALSE_AWAKENING)?.agendaAsideAction
     if (awakeningRule && move.rule === awakeningRule.rule) {
       const difficulty = Number(awakeningRule.baseDifficulty || 2)
         + Number(awakeningRule.perInvestigatorBonus || 0) * (Number(state.numInvestigators) || 1)
@@ -457,11 +471,7 @@ export const behavior = {
       }) || 'willpower'
       api.test?.(inv.seat, skill, difficulty, result => {
         if (!result.success) return
-        const aside = state.scenarioFlags?.agendaAside || []
-        const index = aside.indexOf(FALSE_AWAKENING)
-        if (index >= 0) aside.splice(index, 1)
-        state.removedFromGame ||= []
-        state.removedFromGame.push(FALSE_AWAKENING)
+        api.removeAgendaAside?.(asideCard.id)
         api.info?.('⏰ 卡达斯被移出游戏。')
       })
       return undefined
@@ -546,6 +556,13 @@ export const behavior = {
 
   hunterMove(state, enemy, api) {
     return hunterMoveForRule(state, enemy, api)
+  },
+
+  preyRank(state, enemy, candidates) {
+    if (!enemyStatRuleFor(codeOf(enemy))?.preyHighestAlarm) return null
+    const seatOf = candidate => typeof candidate === 'number' ? candidate : candidate.seat
+    const best = Math.max(...candidates.map(candidate => alarmOf(state, seatOf(candidate))))
+    return candidates.filter(candidate => alarmOf(state, seatOf(candidate)) === best)
   },
 
   canEngageEnemy(state, inv, enemy) {

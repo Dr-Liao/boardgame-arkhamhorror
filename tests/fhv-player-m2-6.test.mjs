@@ -103,14 +103,15 @@ test('P6 10070 诈降：谈判打出手牌[[武器]]（费用 -1），并以[敏
   s.chaosBag = ['0']
   const weaponCost = Number(ALL_CARDS['01016'].cost)
   playEvent(s, '10070', choice => {
-    if (choice.kind === 'effect') return choice.options.some(option => option.id === 'fight') ? 'fight' : null
+    if (choice.kind === 'ability') return choice.options.find(option => option.id !== 'skip')?.id
     return choice.options[0]?.id ?? null
   })
   const weapon = s.investigators[0].assets.find(card => card.code === '01016')
   assert.ok(weapon, '[[武器]]支援被打出并留在场上')
   assert.equal(s.investigators[0].resources, 30 - 1 - Math.max(0, weaponCost - 1), '武器费用 -1')
   assert.equal(s.lastTestResult.skill, 'agility', '本次攻击使用[敏捷]')
-  assert.ok(s.enemies.find(item => item.id === foe.id).damageTaken > 0, '对所选敌人造成了伤害')
+  assert.equal(weapon.uses, 3, '武器的攻击能力花费 1 发子弹')
+  assert.equal(s.enemies.find(item => item.id === foe.id).damageTaken, 2, '武器的攻击能力造成额外 1 点伤害')
 })
 
 test('P6 10071 诱骗：谈判[敏捷](0) 成功按超过点数获得资源（最多 6），失败则敌人攻击', () => {
@@ -132,7 +133,7 @@ test('P6 10071 诱骗：谈判[敏捷](0) 成功按超过点数获得资源（�
   assert.ok(failure.enemies.some(item => item.id === attacker.id))
 })
 
-test('P6 10072 “我肯定还！”：快速借走同地点调查员全部资源，轮末自动归还并弃卡', () => {
+test('P6 10072 “我肯定还！”：快速借走同地点调查员全部资源，弃卡后轮末自动归还', () => {
   const s = game(2)
   const [first, second] = s.investigators
   first.resources = 2
@@ -142,7 +143,8 @@ test('P6 10072 “我肯定还！”：快速借走同地点调查员全部资�
   playEvent(s, '10072')
   assert.equal(s.investigators[0].resources, 9, '借走另一位调查员的全部 7 资源')
   assert.equal(s.investigators[1].resources, 0, '另一位的资源池清空')
-  assert.ok(s.investigators[0].hand.includes('10072'), '本轮结束前留在手牌等待轮末归还')
+  assert.equal(s.investigators[0].hand.includes('10072'), false, '打出后离开手牌')
+  assert.ok(s.investigators[0].discard.includes('10072'), '事件结算后进入弃牌堆')
 
   transact(s, draft => {
     reactionWindow(draft, 'roundEnds', { when: 'roundEnds', round: draft.round }, [])

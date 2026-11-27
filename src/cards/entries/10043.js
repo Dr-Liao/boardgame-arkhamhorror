@@ -17,33 +17,25 @@
 //     （performTest 在投入前/揭示前开窗）；「每次检定仅限一次」= limit { scope: 'perTest', owner: 'instance' }。
 //   · 「+2 意志或 +2 智识」= 本次检定的技能加值（api.addPendingTestBonus，与 09123 的「+2 技能值」同一读点）。
 //
-// approximation（simplified）：
-//   1. 「揭示地点后补满贡品」缺少描述子窗口读点：locations.js#revealLocation 只调用旧式
-//      triggerReaction('locationRevealed')（只结算 legacyReaction），没有 reactionWindow 调用点，
-//      因此声明式描述子收不到该时机。当前只在「新地点放置入场」（locationPlaced）时补满；
-//      见 artifacts/migration/fhv/primitive-requests/10043.json。
-//   2. 「+2 意志或 +2 智识」用检定层面的 +2 实现（引擎没有「只对某技能加值」的写入点）；两者在本卡
-//      允许的检定里等价。
 export default {
   code: '10043',
   name: '鼠面具',
   uses: 2,
   usesType: 'offerings',
   assetRule: { controlledTraitLimit: { trait: 'Mask', amount: 1 } },
-  simplified: true,
-  note: 'approximation: 「揭示地点后补满贡品」缺描述子窗口读点（locationRevealed 只走旧式 triggerReaction），当前只在新地点入场（locationPlaced）时补满；+2 意志/智识按本次检定 +2 结算。见 primitive-requests/10043.json。',
   abilities: [
     {
       kind: 'forced',
-      trigger: 'locationPlaced',
-      id: 'mouseMaskReplenishOnPlacement',
-      label: '新地点入场后：补满 1 个贡品',
-      criteria: [({ source }) => Boolean(source) && (Number(source.uses) || 0) < 2],
+      trigger: ['locationPlaced', 'locationRevealed'],
+      id: 'mouseMaskReplenish',
+      limit: { scope: 'perWindow', owner: 'instance' },
+      label: '你揭示地点或放置新地点后，补满 1 个贡品',
+      criteria: [({ source, inv, context }) => context?.seat === inv.seat && Boolean(source) && (Number(source.uses) || 0) < 2],
       resolve: ({ source, api }) => {
         const room = 2 - (Number(source.uses) || 0)
         if (room <= 0) return
         api.addUses(source, 1)
-        api.info(`🎭 「鼠面具」：新地点入场，补满 1 个贡品（共 ${source.uses || 0} 个）。`)
+        api.info(`🎭 「鼠面具」：补满 1 个贡品（共 ${source.uses || 0} 个）。`)
       },
     },
     {

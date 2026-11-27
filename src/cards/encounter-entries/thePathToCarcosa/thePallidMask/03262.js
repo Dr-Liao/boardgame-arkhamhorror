@@ -15,7 +15,7 @@ export default {
     location.attachments ||= []
     if (location.attachments.some(attachment =>
       originalOf(typeof attachment === 'string' ? { code: attachment } : attachment) === '03262')) {
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     const attachment = api.attachToLocation?.(location.id, {

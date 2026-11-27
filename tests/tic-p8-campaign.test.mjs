@@ -38,8 +38,7 @@ function performRealAction(state) {
   return action
 }
 
-/** 把 intoTheMaelstrom 推进到幕 2（07316）：四色钥匙交给调查员 + 全员门扉 + 真实行动，
- *  让引擎自己的 checkAct 完成 07315 并执行 07316 背面布置（而非直接改 actIndex）。 */
+/** 集齐四色钥匙并全员抵达门扉后，使用 07315 的可选推进动作。 */
 function advanceMaelstromToAct2(state) {
   const gateway = state.locations.find(location => codeOf(location) === '07320')
   assert.ok(gateway, '漩涡深处开局应有门扉 07320')
@@ -58,7 +57,13 @@ function advanceMaelstromToAct2(state) {
   assert.equal(world.registeredEntry('07315').actRule.objective(state, state.acts[state.actIndex]), true,
     '四色钥匙 + 全员门扉后 07315 目标应成立')
   performRealAction(state)
-  assert.equal(state.actIndex, 1, '真实行动应让引擎推进到幕 2')
+  assert.equal(codeOf(state.acts[state.actIndex]), '07315', '执行其他行动不会自动推进')
+  const seat = decisionSeat(world, state)
+  const advance = findMove(state, 'advanceAct', seat)
+  assert.ok(advance, '满足目标后应有推进选项')
+  playMove(world, state, advance, seat)
+  settleChoices(world, state)
+  assert.equal(state.actIndex, 1, '选了推进后进入幕 2')
   assert.equal(codeOf(state.acts[state.actIndex]), '07316')
   assert.ok(state.locations.length > 9, '07316 背面应布置幕 2 地图')
   assert.ok(state.enemies.some(enemy => ['07330a', '07330b'].includes(codeOf(enemy))), '达贡应入场')

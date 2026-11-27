@@ -3,6 +3,7 @@
 // 三章分别使用与既有章节测试同口径的 state 夹具（真实数据对象 + api 桩）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { fixture as engineFixture, enemy as engineEnemy, legalMoves, move, settle } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as olj from '../content/campaigns/theDrownedCity/scenarios/oneLastJob/index.js'
 import * as tww from '../content/campaigns/theDrownedCity/scenarios/theWesternWall/index.js'
@@ -264,24 +265,39 @@ test('11503 漫漫长夜：同模板反应（仅最后线索触发）且背面�
   assert.ok(report !== undefined)
 })
 
-test('11504 盘问帮派（Hibb 线）：幕 1 线索阈值 2+1/人；[fast] 花费 X 线索谈判弃罪犯并放线索', () => {
-  const { state, api } = oljSetup(2)
-  assert.equal(OLJ_ACT_CODES[0], '11504')
-  const flags = registeredEntry('11504').flags
-  assert.equal(flags.parley.clueOnAct, 1)
-  assert.equal(flags.parley.discardEngagedCriminal, true)
-  const actions = olj.behavior.actions(state, state.investigators[0])
-  assert.ok(Array.isArray(actions))
-  const report = olj.behavior.actReveal(state, state.acts[0], api)
-  assert.ok(report !== undefined, '幕 1 背面已接线')
+function verifyActOneParley(actCode) {
+  const state = engineFixture('01001', 2)
+  state.scenario = { ...state.scenario, id: 'oneLastJob' }
+  state.acts = [{ code: actCode, originalCode: actCode }]
+  state.actIndex = 0
+  const [inv, partner] = state.investigators
+  inv.clues = 4
+  inv.actionsLeft = 0
+  partner.location = inv.location
+  const criminal = { code: '11512', originalCode: '11512', traits: ['Criminal'], health: 3, damageTaken: 1 }
+  const unengaged = engineEnemy(state, { ...criminal, engagedSeat: null })
+  const parley = () => legalMoves(state, 0).find(option => option.rule === 'oneLastJobParley' && !option.reason)
+  assert.equal(parley(), undefined)
+  const target = engineEnemy(state, { ...criminal, engagedSeat: 1 })
+  const option = parley()
+  assert.equal(option.actions, 0)
+  const remain = state.investigators[0].clues - 2
+  move(state, option)
+  settle(state)
+  assert.equal(state.investigators[0].clues, remain)
+  assert.equal(state.investigators[0].actionsLeft, 0)
+  assert.equal(state.actClues, 1)
+  assert.ok(state.encounterDiscard.includes(target.code))
+  assert.deepEqual(state.enemies.map(enemy => enemy.id), [unengaged.id])
+  assert.equal(state.investigators[1].engaged.includes(target.id), false)
+}
+
+test('11504 盘问帮派（希布线）：可与同地点被队友交战的罪犯谈判', () => {
+  verifyActOneParley('11504')
 })
 
-test('11505 盘问帮派（La Bella Luna 线）：同文幕 + 背面放美月酒廊并生成内奥米', () => {
-  const { state, api } = oljSetup(2, { choose: () => 'laBellaLuna' })
-  const v2 = state.acts.find(act => (act.originalCode || act.code) === ACT1_V2_CODE) || { originalCode: ACT1_V2_CODE }
-  const report = olj.behavior.actReveal(state, v2, api)
-  assert.ok(report !== undefined)
-  assert.equal(Object.keys(OLJ_LOCATIONS).length > 0, true)
+test('11505 盘问帮派（美月酒廊线）：花费等于剩余生命的线索并推进幕线索', () => {
+  verifyActOneParley('11505')
 })
 
 test('11504b 希布的路边酒馆：显现入场、生成萨迪并把幕 2a/3a 加入幕牌库后推进', () => {
@@ -537,25 +553,39 @@ test('11526 沉没阶梯：揭示后把水下秘库放进上/下一行', () => {
   assert.ok(state.locations.some(item => (item.originalCode || item.code) === '11532') || state.locations.length >= 1)
 })
 
-test('11527 淹没棚屋：深潜者移动时与每处完全淹没地点互连', () => {
+test('11527 淹没棚屋：揭示后深潜者移动与完全淹没地点双向相连', () => {
   const { state } = twwSetup(1)
-  const shanty = state.locations.find(item => (item.originalCode || item.code) === '11527')
-  assert.ok(shanty || tww.behavior.enemyConnections !== undefined)
-  const deepOne = { code: '11727', traits: ['Deep One'], location: shanty?.id || state.locations[0].id }
-  const connections = tww.behavior.enemyConnections(state, deepOne, state.locations[0])
-  assert.ok(Array.isArray(connections))
+  const shanty = state.locations.find(item => item.id === 'drownedShanty')
+  const full = { id: 'fully-flooded', revealed: true }
+  const partial = { id: 'partly-flooded', revealed: true }
+  state.locations.push(full, partial)
+  tww.behavior.waterSet(state, {}, full.id, 2)
+  tww.behavior.waterSet(state, {}, partial.id, 1)
+  const deepOne = { code: '11727', traits: ['Deep One'], location: shanty.id }
+  shanty.revealed = false
+  assert.deepEqual(tww.behavior.enemyConnections(state, deepOne, full), [])
+  shanty.revealed = true
+  const destinations = tww.behavior.enemyConnections(state, deepOne, shanty)
+  assert.ok(destinations.includes(full.id))
+  assert.equal(destinations.includes(partial.id), false)
+  assert.deepEqual(tww.behavior.enemyConnections(state, deepOne, full), [shanty.id])
+  assert.deepEqual(tww.behavior.enemyConnections(state, { traits: ['Cultist'] }, full), [])
 })
 
-test('11528 破碎遗迹[rune_v]：未淹没时的 [action] 发现符文 V（陌生人）并记录翻译', () => {
+test('11528 破碎遗迹：未淹没时发现符文 V 并记录翻译', () => {
   const { state, api } = twwSetup(1)
   const inv = state.investigators[0]
-  const relic = state.locations.find(item => (item.originalCode || item.code) === '11528')
-  assert.ok(relic || true)
-  const glyphLoc = relic || { id: 'relic-v', originalCode: '11528', level: 1, floodLevel: 0, revealed: true }
-  if (!state.locations.includes(glyphLoc)) state.locations.push(glyphLoc)
-  inv.location = glyphLoc.id
-  const moves = tww.behavior.actions(state, inv)
-  assert.ok(moves.some(move => move.rule === 'twwLocationGlyph'), '符文 V 行动出现在行动枚举')
+  const ruins = state.locations.find(item => item.id === 'shatteredRuins')
+  inv.location = ruins.id
+  const glyphAction = () => tww.behavior.actions(state, inv).find(move => move.rule === 'twwLocationGlyph')
+  tww.behavior.waterSet(state, {}, ruins.id, 1)
+  assert.ok(glyphAction().reason)
+  assert.equal(tww.behavior.performAction(state, inv, glyphAction(), api), false)
+  assert.equal(state.campaign.records.discoveredGlyphs?.includes('V') ?? false, false)
+  tww.behavior.waterSet(state, {}, ruins.id, 0)
+  assert.equal(tww.behavior.performAction(state, inv, glyphAction(), api), true)
+  assert.deepEqual(state.campaign.records.discoveredGlyphs, ['V'])
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.V, '陌生人')
 })
 
 test('11529 黑曜石地基：智力(3) 成功抽取放在一边的海底壁画', () => {
@@ -595,36 +625,55 @@ test('11531 海底壁画：显现附属地点且不能取消/不能离场；行�
   assert.equal(attached[0].code, '11531')
 })
 
-test('11531b 海底壁画剧情面：符文 W（寄生虫）翻译并加入胜利区', () => {
-  const entry = registeredEntry('11531b')
-  assert.equal(entry.implemented, true)
+test('11531b 海底壁画：两次通过后同一故事牌进入胜利区并记符文 W', () => {
   const { state, api } = twwSetup(1)
-  state.locations.push({ id: 'frieze-loc', originalCode: '11529', level: 1, revealed: true, attachments: [{ id: 'frieze', code: '11531', originalCode: '11531' }] })
-  state.investigators[0].location = 'frieze-loc'
-  const moves = tww.behavior.actions(state, state.investigators[0])
-  assert.ok(moves.some(move => move.rule === 'twwSeafloorFrieze'), '海底壁画翻面行动出现在行动枚举')
+  const inv = state.investigators[0]
+  const frieze = { id: 'frieze', code: '11531', originalCode: '11531' }
+  const site = { id: 'frieze-loc', originalCode: '11529', level: 1, revealed: true, attachments: [frieze] }
+  state.locations.push(site)
+  inv.location = site.id
+  const flip = tww.behavior.actions(state, inv).find(move => move.rule === 'twwSeafloorFrieze')
+  api.testResult = { success: false }
+  assert.equal(tww.behavior.performAction(state, inv, flip, api), true)
+  assert.deepEqual(site.attachments, [frieze])
+  assert.equal(state.victoryDisplay.length, 0)
+  api.tests.length = 0
+  api.testResult = { success: true }
+  assert.equal(tww.behavior.performAction(state, inv, flip, api), true)
+  assert.deepEqual(api.tests.map(({ skill, difficulty }) => [skill, difficulty]), [['combat', 2], ['willpower', 2]])
+  assert.deepEqual(site.attachments, [])
+  assert.ok(state.victoryDisplay.some(item => item.id === frieze.id && item.code === '11531b' && item.victory === 1))
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.W, '寄生虫')
 })
 
-test('11532 水下秘库[rune_z]：智力(层级) 成功翻面并记录符文 Z（城市）', () => {
-  const entry = registeredEntry('11532')
-  assert.equal(entry.flags.vaultFlipAction, true)
-  assert.equal(entry.flags.cannotFlipAgain, true)
+function verifyVaultFlip() {
   const { state, api } = twwSetup(1)
-  const vault = state.locations.find(item => (item.originalCode || item.code) === '11532') || { id: 'vault', originalCode: '11532', level: 3, revealed: true }
-  if (!state.locations.includes(vault)) state.locations.push(vault)
-  state.investigators[0].location = vault.id
-  const moves = tww.behavior.actions(state, state.investigators[0])
-  assert.ok(moves.some(move => move.rule === 'twwUnderseaVault'), '水下秘库翻面行动出现在行动枚举')
+  const inv = state.investigators[0]
+  const vault = { id: 'underseaVault', code: '11532', originalCode: '11532', level: 3, revealed: true }
+  state.locations.push(vault)
+  inv.location = vault.id
+  const flip = () => tww.behavior.actions(state, inv).find(move => move.rule === 'twwUnderseaVault')
+  assert.ok(flip())
+  api.testResult = { success: false }
+  assert.equal(tww.behavior.performAction(state, inv, flip(), api), true)
+  assert.ok(flip(), '失败仍可再检定')
+  assert.equal(state.campaign.records.discoveredGlyphs?.includes('Z') ?? false, false)
+  api.testResult = { success: true }
+  assert.equal(tww.behavior.performAction(state, inv, flip(), api), true)
+  assert.deepEqual(api.tests.at(-1), { seat: 0, skill: 'intellect', difficulty: 3 })
+  assert.equal(state.scenarioFlags.twwGlyphTranslation.Z, '城市')
+  return { vault, flip }
+}
+
+test('11532 水下秘库：智力检定取当前层级，成功才记录符文 Z', () => {
+  verifyVaultFlip()
 })
 
-test('11532b 水下秘库剧情面：翻回地点面且不能再翻', () => {
-  assert.equal(registeredEntry('11532b').flags.cannotFlipAgain, true)
-  const { state, api } = twwSetup(1)
-  state.locations.push({ id: 'vault', originalCode: '11532', level: 2, revealed: true })
-  state.investigators[0].location = 'vault'
-  const moves = tww.behavior.actions(state, state.investigators[0])
-  assert.ok(Array.isArray(moves))
-  void api
+test('11532b 水下秘库：翻回同一地点实体并锁住翻面动作', () => {
+  const { vault, flip } = verifyVaultFlip()
+  assert.equal(vault.code, '11532')
+  assert.equal(vault.cannotFlipAgain, true)
+  assert.equal(flip(), undefined)
 })
 
 test('11533 深潜者主母：猎手；进场搜索遭遇牌库/弃牌堆生成一名深潜者', () => {

@@ -28,8 +28,7 @@ export default {
           { id: 'leave', label: '我不靠近它半步' }],
       })
       if (answer !== 'collect') return
-      const flags = (state.scenarioFlags ||= {})
-      flags.collectedAStrangeLiquid = true
+      api.setScenarioFlag('collectedAStrangeLiquid')
       api.privateInfo?.(holder.seat, '你在剧本日志里记住：你“收集了一种奇怪的液体”。')
     },
   },

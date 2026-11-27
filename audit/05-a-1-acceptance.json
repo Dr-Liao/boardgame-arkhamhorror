@@ -3,7 +3,7 @@
   "unit": "05-a-1",
   "profile": {
     "id": "tcu-deluxe-a-2026-11",
-    "scope": "万象无终 05 段 tcu 豪华包前半（05001–05055）55 条目录记录。53 条通过五维验收；2 条（05020 谈判、05037 攻击行动指示未按对应行动结算）暂不切换。",
+    "scope": "万象无终 05 段 tcu 豪华包前半（05001–05055）55 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 55,
-    "verified": 53,
-    "unverified": 2,
+    "verified": 55,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 423
   },
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
-      "sha256": "35c5a0734c9b215105f4a4c919d8da4863b7ebc9e94394d9b031c8bd8ac3cb4e"
+      "sha256": "3060b7f0ae68fa7e7e7a17cf08bdacb01619ebc89421526dde2f9d68f2cb96c2"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-witching-hour.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
-      "sha256": "11ad9d1eda4646b4b9682dd09d185c15f248ed8bb65f0e0ab30a4afef27c434d"
+      "sha256": "8e8bb4ef1786c8024005900000d60ee151b0a5854149e1faa206193f4a212dc3"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
@@ -497,9 +497,13 @@
       "code": "05020",
       "name": "拷问",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面粗体行动指示「谈判。」未按 Parley 行动结算：played 描述子只声明 noOpportunityAttack，未声明 actionKind:'parley'/countsAs，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）。行动历史与「执行过谈判行动」类效果不计入，属未披露近似。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05020 拷问 谈判战斗检定：难度=3+敌人伤害，成功发现两处线索"
+        }
+      ]
     },
     {
       "code": "05021",
@@ -761,9 +765,21 @@
       "code": "05037",
       "name": "绝望之举",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面粗体行动指示「攻击。」未按 Fight 行动结算：played 描述子只声明 noOpportunityAttack，未声明 countsAs:'fight'，引擎 actionKind() 返回 'evade'（src/engine/table-decisions.js:310）；同类卡 05009/05013 已声明 countsAs:'fight'。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/phase5-migration.test.mjs",
+          "test": "2026-10-27：攻击事件只有未交战冷漠敌人时不能打出（04033/04266/05037）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05037 绝望之举 从手牌弃掉手部道具：获得 +X 战斗但不返还资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-1.test.mjs",
+          "test": "TCU 05037 绝望之举 弃掉场上的手部道具：+X 战斗 +1 伤害，成功获得 X 资源"
+        }
+      ]
     },
     {
       "code": "05038",

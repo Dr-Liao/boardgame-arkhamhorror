@@ -3,7 +3,7 @@
   "unit": "06-a-2",
   "profile": {
     "id": "tde-beyond-gates-b-2026-11",
-    "scope": "食梦者 06 段 tde 豪华包后半（06057–06109）55 条目录记录。47 条通过五维验收；8 条因声明未接线或收尾/二选一语义未落实暂不切换。",
+    "scope": "食梦者 06 段 tde 豪华包后半（06057–06109）55 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 55,
-    "verified": 47,
-    "unverified": 8,
+    "verified": 55,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 190
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
-      "sha256": "c5dff16a8998d50b37d0ad4244c614fa4fb178ec0e08130c2b89316f95e8a653"
+      "sha256": "aaae2358bfea744f794f92715adbd43e08a7f0d047dd825ca76d5142519bb8f0"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-beyondTheGatesOfSleep.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
-      "sha256": "14761e73fea41b30362945be3e0334419e6b32ce9b9c7603c447a95e2ea2d51e"
+      "sha256": "256c2cddf20cc41e0f50da71e4d57876f2d70068294bea7eb2c1fdfe5cc2ce76"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
-      "sha256": "59979ee2b83b99b3eaa759b82784795d9f82912fd3047848195c4215e50fee87"
+      "sha256": "3aced234e0e955fb1cf94d2d54f305bb0612174da2604348db132eb11f073a15"
     },
     {
       "file": "games/arkhamhorror/tests/tde-rules.test.mjs",
@@ -221,9 +221,13 @@
       "code": "06066",
       "name": "恐怖医院",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面第二句「Each [[Spider]] enemy at an infested location gets +1 fight and +1 evade」没有读点：条目声明 agendaRule.spiderAtInfestedBonus，条目注释称 behavior.enemyStatModifier 读取，但章节 behavior 没有该钩子、共享层 enemyStatModifier 只读 entry.enemyStatRule；全仓库无 spiderAtInfestedBonus 读者（声明即接线缺失）。神话阶段滋生检定与背面的桥梁之阶 +8/结局 4 已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06066 恐怖医院：桥梁之阶 +8 并结束到结局 4；蜘蛛加成已声明"
+        }
+      ]
     },
     {
       "code": "06067",
@@ -405,9 +409,17 @@
       "code": "06081",
       "name": "可疑的护工",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面核心（不能攻击、不能被攻击、不能被造成伤害、不能被击败）未实现：条目把这 4 条写成 flags.cannotAttack/cannotBeAttacked/cannotBeDamaged/cannotBeDefeated，但引擎读的是敌人规则（enemyRule.cannotX 并入 definition / entityRule cannot:*），TDE 共享层与觉醒噩梦章节均未读取这些 flags；全仓库无读者。仅「与你交战时不能调查」（blocksInvestigationWhileEngaged）有读点并可用。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-wakingNightmare.test.mjs",
+          "test": "06081 可疑的护工：与它交战时不能调查；不能攻击/被攻击/被伤害/被击败的 flags 齐全"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06081 可疑的护工：不能攻击/被攻击/受伤/被击败，交战时不能调查"
+        }
+      ]
     },
     {
       "code": "06082",
@@ -489,25 +501,37 @@
       "code": "06087",
       "name": "伊吉若斯之理",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "隐藏牌核心限制未实现：卡面「你不能打出费用为奇数的卡牌；你不能触发费用为奇数的能力；[action] 弃一张费用为偶数的玩家卡：从手牌弃掉本卡」全部只声明在 hiddenRule（cannotPlayOddCost/cannotTriggerOddCost/discardEvenCostAction），引擎 hidden-rules 仅支持 cannotPlayTypes/cannotTriggerFree/cannotFightTraits/maxMovesPerTurn，全仓库无这些 key 的读取或对应行动。隐藏入手上牌由引擎自动完成，但这三条限制与摆脱行动没有行为。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06087 隐私牌阻止奇数费用的打出和能力，弃偶数费用的手牌可摆脱"
+        }
+      ]
     },
     {
       "code": "06088",
       "name": "伊吉若斯之理",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "隐藏牌核心限制未实现：「不能对技能检定投入技能图标总数为奇数的卡牌；[action] 弃技能图标数为偶数的玩家卡以弃掉本卡」只声明 hiddenRule（cannotCommitOddSkillIcons/discardEvenSkillIconsAction），引擎 hidden-rules 无对应读点与行动；提交区只支持 cannotPlayTypes/maxCommitsPerRound 等既有能力。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06088 隐私牌阻止投入奇数图标，弃偶数图标的手牌可摆脱"
+        }
+      ]
     },
     {
       "code": "06089",
       "name": "伊吉若斯之理",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "隐藏牌核心限制未实现：「不能打出/投入卡牌名称为奇数个词的卡牌；[action] 弃名称为偶数个词的玩家卡以弃掉本卡」只声明 hiddenRule（cannotPlayOddWordsInTitle/cannotCommitOddWordsInTitle/discardEvenWordsAction），引擎无词数统计读点与摆脱行动。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06089 隐私牌阻止打出或投入奇数词标题，弃偶数词的手牌可摆脱"
+        }
+      ]
     },
     {
       "code": "06090",
@@ -621,17 +645,33 @@
       "code": "06098",
       "name": "黑夜恐怖",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "威胁区行动的收尾与卡面不符：卡面「[action] 意志(4)。本次检定结束后弃掉黑夜恐怖（即使失败）」，实现在共享 performEncounterAction 中只在检定成功时 api.removeThreat；失败则本卡永远留在威胁区，与「即使失败」冲突。失败后的牌库顶 3 张强制（flags.afterFailTest）已由 TDE encounter-rules.afterTest 实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06098 黑夜恐怖：检定失败后揭示牌库顶 3 张，抽走弱点、其余移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：检定失败限制与「失败后看牌库顶」的数据分派（06085 / 06098）"
+        }
+      ]
     },
     {
       "code": "06099",
       "name": "窥看地下世界",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「当你将受到伤害和/或恐惧时：受到 1 点额外伤害或恐惧」语义是二选一；引擎 harmInterceptor 读点（enemies.js:1057-1060）在同时有伤害与恐惧时给两者各 +1（等价于「和」），没有选择。放置威胁区与 [fast] 弃掉后受 1 伤 1 恐（flags.fastDiscardFollowUp）已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06099 窥看地下世界：同时受到伤害和恐惧时只追加所选的一种；快速弃置仍各受 1 点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-runtime-api.test.mjs",
+          "test": "encounter-rules：威胁区摆脱行动的附加结算（06099 弃牌后 1 伤 1 恐）"
+        }
+      ]
     },
     {
       "code": "06100",
@@ -733,9 +773,13 @@
       "code": "06108",
       "name": "隐蔽的祖格鼠",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "被击败强制只实现了一部分：卡面「隐蔽的祖格鼠被击败时：取消所有超出伤害，并把其余的蜂拥/头领卡牌移动到一个连接地点，呈横置状态」。enemyScript.onSwarmDefeated 只在「本敌人作为蜂拥卡被击败」时触发，且只移动头领（未把其余蜂拥卡一并移动）；作为头领被击败的分支没有对应处理。取消超出伤害（cancelExcessDamage）已接引擎 enemies.js:916。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard2.test.mjs",
+          "test": "TDE 06108 隐蔽的祖格鼠：被击败时取消超出伤害并把头领移到连接地点横置"
+        }
+      ]
     },
     {
       "code": "06109",

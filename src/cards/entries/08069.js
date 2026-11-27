@@ -8,7 +8,7 @@
 // 一卡一文件：这张卡的行为只在这里维护。
 // 读点：composure（沉稳：非直接恐惧先分配）+ freeTriggers（法术检定花 1 资源 +1，requireTestTrait）；
 // 被动 +1 用 modifier 的条件函数（source 卡面特性含 Spell 的技能检定）。
-// 与 08056 相同，非直接伤害分支待 primitive request（composureDamage）。
+// 非直接伤害分配也检查 composureDamage。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const testSourceHasTrait = (state, trait) => {
@@ -21,6 +21,7 @@ export default {
   code: '08069',
   fast: true,
   composure: true,
+  flags: { composureDamage: true },
   freeTriggers: [
     { skill: 'any', cost: { resources: 1 }, bonus: 1, requireTestTrait: 'Spell' },
   ],

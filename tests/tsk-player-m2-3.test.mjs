@@ -3,12 +3,15 @@
 // 断言真实状态变化（费用/槽位/使用次数/目标/窗口/持续/负面路径）。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
+import { fixture, asset, enemy, legalMoves, move, settle } from './core-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { executeDescriptor, getStat, commitIcons, playerWindow, drawEncounter } from '../src/engine/engine.js'
+import { executeDescriptor, getStat, commitIcons, playerWindow, drawEncounter, reactionWindow, performTest,
+  enemyFightValue, enemyEvadeValue, moveEnemyToward } from '../src/engine/engine.js'
 import { recordCustomizationChoices } from '../src/engine/tsk-customizable.js'
+import { playerLocationRuleActive } from '../src/engine/location-attachments.js'
 import { slotBonus } from '../src/engine/modifiers.js'
+import { agendaDoom } from '../src/engine/rules-state.js'
 import { beneathCards, storeBeneath } from '../src/engine/commit-origins.js'
 import entries09075 from '../src/cards/entries/09075.js'
 import entries09076 from '../src/cards/entries/09076.js'
@@ -117,7 +120,9 @@ test('P6 09076 职业枪手：入场后把手中违法支援附属到场，并�
   const s = fixture('01001')
   const triggerman = asset(s, '09076')
   inv(s).hand = ['09075']
-  fire(s, '09076', descriptors('09076', 'entersPlay')[0], { source: triggerman })
+  transact(s, draft => reactionWindow(draft, 'assetEnteredPlay', {
+    when: 'assetEnteredPlay', seat: 0, assetId: triggerman.id, assetCode: '09076',
+  }, []), pending => pending.options.find(option => option.cardCode === '09076')?.id)
   const kit = inv(s).assets.find(card => card.code === '09075')
   assert.ok(kit, '违法支援被放置入场')
   assert.equal(kit.attachedToAsset, assetById(s, triggerman.id).id, '违法支援附属到职业枪手')
@@ -126,11 +131,14 @@ test('P6 09076 职业枪手：入场后把手中违法支援附属到场，并�
   inv(s).assets = inv(s).assets.filter(card => card.code !== '09075')
   const gun = asset(s, '01029', { uses: 2 })
   gun.attachedToAsset = assetById(s, triggerman.id).id
-  const foe = enemy(s, { fight: 0, evade: 0, health: 20, engagedSeat: 0 })
+  const foe = enemy(s, { fight: 4, evade: 0, health: 20, engagedSeat: 0 })
+  inv(s).combat = 1
   s.chaosBag = ['0']
   const actionsBefore = inv(s).actionsLeft
   fire(s, '09076', descriptors('09076', 'free')[0], { source: assetById(s, triggerman.id) })
-  assert.equal(enemyById(s, foe.id).damageTaken, 5, '无行动费结算附属攻击（霰弹枪按超过难度造成 5 点）')
+  assert.equal(s.lastTestResult.value, 7, '印刷的战斗 1 被基础 4 替换，再加枪械 +3')
+  assert.equal(enemyById(s, foe.id).damageTaken, 3, '按成功差值造成伤害')
+  assert.equal(assetById(s, gun.id).uses, 1, '免除行动费用，弹药仍需支付')
   assert.equal(inv(s).actionsLeft, actionsBefore, '不支付附属能力的[action]费用')
   assert.equal(assetById(s, triggerman.id).exhausted, true, '横置职业枪手')
   assert.equal(inv(s).resources, 29, '花费 1 资源')
@@ -139,20 +147,23 @@ test('P6 09076 职业枪手：入场后把手中违法支援附属到场，并�
 // ---------------------------------------------------------------------------
 // 09077 地下市场
 // ---------------------------------------------------------------------------
-test('P6 09077 地下市场：牌库 +10；回合开始揭示 2 张，花 1 资源抽 1 张其余放底', () => {
+test('P6 09077 地下市场：起始手牌前移走 10 张违法卡，回合开始付 1 资源从市场抽一张', () => {
   const s = fixture('01001')
-  asset(s, '09077')
-  assert.equal(registeredEntry('09077').deckConstruction.sizeBonus, 10, '牌库张数 +10')
-  inv(s).deck = ['01060', '01029']
+  const market = asset(s, '09077')
+  assert.equal(registeredEntry('09077').deckConstruction.sizeBonus, 10)
+  inv(s).deck = ['01088', ...Array(5).fill('09075'), ...Array(5).fill('09064')]
+  fire(s, '09077', descriptors('09077', 'setup')[0], { source: market }, pending =>
+    pending.options.find(option => option.id === 'build')?.id)
+  assert.deepEqual(inv(s).deck, ['01088'])
+  assert.equal(s.scenarioFlags[`marketDeck:${market.id}`].length, 10)
   const before = inv(s).resources
-  fire(s, '09077', descriptors('09077', 'reaction')[0], { context: { seat: 0 } }, pending => {
-    if (pending.options.some(option => option.id === 'spend')) return 'spend'
-    if (pending.options.some(option => option.id === '0')) return '0'
-    return null
-  })
-  assert.equal(inv(s).resources, before - 1, '花费 1 资源')
-  assert.equal(inv(s).hand.length, 1, '抽取其中 1 张')
-  assert.equal(inv(s).deck.length, 1, '另一张放回牌库底')
+  transact(s, draft => reactionWindow(draft, 'turnBegins', { when: 'turnBegins', seat: 0 }, []), pending =>
+    pending.options.find(option => option.cardCode === '09077')?.id
+      ?? (pending.kind === 'card' ? '0' : null))
+  assert.equal(inv(s).resources, before - 1)
+  assert.ok(['09075', '09064'].includes(inv(s).hand[0]))
+  assert.equal(s.scenarioFlags[`marketDeck:${market.id}`].length, 9)
+  assert.deepEqual(inv(s).deck, ['01088'])
 })
 
 // ---------------------------------------------------------------------------
@@ -191,30 +202,91 @@ test('P6 09079 传神佳墨：3 充能、回合开始移除 1 充能并在耗尽
 // ---------------------------------------------------------------------------
 // 09080 召来的仆从
 // ---------------------------------------------------------------------------
-test('P6 09080 召来的仆从：行动把它移动到已揭示的连接地点；定制面板声明 8 项', () => {
-  const s = fixture('01001')
-  const servant = asset(s, '09080')
-  const destination = link(s, inv(s).location, 'm23-servant')
-  assert.equal(registeredEntry('09080').customizationOptions.length, 8, '定制选项原样声明')
-  assert.equal(registeredEntry('09080').abilities[0].cost.discardControlledAsset, 1, '额外费用弃掉另一个支援')
-  fire(s, '09080', descriptors('09080', 'action')[0], { source: servant, context: { targetId: destination } })
-  const targetLocation = s.locations.find(location => location.id === destination)
-  assert.equal((targetLocation.attachments || []).some(card => card.code === '09080'), true, '仆从移动到目标地点')
-  assert.equal(inv(s).assets.some(card => card.id === servant.id), false, '不再作为支援留在场上')
+test('P6 09080 召来的仆从：弃掉支援付费，仆从用独立行动移动到相邻地点', () => {
+  const state = fixture('01001')
+  const origin = inv(state).location
+  const destination = link(state, origin, 'm23-servant')
+  inv(state).hand = ['09080']
+  const paid = asset(state, '01045')
+  move(state, { action: 'play', cardId: '09080' }); settle(state)
+  const servant = inv(state).assets.find(card => card.code === '09080')
+  assert.ok(servant)
+  assert.equal(inv(state).assets.some(card => card.id === paid.id), false)
+  assert.equal(servant.location, origin)
+  const actions = inv(state).actionsLeft
+  const send = legalMoves(state).find(command => command.assetId === servant.id && command.targetId === destination)
+  assert.ok(send)
+  move(state, send); settle(state)
+  assert.equal(inv(state).assets.find(card => card.id === servant.id).location, destination)
+  assert.equal(inv(state).location, origin)
+  assert.equal(inv(state).actionsLeft, actions)
 })
 
 // ---------------------------------------------------------------------------
 // 09081 号令真言
 // ---------------------------------------------------------------------------
-test('P6 09081 号令真言：对同地点非精英敌人下「蹲下」命令使其横置', () => {
+test('P6 09081 号令真言：附属到非精英敌人，之后可谈判，每种命令每轮一次', () => {
   const s = fixture('01001')
-  const foe = enemy(s, { engagedSeat: 0, fight: 3, evade: 3, health: 10 })
-  fire(s, '09081', descriptors('09081', 'played')[0], {}, pending => {
-    if (pending.options.some(option => option.id === 'cower')) return 'cower'
-    return null
-  })
-  assert.equal(enemyById(s, foe.id).exhausted, true, '“蹲下”使敌人横置')
-  assert.equal(registeredEntry('09081').abilities[0].fast, true, '快速事件')
+  customize(s, '09081', [4, 4])
+  inv(s).hand = ['09081']
+  locationOf(s).connections = []
+  const foe = enemy(s, { health: 20, engagedSeat: 0 })
+  const before = inv(s).actionsLeft
+  move(s, { action: 'play', cardId: '09081' })
+  settle(s)
+  assert.equal(inv(s).actionsLeft, before)
+  const word = enemyById(s, foe.id).attachments.find(card => card.code === '09081')
+  assert.equal(word.ownerSeat, 0)
+  assert.ok(!inv(s).discard.includes('09081'))
+  assert.equal(enemyById(s, foe.id).exhausted || false, false)
+  const parley = () => legalMoves(s, 0).find(command => command.action === 'entityAbility'
+    && command.entityId === word.id && command.label.includes('谈判'))
+  assert.ok(parley())
+  move(s, parley())
+  settle(s)
+  assert.equal(enemyById(s, foe.id).exhausted, true)
+  assert.equal(inv(s).actionsLeft, before - 1)
+  enemyById(s, foe.id).exhausted = false
+  assert.equal(parley(), undefined, '同轮不能重复同一命令')
+  s.round++
+  assert.ok(parley(), '下一轮可再次命令')
+  const recall = legalMoves(s, 0).find(command => command.entityId === word.id && command.label.includes('返回手牌'))
+  assert.ok(recall)
+  move(s, recall)
+  settle(s)
+  assert.ok(inv(s).hand.includes('09081'))
+  assert.ok(!enemyById(s, foe.id).attachments.some(card => card.id === word.id))
+})
+
+test('P6 09081 号令真言：三遍念诵把命令传给自己的其他附属，每个实例分别受每轮限制', () => {
+  const s = fixture('01001')
+  customize(s, '09081', [7, 7, 7])
+  inv(s).hand = ['09081', '09081']
+  locationOf(s).connections = []
+  const first = enemy(s, { name: '第一处宿主', engagedSeat: 0 })
+  const second = enemy(s, { name: '第二处宿主', engagedSeat: 0 })
+  const elite = enemy(s, { name: '精英', elite: true, engagedSeat: 0 })
+  for (const host of [first, second]) {
+    move(s, { action: 'play', cardId: '09081' })
+    assert.equal(s.pendingChoice.kind, 'target')
+    assert.deepEqual(s.pendingChoice.options.map(option => option.id), [first.id, second.id])
+    settle(s, choice => choice.kind === 'target' ? host.id : null)
+  }
+  const word = enemyById(s, first.id).attachments.find(item => item.code === '09081')
+  const anotherWord = enemyById(s, second.id).attachments.find(item => item.code === '09081')
+  const parley = id => legalMoves(s, 0).find(command => command.action === 'entityAbility'
+    && command.entityId === id && command.label.includes('谈判'))
+  enemyById(s, first.id).exhausted = true
+  assert.equal(parley(word.id), undefined, '只能从有合法命令的原始宿主发动')
+  enemyById(s, first.id).exhausted = false
+  const damage = inv(s).damage
+  move(s, parley(word.id))
+  settle(s)
+  assert.deepEqual([first, second, elite].map(host => Boolean(enemyById(s, host.id).exhausted)), [true, true, false])
+  assert.equal(inv(s).damage, damage, '谈判不会引发借机攻击')
+  for (const host of [first, second]) enemyById(s, host.id).exhausted = false
+  assert.equal(parley(word.id), undefined)
+  assert.equal(parley(anotherWord.id), undefined)
 })
 
 // ---------------------------------------------------------------------------
@@ -357,19 +429,28 @@ test('P6 09086 惊悚皈依：每个法术槽抽 1 张；每个被占用的法�
 // ---------------------------------------------------------------------------
 // 09087 爆炸结界
 // ---------------------------------------------------------------------------
-test('P6 09087 爆炸结界：X 对交战的非精英敌人造成伤害，X 受空法术槽限制', () => {
+test('P6 09087 爆炸结界：支付 X 前先弃法术，X 受弃置后空法术槽限制', () => {
   const s = fixture('01001')
-  const foe = enemy(s, { engagedSeat: 0, fight: 0, evade: 0, health: 20 })
-  fire(s, '09087', descriptors('09087', 'played')[0], { context: { playCost: { cost: 2 } } })
-  assert.equal(enemyById(s, foe.id).damageTaken, 2, '造成 X=2 点伤害')
-
-  const capped = fixture('01001')
-  asset(capped, '01061')
-  asset(capped, '01060')
-  const target = enemy(capped, { engagedSeat: 0, fight: 0, evade: 0, health: 20 })
-  fire(capped, '09087', descriptors('09087', 'played')[0], { context: { playCost: { cost: 2 } } })
-  assert.equal(enemyById(capped, target.id).damageTaken, 0, '没有空法术槽时 X 被钳制为 0')
-  assert.equal(registeredEntry('09087').chooseResourceCostOnPlay, true, 'X 费用卡')
+  const arcane = asset(s, '01061')
+  asset(s, '01060')
+  const foe = enemy(s, { engagedSeat: 0, health: 20 })
+  inv(s).hand = ['09087']
+  const before = inv(s).resources
+  move(s, { action: 'play', cardId: '09087' })
+  let paymentOffered = false
+  settle(s, pending => {
+    if (pending.kind === 'discard') return pending.options.find(option => option.id === arcane.id)?.id ?? 'done'
+    if (pending.kind === 'resource') {
+      paymentOffered = true
+      assert.deepEqual(pending.options.map(option => String(option.id)), ['0', '1'])
+      return '1'
+    }
+    return null
+  })
+  assert.ok(paymentOffered)
+  assert.equal(inv(s).resources, before - 1)
+  assert.equal(enemyById(s, foe.id).damageTaken, 1)
+  assert.ok(inv(s).discard.includes('01061'))
 })
 
 // ---------------------------------------------------------------------------
@@ -429,76 +510,72 @@ test('P6 09089 束敌宝罐：罐底每个敌人 +1 法术槽；可取消有相�
 // ---------------------------------------------------------------------------
 // 09090 恐灵附身
 // ---------------------------------------------------------------------------
-test('P6 09090 恐灵附身：投入后放毁灭换 2 图标，或移除毁灭/补半使用', () => {
-  const s = fixture('01001')
-  const assetUnderTest = asset(s, '01061', { doom: 1 })
-  s.skillTest = { seat: 0, skill: 'willpower', source: { assetId: assetUnderTest.id }, committed: [] }
-  fire(s, '09090', descriptors('09090', 'reaction')[0], { context: { cardCode: '09090' } }, pending => {
-    if (pending.options.some(option => option.id === 'settle')) return 'settle'
-    return null
-  })
-  assert.equal(assetById(s, assetUnderTest.id).doom, 0, '移除 1 个毁灭标记')
-
-  const s2 = fixture('01001')
-  const asset2 = asset(s2, '01061')
-  s2.skillTest = { seat: 0, skill: 'willpower', source: { assetId: asset2.id }, committed: [] }
-  fire(s2, '09090', descriptors('09090', 'reaction')[0], { context: { cardCode: '09090' } }, pending => {
-    if (pending.options.some(option => option.id === 'doom')) return 'doom'
-    return null
-  })
-  assert.equal(assetById(s2, asset2.id).doom, 1)
-  assert.equal(s2.skillTest.extraCommittedIcons, 2, '本次检定 +2 图标')
+test('P6 09090 恐灵附身：只在投入支援检定后的成功分支移除毁灭', () => {
+  for (const success of [false, true]) {
+    const s = fixture('01001')
+    const tested = asset(s, '01061', { doom: 1 })
+    inv(s).hand = ['09090']
+    s.chaosBag = ['0']
+    transact(s, draft => performTest(draft, 0, 'willpower', success ? 1 : 20, {
+      source: { code: tested.code, assetId: tested.id, label: '支援检定' },
+    }), pending => {
+      if (pending.kind === 'commit') return pending.options.find(option => option.label.includes('恐灵附身'))?.id
+      return pending.options.find(option => option.id === 'settle')?.id
+    })
+    assert.equal(s.lastTestResult.success, success)
+    assert.equal(assetById(s, tested.id).doom, success ? 0 : 1)
+    assert.ok(inv(s).discard.includes('09090'))
+  }
 })
 
 // ---------------------------------------------------------------------------
 // 09091 星界映射
 // ---------------------------------------------------------------------------
-test('P6 09091 星界映射：每个空法术槽 +1 手槽；额外行动打出手中手部槽位支援', () => {
+test('P6 09091 星界映射：按实际空法术槽增加手槽，额外行动只用于打出占手槽的支援', () => {
   const s = fixture('01001')
   asset(s, '09091')
-  assert.equal(slotBonus(inv(s), 'hand'), 2, '2 个空法术槽 → +2 手部槽位')
-  const arcane = asset(s, '01061')
-  assert.equal(slotBonus(inv(s), 'hand'), 1, '占用 1 个法术槽后只剩 +1 手槽')
-  inv(s).assets = inv(s).assets.filter(card => card.id !== arcane.id)
-  inv(s).hand = ['01029']
+  asset(s, '01070')
+  assert.equal(slotBonus(inv(s), 'hand'), 3, '额外法术槽动态计入')
+  asset(s, '01061')
+  assert.equal(slotBonus(inv(s), 'hand'), 2, '一个法术槽被占用')
+  inv(s).hand = ['01029', '01088', '09075']
   inv(s).resources = 10
-  const actions = inv(s).actionsLeft
-  fire(s, '09091', descriptors('09091', 'action')[0])
-  assert.equal(inv(s).assets.some(card => card.code === '01029'), true, '额外行动打出手部槽位支援')
-  assert.equal(inv(s).actionsLeft, actions, '不消耗行动点')
-  assert.equal(inv(s).resources, 5, '仍支付资源费用 5')
-})
-
-test('P6 09091 星界映射：不是自己的回合时玩家窗口不提供额外行动', () => {
-  // 卡面「你在自己回合期间可以执行一个行动」：免费能力窗口会向所有调查员询问，
-  // 漏 criteria 时额外行动在别人的回合里也会被列出来。
-  const s = fixture('01001', 2)
-  asset(s, '09091')
-  const openWindow = draft => playerWindow(draft, 'investigation.afterAction', [], null, {})
-  s.currentSeat = 1
-  resolveTransaction(s, 1, { action: 'tskP6OtherTurn' }, openWindow)
-  const offTurnLabels = (s.pendingChoice?.options || []).map(option => String(option.label))
-  assert.equal(offTurnLabels.some(label => label.includes('星界映射')), false, '不是自己的回合不能触发额外行动')
-  // 自己回合的同一窗口仍然提供（只由 criteria 开关，回合内可用性不变）。
-  s.currentSeat = 0
-  resolveTransaction(s, 0, { action: 'tskP6OwnTurn' }, openWindow)
-  const ownTurnLabels = (s.pendingChoice?.options || []).map(option => String(option.label))
-  assert.ok(ownTurnLabels.some(label => label.includes('星界映射')), '自己的回合仍然可以触发额外行动')
+  inv(s).actionsLeft = 0
+  move(s, { action: 'play', cardId: '01029' })
+  settle(s)
+  assert.ok(inv(s).assets.some(card => card.code === '01029'))
+  assert.equal(inv(s).actionsLeft, 0)
+  assert.equal(inv(s).resources, 5)
+  assert.throws(() => move(s, { action: 'play', cardId: '09075' }), /行动/)
+  assert.throws(() => move(s, { action: 'play', cardId: '01088' }), /行动/)
 })
 
 // ---------------------------------------------------------------------------
 // 09092 艾勒·鲁巴什
 // ---------------------------------------------------------------------------
-test('P6 09092 艾勒·鲁巴什：把带毁灭支援附属到自身，并在其技能检定上 +1', () => {
+test('P6 09092 艾勒·鲁巴什：允许两个附属并各忽略 1 毁灭；附属支援发起检定 +1', () => {
   const s = fixture('01001')
   const elle = asset(s, '09092')
-  const orb = asset(s, '01061', { doom: 1 })
-  const baseWillpower = getStat(s, inv(s), 'willpower')
-  fire(s, '09092', descriptors('09092', 'free')[0], { source: elle })
-  assert.equal(assetById(s, orb.id).attachedToAsset, elle.id, '带毁灭支援附属到艾勒')
-  assert.equal(assetById(s, elle.id).exhausted, true, '横置支付费用')
-  s.skillTest = { seat: 0, skill: 'willpower', source: { assetId: orb.id }, committed: [] }
-  assert.equal(getStat(s, inv(s), 'willpower'), baseWillpower + 1, '结算附属支援的技能检定 +1')
+  const orb = asset(s, '01061', { doom: 2 })
+  const spell = asset(s, '01060', { doom: 1 })
+  const doom = agendaDoom(s)
+  const ability = descriptors('09092', 'free')[0]
+  fire(s, '09092', ability, { source: elle }, pending =>
+    pending.options.find(option => option.id === orb.id)?.id)
+  assetById(s, elle.id).exhausted = false
+  fire(s, '09092', ability, { source: elle }, pending =>
+    pending.options.find(option => option.id === 'attach')?.id)
+  assert.equal(assetById(s, orb.id).attachedToAsset, elle.id)
+  assert.equal(assetById(s, spell.id).attachedToAsset, elle.id)
+  assert.equal(assetById(s, elle.id).exhausted, true)
+  assert.equal(agendaDoom(s), doom - 2)
+  assert.equal(assetById(s, orb.id).doom, 2)
+  assert.equal(assetById(s, spell.id).doom, 1)
+  const willpower = getStat(s, inv(s), 'willpower')
+  transact(s, draft => performTest(draft, 0, 'willpower', 1, {
+    source: { label: '附属支援检定', code: orb.code, assetId: orb.id },
+  }))
+  assert.equal(s.lastTestResult.value, willpower + 1)
 })
 
 // ---------------------------------------------------------------------------
@@ -633,6 +710,29 @@ test('P6 09098 缟玛瑙五芒星（4 级）：躲避连接地点敌人；成功
 // ---------------------------------------------------------------------------
 // 09099 便携万能工具
 // ---------------------------------------------------------------------------
+test('P6 09099 便携万能工具：可拆卸和弹簧式同时生效时，队友将要失败才可触发', () => {
+  const s = fixture('01001', 2)
+  const other = inv(s, 1)
+  s.humanSeats = [0, 1]
+  other.location = inv(s).location
+  const tool = asset(s, '09099')
+  customize(s, '09099', [0, 6, 6, 6, 6])
+  const value = getStat(s, other, 'willpower')
+  let offered = false
+  transact(s, draft => performTest(draft, 1, 'willpower', value + 1, {}), pending => {
+    const option = pending.options.find(item => item.cardCode === '09099')
+    if (!option) return null
+    assert.equal(pending.seat, 1)
+    assert.match(pending.prompt, /失败/)
+    offered = true
+    return option.id
+  })
+  assert.ok(offered)
+  assert.equal(assetById(s, tool.id).exhausted, true)
+  assert.equal(s.lastTestResult.value, value + 1)
+  assert.equal(s.lastTestResult.success, true)
+})
+
 test('P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值；勾选尖刀再 +1', () => {
   const runFight = (state, select) => {
     const foe = enemy(state, { engagedSeat: 0, fight: 0, evade: 0, health: 30 })
@@ -677,15 +777,30 @@ test('P6 09099 便携万能工具：真实攻击检定窗口横置 +1 技能值�
 // ---------------------------------------------------------------------------
 test('P6 09100 简易陷阱：以 2 计时入场，每轮结束移除 1 计时，耗尽后弃掉', () => {
   const s = fixture('01001')
-  fire(s, '09100', descriptors('09100', 'played')[0])
-  const trap = inv(s).assets.find(card => card.code === '09100')
-  assert.ok(trap, '事件变成场上卡')
-  assert.equal(assetById(s, trap.id).uses, 2, '使用 2 计时')
-  assert.equal(assetById(s, trap.id).usesType, 'time')
-  fire(s, '09100', descriptors('09100', 'forced')[0], { source: assetById(s, trap.id) })
-  assert.equal(assetById(s, trap.id).uses, 1, '一轮结束移除 1 计时')
-  fire(s, '09100', descriptors('09100', 'forced')[0], { source: assetById(s, trap.id) })
-  assert.equal(inv(s).assets.some(card => card.id === trap.id), false, '没有计时后弃掉')
+  const local = inv(s).location
+  const remote = link(s, local, 'trap-target')
+  const normal = enemy(s, { location: remote, fight: 3, evade: 3, engagedSeat: null, hunter: true })
+  const elite = enemy(s, { location: remote, fight: 3, evade: 3, engagedSeat: null, elite: true })
+  customize(s, '09100', [4, 4, 5, 5, 5])
+  inv(s).hand = ['09100']
+  move(s, { action: 'play', cardId: '09100' })
+  settle(s, pending => pending.options.some(option => option.id === remote) ? remote : null)
+  const trap = () => s.playerLocationAttachments.find(card => card.code === '09100')
+  assert.equal(trap().location, remote)
+  assert.equal(trap().uses, 2)
+  assert.equal(trap().usesType, 'time')
+  assert.deepEqual([enemyFightValue(s, normal, inv(s)), enemyEvadeValue(s, normal, inv(s))], [2, 2])
+  assert.deepEqual([enemyFightValue(s, elite, inv(s)), enemyEvadeValue(s, elite, inv(s))], [3, 3])
+  assert.equal(playerLocationRuleActive(s, normal, 'blocksEnemyOpportunityAttack'), true)
+  assert.equal(playerLocationRuleActive(s, elite, 'blocksEnemyOpportunityAttack'), false)
+  transact(s, draft => moveEnemyToward(draft, draft.enemies.find(card => card.id === normal.id), local, []))
+  assert.equal(enemyById(s, normal.id).location, remote)
+  const finishRound = draft => reactionWindow(draft, 'roundEnds', { when: 'roundEnds', round: draft.round }, [])
+  transact(s, finishRound)
+  assert.equal(trap().uses, 1)
+  s.round++
+  transact(s, finishRound)
+  assert.equal(trap(), undefined)
   assert.ok(inv(s).discard.includes('09100'))
 })
 

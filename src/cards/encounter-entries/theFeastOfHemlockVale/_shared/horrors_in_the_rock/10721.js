@@ -11,9 +11,7 @@
 //     敌人把自己的声明式修正走同一管线；`amount` 函数读到 damageTaken）；
 //   · 白日攻击后治愈 = enemyAttacked 窗口（敌人攻击结算后的既有窗口）+ api.healEnemy；
 //   · (白日)/(黑夜) 优先读 duringPeriod，无日历章节按黑暗地点/战役记录回退（与 10716 同口径）。
-//
-// 近似：黑夜「+1 伤害值」没有实体修正目标（ENTITY_MODIFIER_TARGETS 只有
-//   enemyFight/enemyEvade/enemyHealth），条目不新增字段冒充已接线——只在 flags 与 note 披露。
+//   · 黑夜伤害值由敌人发起攻击时重新按当前伤害标记计算。
 import { duringPeriod } from '../../../../../engine/matcher.js'
 
 const CODE = '10721'
@@ -43,6 +41,10 @@ export default {
   code: CODE,
   scope: 'enemy',
   implemented: true,
+  enemyRule: {
+    attackDamageBonus: (state, enemy) => isNight(state, enemy.location)
+      ? Math.floor((enemy.damageTaken || 0) / 2) : 0,
+  },
   modifiers: [{
     target: 'enemyFight',
     amount: ({ state, entity }) => (isNight(state, entity?.location)
@@ -76,7 +78,4 @@ export default {
     day: { healAfterAttack: 2 },
     night: { fightPer2Damage: 2, damagePer2Damage: 1 },
   },
-  note: '黑夜攻击值 +2/每 2 点伤害走条目的 enemyFight 修正（entityModifierTotal 读点）；'
-    + '黑夜「+1 伤害值」缺实体修正目标，只在 flags.night 声明并在本 note 披露未接线；'
-    + '白日攻击后治愈走 enemyAttacked + api.healEnemy。',
 }

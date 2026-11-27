@@ -1,10 +1,12 @@
+import { filterHand } from './hand-icons.js'
+import { attachmentPreventsReady, attachmentTextBlanked } from './attachment-rules.js'
 import { discardPlayerCards } from './player-zones.js'
 import { discardEncounterAttachment } from './scenario-decks.js'
 import { hasPlayerWindow, playerWindowContext } from './player-mechanics.js'
 import { assetTextBlankedExceptForced } from './card-text.js'
 import { resolvePoolSchedules } from './chaos-token-pool.js'
 import { availableResources } from './resource-bank.js'
-import { investigatorRule } from '../cards/card-rules.js'
+import { investigatorRule, locationRuleFor } from '../cards/card-rules.js'
 import { swarmGroup } from './swarm.js'
 import { hasWindowListener } from './window-listeners.js'
 // 阶段机（补给阶段 / 密谋揭示）从 engine.js 拆出的第五个模块（Phase 6 · 6d-5）。
@@ -102,9 +104,9 @@ function upkeepPhase(state) {
     inv.phaseStatBonus = null
     inv.phaseStatBonuses = []
     inv.fearExtraPaid = false
-    if (!assetsCannotReady(inv, state.round)) {
+    if (!assetsCannotReady(inv, state.round, state)) {
       for (const asset of inv.assets) {
-        if (assetTextBlankedExceptForced(asset) || !registeredEntry(asset.code)?.assetRule?.skipUpkeepReady) asset.exhausted = false
+        if (!attachmentPreventsReady(state, asset) && (assetTextBlankedExceptForced(asset) || !registeredEntry(asset.code)?.assetRule?.skipUpkeepReady)) asset.exhausted = false
         for (const attachment of asset.attachments || []) {
           if (!attachment.assetReference && attachment.exhausted) attachment.exhausted = false
         }
@@ -177,9 +179,8 @@ function upkeepPhase(state) {
       const upkeepDraw = investigatorRule(inv.code)?.upkeepDraw
       let drawTexts = []
       if (upkeepDraw && !investigatorTextBlanked(state, inv)) {
-        const keep = (inv.hand || []).filter(code => isWeaknessCode(code))
         const discarded = (inv.hand || []).filter(code => !isWeaknessCode(code))
-        inv.hand = keep
+        filterHand(inv, isWeaknessCode)
         if (discarded.length) {
           discardPlayerCards(state, inv, ...discarded)
           info(state, events, `${inv.name} 弃掉手牌中的 ${discarded.length} 张非弱点卡牌（补给阶段替换抽牌）。`)
@@ -198,7 +199,9 @@ function upkeepPhase(state) {
       const skipIncome = Boolean(darkHorseAsset) && requestChoice(state, { kind: 'upkeep', source: darkHorseAsset.code, seat: inv.seat,
         prompt: '黑马：本回合是否放弃获得资源？',
         options: [{ id: 'gain', label: `获得 ${supply} 资源` }, { id: 'skip', label: '不获得资源（保持 0 资源）' }] }) === 'skip'
-      if (!skipIncome && scenarioBehavior(state).canGainResources?.(state, inv) !== false) {
+      const here = state.locations.find(location => location.id === inv.location)
+      const noUpkeepResources = here?.revealed && locationRuleFor(here.originalCode || here.code)?.noUpkeepResources
+      if (!skipIncome && !noUpkeepResources && scenarioBehavior(state).canGainResources?.(state, inv) !== false) {
         inv.resources += supply
         const supplyText = `${inv.name} 获得 ${supply} 资源（当前 ${inv.resources}）。`
         info(state, events, supplyText, { kind: 'automatic', phase: 'upkeep', round: state.round, text: supplyText, effect: 'resource', delta: supply, seat: inv.seat, location: inv.location })
@@ -265,6 +268,14 @@ function upkeepPhase(state) {
   // 非玩家实体的描述子强制（07084/07085 达贡祭司的「轮末放 1 毁灭」）永远等不到窗口（审计 H12）。
   if (hasWindowListener(state, 'roundEnds')) {
     openAbilityWindow(state, 'roundEnds', { when: 'roundEnds', round: state.round }, events)
+  }
+  for (const location of state.locations) {
+    for (const source of (location.attachments || []).slice()) {
+      const rule = registeredEntry(source.originalCode || source.code)?.treacheryRule
+      if ((source.discardAtRound != null && source.discardAtRound === state.round) || (rule?.discardAtRoundEnd && !attachmentTextBlanked(state, source))) {
+        scenarioRuntime(state, events).discardAttachment(source)
+      }
+    }
   }
   resolvePoolSchedules(state)
   for (const inv of state.investigators) { inv.onTheLam = false; inv.skillSubstitute = null }

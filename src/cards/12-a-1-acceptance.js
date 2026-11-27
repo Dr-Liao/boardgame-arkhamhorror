@@ -14,6 +14,6 @@ export const CORE2026_SHARD1_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const CORE2026_SHARD1_ACCEPTANCE_SHA256 = '61243c5b6c0dae37336e6803e329ee3e181f693cecedab84f7acf41389d91071'
+export const CORE2026_SHARD1_ACCEPTANCE_SHA256 = '12aedfcc9175b957073955e60758c0e1084f6009951c4500fc5080c2828064b5'
 const verified = new Set(["12001","12002","12003","12004","12005","12006","12007","12008","12009","12010","12011","12012","12013","12014","12015","12016","12017","12018","12019","12020","12021","12022","12023","12024","12025","12026","12027","12028","12029","12030","12031","12032","12033","12034","12035","12036","12037","12038","12039","12040"])
 export const core2026Shard1CardVerified = code => verified.has(code)

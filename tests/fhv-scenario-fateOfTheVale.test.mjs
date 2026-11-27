@@ -319,10 +319,11 @@ test('P7 fateOfTheVale 深渊：五类结算卡片、从底部抽遭遇卡、其
   const drawn = behavior.drawEncounterFromAbyss(state, 0, { info: () => {} })
   assert.equal(drawn, '10674')
   assert.equal(behavior.abyssSize(state), 3, '只抽走遭遇卡')
-  assert.deepEqual(behavior.abyssCards(state).slice(0, 2), ['01020', '01021'], '其余揭示牌放回深渊顶')
+  assert.deepEqual(behavior.abyssCards(state), ['10693b', '01021', '01020'], '其余揭示牌放回深渊顶')
   // 放一张牌到深渊顶（引擎：deck 尾部是顶）。
   behavior.putOnAbyss(state, ['01030'])
   assert.equal(behavior.abyssCards(state).at(-1), '01030')
+  assert.equal(behavior.drawFromAbyss(state, 0, { info: () => {} }).kind, 'resident')
   const painted = behavior.drawFromAbyss(state, 0, { info: () => {} })
   assert.equal(painted.kind, 'player')
   assert.equal(state.investigators[0].hand.includes(painted.code), true, '玩家卡加入手牌')

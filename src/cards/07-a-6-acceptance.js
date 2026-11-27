@@ -14,6 +14,6 @@ export const TIC_SHARD6_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TIC_SHARD6_ACCEPTANCE_SHA256 = '4f02fb2913c4404b215c608f855d8c64133f4e41eb7612e91d4f81dd8c5e4392'
+export const TIC_SHARD6_ACCEPTANCE_SHA256 = '01eb06eb25ce0af27016bae876f51aefaabdc54b245b7c8f817a8cfc451eba5d'
 const verified = new Set(["07220","07221","07222","07223","07224","07225","07226","07227","07228","07229","07230","07231","07232","07233","07234","07235","07236","07237","07238","07239","07240","07241","07242","07243","07244","07245","07246","07247","07248","07249","07250","07251","07252","07252b","07253","07254","07255","07256","07257","07258","07259","07260"])
 export const ticShard6CardVerified = code => verified.has(code)

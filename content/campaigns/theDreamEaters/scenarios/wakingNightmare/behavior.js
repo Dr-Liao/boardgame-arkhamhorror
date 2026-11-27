@@ -572,6 +572,14 @@ export const behavior = {
     return wakingNightmareChaosToken(state, inv, token)
   },
 
+  enemyStatModifier(state, enemy, stat, inv) {
+    const shared = encounterRules.enemyStatModifier(state, enemy, stat, inv)
+    const agenda = state.agendas?.[state.agendaIndex]
+    const bonus = agendaRuleFor(codeOf(agenda), CHAPTER_ID)?.spiderAtInfestedBonus?.[stat] || 0
+    const spider = enemy.traits?.some(trait => trait.toLowerCase() === 'spider')
+    return shared + (spider && isInfested(state, enemy.location) ? bonus : 0)
+  },
+
   // ---- 调查封锁 / 地点揭示 / 进入 / 离开 ----
   investigationError(state, inv, location) {
     const blocker = (state.enemies || []).find(enemy => enemy.engagedSeat === inv?.seat

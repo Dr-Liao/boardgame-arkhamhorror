@@ -1,3 +1,4 @@
+import { replaceHand } from './hand-icons.js'
 import { isDraftMode, draftDecksReady } from '../deck/draft-mode.js'
 import { investigatorIdentity } from '../deck/investigator-identity.js'
 import { putInHand } from './hand-entry.js'
@@ -344,7 +345,7 @@ function prepareInvestigator(state, inv, events, startLocation, options = {}) {
   inv.actionsLeft = 3
   inv.exploreOnlyActions = 0
   inv.tomeActionUsed = false
-  inv.hand = []
+  replaceHand(inv, [])
   inv.deck = state.scenario?.mechanics?.noEncounterDeck
     ? deck : deck.filter(code => !registeredEntry(code)?.encounterLookRule?.forceBeneath)
   inv.discard = []
@@ -829,6 +830,7 @@ function startScenario(state, index, events, scenarioIdOverride = null) {
   state.expeditionLeaderSeat = state.expeditionLeaderSeat ?? null
   state.exiled = []
   state.exiledBySeat = []
+  delete state.collectionLoans
   state.locationVariants = {}
   state.scenarioZones = {}
   if (state.agendaAside) delete state.agendaAside

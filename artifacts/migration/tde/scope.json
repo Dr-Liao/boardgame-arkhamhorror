@@ -1740,8 +1740,8 @@
       "path": "src/cards/cards-data.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 13525354,
-      "sha256": "e82ac62eb62e6c6c410a960055db9549cce336433e2003852af559dedea6f9bc"
+      "bytes": 13678701,
+      "sha256": "2014b839430109f0434c590d5c92b53df01e73a9f580833b93c40e334c41c166"
     },
     {
       "path": "content/packs/tdeCampaign/manifest.js",
@@ -1754,8 +1754,8 @@
       "path": "content/packs/tdeInvestigators/manifest.js",
       "kind": "repo",
       "exists": true,
-      "bytes": 4545,
-      "sha256": "a4bbe66ef7f3c7480c5a55dc70946f18f6516887e06fec8076efa9bb2480d97b"
+      "bytes": 4476,
+      "sha256": "9f7ea86f3b64fa50d4078577dabb63c345b91520d764c337a7efcd0dae71f1dc"
     },
     {
       "path": "content/packs/tdePlayer/manifest.js",

@@ -10,7 +10,7 @@ import { encounterRules, activeInvestigators, original, here, recordsFor, discar
 import { addChaosToken } from '../../tcu-chaos.js'
 import {
   BROWN_JENKIN, KEZIAHS_ROOM, MOLDY_HALLS, NAHAB, SITE_OF_THE_SACRIFICE, STRANGE_GEOMETRY,
-  SWARM_OF_RATS, THE_BLACK_BOOK, UNKNOWN_PLACES, WALTER_GILMANS_ROOM,
+  THE_BLACK_BOOK, UNKNOWN_PLACES, WALTER_GILMANS_ROOM,
 } from './definition.js'
 import {
   SECRET_NAME_TOKEN_MEANINGS, secretNameChaosAfterTest, secretNameChaosToken,
@@ -25,30 +25,6 @@ function takeFromSetAside(state, code) {
   const index = list.indexOf(code)
   if (index >= 0) list.splice(index, 1)
   return index >= 0
-}
-
-// 参考实现的 findEncounterCard 只搜「遭遇牌库 + 遭遇弃牌堆」（默认 FromEncounterDeck/Discard），
-// 找不到时整段无效果——绝不凭空生成新副本。
-// 从遭遇牌库中段取牌也可能把牌库取空：用共享 watchEncounterDeckEmpty 在改动后补通知（05091/05098）。
-function findInEncounter(state, predicate, api = null) {
-  const discardIndex = (state.encounterDiscard || []).findIndex(predicate)
-  if (discardIndex >= 0) return state.encounterDiscard.splice(discardIndex, 1)[0]
-  const deckIndex = [...(state.encounterDeck || [])].reverse().findIndex(predicate)
-  if (deckIndex >= 0) {
-    const watch = watchEncounterDeckEmpty(state)
-    const realIndex = state.encounterDeck.length - 1 - deckIndex
-    const found = state.encounterDeck.splice(realIndex, 1)[0]
-    if (api) watch(api)
-    return found
-  }
-  return null
-}
-
-// 「找出某张卡（即使不在场）」：场外区域（set aside/弃牌堆/牌库）。参考 findUniqueCard。
-function findAnywhere(state, code, api = null) {
-  const wanted = String(code)
-  if (takeFromSetAside(state, wanted)) return wanted
-  return findInEncounter(state, candidate => String(candidate) === wanted, api)
 }
 
 const inPlay = (state, code) => state.enemies.find(enemy => String(codeOf(enemy)) === code) || null
@@ -366,31 +342,11 @@ export const behavior = {
   },
 
   hauntedScript(state, payload, api) {
-    const { scriptId, seat } = payload || {}
-    if (scriptId === 'landlordsQuartersRats') {
-      let code = null
-      const isRats = candidate => String(candidate) === SWARM_OF_RATS
-        || ALL_CARDS[candidate]?.nameEn === 'Swarm of Rats'
-      const discardIndex = (state.encounterDiscard || []).findIndex(isRats)
-      if (discardIndex >= 0) code = state.encounterDiscard.splice(discardIndex, 1)[0]
-      else {
-        const deckIndex = [...state.encounterDeck].reverse().findIndex(isRats)
-        if (deckIndex >= 0) {
-          // 从牌库中段找出「鼠群」可能把牌库取空：用共享钩子补「遭遇牌库耗尽」通知。
-          const watch = watchEncounterDeckEmpty(state)
-          const realIndex = state.encounterDeck.length - 1 - deckIndex
-          code = state.encounterDeck.splice(realIndex, 1)[0]
-          watch(api)
-        }
-      }
-      const target = locationIdByCode(state, MOLDY_HALLS) || state.investigators[seat]?.location
-      if (code && target) {
-        api.spawn?.(code, target)
-        api.shuffleEncounterDeck?.()
-        api.info?.(`🐀 闹鬼：从遭遇牌库/弃牌堆找出「鼠群」，生成在「发霉的走道」。`)
-      } else {
-        api.info?.('🐀 闹鬼：没有找到「鼠群」。')
-      }
+    const { scriptId, seat, locationId } = payload || {}
+    const hauntedLocation = state.locations.find(location => location.id === locationId)
+    const script = locationRuleFor(codeOf(hauntedLocation))?.hauntedScripts?.[scriptId]
+    if (script) {
+      script(state, api)
       return true
     }
     if (scriptId === 'keziahsRoomHex') {

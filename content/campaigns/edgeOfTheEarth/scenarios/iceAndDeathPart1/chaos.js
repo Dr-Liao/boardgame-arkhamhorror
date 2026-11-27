@@ -6,6 +6,7 @@
 //              困难/专家按失败差值张数，每张不能洗入则受 1 点恐惧）。
 //   [tablet]：简单/普通 -3，困难/专家 -4。失败时每低于难度 1 点弃牌库顶 1 张；弃到的弱点抽取。
 // 其余标记沿用战役混乱袋基础值（共享层负责）。
+import { entryFlags } from '../../../../../src/cards/card-rules.js'
 import { locationShelter } from '../../../../../src/engine/eote-shelter.js'
 
 export const PART1_TOKEN_MEANINGS = Object.freeze({
@@ -47,14 +48,13 @@ export function shelterValueOf(state, locationId) {
 }
 
 /** 标记修正值；返回 null 表示交回引擎默认值。 */
+export function iceAndDeathTokenValue(tokenFace, shelter, hard) {
+  if (tokenFace === 'skull') return hard ? shelter : Math.ceil(shelter / 2)
+  return entryFlags('08501')?.tokenModifiers?.[hard ? 'hard' : 'standard']?.[tokenFace] ?? null
+}
+
 export function part1ChaosTokenValue(state, tokenFace, inv) {
-  const shelter = shelterValueOf(state, inv?.location)
-  switch (tokenFace) {
-    case 'skull': return hardSide(state) ? shelter : Math.ceil(shelter / 2)
-    case 'cultist': return -2
-    case 'tablet': return hardSide(state) ? -4 : -3
-    default: return null
-  }
+  return iceAndDeathTokenValue(tokenFace, shelterValueOf(state, inv?.location), hardSide(state))
 }
 
 /**

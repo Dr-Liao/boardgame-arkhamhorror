@@ -3,7 +3,7 @@
   "unit": "06-a-8",
   "profile": {
     "id": "tde-where-the-gods-dwell-2026-11",
-    "scope": "食梦者 06 段 Where the Gods Dwell（wgd，06276–06322）47 条目录记录。42 条通过五维验收；5 条因字面功能缺失/错值或声明未接线暂不切换。",
+    "scope": "食梦者 06 段 Where the Gods Dwell（wgd，06276–06322）47 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 47,
-    "verified": 42,
-    "unverified": 5,
+    "verified": 47,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 388
+    "testsPassed": 390
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
-      "sha256": "c2eeb3843e5101217ffeefa021ddd71bb34cf5613a16705a25d8ebf1ae685652"
+      "sha256": "fbd9411775d578d7277012d64541ed96a3960a7a54c343faad47156cbe616897"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-whereTheGodsDwell.test.mjs",
-      "sha256": "33bb5e42da0510e0d06ad453f18539837d28b00047c2d4a347d8e1c91ef017e3"
+      "sha256": "0906a210c5779e80082f3680f675994de68b632fa8e02fddc44658b919c8966d"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
@@ -193,9 +193,21 @@
       "code": "06286",
       "name": "神居之所",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "剧本参考卡混乱标记表：chaos.js 只匹配 token==='elder_thing'，而引擎/混乱袋实际 token id 为 'elderthing'；导致 resolveChaosToken 返回 null，引擎回落到 SYMBOL_DEFAULTS.elderthing=-3，而印刷值为简单/普通 0、困难/专家 -1（两种难度都错）。既有测试用 'elder_thing' 字面量造成假绿。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06286 混乱标记表：skull 随幕/密谋编号、tablet -4/-6、cultist 再揭示一个；elderthing 分难度结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-whereTheGodsDwell.test.mjs",
+          "test": "06286 章节清单：playable、原卡、地点/幕/议程/结局数量与依赖"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06286 已验收 · scenario 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06287",
@@ -233,9 +245,17 @@
       "code": "06289",
       "name": "混沌化身",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "议程 3 背面『Each investigator is defeated and driven insane』只结算了 api.defeat，未调用 api.driveInsane；战役记录 status 不会写为 insane，TDE 战役/本章 resolution 也没有『被击败→发疯』的兜底映射。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06289 混沌化身背面：场上的每位调查员被击败并发疯，战役记录写入精神创伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06289 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06290",
@@ -597,17 +617,37 @@
       "code": "06312",
       "name": "荒土蠕虫",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "『Prey - Lowest [agility]』未接线：definition 里是印刷短语 'Lowest [agility]'（TDE card-data printedPrey），引擎排序表 card-ops.js PREY_RANK 使用 camelCase key（lowestAgility），preyTarget 用 PREY_RANK[enemy.prey] 求值不命中 → 猎物退化为候选人任选；条目缺 enemyRule.prey 覆盖（05088/05101/06084 等同句卡均写了覆盖）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06312 荒土蠕虫：生成于冰封荒土或大礼堂（二选一），猎物为敏捷最低"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06312 已验收 · enemy 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06313",
       "name": "无面欺诈者",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "『Prey - Most cards in hand』未接线：definition 存印刷短语 'Most cards in hand'，引擎 PREY_RANK 需要 mostCardsInHand key，条目未写 enemyRule.prey 覆盖 → 猎物排序不生效。（同卡『攻击时揭示手牌混沌低语并 +2 伤害』已正确接线并有既有测试）"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06313 无面欺诈者：手牌最多的调查员成为猎物"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06313 已验收 · enemy 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-whereTheGodsDwell.test.mjs",
+          "test": "无面欺诈者（06313）：手牌有混沌低语时攻击 +2 伤害并揭示该卡"
+        }
+      ]
     },
     {
       "code": "06314",
@@ -677,9 +717,25 @@
       "code": "06318",
       "name": "万千化身",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "『If no copies of Nyarlathotep attack as a result of this effect, Myriad Forms gains surge』无读点：条目写 scenarioFlags.myriadFormsAttacked，但全仓没有读取方，章节 behavior 也没有 encounterGainsSurge 钩子，引擎 encounter.js:192 的涌动判定永远拿不到该状态（声明了没人读 + 卡面子句缺失）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06318 万千化身：场上真形完成攻击则阻止涌动，攻击被禁止时仍涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06318 万千化身：实际抽取时仅在没有奈亚拉托提普攻击的情况下再抽一张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard8.test.mjs",
+          "test": "06318 万千化身：揭示手中全部奈亚拉托提普、逐张攻击并洗回遭遇牌库；真形在场上时移动并攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06318 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06319",

@@ -593,13 +593,6 @@ export const encounterRules = Object.freeze({
       if (inv.firstTestRound === state.round) continue
       total += amount
     }
-    // 敌人光环：所在地点的调查员全技能修正（05266 夜鹰：每张 -1，可叠加）。
-    for (const enemy of state.enemies || []) {
-      const aura = enemyStatRuleFor(original(enemy))?.skillAura
-      if (!aura) continue
-      if (aura.locationBound && enemy.location !== inv.location) continue
-      total += Number(aura.amount) || 0
-    }
     return total
   },
 

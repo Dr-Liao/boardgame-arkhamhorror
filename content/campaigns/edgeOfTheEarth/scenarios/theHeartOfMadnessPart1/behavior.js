@@ -5,11 +5,10 @@ import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { actRuleFor, agendaRuleFor, entryFlags, enemyScriptFor, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { randomValue } from '../../../../../src/engine/rules-state.js'
 import { initializeSeals, placeDormantSeal, recoverSeal, sealsOf, sealsAt } from '../../../../../src/campaign/eote-seals.js'
-import { HEART_OF_MADNESS_TOKEN_MEANINGS, heartOfMadnessChaosAfterTest, heartOfMadnessChaosToken, isMistPylon, locationSeals } from './chaos.js'
-import { RAW_CODES, SEAL_LOCATION_CODES } from './definition.js'
+import { HEART_OF_MADNESS_TOKEN_MEANINGS, heartOfMadnessChaosAfterTest, heartOfMadnessChaosToken, isMistPylon } from './chaos.js'
+import { SEAL_LOCATION_CODES } from './definition.js'
 
 export const scenarioApproximations = Object.freeze([
-  '原质团「敌人阶段结束时再次重整并结算敌人阶段」按重整+提示近似。',
   '石板标记抽忒咳哩-哩牌直接取牌库顶放入弃牌堆（P5 弱点管线近似）。',
   'cultist 视为寒霜只声明 asFrost 字段。',
 ])
@@ -169,19 +168,6 @@ export const behavior = {
     return checkDetonation(state, api)
   },
 
-  resolveEncounter(state, inv, treachery, api) {
-    const flags = entryFlags(codeOf(treachery)) || {}
-    if (flags.revelation === 'electrostaticDischarge') {
-      const here = locationOf(state, inv?.location)
-      const seal = here ? locationSeals(state, here.id).find(entry => entry.active) : null
-      api.horror?.(inv.seat, 1)
-      if (seal) api.damage?.(inv.seat, 1)
-      api.info?.(`⚡ 静电放电：与封印同地点的调查员受 ${seal ? '1 伤害与 1' : '1'} 恐惧。`)
-      return true
-    }
-    return false
-  },
-
   checkObjectives(state, api) {
     if (state.status !== 'playing') return
     if (checkDetonation(state, api)) return
@@ -259,21 +245,13 @@ export const behavior = {
     return { modifier: -3, once: true }
   },
 
-  enemyPhaseEnd(state, api) {
-    const mass = (state.enemies || []).find(enemy => codeOf(enemy) === RAW_CODES.protoplasmicMass)
-    if (!mass || mass.readiedAgainRound === state.round) return
-    const anyActivated = activeInvestigators(state).some(inv => sealsHeld(state, inv.seat).some(entry => entry.active))
-    if (!anyActivated) return
-    mass.readiedAgainRound = state.round
-    mass.exhausted = false
-    api.info?.('🫀 原质团在敌人阶段结束时重整（近似：不重复整段敌人阶段）。')
-  },
-
   resolution(state, key, events, api = {}) {
     const records = recordsFor(state)
     const gate = state.scenario?.startLocation
     const placed = activatedSealsAtLocation(state, gate).map(entry => entry.kind)
-    const recovered = sealsOf(state).filter(entry => entry.placedBySeat != null).map(entry => entry.kind)
+    const recovered = sealsOf(state).filter(entry => entry.locationId == null && entry.placedBySeat != null
+      && (!state.investigators[entry.placedBySeat]?.defeated || state.investigators[entry.placedBySeat]?.resigned))
+      .map(entry => entry.kind)
     if (placed.length) records.sealsPlaced = placed
     if (recovered.length) records.sealsRecovered = recovered
     const activeCount = sealsOf(state).filter(entry => entry.active).length

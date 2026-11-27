@@ -2,7 +2,7 @@
 // Detailed evidence: audit/07-a-3-acceptance.json. Not a promise of all-combination equivalence.
 export const TIC_SHARD3_ACCEPTANCE_PROFILE = {
   "id": "tic-in-too-deep-2026-11",
-  "scope": "印斯茅斯暗潮 07 段 In Too Deep（itd，07108–07151）44 条目录记录。32 条通过五维验收；12 条（07129–07138、07140、07141）因「谈判移除屏障」同句模板逐卡手写暂不切换（复审更新）。",
+  "scope": "印斯茅斯暗潮 07 段 In Too Deep（itd，07108–07151）44 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TIC_SHARD3_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TIC_SHARD3_ACCEPTANCE_SHA256 = '92ca6b2ffb232d5b8eca1b14ef6bd1d995eb07ff70cbd75da6d9fe8860f67c20'
-const verified = new Set(["07108","07109","07110","07111","07112","07113","07114","07115","07116","07117","07118","07119","07120","07121","07122","07123","07124","07125","07126","07127","07128","07139","07142","07143","07144","07145","07146","07147","07148","07149","07150","07151"])
+export const TIC_SHARD3_ACCEPTANCE_SHA256 = '9beddb26f6b3c3b28f870efb8dd0ba4d83a90afac20a8c7894e3a89b790b6a4b'
+const verified = new Set(["07108","07109","07110","07111","07112","07113","07114","07115","07116","07117","07118","07119","07120","07121","07122","07123","07124","07125","07126","07127","07128","07129","07130","07131","07132","07133","07134","07135","07136","07137","07138","07139","07140","07141","07142","07143","07144","07145","07146","07147","07148","07149","07150","07151"])
 export const ticShard3CardVerified = code => verified.has(code)

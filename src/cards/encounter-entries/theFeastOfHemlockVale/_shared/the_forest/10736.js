@@ -12,14 +12,14 @@
 //     已有同卡附属的地点排除（与 07299 石障同一写法）。
 //   · 附属 = api.attachToLocation（src/engine/location-attachments.js#attachLocationCard 唯一写入口，
 //     落在 location.attachments；不写 state）。
-//   · 昼夜两段「进入/离开附属地点的强制伤害」：引擎对**地点附属**没有移动窗口来源
-//     （ability-rules.js#nonPlayerAbilitySources 只枚举地点本身，不枚举 location.attachments；
-//     hidden-rules.js 的附属读点只有 treacheryRule.blocksMovementWhileReady 一类布尔规则），
-//     因此这次只落数据（dayMoveInto / nightMoveInOut），契约允许的近似在 note 里披露。
+//   · 进入/离开附属地点时，在移动结算内读取该地点的昼夜。
 import { entryDistance, originalOf } from '../../../_shared.js'
+import { duringPeriod } from '../../../../../engine/matcher.js'
 
 const CODE = '10736'
 const NAME = '荆棘之墙'
+const isDay = duringPeriod('day')
+const isNight = duringPeriod('night')
 
 const hasWall = location =>
   (location.attachments || []).some(attachment => String(originalOf(attachment)) === CODE)
@@ -38,6 +38,21 @@ export default {
   code: CODE,
   scope: 'treachery',
   implemented: true,
+  treacheryRule: {
+    onInvestigatorMove({ state, inv, source, location, from, to, api }) {
+      if (from?.id === to?.id || (location.id !== from?.id && location.id !== to?.id)) return
+      const context = { state, source: location }
+      const records = state.campaign?.records || {}
+      const recordedDate = typeof records.hemlockDate === 'string' ? records.hemlockDate.split(':')[1] : null
+      const recorded = String(records.time ?? records.timeOfDay ?? recordedDate ?? '').toLowerCase()
+      const night = isNight(context) || (!isDay(context) && recorded === 'night')
+      if (night) api.damage(inv.seat, 1)
+      else if (location.id === to?.id && (isDay(context) || recorded === 'day')) {
+        api.damage(inv.seat, 2)
+        api.detachEncounterAttachmentById(source.id)
+      }
+    },
+  },
   flags: {
     encounterGroup: 'the_forest',
     quantity: 2,
@@ -62,9 +77,6 @@ export default {
       code: CODE, originalCode: CODE, id: `${CODE}:${chosen.id}`,
     })
     api.info?.(`🌿 「${NAME}」附属到「${chosen.name || chosen.id}」。`)
-    return false
+    return { placed: true }
   },
-  note: '显现（附属到最近且没有同卡附属的地点）自足实现。「白日：进入时 2 点伤害并弃掉本卡 / '
-    + '黑夜：进入或离开时 1 点伤害」是移动窗口强制，引擎的地点附属没有移动窗口来源（只有地点本身是窗口来源），'
-    + '本批只落数据（flags.dayMoveInto / flags.nightMoveInOut）留给 P8 章节移动读点，未接线的子句不冒充已实现。',
 }

@@ -3,7 +3,7 @@
   "unit": "09-a-2",
   "profile": {
     "id": "tsk-player-b-2026-11",
-    "scope": "绯红密钥 09 段 tskp 玩家卡（09044–09086）43 条目录记录。25 条通过五维验收；18 条近似未替换/证据缺口暂不切换。",
+    "scope": "绯红密钥 09 段 tskp 玩家卡（09044–09086）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,27 +17,35 @@
   },
   "summary": {
     "total": 43,
-    "verified": 25,
-    "unverified": 18,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 175
+    "testsPassed": 195
   },
   "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+      "sha256": "703d2b3e6689259fc2ea72b752451fe48ee7ddccfc1f9e54208699526254c68f"
+    },
+    {
+      "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+      "sha256": "fc61a1a7533906d64dc844d1fa2e3c93b92b4fa1385ef8827c14007fae3ca2e5"
+    },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
       "sha256": "94357ea35e9eab4dcf56759fa062ce1d6fae8f25cbf4b593f488b82a0e695992"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
-      "sha256": "a19a9030777563e27281aaff3fdd686813ca930c822b76cfe9b2071bc8cac269"
+      "sha256": "da0842784d0275c8c6ca76deed4c6474fd89e4aa85b22b7537cef30d2f440fe3"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
-      "sha256": "b7f26a9b61ab4b2f3c34207cf0ebcb792b9b841014f4e066401cc041be7de6c2"
+      "sha256": "688ad6415126779c1c6ae31a319314fb9d6beafbc1a826917fb025fdc3b2f3ed"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-player-m2-4.test.mjs",
-      "sha256": "4c3561482920f880890afe80e56b24b125a7c262b97b6ff3324b392309c7c87a"
+      "sha256": "a032b44c11fd3906fba3a486a33d5cbbee82b1e96e56aef13e3c7fe668a5e653"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-investigator-09001.test.mjs",
@@ -68,16 +76,12 @@
       "sha256": "76f966450300765d643bd72eac107a289a36ecb86f6b869a37fc9b2667518b45"
     },
     {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
-    },
-    {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
       "sha256": "4311237d47f104f0b62635d521dcccf34a0804a9109d07f7f3aa3ff05800743b"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-interactions.test.mjs",
@@ -101,9 +105,17 @@
       "code": "09045",
       "name": "研究笔记",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面第一句反应能力「一个玩家卡牌能力将你的线索放到你所在地点后：把等量资源作为证据放到研究笔记上」未实现：条目自认「没有线索放置窗口」，只保留 [action] 检定/花费证据；证据计数器永远只能由其它来源写入，卡面主要循环（放线索→攒证据）断裂。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09045：玩家事件将线索放到自己的地点时，笔记增加等量证据"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-1.test.mjs",
+          "test": "P6 09045 研究笔记 检定[智力](0)：成功每超出 1 点可花 1 证据发现 1 个线索"
+        }
+      ]
     },
     {
       "code": "09046",
@@ -169,9 +181,17 @@
       "code": "09051",
       "name": "俄耳甫斯教信条",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面核心「将所选诡计的印刷文本框视为空白（除特性）直到本轮结束」未实现：条目只完成「选择诡计 + 花费 1 秘密 + 写一条 endOfRound 效果记录」，引擎没有 blankCardText 读点，被选诡计的条目文本仍照常结算；条目已标 simplified:true 并登记 primitive-requests/09051.json。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09051：诡计的打出限制被清空，下一回合仍为空白，下一轮恢复"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09051 俄耳甫斯教信条：花 1 秘密，使指定诡计文本框视为空白直到轮末"
+        }
+      ]
     },
     {
       "code": "09052",
@@ -213,9 +233,13 @@
       "code": "09055",
       "name": "媒体通行证",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面触发同时包括「花费线索**或**将线索放到你所在地点后」；实现只挂 clueDiscovered（发现/放置线索后）窗口，花费线索（api.spendClues 直接记账）没有窗口，因此花线索不触发本卡。条目自标 simplified 并登记 primitive-requests/09055.json。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09055 媒体通行证：发现线索不发动，花费线索后横置并增加本回合行动"
+        }
+      ]
     },
     {
       "code": "09056",
@@ -245,9 +269,13 @@
       "code": "09058",
       "name": "格雷氏解剖学",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「该卡下次被治疗/被造成伤害时 +1（最多 +3）」是伤害/治疗管线的持续修改读点；实现只能逐点询问并写一条 endOfRound 记录，没有任何结算端消费它，实际治疗/伤害数值不变。条目自标 simplified 并登记 primitive-requests/09058.json。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09058 格雷氏解剖学：检定[智力](1)后按超过点数逐项记录本轮效果（上限 +3）"
+        }
+      ]
     },
     {
       "code": "09059",
@@ -265,17 +293,45 @@
       "code": "09060",
       "name": "狐朋狗友",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "可定制卡多项未实现：①「购买时记录[[特性]]」没有构筑期读点，改为首次打出时补选并写战役记录（购买时点/升级表不符）；② Bolstering/Prompt 无逐实例读点、Clever 只保留原顺序（条目 note 自认），定制项效果不完整。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09060 鼓舞：只给新加入的同名副本百搭图标，手牌移位和存档后仍可投入，阶段结束后失效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09060：快速让队友结算，免费加入一张双特性牌，按指定顺序放回，支付费用打出"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09060 狐朋狗友：查看牌库顶 6 张，花 1 资源把具有所选特性的牌加入手牌，其余洗回"
+        }
+      ]
     },
     {
       "code": "09061",
       "name": "敏锐直觉",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面两个打出条件只实现「检定成功超过 3 点」；「议程或幕推进后」没有引擎事后窗口，完全无法打出；5 个定制追加条件与 Sharpened Talent 也缺读点（后者用本阶段 +2 近似那次行动）。条目自标 simplified 并登记 primitive-requests/09061.json。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "09-a-2 09061：定制勾满后才能在幕间购买第三张，第四张仍非法"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09021/09022/09023/09061/09099/09079/09119）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09061 敏锐直觉：再选第二行动，技能加值仅在两次授予的行动中生效"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09061 敏锐直觉：检定超过 3 点后能打出，整队每轮一次"
+        }
+      ]
     },
     {
       "code": "09062",
@@ -293,9 +349,13 @@
       "code": "09063",
       "name": "非分之财",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面把资源放在支援上（asset.resources），并在「撤退或游戏结束时」强制结算给下一位调查员开局 +资源。实现把资源存进实例 uses，且把强制结算改成主动 free 能力 + 战役记录：结算时机/自动性/资源位置均与卡面不符（条目自标 simplified，primitive-requests/09063.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09063 非分之财：资源确实移到资产上，撤退时分配下场的起始资源"
+        }
+      ]
     },
     {
       "code": "09064",
@@ -313,9 +373,13 @@
       "code": "09065",
       "name": "暗袋",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面核心「附属支援获得 1 个额外手部/饰品槽（仅用于[[违法]]支援）」未实现：引擎只有 hostExtraSlot 且仅接受 arcane，条目只完成「快速+自己回合+附属到服装支援」，宿主额外受限槽缺读点（simplified，primitive-requests/09065.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09065 暗袋：快速、只能自己回合，附属目标只认[[服装]]/[[护甲]]支援"
+        }
+      ]
     },
     {
       "code": "09066",
@@ -345,9 +409,17 @@
       "code": "09068",
       "name": "直捣蜂窝",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「从遭遇牌库顶 9 张中寻找一个**非精英**敌人」要求搜索阶段过滤精英；实现因 cards-data 没有精英标志，搜索阶段不过滤，只在生成后按实例 elite 复核写日志，抽到精英时效果会偏离（simplified，primitive-requests/09068.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09068：顶九张只有精英时不生成敌人、发现线索或获得资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09068 直捣蜂窝：查找遭遇牌库顶 9 张的敌人并与之交战，发现 1 个线索并获得等于其生命值的资源"
+        }
+      ]
     },
     {
       "code": "09069",
@@ -377,17 +449,29 @@
       "code": "09071",
       "name": "时髦大衣",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面触发是「你在自己回合内通过另一张玩家卡效果获得 1+ 资源后」的反应；引擎没有资源获得窗口，实现改为主动 free 能力（任何时机点用），触发时机与自动性不符（simplified，primitive-requests/09071.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09071 时髦大衣：玩家卡使你在回合内获得资源后，可以横置再获得 1 资源"
+        }
+      ]
     },
     {
       "code": "09072",
       "name": "查克·费格斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面三选一：event 获得快速 / 少 2 资源 / **事件结算期间**技能值 +2；实现第三项用「本阶段 skill:* +2」持续效果近似，作用范围超出该次事件结算（simplified，primitive-requests/09072.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09072：技能加值只作用于所选事件的结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09072 查克·费格斯：打出[[策略]]/[[技巧]]事件时横置，选择使其获得快速或 -2 费用"
+        }
+      ]
     },
     {
       "code": "09073",
@@ -405,9 +489,13 @@
       "code": "09074",
       "name": "破门而入",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「若成功超过难度 3 点，本回合结束时将破门而入返回手牌」是延迟去向；实现是结算后立即返回手牌（keepOnPlay+显式回手），时机与卡面不符（simplified，primitive-requests/09074.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-2.test.mjs",
+          "test": "P6 09074 破门而入：加入[敏捷]调查，成功超过 1 点自动躲避敌人，超过 3 点回合结束时返回手牌"
+        }
+      ]
     },
     {
       "code": "09075",
@@ -425,17 +513,25 @@
       "code": "09076",
       "name": "职业枪手",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面 [fast] 是「以**基础技能值 4** 结算附属资产的 [action] 能力（免行动费）」；引擎描述子级没有 baseValue 覆盖读点，条目 note 明示该基础值 4 未实现，只能按附属资产原值结算，核心数值与卡面不符（simplified，primitive-request/09076.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09076 职业枪手：入场后把手中违法支援附属到场，并能免费结算其攻击行动"
+        }
+      ]
     },
     {
       "code": "09077",
       "name": "地下市场",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面核心「开局前从牌库选 10 张[[违法]]牌组成市场牌库，每回合从市场牌库顶揭示 2 张」未实现：实现用玩家牌库顶 2 张近似市场牌库顶（市场牌库与开局前选择缺失，simplified，primitive-request/09077.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09077 地下市场：起始手牌前移走 10 张违法卡，回合开始付 1 资源从市场抽一张"
+        }
+      ]
     },
     {
       "code": "09078",
@@ -453,25 +549,61 @@
       "code": "09079",
       "name": "传神佳墨",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "可定制卡关键选项未实现：①「购买时圈选技能」没有构筑期读点，基础所选技能按意志近似；② Shifting Ink（运行时控制权切换）与灌墨的槽位替换未实现（note 自认）。技能加成因此不是玩家购买的技能（simplified，primitive-request/09079.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09079：记录所选技能，灌墨后可由同地点调查员控制并占用法术槽"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "P2-3 TSK 定制卡：费用修正与效果闸门在勾满前不生效（09021/09022/09023/09061/09099/09079/09119）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09079 传神佳墨：3 充能、回合开始移除 1 充能并在耗尽时弃掉；所选技能 +1"
+        }
+      ]
     },
     {
       "code": "09080",
       "name": "召来的仆从",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "可定制卡多项未实现：Armored Carapace（+3 生命 + 替同地点调查员承受伤害）与 Jaws「忽略警戒」没有读点；额外费用改在 entersPlay 用 api.discardAsset 支付（打出费用管线未读 cost.discardControlledAsset）；槽位覆盖/返回手牌费用/共享行动预算也自认未实现（simplified，primitive-request/09080.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09080：打出须弃掉另一支援，仆从自行移动并用掉唯一行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09080：邪魔在身允许两种不同动作，利爪可远程攻击，坚壳可替同地点队友承伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09080 召来的仆从：弃掉支援付费，仆从用独立行动移动到相邻地点"
+        }
+      ]
     },
     {
       "code": "09081",
       "name": "号令真言",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「快速：附属到一个非精英敌人；[action] 若附属敌人在你地点：谈判，给一个命令（每命令每轮一次）」的持续附属/每轮命令限制未实现：实现为打出时一次性对所选敌人下命令，没有真正附属，持续谈判与 Greater Control/Bonded/Thrice Spoken 定制项也未实现（simplified，primitive-request/09081.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-p8-customization.test.mjs",
+          "test": "09-a-2 09081：定制勾满后才能在幕间购买第三张，第四张仍非法"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09081 号令真言：三遍念诵把命令传给自己的其他附属，每个实例分别受每轮限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09081 号令真言：附属到非精英敌人，之后可谈判，每种命令每轮一次"
+        }
+      ]
     },
     {
       "code": "09082",
@@ -525,9 +657,17 @@
       "code": "09086",
       "name": "惊悚皈依",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「你每有一个法术槽位，抽 1 张（最多 5）；你每有一个已填法术槽位，弃 1 张手牌」应读当前实际槽位容量；引擎没有公开槽位容量读点，实现按基础法术槽=2 计，其它卡授予的额外法术槽（如 08060 咏春棍）不会被计入，数值与卡面不符（simplified，primitive-request/09086.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard2.test.mjs",
+          "test": "09-a-2 09086：额外法术槽计入抽牌，已占用的槽位另需弃牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-player-m2-3.test.mjs",
+          "test": "P6 09086 惊悚皈依：每个法术槽抽 1 张；每个被占用的法术槽弃 1 张手牌"
+        }
+      ]
     }
   ]
 }

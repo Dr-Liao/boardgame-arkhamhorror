@@ -17,7 +17,6 @@ export default {
   abilities: [{
     kind: 'action', actionKind: 'activate',
     label: '控制封印 C：检定 willpower(3)，成功后共同花费线索激活该封印',
-    limit: { scope: 'perGame', owner: 'instance' },
     criteria: ({ state, inv }) => sealHeldBy(state, inv.seat),
     resolve: ({ state, inv, source, api }) => {
       const runtime = api.scenario || api
@@ -43,7 +42,10 @@ export default {
           return
         }
         api.info('🔯 「被遗忘的神庙（Forsaken Temple）」：封印 C 被激活。')
-        api.info('「被遗忘的神庙」：查看同一辐条上所有未揭示地点的已揭示面（由章节地图数据结算）。');
+        const slots = state.scenario.spokes?.find(group => group.includes(source.slot)) || []
+        for (const location of state.locations.filter(item => !item.revealed && slots.includes(item.slot))) {
+          runtime.peekLocation(inv.seat, location.id)
+        }
       } })
     },
   }],

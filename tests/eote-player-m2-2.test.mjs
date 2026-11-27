@@ -15,7 +15,7 @@ import { registerCardAbilities, registeredEntry, descriptorOfKind } from '../src
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
 import {
   legalMoves, executeDescriptor, commitIcons, getStat, getMaxHealth, getMaxSanity, applyHarm,
-  reactionWindow, drawCards, triggerReaction, applyFreeTriggers,
+  beginInvestigationPhase, reactionWindow, drawCards, scenarioRuntime, triggerReaction, applyFreeTriggers,
 } from '../src/engine/engine.js'
 import { replacementAnalysis, purchaseCard, refreshArcaneResearch } from '../src/campaign/campaign.js'
 import { buildDeck } from '../src/deck/deckbuilding.js'
@@ -124,43 +124,17 @@ function playEvent (state, code, select = () => null) {
   settle(state, select)
 }
 
-test('P6 08049 反间谍活动：取消诡计显现并由「遭遇牌库→你的牌库」升级改抽自己牌库', () => {
-  // 主效果：取消该诡计显现，并从遭遇牌库抽牌（此处遭遇牌库为空，只断言取消与结算日志）。
-  const s = game()
-  const inv = s.investigators[0]
+test('P6 08049 反间谍活动：实际取消显现，可多付 2 改抽自己的牌库', () => {
+  const state = game()
+  const inv = state.investigators[0]
   inv.hand = ['08049']
-  inv.resources = 10
-  s.encounterDeck = []
-  s.encounterDiscard = []
-  const context = { when: 'treachery', seat: 0, location: inv.location, cardCode: 'dissonantVoices', cancelled: false }
-  runDescriptor(s, '08049', 'played', { context })
-  assert.equal(context.cancelled, true, '取消该卡牌的显现')
-  assert.ok((s.log || []).some(line => String(line).includes('反间谍活动')), '日志记录结算')
-
-  // 「你的牌库」升级：playUpgrades.yourDeck → 改为抽自己的牌库顶。
-  const upgraded = game()
-  const upInv = upgraded.investigators[0]
-  upInv.deck = Array(10).fill('01088')
-  const context2 = {
-    when: 'treachery', seat: 0, location: upInv.location, cardCode: 'dissonantVoices',
-    cancelled: false, playCost: { playUpgrades: { yourDeck: true } },
-  }
-  const deckBefore = upInv.deck.length
-  runDescriptor(upgraded, '08049', 'played', { context: context2 })
-  assert.equal(context2.cancelled, true)
-  assert.equal(upgraded.investigators[0].deck.length, deckBefore - 1, '升级后抽自己的牌库顶')
-
-  // beforePlayCost 升级描述子：提升费用 2 点并记录 playUpgrades。
-  const kickerState = game()
-  const costContext = { cardCode: '08049', cost: 2, costIncrease: 0 }
-  runDescriptor(kickerState, '08049', 'reaction', { context: costContext, ignoreCosts: true })
-  assert.equal(costContext.costIncrease, 2, '提升费用 2 点')
-  assert.equal(costContext.playUpgrades?.yourDeck, true, '记录「你的牌库」升级')
-  // 第二条升级（"你"→"任意调查员"）近似：花 2 点记录升级（跨座位触发待原语）。
-  const anyContext = { cardCode: '08049', cost: 2, costIncrease: 0 }
-  runDescriptor(kickerState, '08049', 'reaction', { context: anyContext, ignoreCosts: true, index: 1 })
-  assert.equal(anyContext.costIncrease, 2, '第二条升级同样提升费用 2 点')
-  assert.equal(anyContext.playUpgrades?.anyInvestigator, true, '记录「任意调查员」升级（近似）')
+  inv.deck = ['01088']
+  const resources = inv.resources
+  transact(state, draft => scenarioRuntime(draft, []).drawEncounter(0, { code: 'dissonantVoices' }), choice =>
+    choice.options.find(option => option.cardCode === '08049' || /改抽自己的牌库/.test(option.label))?.id)
+  assert.deepEqual(state.investigators[0].hand, ['01088'])
+  assert.equal(state.investigators[0].resources, resources - ALL_CARDS['08049'].cost - 2)
+  assert.equal(state.investigators[0].threat.length, 0)
 })
 
 test('P6 08050 欺骗制度：每控制一种不同职阶获得 1 资源；无卡牌时不获得', () => {
@@ -229,13 +203,15 @@ test('P6 08056 刚毅果敢：+1 意志/+1 敏捷、沉稳先吃非直接恐惧�
   const stillThere = s.investigators[0].assets.find(item => item.code === '08056')
   const inDiscard = (s.investigators[0].discard || []).includes('08056')
   assert.ok((stillThere?.horror || 0) === 1 || inDiscard, '沉稳先承受非直接恐惧（随后因神智满被击败）')
-  // approximation：非直接伤害用 redirectOneDamageToSelf 近似（每次结算 1 点转移到本卡）。
   const redirect = game()
   asset(redirect, '08056')
   transact(redirect, draft => { applyHarm(draft, draft.investigators[0], 2, 0, []) })
-  const redirectMoxie = redirect.investigators[0].assets.find(item => item.code === '08056')
-  assert.equal(redirect.investigators[0].damage, 1, '2 点非直接伤害中 1 点转移到刚毅果敢')
-  assert.equal(redirectMoxie?.damage || 0, 1, '刚毅果敢先承受 1 点非直接伤害（近似）')
+  assert.equal(redirect.investigators[0].damage, 0, '非直接伤害必须先分配给沉稳支援')
+  assert.equal(redirect.investigators[0].assets.find(item => item.code === '08056').damage, 2)
+  transact(redirect, draft => { applyHarm(draft, draft.investigators[0], 2, 0, []) })
+  assert.equal(redirect.investigators[0].damage, 1)
+  assert.equal(redirect.investigators[0].assets.some(item => item.code === '08056'), false)
+  assert.ok(redirect.investigators[0].discard.includes('08056'), '承受满额伤害的支援被击败')
 })
 
 test('P6 08057 黑色扇子：资源阈值 15/20 的每回合额外行动与技能修正（10+ 生命/神智待引擎读点）', () => {
@@ -624,14 +600,19 @@ test('P6 08053 红色闹钟（2经验）：回合开始放充能/拿资源，1/2
   assert.equal(moving.investigators[0].location, 'c', '两次移动后位于 C')
 })
 
-test('P6 08055 黑市：从任意调查员牌库顶揭示共 5 张放在一边（近似：置入弃牌堆）', () => {
-  const s = game()
-  const inv = s.investigators[0]
-  inv.deck = Array(10).fill('01088')
-  const deckBefore = inv.deck.length
-  runDescriptor(s, '08055', 'played', { select: choice => (choice.options.some(option => option.id === 'skip') ? 'skip' : null) })
-  assert.equal(s.investigators[0].deck.length, deckBefore - 5, '从牌库顶揭示 5 张')
-  assert.equal(s.investigators[0].discard.length, 5, '放在一边的牌进入弃牌堆（近似）')
+test('P6 08055 黑市：调查阶段揭示五张进入公共场外区，下一调查阶段洗回', () => {
+  const state = game()
+  state.investigators[0].hand = ['08055']
+  state.investigators[0].deck = Array(10).fill('01088')
+  transact(state, draft => beginInvestigationPhase(draft, []), choice =>
+    choice.options.find(option => option.cardCode === '08055')?.id)
+  assert.equal(state.investigators[0].deck.length, 5)
+  assert.equal(state.sharedPlayCards.length, 5)
+  assert.ok(state.sharedPlayCards.every(card => card.ownerSeat === 0 && card.code === '01088'))
+  assert.deepEqual(state.investigators[0].discard, ['08055'])
+  transact(state, draft => beginInvestigationPhase(draft, []))
+  assert.equal(state.investigators[0].deck.length, 10)
+  assert.equal(state.sharedPlayCards, undefined)
 })
 
 test('P6 08058 红色闹钟（5经验）：先拿取再放充能，1/2/3 充能分支', () => {
@@ -764,32 +745,17 @@ test('P6 08062 闭环：入场充能数=职阶数；花 1 充能横置执行一�
   assert.equal(after.uses, 2, '花费 1 充能')
 })
 
-test('P6 08064 先见：指定卡牌与抽到的卡相同 → 取消/弃掉；遭遇牌可取消显现', () => {
-  const s = game()
-  const inv = s.investigators[0]
-  inv.hand = ['01088', '01031']
-  runDescriptor(s, '08064', 'played', {
-    context: { when: 'cardDrawn', seat: 0, location: inv.location, cardCode: '01088' },
-    select: choice => {
-      if (choice.options.some(option => option.id === '01088')) return '01088'
-      if (choice.options.some(option => option.id === 'cancel')) return 'cancel'
-      return null
-    },
+test('P6 08064 先见：实际遭遇抽牌前指定卡名，命中后取消显现', () => {
+  const state = game()
+  state.investigators[0].hand = ['08064']
+  state.encounterDeck = ['dissonantVoices']
+  transact(state, draft => scenarioRuntime(draft, []).drawEncounter(0), choice => {
+    if (choice.kind === 'cardName') return 'Dissonant Voices'
+    return choice.options.find(option => option.cardCode === '08064' || option.id === 'cancel')?.id
   })
-  assert.equal(s.investigators[0].hand.includes('01088'), false, '取消并弃掉抽到的卡牌')
-  assert.equal((s.investigators[0].discard || []).includes('01088'), true)
-
-  const encounter = game()
-  const context = { when: 'encounterDrawn', seat: 0, location: encounter.investigators[0].location, cardCode: 'dissonantVoices', cancelled: false }
-  runDescriptor(encounter, '08064', 'played', {
-    context,
-    select: choice => {
-      if (choice.options.some(option => option.id === 'dissonantVoices')) return 'dissonantVoices'
-      if (choice.options.some(option => option.id === 'cancel')) return 'cancel'
-      return null
-    },
-  })
-  assert.equal(context.cancelled, true, '遭遇牌的显现被取消')
+  assert.equal(state.investigators[0].threat.length, 0)
+  assert.ok(state.investigators[0].discard.includes('08064'))
+  assert.ok(state.encounterDiscard.includes('dissonantVoices'))
 })
 
 test('P6 08070 真法魔典：揭示手牌法术支援并结算其能力', () => {

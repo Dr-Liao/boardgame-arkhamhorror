@@ -631,10 +631,11 @@ export function buildDeckFromList(invDef, cardCodes, options = {}) {
     if (!licensed.has(code) || !isPlayable(card)) { errors.push(name + ' 未获运行时许可'); continue }
     if (!pool.has(code)) { errors.push(name + ' 不在 playerPool 白名单内'); continue }
     if (!matchesDeckOptions(invDef, card, codes)) { errors.push(name + ' 不符合构筑限制'); continue }
-    if (n > cardLimit(card)) errors.push(name + ' 超过张数上限（' + cardLimit(card) + '）')
+    const limit = options.cardCopyLimit?.(code) ?? cardLimit(card)
+    if (n > limit) errors.push(name + ' 超过张数上限（' + limit + '）')
     spentXp += n * (card.xp ?? 0) * (card.exceptional ? 2 : 1)
   }
-  errors.push(...validateDeckRules(invDef, codes, ALL_CARDS).errors)
+  errors.push(...validateDeckRules(invDef, codes, ALL_CARDS, { cardCopyLimit: options.cardCopyLimit }).errors)
   if (codes.some(code => registeredEntry(code)?.campaignDeck?.brandSpellOnPurchase) && !brandedSpellOptions(codes).length) {
     errors.push('牌组必须有一张可烙印的单张非签名法术支援')
   }

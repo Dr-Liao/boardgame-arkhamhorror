@@ -7,6 +7,7 @@
 //   · locationShroudModifier：废弃风车的调查 -4 帷幕（89008 的近似全局口径）；
 //   · resolveEncounterCard：85044 现实酸液改走 89005 图表（近似抽样结算）；
 //   · enemyDefeated 的复制异变体已在普通 behavior 内按 elseMode 分支实现。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import * as nb from '../theBlobThatAteEverything/behavior.js'
 import {
   CHAPTER_ID, LOCATIONS, STORY_RULES, ELSE_QUARANTINE_IDS, ELSE_SET_ASIDE_CODES,
@@ -232,7 +233,7 @@ const REALITY_ASPECTS = Object.freeze([
   { id: 'handCard', text: '…你手牌中随机 1 张。', apply: (state, inv, api) => {
     if (!inv?.hand?.length) return false
     const index = Math.floor(randomOf(api) * inv.hand.length)
-    const [card] = inv.hand.splice(index, 1)
+    const [card] = spliceHand(inv, index, 1)
     info(api, `🕳️ 现实酸液吞噬了手牌中的「${card}」。`)
     return true
   } },

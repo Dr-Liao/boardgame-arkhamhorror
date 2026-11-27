@@ -3,7 +3,7 @@
   "unit": "12-a-5",
   "profile": {
     "id": "core2026-campaign-b-2026-11",
-    "scope": "2026 核心盒 12 段战役侧（12161–12195）36 条目录记录。36 条全部因批次 4 未迁移判实现完整性失败。",
+    "scope": "2026 核心盒 12 段战役侧（12161–12195，含 12179b）36 条目录记录。两张跨战役重印通过，34 张 Brethren of Ash 战役卡缺少本地关卡实现。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 36,
-    "verified": 0,
-    "unverified": 36,
+    "verified": 2,
+    "unverified": 34,
     "unimplemented": 0,
-    "testsPassed": 5
+    "testsPassed": 6
   },
   "testFiles": [
     {
-      "file": "games/arkhamhorror/tests/starter-batch-3.test.mjs",
-      "sha256": "2b3d0bb9ece2c3a59b03ef8aee404c3dbba61baaeccf1e8f0b54c997a905c31e"
+      "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
+      "sha256": "d9a99f4137ca1129569168f42fa8101317144545ef0c3ac7993e24959581f6db"
     }
   ],
   "entries": [
@@ -34,288 +34,296 @@
       "name": "障眼诱饵",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12161.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（dead_ends）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12162",
       "name": "蝙蝠恐魔",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12162.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（flying_terrors）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12163",
       "name": "空中追击",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12163.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（flying_terrors）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12164",
       "name": "独行无赖",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12164.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（gangs_of_arkham）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12165",
       "name": "交火",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12165.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（gangs_of_arkham）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12166",
       "name": "夜鹰",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12166.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（whippoorwills_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
+          "test": "12166 夜鹰重印：真实抽取保留印刷身份，继承冷漠、猎手和同地点技能减值"
+        }
+      ]
     },
     {
       "code": "12167",
       "name": "渴望死亡",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12167.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（whippoorwills_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
+          "test": "12167 渴望死亡重印：真实显现按伤害提高难度，失败受恐惧并弃掉抽到的印刷副本"
+        }
+      ]
     },
     {
       "code": "12168",
       "name": "灰烬女王",
       "type": "scenario",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12168.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12169",
       "name": "聚集于此",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12169.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12170",
       "name": "重生",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12170.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12171",
       "name": "灰烬同袍会",
       "type": "agenda",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12171.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12172",
       "name": "搜查下水道",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12172.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12173",
       "name": "阻止仪式",
       "type": "act",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12173.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12174",
       "name": "地下水库",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12174.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12175",
       "name": "水闸控制台",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12175.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12176",
       "name": "灰烬重生",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12176.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12177",
       "name": "*女王的骑士",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12177.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12178",
       "name": "*烈焰兆使",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12178.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12179",
       "name": "*俄洛寇斯",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12179.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12179b",
       "name": "*俄洛寇斯",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12179b.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12180",
       "name": "*烈焰仆从",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12180.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12181",
       "name": "收藏家",
       "type": "asset",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12181.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（queen_of_ash）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12182",
       "name": "下水道涵洞",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12182.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12183",
       "name": "下水道隧道",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12183.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12184",
       "name": "下水道隧道",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12184.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12185",
       "name": "下水道隧道",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12185.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12186",
       "name": "下水道隧道",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12186.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12187",
       "name": "下水道隧道",
       "type": "location",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12187.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（arkham_sewers）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12188",
       "name": "狂信徒",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12188.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12189",
       "name": "黑暗魔术师",
       "type": "enemy",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12189.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12190",
       "name": "亵渎祝祷",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12190.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（cultists_ch2）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12191",
       "name": "异常腐败",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12191.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（reeking_decay）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12192",
       "name": "腐臭蒸汽",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12192.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（reeking_decay）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12193",
       "name": "力竭",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12193.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12194",
       "name": "不谐",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12194.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     },
     {
       "code": "12195",
       "name": "折磨",
       "type": "treachery",
       "status": "pending",
-      "dimension": "implementation",
-      "reason": "批次 4（战役侧 12105–12195）未迁移：无单卡条目文件（entries/encounter-entries 均无 12195.js）、`src`/`content`/`web` 全仓无该卡号读点（probe-implReadPoints=none）、`content/campaigns/nightOfTheZealot` 不引用本卡或所属遭遇组（torment）、`_reprint-aliases.js`/`scenarios-data.js` 无该卡别名（无 canonical 实现可复用）；cards-data `availability = 'catalog-only'` → 运行时不可用。"
+      "dimension": "实现完整性",
+      "reason": "Brethren of Ash 对应关卡缺少本地实现，目前缺少可执行的章节结算证据。"
     }
   ]
 }

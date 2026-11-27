@@ -7,8 +7,6 @@ export default {
   code: '06336',
   scope: 'agenda',
   implemented: true,
-  doomPerInvestigator: true,
-  doomPerInvestigatorAmount: 2,
   flags: { doomThresholdPerInvestigator: 2 },
   agendaRule: {
     advance: { finish: 'resolution2' },

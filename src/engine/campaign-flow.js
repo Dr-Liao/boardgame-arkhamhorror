@@ -6,6 +6,8 @@
 //
 // 依赖注入同前几批；本模块没有工厂产物依赖。
 
+import { filterHand } from './hand-icons.js'
+import { hasWindowListener } from './window-listeners.js'
 import { isDraftMode, openDraftUpgrades } from '../deck/draft-mode.js'
 import { adoptInvestigatorIdentity, restoreInvestigatorForms } from './investigator-form.js'
 import { isStoryInvestigator, restoreStoryInvestigators } from './story-investigators.js'
@@ -14,6 +16,7 @@ import { changeChaosBag } from './chaos-bag.js'
 import { selectMechanic } from './mechanic-choices.js'
 import { investigatorRule } from '../cards/card-rules.js'
 import { hiddenScenarioExperience } from './hidden-rules.js'
+import { returnCollectionLoans } from './collection-loans.js'
 
 export function createCampaignFlow(deps) {
   const { scenarioRuntime } = deps
@@ -35,6 +38,7 @@ export function createCampaignFlow(deps) {
     campaignManifestFor,
     cardDef,
     endCampaign,
+    exileExitAssets,
     enterCampaignNode,
     getThreatEffect,
     info,
@@ -274,6 +278,10 @@ function finishScenario(state, resolutionKey, events) {
   const recordsBefore = structuredClone(campaign.records)
   state.resolution = resolutionKey
   campaign.phase = 'resolution'
+  if (hasWindowListener(state, 'scenarioEnding')) deps.reactionWindow(state, 'scenarioEnding', {
+    when: 'scenarioEnding', resolution: resolutionKey,
+  }, events, { allowNested: true })
+  for (const investigator of state.investigators) exileExitAssets(state, investigator, events)
   const awardedLocationIds = new Set((state.victoryDisplay || [])
     .filter(card => String(card.id || '').startsWith('location:'))
     .map(card => String(card.id).slice('location:'.length)))
@@ -288,7 +296,7 @@ function finishScenario(state, resolutionKey, events) {
     for (const code of [...(inv.hand || [])]) {
       const entry = registeredEntry(code)
       if (!entry?.darkPactForced || !entry.replacementCode) continue
-      inv.hand = inv.hand.filter(item => item !== code)
+      filterHand(inv, item => item !== code)
       inv.deck = (inv.deck || []).filter(item => item !== code)
       inv.deck.push(entry.replacementCode)
       info(state, events, `📜 「${cardName(code)}」仍在你手中：移出牌库，换成「${cardName(entry.replacementCode)}」。`)
@@ -320,6 +328,7 @@ function finishScenario(state, resolutionKey, events) {
     cardDef, entryOf: registeredEntry, investigatorRule,
   })
   persistPoisonedWeaknesses(state, events)
+  returnCollectionLoans(state)
   settleExiledCards(campaign, state.exiledBySeat)
   for (const inv of state.investigators) {
     // 故事调查员（序章人物）不记创伤、也不改真实调查员的战役状态：他们的失败只写章节自己的

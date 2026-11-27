@@ -1,16 +1,18 @@
 ﻿// 08-a 地球边缘 · 分片 6（08573b–08607）独立验收证据。
 //
 // 覆盖 fatalMirage（08573b–08595）与 toTheForbiddenPeaks（08596–08607）全部 45 张：
-//   · 逐卡标题含卡号；
-//   · 真实执行内容层 behavior / 条目声明 / 引擎读点（不是只断言「条目存在」）；
-//   · 失败卡同样用真实断言记录当前实现与卡面的差距（读点缺失/条件缺失），供报告失败清单引用。
+//   · 地点与剧情翻面、记忆敌人与猎物、坚毅伙伴能力、山峰爬升；
+//   · 旧报告缺口通过角色行动、显现或强制结算复验。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { contentRegistry } from '../content/registered.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { asset, enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 import { registeredEntry } from '../src/engine/ability.js'
 import {
-  actRuleFor, agendaRuleFor, encounterResolveFor, entryFlags, locationRuleFor, treacheryRuleFor, treacheryTestFor,
+  actRuleFor, agendaRuleFor, entryFlags, locationRuleFor,
 } from '../src/cards/card-rules.js'
 import { setLocationLevel, locationLevel } from '../src/engine/vertical-chain.js'
 import { initializeTekeliDeck, tekeliDeckSize } from '../src/engine/eote-tekeli.js'
@@ -95,150 +97,329 @@ for (const code of fmDef.MEMORY_STORY_CODES || []) {
   })
 }
 
-// ---------------------------------------------------------------------------
-// 08574 黑色岩石（幻景地点：伙伴减帷幕 / 花 frost 得线索）
-// ---------------------------------------------------------------------------
-test('08574 黑色岩石：幻景层与线索按 mirage 规则结算，但「伙伴在场 -2 帷幕」与「花 frost 得 2 线索」无读点', () => {
-  const entry = entryOf('08574')
-  assert.equal(entry.flags.tier, 2, '幻景 2 由条目声明且在 behavior.mirageTier 读取')
-  assert.equal(entry.flags.mirageId, 'theBlackStone')
-  // -2 帷幕：behavior.locationShroudModifier 只处理记忆囚笼；伙伴在本地也不返回 -2。
-  const state = stateFor()
-  state.locations = [{ id: 'theBlackStone', code: '08574', revealed: true, clues: 2 }]
-  assert.equal(fm.locationShroudModifier(state, state.locations[0]), 0, '当前没有 -2 帷幕读点')
-  // 花 frost 得线索能力：条目没有 abilities。
-  assert.equal((entry.abilities || []).length, 0, '没有声明 [fast] 加 frost 得 2 线索能力')
-  assert.equal(typeof fm.flipStoryFace === 'function', true)
+
+function mirageGame(count = 1, id = 'theBlackStone') {
+  const state = fixture('01001', count)
+  state.scenario = structuredClone(contentRegistry.getScenarioData('fatalMirage'))
+  state.acts = structuredClone(state.scenario.acts)
+  state.agendas = structuredClone(state.scenario.agendas)
+  state.actIndex = state.agendaIndex = 0
+  state.locations = []
+  state.scenarioFlags = {}
+  state.scenarioZones = { setAside: [] }
+  state.campaign.id = 'edgeOfTheEarth'
+  const location = fm.placeLocation(state, id)
+  Object.assign(location, { shroud: 4, clues: 4 })
+  for (const inv of state.investigators) inv.location = location.id
+  return { state, location }
+}
+
+const takeReaction = choice => choice.kind === 'reaction'
+  ? choice.options.find(option => option.id !== 'skip')?.id : null
+
+function execute(state, effect, select = takeReaction) {
+  const invoke = draft => effect(draft, scenarioRuntime(draft, []))
+  resolveTransaction(state, 0, { action: '08-a6-evidence' }, invoke)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 40, '验收选择必须在有限步数内完成')
+    const choice = state.pendingChoice
+    const optionId = select(choice) ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, invoke)
+  }
+}
+
+function activate(state, entityId, select = takeReaction) {
+  const action = legalMoves(state, 0).find(candidate =>
+    ['entityAbility', 'ability'].includes(candidate.action) && (candidate.entityId || candidate.assetId) === entityId
+    && !candidate.reason)
+  assert.ok(action, entityId + ' 应有可提交的特殊能力')
+  move(state, action)
+  settle(state, select)
+}
+
+test('08574 黑色岩石：克莱普尔降低帷幕 2，添加寒霜取得 2 线索且团队仅可一次', () => {
+  const { state, location } = mirageGame()
+  const shroud = () => scenarioRuntime(state, []).locationShroud(location.id, 0, { includeLocationState: true })
+  assert.equal(shroud(), 4)
+  asset(state, '08718')
+  assert.equal(shroud(), 2)
+  const actions = state.investigators[0].actionsLeft
+  activate(state, location.id)
+  assert.equal(state.chaosBag.filter(token => token === 'frost').length, 1)
+  assert.equal(state.investigators[0].clues, 2)
+  assert.equal(state.investigators[0].actionsLeft, actions)
+  assert.equal(legalMoves(state, 0).some(candidate => candidate.entityId === location.id && !candidate.reason), false)
 })
 
-// ---------------------------------------------------------------------------
-// 08575–08583 九个记忆敌人（Prey=伙伴 / 特殊反应/谈判）
-// ---------------------------------------------------------------------------
 for (const code of fmDef.MEMORY_ENEMY_CODES) {
-  test(`${code} 记忆敌人：翻面强制与关键词生效，但 Prey（伙伴）与专属反应/谈判无条目能力/读点`, () => {
-    const entry = entryOf(code)
-    assert.ok(entry, `${code} 已注册`)
-    assert.equal(entry.enemyRule.flipOnDefeat, true, '被击败翻面由 enemyRule.flipOnDefeat 读点结算')
-    const scenarioEnemy = fmDef.scenario.enemies[code]
-    assert.ok(scenarioEnemy, '章节遭遇定义存在')
-    assert.equal(Boolean(scenarioEnemy.alert || scenarioEnemy.retaliate), true, 'Alert/Retaliate 由卡文解析')
-    assert.equal(scenarioEnemy.prey, undefined, '「Prey - Investigator with 伙伴」未被映射（无 preyPartner 读点）')
-    assert.ok(entry.flags.preyPartner, '条目声明了 preyPartner，但引擎/内容层无读点')
-    assert.equal((entry.abilities || []).length, 0, '专属反应/谈判没有条目能力')
-    // 被击败 → 翻面读记忆剧情仍可执行。
-    const state = stateFor()
-    state.locations = [{ id: 'here', code: '08573', revealed: true, clues: 0 }]
-    const enemy = { id: 'e1', code, originalCode: code, location: 'here', traits: [...(scenarioEnemy.traits || [])], defeatedBy: 0 }
-    state.enemies = [enemy]
-    const handled = fm.enemyDefeated(state, enemy, { info: () => {} })
-    assert.equal(handled, true, '被击败翻面读剧情')
-    assert.ok(hasStoryVictory(state, `${code}b`), '背面剧情进胜利区')
+  test(code + ' 记忆敌人：真实击败翻面，背面进入胜利区', () => {
+    const { state } = mirageGame()
+    const target = enemy(state, { code, originalCode: code, health: 8 })
+    execute(state, (draft, api) => api.damageEnemy(target.id, 12, 0))
+    assert.equal(state.enemies.some(card => card.id === target.id), false)
+    assert.ok(hasStoryVictory(state, code + 'b'))
   })
 }
 
-// ---------------------------------------------------------------------------
-// 08584 恐怖阴影
-// ---------------------------------------------------------------------------
-test('08584 恐怖阴影：冷漠/猎手由数据解析，但「破除幻景后失去冷漠」与「发现线索放毁灭」无读点', () => {
-  const entry = entryOf('08584')
-  const def = fmDef.scenario.enemies['08584']
-  assert.equal(def.aloof, true, 'Aloof 由卡文解析')
-  assert.equal(def.hunter, true, 'Hunter 由卡文解析')
-  assert.equal(entry.flags.losesAloofAtFlippedLocation, true)
-  assert.equal(entry.flags.doomOnClueDiscover, true)
-  assert.equal((entry.abilities || []).length, 0, '两个强制都没有条目能力')
-  // 内容层 behavior 没有任何线索发现→毁灭 的钩子。
-  assert.equal(typeof fm.behavior?.cluesDiscovered, 'undefined')
-  assert.equal(Object.keys(fm).some(key => /doomOnClue|cluesDiscovered/i.test(key)), false, 'behavior 无对应钩子')
-})
-
-// ---------------------------------------------------------------------------
-// 08585 易散之雾 / 08586 回首往事
-// ---------------------------------------------------------------------------
-test('08585 易散之雾：条目声明了附属规则，但遭遇结算无 resolve/检定读点', () => {
-  assert.equal(treacheryRuleFor('08585').attachToNearestUnflippedLocation, true)
-  const entry = entryOf('08585')
-  assert.equal(entry.flags.attachLocationClues, 2)
-  assert.equal(entry.flags.discardWhenLocationFlipped, true)
-  assert.equal(encounterResolveFor('08585'), null, '没有 encounterResolve')
-  assert.equal(treacheryTestFor('08585'), null, '没有声明式显现检定')
-  assert.equal(fmDef.scenario.treacheries['08585'] != null, true)
-})
-test('08586 回首往事：条目声明 chooseOne，但遭遇结算没有 chooseOne 读点', () => {
-  assert.deepEqual(treacheryRuleFor('08586').chooseOne, ['take2Damage', 'place1DoomOnAgenda'])
-  assert.equal(entryOf('08586').flags.peril, true)
-  assert.equal(encounterResolveFor('08586'), null)
-  assert.equal(treacheryTestFor('08586'), null)
-  const def = fmDef.scenario.treacheries['08586']
-  assert.equal(def.peril, true, 'Peril 由卡文解析（该项生效）')
-})
-
-// ---------------------------------------------------------------------------
-// 08587–08595 九位坚毅伙伴
-// ---------------------------------------------------------------------------
-const PARTNER_EXPECT = {
-  '08587': { usesType: 'secrets', abilities: 0, gap: 'heal2HorrorAfterFreeSpend' },
-  '08588': { usesType: 'secrets', abilities: 0, gap: 'afterTekeliliResolvedDraw3DiscardWeaknesses' },
-  '08589': { usesType: 'secrets', abilities: 1, gap: 'evadeBase6ThenMayMove' },
-  '08590': { usesType: 'supplies', abilities: 0, gap: 'heal2DamageAfterFreeSpend' },
-  '08591': { usesType: 'supplies', abilities: 0, gap: 'cancelFrostThenRevealOrSpendSupply' },
-  '08592': { usesType: 'ammo', abilities: 1, gap: 'fightBase6NonEliteCannotAttackThisRound' },
-  '08593': { usesType: 'secrets', abilities: 1, gap: 'investigateBase6LookTopCard' },
-  '08594': { usesType: 'supplies', abilities: 0, gap: 'blankNonWeaknessTreacheryText' },
-  '08595': { usesType: 'resources', abilities: 0, gap: 'gain1ResourceMoveUpTo3' },
+for (const [code, companion] of Object.entries({
+  '08575': '08716', '08576': '08717', '08577': '08722', '08578': '08719', '08579': '08714',
+  '08580': '08715', '08581': '08718', '08582': '08721', '08583': '08720',
+})) {
+  test(code + ' 记忆敌人：有两个同地点调查员时优先交战对应伙伴的控制者', () => {
+    const { state } = mirageGame(2)
+    asset(state, companion, {}, 1)
+    execute(state, (draft, api) => {
+      const target = api.spawn(code, draft.investigators[0].location)
+      api.resolveEnemyPhaseOf(target)
+    })
+    const target = state.enemies.find(card => (card.originalCode || card.code) === code)
+    assert.ok(target)
+    assert.equal(target.engagedSeat, 1)
+  })
 }
-for (const [code, expect] of Object.entries(PARTNER_EXPECT)) {
-  test(`${code} 坚毅伙伴：条目 uses(${expect.usesType})/能力声明与 choosePartner 实体使用数、能力接线核验`, () => {
-    const entry = entryOf(code)
-    assert.equal(entry.usesType, expect.usesType, '条目声明使用类型')
-    assert.equal(entry.flags.partnerRules ? Object.values(entry.flags.partnerRules)[0] : null, expect.gap, '声明的能力字符串无读点')
-    const state = stateFor()
-    const asset = fm.choosePartner(state, 0, code)
-    assert.ok(asset, 'choosePartner 生成伙伴资产')
-    assert.equal(asset.uses, undefined, 'choosePartner 只读 ALL_CARDS.uses（该卡无 uses 字段）→ 使用数未接线')
-    assert.equal(asset.usesType, undefined, '资产 usesType 未接线')
-    assert.equal((entry.abilities || []).length, expect.abilities, '条目能力数量')
-    const calls = []
-    const api = {
-      evade: (...args) => calls.push(['evade', ...args]), fight: (...args) => calls.push(['fight', ...args]),
-      investigate: (...args) => calls.push(['investigate', ...args]), lookAt: (...args) => calls.push(['lookAt', ...args]),
-      testResult: () => ({ success: true }), moveDestinations: () => [], choice: () => null,
-      addEffect: (...args) => calls.push(['addEffect', ...args]), moveInvestigator: (...args) => calls.push(['move', ...args]),
-      locName: id => id, addUses: () => {},
-    }
-    for (const ability of entry.abilities || []) {
-      assert.equal(ability.kind, 'action', '能力以 [action] 声明')
-      assert.equal(ability.cost?.action, true, '声明为消耗 1 行动（卡面为 [fast]，时机口径不符）')
-      ability.resolve({ inv: state.investigators[0], source: asset, target: { id: 'e1', elite: false }, state, api })
-      for (const call of calls) {
-        if (call[0] === 'fight') {
-          const opts = call[call.length - 1]
-          opts?.onSuccess?.({ enemy: { elite: false } })
-        }
-      }
-    }
-    if (code === '08592') {
-      const add = calls.find(call => call[0] === 'addEffect')
-      assert.ok(add, '曲奇的「本轮不能攻击」以 addEffect 实现')
-      assert.deepEqual(add[1].modifiers, [], 'addEffect 的空 modifiers 不产生实际的「不能攻击」读点')
-    }
-    if (code === '08593') {
-      const look = calls.find(call => call[0] === 'lookAt')
-      assert.deepEqual(look?.[2], { zone: 'deck', count: 1 }, '只查看自己牌库顶 1 张：缺「任一位调查员牌库或遭遇牌库」与弃牌选项')
-    }
+
+const memoryEffects = {
+  '08575': [3, ({ state, target }) => {
+    state.investigators[0].agility = 8
+    move(state, { action: 'evade', enemyId: target.id })
+    settle(state, takeReaction)
+  }],
+  '08576': [2, ({ state }) => {
+    state.investigators[0].damage = 2
+    const doctor = asset(state, '08590')
+    activate(state, doctor.id)
+  }],
+  '08577': [1, ({ state }) => {
+    move(state, { action: 'resource' })
+    settle(state, takeReaction)
+  }],
+  '08578': [1, ({ state, target }) => {
+    execute(state, (draft, api) => api.attack(draft.enemies.find(card => card.id === target.id), draft.investigators[0]))
+  }],
+  '08579': [2, ({ state }) => execute(state, (draft, api) => api.drawCards(0, 2))],
+  '08580': [3, ({ state, target }) => {
+    initializeTekeliDeck(state, { cards: ['08723', '08724', '08725', '08726', '08727', '08728', '08729'] })
+    const before = tekeliDeckSize(state)
+    const actions = state.investigators[0].actionsLeft
+    activate(state, target.id)
+    assert.equal(tekeliDeckSize(state), before - 3)
+    assert.equal(state.investigators[0].actionsLeft, actions - 2)
+  }],
+  '08581': [4, ({ state, target }) => {
+    const actions = state.investigators[0].actionsLeft
+    activate(state, target.id)
+    assert.equal(state.chaosBag.filter(token => token === 'frost').length, 1)
+    assert.equal(state.investigators[0].actionsLeft, actions - 1)
+  }],
+  '08582': [4, ({ state, target, location }) => {
+    scenarioRuntime(state, []).attachEncounterToLocation('08585', location.id)
+    execute(state, (draft, api) => api.exhaustEnemy(draft.enemies.find(card => card.id === target.id)))
+  }],
+  '08583': [2, ({ state, location }) => execute(state, (draft, api) => api.discoverClue(0, 2, location.id))],
+}
+for (const [code, [damage, activateEffect]] of Object.entries(memoryEffects)) {
+  test(code + ' 记忆敌人：真实专属反应或谈判对敌人造成 ' + damage + ' 伤害', () => {
+    const { state, location } = mirageGame()
+    const target = enemy(state, { code, originalCode: code, health: 10, fight: 2, evade: 2, damage: 1,
+      exhausted: ['08576', '08577', '08579'].includes(code) })
+    activateEffect({ state, location, target })
+    assert.equal(state.enemies.find(card => card.id === target.id)?.damageTaken, damage)
+  })
+}
+
+test('08584 恐怖阴影：幻景破除前冷漠，发现或取得线索各放等量毁灭', () => {
+  const { state, location } = mirageGame()
+  state.scenarioZones.setAside = ['08581']
+  const target = enemy(state, { code: '08584', originalCode: '08584', aloof: true, hunter: true, engagedSeat: null })
+  const mayFight = () => legalMoves(state, 0).some(action => action.action === 'fight' && action.enemyId === target.id && !action.reason)
+  assert.equal(mayFight(), false)
+  state.investigators[0].clues = fm.mirageFlipCost(state, location.id)
+  const flip = legalMoves(state, 0).find(candidate => candidate.rule === 'mirageFlip:' + location.id && !candidate.reason)
+  assert.ok(flip)
+  move(state, flip)
+  settle(state)
+  assert.equal(fm.isClearedOfMirages(state, location.id), true)
+  assert.equal(mayFight(), true)
+  execute(state, (draft, api) => api.discoverClue(0, 2, location.id))
+  execute(state, (draft, api) => api.takeControlOfClues(0, 1, location.id))
+  assert.equal(state.enemies.find(card => card.id === target.id).doom, 3)
+})
+
+test('08585 易散之雾：实际显现附属并增加 2 线索，破除幻景时付额外线索后弃置', () => {
+  const { state, location } = mirageGame()
+  state.scenarioZones.setAside = ['08581']
+  const before = location.clues
+  state.encounterDeck = ['08585']
+  execute(state, (draft, api) => api.drawEncounter(0))
+  const current = () => state.locations.find(card => card.id === location.id)
+  assert.equal(current().clues, before + 2)
+  assert.ok(current().attachments.some(card => card.code === '08585'))
+  const cost = fm.mirageFlipCost(state, location.id)
+  state.investigators[0].clues = cost + 2
+  const flip = legalMoves(state, 0).find(candidate => candidate.rule === 'mirageFlip:' + location.id && !candidate.reason)
+  assert.ok(flip)
+  move(state, flip)
+  settle(state, choice => choice.options.find(option => option.label.includes('额外') && option.label.includes('线索'))?.id)
+  assert.equal(state.investigators[0].clues, 0)
+  assert.equal(state.investigators[0].damage, 0)
+  assert.equal(current().attachments.some(card => card.code === '08585'), false)
+  assert.ok(state.encounterDiscard.includes('08585'))
+})
+
+test('08586 回首往事：实际显现可选择 2 恐惧或在密谋加 1 毁灭', () => {
+  for (const mode of ['horror', 'doom']) {
+    const { state } = mirageGame()
+    const doom = state.doom
+    state.encounterDeck = ['08586']
+    execute(state, (draft, api) => api.drawEncounter(0), choice => choice.options.find(option => option.id === mode)?.id)
+    assert.equal(state.investigators[0].horror, mode === 'horror' ? 2 : 0)
+    assert.equal(state.doom, doom + (mode === 'doom' ? 1 : 0))
+  }
+})
+
+const partnerUses = {
+  '08587': [3, 'secrets'], '08588': [5, 'secrets'], '08589': [3, 'secrets'], '08590': [3, 'supplies'],
+  '08591': [3, 'supplies'], '08592': [3, 'ammo'], '08593': [3, 'secrets'], '08594': [3, 'supplies'],
+  '08595': [9, 'resources'],
+}
+for (const [code, [uses, type]] of Object.entries(partnerUses)) {
+  test(code + ' 坚毅伙伴：真实选择生成卡面印刷的使用数和类型', () => {
+    const { state } = mirageGame()
+    const partner = fm.choosePartner(state, 0, code)
+    assert.ok(state.investigators[0].assets.includes(partner))
+    assert.equal(partner.uses, uses)
+    assert.equal(partner.usesType, type)
   })
 }
 
 // ---------------------------------------------------------------------------
 // 08596 失落之峰（剧本参考卡）
 // ---------------------------------------------------------------------------
-test('08596 失落之峰（剧本参考卡）：内容层已实现标记数值，但没有单卡条目文件（一卡一文件缺口）', () => {
-  assert.equal(registeredEntry('08596'), null, '08596 没有单卡条目文件')
+
+for (const [code, harm] of [['08587', 'horror'], ['08590', 'damage']]) {
+  test(code + ' 坚毅伙伴：快速治疗 2 点 ' + harm + '，横置并花 1 使用，无行动消耗', () => {
+    const { state } = mirageGame()
+    const inv = state.investigators[0]
+    inv[harm] = 2
+    const partner = fm.choosePartner(state, 0, code)
+    const actions = inv.actionsLeft
+    activate(state, partner.id)
+    assert.equal(state.investigators[0][harm], 0)
+    assert.equal(state.investigators[0].actionsLeft, actions)
+    const current = state.investigators[0].assets.find(card => card.id === partner.id)
+    assert.equal(current.uses, 2)
+    assert.equal(current.exhausted, true)
+  })
+}
+
+test('08588 丹佛斯：真实忒咳哩弱点结算后抽 3 张，抽到的忒咳哩直接弃掉', () => {
+  const { state } = mirageGame()
+  const partner = fm.choosePartner(state, 0, '08588')
+  initializeTekeliDeck(state, { cards: ['08723', '08724', '08725', '08726', '08727', '08728', '08729'] })
+  state.investigators[0].deck = ['01088', '08724', '01088', '08723']
+  move(state, { action: 'draw' })
+  settle(state, takeReaction)
+  const inv = state.investigators[0]
+  assert.equal(inv.horror, 1)
+  assert.equal(inv.damage, 0)
+  assert.deepEqual(inv.hand, ['01088', '01088'])
+  assert.ok(inv.discard.includes('08724'))
+  assert.equal(inv.assets.find(card => card.id === partner.id).uses, 4)
+})
+
+test('08589 阿什瓦克：真实快速躲避基础敏捷 6，成功可移动到相邻地点', () => {
+  const { state, location } = mirageGame()
+  const destination = fm.placeLocation(state, 'coastalWaters')
+  location.connections = [destination.id]
+  destination.connections = [location.id]
+  state.investigators[0].agility = 1
+  const target = enemy(state, { evade: 5 })
+  const partner = fm.choosePartner(state, 0, '08589')
+  activate(state, partner.id, choice => choice.options.find(option => option.id === destination.id)?.id)
+  assert.equal(state.lastTestResult.value, 6)
+  assert.equal(state.investigators[0].location, destination.id)
+  assert.equal(state.enemies.find(card => card.id === target.id).exhausted, true)
+})
+
+test('08591 克莱普尔：实际取消寒霜，再揭示新标记或扣 1 补给', () => {
+  for (const mode of ['reveal', 'supply']) {
+    const { state } = mirageGame()
+    const partner = fm.choosePartner(state, 0, '08591')
+    state.investigators[0].intellect = 8
+    state.chaosBag = ['frost', '0']
+    state.debugNextTokens = ['frost', '0']
+    move(state, { action: 'investigate' })
+    settle(state, choice => choice.options.find(option => option.id === mode)?.id ?? takeReaction(choice))
+    const current = state.investigators[0].assets.find(card => card.id === partner.id)
+    assert.equal(current.uses, mode === 'supply' ? 2 : 3)
+    assert.equal(current.exhausted, true)
+    assert.equal(state.lastTestResult.success, true)
+    assert.equal(state.lastTestResult.value, 8)
+  }
+})
+
+test('08592 曲奇：真实快速攻击基础战斗 6，只有非精英敌人失去本轮攻击能力', () => {
+  for (const elite of [false, true]) {
+    const { state } = mirageGame()
+    const partner = fm.choosePartner(state, 0, '08592')
+    state.investigators[0].combat = 1
+    const target = enemy(state, { elite, fight: 5, damage: 1 })
+    activate(state, partner.id)
+    assert.equal(state.lastTestResult.value, 6)
+    const current = state.enemies.find(card => card.id === target.id)
+    assert.equal(current.damageTaken, 1)
+    execute(state, (draft, api) => api.attack(draft.enemies.find(card => card.id === target.id), draft.investigators[0]))
+    assert.equal(state.investigators[0].damage, elite ? 1 : 0)
+  }
+})
+
+test('08593 肯斯勒：真实快速调查基础智力 6，成功查看并弃掉遭遇牌库顶牌', () => {
+  const { state } = mirageGame()
+  const partner = fm.choosePartner(state, 0, '08593')
+  state.investigators[0].intellect = 1
+  state.encounterDeck = ['08585', '08586']
+  activate(state, partner.id, choice => choice.options.find(option => ['encounter', 'discard'].includes(option.id))?.id)
+  assert.equal(state.lastTestResult.value, 6)
+  assert.deepEqual(state.encounterDeck, ['08585'])
+  assert.ok(state.encounterDiscard.includes('08586'))
+})
+
+test('08594 埃尔斯沃思：可横置或花补给，令场上非弱点诡计文本空白直到回合结束', () => {
+  for (const payment of ['exhaust', 'supply']) {
+    const { state, location } = mirageGame()
+    const partner = fm.choosePartner(state, 0, '08594')
+    scenarioRuntime(state, []).attachEncounterToLocation('08585', location.id)
+    const attached = () => state.locations.find(card => card.id === location.id).attachments[0]
+    activate(state, partner.id, choice => choice.options.find(option => option.id === payment)?.id)
+    assert.equal(attached().textBlankTurn, state.turnSerial)
+    const current = state.investigators[0].assets.find(card => card.id === partner.id)
+    assert.equal(current.uses, payment === 'supply' ? 2 : 3)
+    assert.equal(current.exhausted, payment === 'exhaust')
+    state.encounterDeck = Array(12).fill('08586')
+    move(state, { action: 'endTurn' })
+    settle(state)
+    assert.equal(attached().textBlankTurn, undefined)
+  }
+})
+
+test('08595 高田弘子：实际行动获得 1 资源并移入选择的至多 3 资源', () => {
+  const { state } = mirageGame()
+  const partner = fm.choosePartner(state, 0, '08595')
+  const gainedFrom = state.investigators[0].resources
+  const actions = state.investigators[0].actionsLeft
+  activate(state, partner.id, choice => choice.options.find(option => option.id === '3')?.id)
+  assert.equal(state.investigators[0].resources, gainedFrom + 4)
+  assert.equal(state.investigators[0].actionsLeft, actions - 1)
+  assert.equal(state.investigators[0].assets.find(card => card.id === partner.id).uses, 6)
+})
+
+test('08596 失落之峰：混乱标记的骷髅数值随地点高度和难度变化', () => {
   assert.equal(peaks.manifest.referenceCode, '08596')
-  assert.ok(tp.tokenMeanings && tp.tokenMeanings.standard, '内容层 behavior 提供 tokenMeanings')
-  assert.equal(typeof tp.resolveChaosToken, 'function')
-  const token = tp.resolveChaosToken({ scenarioFlags: {}, locations: [{ id: 'loc', code: '08607', level: 2 }], investigators: [{ seat: 0, location: 'loc' }] }, { seat: 0, location: 'loc' }, 'skull')
-  assert.ok(token != null, 'skull 标记数值由内容层 chaos 提供（无条目 scenarioRule 读点）')
+  const state = peakState([['here', '08607', 2]])
+  const inv = state.investigators[0]
+  assert.equal(tp.resolveChaosToken(state, inv, 'skull').delta, -2)
+  state.difficulty = 'hard'
+  assert.equal(tp.resolveChaosToken(state, inv, 'skull').delta, -4)
 })
 
 // ---------------------------------------------------------------------------
@@ -396,7 +577,7 @@ test('08605 白雪覆盖的峭壁：从下方进入横置你控制的所有支�
   assert.equal(state.investigators[0].assets.every(asset => asset.exhausted === true), true)
 })
 
-test('08606 迎风通路：从下方进入放 1 线索；揭示时按人数放线索（卡面「高度为 0」条件未读）', () => {
+test('08606 迎风通路：从下方进入放 1 线索，揭示时仅高度为 0 才按人数放线索', () => {
   assert.equal(locationRuleFor('08606').onReveal.effect, 'placeCluesPerInvestigator')
   const state = peakState([['below', '08599', 0], ['loc06', '08606', 1]])
   state.numInvestigators = 2
@@ -405,8 +586,12 @@ test('08606 迎风通路：从下方进入放 1 线索；揭示时按人数放�
   tp.locationEntered(state, state.investigators[0], 'loc06', { info: () => {} })
   const loc = state.locations.find(item => item.id === 'loc06')
   assert.equal(loc.clues, 1, '从下方进入放 1 个线索')
-  const amount = tp.locationRevealed(state, loc, { info: () => {} })
-  assert.equal(amount, 2, '当前实现不论高度都放 1×人数线索（缺「高度为 0」条件）')
+  assert.equal(tp.locationRevealed(state, loc, { info: () => {} }), null)
+  assert.equal(loc.clues, 1)
+  const low = peakState([['bottom', '08606', 0]])
+  low.numInvestigators = 2
+  assert.equal(tp.locationRevealed(low, low.locations[0], { info: () => {} }), 2)
+  assert.equal(low.locations[0].clues, 2)
 })
 
 test('08607 山顶：线索只能调查发现；揭示加 frost；[action] 撤退把探险支援加入胜利区', () => {

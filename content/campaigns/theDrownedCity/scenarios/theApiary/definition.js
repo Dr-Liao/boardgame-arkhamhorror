@@ -310,6 +310,7 @@ export const ENCOUNTER_DECK_BY_DIRECTION = Object.freeze({
 // ---------------------------------------------------------------------------
 const definitions = encounterDefinitions([
   ...ENCOUNTER_DECK_CODES,
+  '11723', '11724',
   ...ENEMY_CODES, SQUAMOUS_PARASITE_STORY_CODE, ANCIENT_RELIC_STORY_CODE, HIDDEN_VAULT_STORY_CODE,
   MARIA_RIVERA_CODE, GRISLY_MASK_CODE,
 ])

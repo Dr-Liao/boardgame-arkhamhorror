@@ -10,7 +10,7 @@
 //     `src/engine/scenario-keys.js`（initializeValueKeys/valueKeysAt/spendValueKeys）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
-  actRuleFor, agendaRuleFor, encounterResolveFor, enemyRuleFor, locationRuleFor,
+  actRuleFor, agendaRuleFor, encounterResolveFor, enemyRuleFor, entryFlags, locationRuleFor,
   resolveDeclarativeTreacheryTest, treacheryRuleFor, treacheryTestFor,
 } from '../../../../../src/cards/card-rules.js'
 import {
@@ -20,7 +20,7 @@ import {
   cityscapeOf, connectGrid, gridLocations, lookColumn, lookRow, placeGridLocation,
 } from '../../../../../src/engine/grid-map.js'
 import {
-  initializeValueKeys, spendValueKeys, valueKeyIds, valueKeysAt,
+  initializeValueKeys, moveValueKey, spendValueKeys, swapValueKeys, valueKeyIds, valueKeysAt,
 } from '../../../../../src/engine/scenario-keys.js'
 import { initializeTekeliDeck } from '../../../../../src/engine/eote-tekeli.js'
 import {
@@ -36,6 +36,7 @@ import {
 import { citySetupText } from './texts.js'
 
 const CHAPTER_ID = 'cityOfTheElderThings'
+const activeInvestigators = state => state.investigators.filter(inv => !inv.defeated && !inv.resigned)
 const codeOf = card => card?.originalCode || card?.code || card
 const locationOf = (state, inv) => (state.locations || []).find(item => item.id === inv?.location) || null
 const recordsFor = state => {
@@ -394,7 +395,7 @@ export const behavior = {
     const hereRule = locationRuleFor(codeOf(location))
     for (const option of hereRule?.actions || []) {
       if (option.teamOnce && flags[`cityTeamOnce:${option.rule}`]) continue
-      if (option.values && option.values.some(value => !valueKeyAtPlaceExists(state, inv, value))) continue
+      if (option.values && (keysBlockedByReadyTerror(state, inv) || !canPayValueKeys(state, inv.seat, option.values))) continue
       moves.push({ action: 'scenarioAction', rule: `loc:${option.rule}`, actions: 1, data: option, label: option.label })
     }
     const roundKey = `cityActions:${inv.seat}:${state.round}`
@@ -451,7 +452,10 @@ export const behavior = {
       const here = locationOf(state, inv)
       if (!here || (here.clues || 0) > 0) return false
       const claimed = behavior.claimKey(state, inv.seat, here.id)
-      if (claimed) api?.info?.(`🔑 ${inv.name} 取得了「${here.name}」上的一把钥匙。`)
+      if (claimed) {
+        api.cityKeyControlled?.(inv.seat, here.id)
+        api.info?.(`🔑 ${inv.name} 取得了「${here.name}」上的一把钥匙。`)
+      }
       return claimed
     }
     if (move.rule === 'key:give') {
@@ -464,7 +468,10 @@ export const behavior = {
       const targetSeat = Number(answer)
       if (!Number.isInteger(targetSeat) || !targets.some(other => other.seat === targetSeat)) return false
       const given = behavior.giveKeys(state, inv.seat, targetSeat)
-      if (given) api?.info?.(`🔑 ${inv.name} 把自己控制的钥匙交给了${state.investigators[targetSeat]?.name || `座位 ${targetSeat}`}。`)
+      if (given) {
+        api.cityKeyControlled?.(targetSeat, inv.location)
+        api.info?.(`🔑 ${inv.name} 把自己控制的钥匙交给了${state.investigators[targetSeat]?.name || `座位 ${targetSeat}`}。`)
+      }
       return given
     }
     if (move.rule === 'cityLookRowOrColumn') {
@@ -513,6 +520,7 @@ export const behavior = {
       if (!option) return false
       const spent = spendValueKeys(state, investigatorHolder(inv.seat), { values: option.values })
       if (!spent) return false
+      ACT_TWO_HANDLERS[action]?.(state, api)
       api?.info?.(`🔑 ${option.label}。`)
       return true
     }
@@ -539,6 +547,37 @@ export const behavior = {
     return cityOfTheElderThingsChaosToken(state, inv, token)
   },
 
+  chaosTokenModifier(state, inv, token, modifier) {
+    const location = state.locations.find(item => item.id === inv.location)
+    if (!locationRuleFor(codeOf(location))?.flags?.doubleKeyTokenModifier) return modifier
+    const keys = [...behavior.keysAtLocation(state, location.id), ...state.investigators
+      .filter(owner => !owner.defeated && !owner.resigned && owner.location === location.id)
+      .flatMap(owner => behavior.keysControlled(state, owner.seat))]
+    const face = /^[+-]?\d+$/.test(token) ? String(Number(token)) : token
+    return keys.some(key => String(key.value) === face) ? 2 * modifier : modifier
+  },
+
+  firstFrostResolved(state, inv, api) {
+    const location = state.locations.find(item => item.id === inv.location)
+    const flags = locationRuleFor(codeOf(location))?.flags || {}
+    if (flags.frostForcedDamage || flags.frostForcedHorror) {
+      api.harm(inv.seat, { damage: flags.frostForcedDamage, horror: flags.frostForcedHorror })
+    }
+    let succeeds = true
+    for (const threat of inv.threat.slice()) {
+      const effect = entryFlags(codeOf(threat))?.frostWeakness
+      if (!['damage', 'horror'].includes(effect) || inv.defeated) continue
+      const harm = effect === 'damage' ? '伤害' : '恐惧'
+      const answer = api.choice({ kind: 'effect', source: threat.code, seat: inv.seat,
+        prompt: `受到 1 点${harm}，或使本次检定自动失败。`,
+        options: [{ id: effect, label: `受到 1 点${harm}` }, { id: 'fail', label: '自动失败' }],
+      })
+      if (answer === 'fail') succeeds = false
+      else api.harm(inv.seat, { [effect]: 1 })
+    }
+    return succeeds
+  },
+
   afterTest(state, inv, result, api) {
     const riders = cityOfTheElderThingsAfterTest(state, inv, result) || []
     for (const rider of riders) {
@@ -547,7 +586,7 @@ export const behavior = {
         // 由引擎的 testAutoFail 钩子真正生效；这里只记事件，避免重复改值。
         ;(state.scenarioFlags ||= {}).lastAutoFailReason = 'tabletFrost'
       } else if (rider === 'autoFailDamage') {
-        inv.damage = (inv.damage || 0) + 1
+        api.damage(inv.seat, 1)
         ;(state.scenarioFlags ||= {}).lastAutoFailReason = 'tabletFrostDamage'
       } else if (rider === 'nearestEnemy') nearestEnemyMovesAndAttacks(state, inv, api)
     }
@@ -654,10 +693,6 @@ export const enemyCodes = ENEMY_CODES
 // 逐卡数据驱动的结算实现（behavior 只按 kind/rule 分派，不按卡号分支）。
 // ---------------------------------------------------------------------------
 
-function valueKeyAtPlaceExists(state, inv, value) {
-  return behavior.keysControlled(state, inv.seat).some(key => String(key.value) === String(value))
-}
-
 const addFrostToken = (state, api) => {
   state.chaosBag ||= []
   state.chaosBag.push('frost')
@@ -668,6 +703,34 @@ const addFrostToken = (state, api) => {
 // 议程背面按名字分派的处理器（扩展点；08623 的 'resolution2' 走 agendaReveal 的通用
 // resolution* 分支：写记录 + 真实 finishScenario）。
 export const AGENDA_REVEAL_HANDLERS = Object.freeze({})
+
+const ACT_TWO_HANDLERS = Object.freeze({
+  healAll(state, api) {
+    for (const inv of activeInvestigators(state)) {
+      const trauma = state.campaign.trauma?.[inv.seat]
+      const kinds = ['physical', 'mental'].filter(kind => trauma?.[kind] > 0)
+      if (!inv.damage && !inv.horror && !kinds.length) continue
+      const selected = api.choice({ kind: 'effect', seat: inv.seat, source: 'healAll',
+        prompt: '是否治愈 1 点伤害、1 点恐惧与 1 点创伤？',
+        options: [{ id: 'heal', label: '治愈' }, { id: 'skip', label: '跳过' }] })
+      if (selected !== 'heal') continue
+      api.healDamage(inv.seat, 1)
+      api.healHorror(inv.seat, 1)
+      const kind = kinds.length === 1 ? kinds[0] : kinds.length > 1 ? api.choice({
+        kind: 'trauma', seat: inv.seat, source: 'healAll', prompt: '选择治愈的创伤',
+        options: kinds.map(id => ({ id, label: id === 'physical' ? '肉体创伤' : '精神创伤' })),
+      }) : null
+      if (kind) api.addTrauma(inv.seat, kind, -1)
+    }
+  },
+  returnTekeliWeaknesses(state, api) {
+    for (const inv of activeInvestigators(state)) api.returnTekeliFromDeck(inv.seat, inv.deck.length, { shuffleIntoTekeli: true })
+  },
+  removeElderThingTokens(state, api) {
+    const count = state.chaosBag.filter(token => token === 'elderthing').length
+    if (count) api.changeChaosBag('elderthing', -count)
+  },
+})
 
 export const ACT_REVEAL_HANDLERS = Object.freeze({
   // 08624/08625/08626 背面（参考 SprawlingCityV1/V2/V3.hs AdvanceAct）：
@@ -775,7 +838,7 @@ export const TREACHERY_HANDLERS = Object.freeze({
 
   // 08646 冻伤：放入威胁区（1 点「伤害」计数器；治愈近似为弃掉自身）。
   frostbitten(state, inv, card, api) {
-    if (api?.threat) api.threat(inv.seat, '08646', { threatEffect: { counters: 1, healAs: 'damage' } })
+    if (api?.threat) api.threat(inv.seat, '08646', { counters: 1, threatEffect: { counters: 1, healAs: 'damage' } })
     else {
       inv.threat ||= []
       inv.threat.push({ id: 'threat-08646', code: '08646', originalCode: '08646', counters: 1, forcedFrost: 'damage' })
@@ -786,7 +849,7 @@ export const TREACHERY_HANDLERS = Object.freeze({
 
   // 08647 附身：放入威胁区（1 点「恐惧」计数器；threatHorrorSink 原语接管治愈）。
   possessed(state, inv, card, api) {
-    if (api?.threat) api.threat(inv.seat, '08647', { threatEffect: { counters: 1, threatHorrorSink: true } })
+    if (api?.threat) api.threat(inv.seat, '08647', { counters: 1, threatEffect: { counters: 1, threatHorrorSink: true } })
     else {
       inv.threat ||= []
       inv.threat.push({ id: 'threat-08647', code: '08647', originalCode: '08647', counters: 1, threatHorrorSink: true })
@@ -801,141 +864,140 @@ export const LOCATION_ACTION_HANDLERS = Object.freeze({
   tunnelInvestigate(state, inv, data, api) {
     const location = (state.locations || []).find(item => item.id === inv.location)
     if (!location) return false
-    const difficulty = 4
-    api?.test?.(inv.seat, 'willpower', difficulty, result => {
+    if (!api?.test) return false
+    const skill = api.choice({ kind: 'skill', source: RAW_CODES.hiddenTunnel, seat: inv.seat,
+      prompt: '选择隐秘隧道的检定技能。',
+      options: [{ id: 'willpower', label: '意志' }, { id: 'intellect', label: '智力' },
+        { id: 'combat', label: '战斗' }, { id: 'agility', label: '敏捷' }],
+    })
+    const holder = investigatorHolder(inv.seat)
+    const spend = valueKeysAt(state, holder).some(key => key.value === 'skull')
+      && api.choice({ kind: 'effect', source: RAW_CODES.hiddenTunnel, seat: inv.seat,
+        prompt: '可花费一个骷髅钥匙获得技能值 +5。',
+        options: [{ id: 'keep', label: '保留钥匙' }, { id: 'spend', label: '花费钥匙' }],
+      }) === 'spend'
+      && spendValueKeys(state, holder, { values: ['skull'] })
+    api.test(inv.seat, skill, 4, result => {
       if (!result?.success) return
-      let amount = 1
-      if (spendValueKeys(state, investigatorHolder(inv.seat), { values: ['skull'] })) amount = 2
-      location.clues = Math.max(0, (location.clues || 0) - amount)
-      api?.info?.(`🕳️ 隐秘隧道：把 ${amount} 个线索放回供应堆。`)
-    }, 0, { type: 'scenario', code: RAW_CODES.hiddenTunnel, name: '隐秘隧道', action: 'activate', ability: true })
+      const amount = Math.min(location.clues || 0, spend ? 2 : 1)
+      location.clues -= amount
+      api.info?.(`🕳️ 隐秘隧道：把 ${amount} 个线索放回供应堆。`)
+    }, spend ? 5 : 0, { type: 'scenario', code: RAW_CODES.hiddenTunnel, name: '隐秘隧道', action: 'activate', ability: true })
     return true
   },
   // 08631 古代天文馆：花费 2 个「0」钥匙；记录研究。
   planetariumStudy(state, inv, data, api) {
     if (!spendValueKeys(state, investigatorHolder(inv.seat), { values: data.values })) return false
     if (data.remember) recordsFor(state)[data.remember] = true
-    addFrostToken(state, api)
-    api?.info?.('🔭 古代天文馆：拍摄天文图照片（记录），混乱袋加入 1 个 [frost]。')
+    api.changeChaosBag('0', 1, { permanent: true })
+    api.info?.('🔭 古代天文馆：拍摄天文图照片，在战役混乱袋中加入 1 个「0」标记。')
     return true
   },
-  // 08632 石桥：战斗/敏捷(4) 发现 1 线索（无选择入口时按战斗检定，难度相同）。
+
   bridgeDiscover(state, inv, data, api) {
-    const location = (state.locations || []).find(item => item.id === inv.location)
-    if (!location) return false
-    api?.test?.(inv.seat, 'combat', 4, result => {
-      if (!result?.success) return
-      if ((location.clues || 0) > 0) { location.clues -= 1; inv.clues = (inv.clues || 0) + 1 }
-      api?.info?.('🌉 石桥：发现 1 个线索。')
+    if (!inv.location) return false
+    const skill = api.choice?.({ kind: 'skill', source: RAW_CODES.stoneBridge, seat: inv.seat,
+      prompt: '选择用哪项技能检定来调查石桥。',
+      options: [{ id: 'combat', label: '战斗(4)' }, { id: 'agility', label: '敏捷(4)' }],
+    }) || 'combat'
+    api.test(inv.seat, skill, 4, result => {
+      if (result?.success) api.discoverClue(inv.seat, 1, inv.location)
     }, 0, { type: 'scenario', code: RAW_CODES.stoneBridge, name: '石桥', action: 'activate', ability: true })
     return true
   },
-  // 08632 石桥：移动到另一个石桥地点。
   bridgeTravel(state, inv, data, api) {
-    const bridgeCodes = new Set(['08632'])
-    const target = (state.locations || []).find(item => item.id !== inv.location
-      && bridgeCodes.has(String(item.originalCode || item.code)))
+    const bridges = (state.locations || []).filter(location =>
+      location.id !== inv.location && codeOf(location) === RAW_CODES.stoneBridge)
+    const target = chooseCityOption(api, inv, RAW_CODES.stoneBridge, '选择要移动到的另一座石桥。', bridges)
     if (!target) return false
-    inv.location = target.id
-    api?.info?.('🌉 石桥：移动到另一个石桥地点。')
-    return true
+    return api.moveInvestigator(inv.seat, target) !== false
   },
-  // 08633 圆柱塔：花费 2 个「-2」钥匙；抽 2、得 2 资源、移除 2 个 frost；记录。
   towerStudy(state, inv, data, api) {
-    if (!spendValueKeys(state, investigatorHolder(inv.seat), { values: data.values })) return false
-    inv.deck ||= []
-    for (let index = 0; index < 2; index += 1) { const card = inv.deck.pop(); if (card) inv.hand.push(card) }
-    inv.resources = (inv.resources || 0) + 2
-    removeFrostTokens(state, 2)
+    if (!spendValueKeysFor(state, inv, data.values)) return false
+    api.drawCards(inv.seat, 2)
+    api.gainResources(inv.seat, 2)
+    const frost = Math.min(2, state.chaosBag.filter(token => token === 'frost').length)
+    if (frost) api.changeChaosBag('frost', -frost)
     if (data.remember) recordsFor(state)[data.remember] = true
-    api?.info?.('🗼 圆柱塔：抽 2 张牌、获得 2 资源、移除 2 个 [frost]（记录）。')
     return true
   },
-  // 08635 地图资料室：花费 2 个「-3」钥匙；揭示 3 个地点并各发现 1 线索；记录。
   mapRoomStudy(state, inv, data, api) {
-    if (!spendValueKeys(state, investigatorHolder(inv.seat), { values: data.values })) return false
-    const hidden = (state.locations || []).filter(item => !item.revealed && item.id !== HIDDEN_TUNNEL).slice(0, 3)
-    for (const location of hidden) { location.revealed = true; location.clues = Math.max(0, (location.clues || 0) - 1) }
-    if (data.remember) recordsFor(state)[data.remember] = true
-    api?.info?.('🗺️ 地图资料室：揭示 3 个地点并各发现 1 个线索（记录）。')
-    return true
-  },
-  // 08636 无顶堡垒：花费 2 个「-1」钥匙；移除密谋 1 毁灭或弃掉非精英敌人；记录。
-  rampartStudy(state, inv, data, api) {
-    if (!spendValueKeys(state, investigatorHolder(inv.seat), { values: data.values })) return false
-    if ((state.doom || 0) > 0) state.doom -= 1
-    else {
-      const enemy = (state.enemies || []).find(item => !item.elite && !item.defeated)
-      if (enemy) enemy.defeated = true
+    const candidates = (state.locations || []).filter(location => location.id !== HIDDEN_TUNNEL)
+    if (!candidates.length || !spendValueKeysFor(state, inv, data.values)) return false
+    const selected = []
+    while (selected.length < 3 && candidates.length) {
+      const id = chooseCityOption(api, inv, RAW_CODES.mapRoom, '选择一个地点来揭示并发现其线索。', candidates)
+      const index = candidates.findIndex(location => location.id === id)
+      if (index < 0) break
+      selected.push(candidates.splice(index, 1)[0])
     }
+    for (const location of selected) if (!location.revealed) api.reveal(location.id, inv.seat)
+    for (const location of selected) api.discoverClue(inv.seat, 1, location.id)
     if (data.remember) recordsFor(state)[data.remember] = true
-    api?.info?.('🏰 无顶堡垒：移除 1 个毁灭或弃掉一个非精英敌人（记录）。')
     return true
   },
-  // 08637 破败街道：发现最后一个线索后，发现连接地点的 1 个线索。
-  streetsReactionClue(state, inv, data, api) {
-    const here = (state.locations || []).find(item => item.id === inv.location)
-    const neighbor = here && (state.locations || []).find(item => (here.connections || []).includes(item.id) && (item.clues || 0) > 0)
-    if (!neighbor) return false
-    neighbor.clues -= 1
-    inv.clues = (inv.clues || 0) + 1
-    api?.info?.('🧱 破败街道：发现连接地点的 1 个线索。')
+  rampartStudy(state, inv, data, api) {
+    const targets = new Map()
+    for (const enemy of state.enemies || []) {
+      if (!enemy.elite && !enemy.defeated && !enemy.global) targets.set('enemy:' + enemy.id, {
+        label: enemy.name || cardNameOf(codeOf(enemy)), discard: () => api.discardEnemy(enemy),
+      })
+    }
+    for (const entry of api.cardsInPlayTreacheries()) {
+      if (ALL_CARDS[entry.code]?.traits?.some(trait => String(trait).toLowerCase() === 'elite')) continue
+      targets.set('treachery:' + entry.attachment.id, {
+        label: cardNameOf(entry.code), discard: () => api.discardCardInPlay(entry),
+      })
+    }
+    if (state.doom > 0) targets.set('doom', { label: '移除当前密谋 1 毁灭', discard: () => api.removeDoom(1) })
+    if (!targets.size || !spendValueKeysFor(state, inv, data.values)) return false
+    const selected = chooseCityOption(api, inv, RAW_CODES.rooflessRampart, '选择要弃掉的场上卡牌，或移除 1 毁灭。',
+      [...targets].map(([id, value]) => ({ id, name: value.label })), 'effect')
+    targets.get(selected)?.discard()
+    if (data.remember) recordsFor(state)[data.remember] = true
     return true
   },
-  // 08638 巨大尖顶：把本行另一地点 1 个钥匙移到巨大尖顶。
   moveKeyToSpires(state, inv, data, api) {
-    const target = (state.locations || []).find(item => item.id === inv.location)
-    if (!target) return false
     const cell = cityscapeOf(state, inv.location)
     if (!cell) return false
-    const source = (state.locations || []).find(item => {
-      const other = cityscapeOf(state, item.id)
-      return other && other.row === cell.row && item.id !== inv.location && behavior.keysAtLocation(state, item.id).length
+    const available = (state.locations || []).flatMap(location => {
+      const position = cityscapeOf(state, location.id)
+      if (location.id === inv.location || position?.row !== cell.row) return []
+      return behavior.keysAtLocation(state, location.id).map(key => ({
+        id: key.id, location: location.id, name: location.name + ' — ' + key.value,
+      }))
     })
-    if (!source) return false
-    const key = behavior.keysAtLocation(state, source.id)[0]
-    spendValueKeys(state, locationHolder(source.id), { values: [key.value], destination: locationHolder(inv.location) })
-    api?.info?.('🗼 巨大尖顶：移动本行另一个地点的 1 个钥匙到尖顶。')
-    return true
+    const chosen = chooseCityOption(api, inv, RAW_CODES.cyclopeanSpires, '选择同行其他地点上的一把钥匙。', available, 'effect')
+    const key = available.find(item => item.id === chosen)
+    return !!key && moveValueKey(state, key.id, locationHolder(key.location), locationHolder(inv.location))
   },
-  // 08639 埋没通路：把本地点 1 个线索移到本行/列一个未揭示地点。
   moveClueToHidden(state, inv, data, api) {
-    const here = (state.locations || []).find(item => item.id === inv.location)
-    if (!here || (here.clues || 0) < 1) return false
+    const here = locationOf(state, inv)
     const cell = cityscapeOf(state, inv.location)
-    const target = (state.locations || []).find(item => {
-      const other = cityscapeOf(state, item.id)
-      return other && !item.revealed && ((cell && (other.row === cell.row || other.column === cell.column)))
+    if (!cell || !here || (here.clues || 0) < 1) return false
+    const candidates = (state.locations || []).filter(location => {
+      const position = cityscapeOf(state, location.id)
+      return !location.revealed && position && (position.row === cell.row || position.column === cell.column)
     })
-    if (!target) return false
-    here.clues -= 1
-    target.clues = (target.clues || 0) + 1
-    api?.info?.('🕳️ 埋没通路：把 1 个线索移到同行/同列的未揭示地点。')
-    return true
+    const id = chooseCityOption(api, inv, RAW_CODES.submergedPassageway, '选择同行或同列的未揭示地点。', candidates)
+    return !!id && api.moveClueToLocation(here.id, id, 1) > 0
   },
-  // 08640 古老者之庙：没有线索时交换两个有钥匙地点的所有钥匙。
   swapKeys(state, inv, data, api) {
-    const temple = (state.locations || []).find(item => item.id === inv.location)
+    const temple = locationOf(state, inv)
     if (!temple || (temple.clues || 0) > 0) return false
-    const holders = CITY_LOCATION_IDS.filter(id => behavior.keysAtLocation(state, id).length >= 2)
-    if (holders.length < 2) return false
-    const [a, b] = holders
-    const keysA = behavior.keysAtLocation(state, a).map(key => key.value)
-    const keysB = behavior.keysAtLocation(state, b).map(key => key.value)
-    for (const value of keysA) spendValueKeys(state, locationHolder(a), { values: [value], destination: locationHolder(b) })
-    for (const value of keysB) spendValueKeys(state, locationHolder(b), { values: [value], destination: locationHolder(a) })
-    api?.info?.('🏛️ 古老者之庙：交换两个地点的所有钥匙。')
-    return true
+    const locations = (state.locations || []).filter(location => behavior.keysAtLocation(state, location.id).length > 0)
+    if (locations.length < 2) return false
+    const first = chooseCityOption(api, inv, RAW_CODES.templeOfTheElderThings, '选择第一个交换钥匙的地点。', locations)
+    const second = chooseCityOption(api, inv, RAW_CODES.templeOfTheElderThings, '选择第二个交换钥匙的地点。',
+      locations.filter(location => location.id !== first))
+    return !!first && !!second && swapValueKeys(state, locationHolder(first), locationHolder(second))
   },
 })
 
-function removeFrostTokens(state, amount) {
-  let left = amount
-  state.chaosBag = (state.chaosBag || []).filter(token => {
-    if (left > 0 && token === 'frost') { left -= 1; return false }
-    return true
-  })
-  return amount - left
+function chooseCityOption(api, inv, source, prompt, candidates, kind = 'location') {
+  if (candidates.length < 2) return candidates[0]?.id
+  return api.choice({ kind, source, seat: inv.seat, prompt,
+    options: candidates.map(candidate => ({ id: candidate.id, label: candidate.name || candidate.id })) })
 }
 
 function spendValueKeysFor(state, inv, values) {

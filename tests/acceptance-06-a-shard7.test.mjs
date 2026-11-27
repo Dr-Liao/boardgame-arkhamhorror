@@ -2,13 +2,16 @@
 //
 // 目的：为 `tests/tde-scenario-pointOfNoReturn.test.mjs` / `tests/tde-player-m2-*.test.mjs` 里
 // 没有「标题含卡号」的 35 张卡补真实执行证据（地点/故事/幕/密谋/玩家资产/敌人/诡计），
-// 并复现本分片判出的两处参考卡伤害接线缺陷（06273 / 06274，见验收报告失败清单）。
+// 复验最近敌人、隧道和剧本参考卡伤害等共享读点。
 //
 // 全部走真实条目 / behavior / 共享 encounter-rules / 引擎原语读点；不依赖账本结论。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import '../src/engine/engine.js' // 注册全部单卡条目（entryFlags / registeredEntry 读点）
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { swarmCardsOf } from '../src/engine/swarm.js'
+import { enemy, fixture } from './core-fixture.mjs'
 import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { encounterRules } from '../content/campaigns/theDreamEaters/encounter-rules.js'
@@ -112,9 +115,11 @@ function apiFor(state, overrides = {}) {
       calls.push(['takeFromSetAside', code])
       return true
     },
-    giveAsset: (seat, code) => {
-      state.investigators[seat].assets.push({ id: `asset:${code}`, code, originalCode: code })
+    giveAsset: (seat, code, options = {}) => {
+      const asset = { id: `asset:${code}`, code, originalCode: code, ...options }
+      state.investigators[seat].assets.push(asset)
       calls.push(['giveAsset', seat, code])
+      return asset
     },
     setCampaignRecord: (key, value) => { state.campaign.records[key] = value; calls.push(['setCampaignRecord', key, value]) },
     campaignRecord: key => state.campaign.records[key] ?? null,
@@ -282,7 +287,7 @@ test('验收 06248/06249 密谋推进：邪恶国度洗回弃牌+参考卡伤害
   assert.ok(finishApi.calls.some(call => call[0] === 'finish' && call[1] === 'resolution2'), '参考卡伤害 ≥5 → 进入结局 2')
 })
 
-test('验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 交出皮克曼', () => {
+test('验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭遇组移出/洗入、v.II 由指定调查员控制皮克曼，离场时移出游戏', () => {
   const state = setupInitial(stateFor(2))
   state.scenarioZones.setAside = [...Object.values(SET_ASIDE_GROUP_DECKS).flat()]
   const api = apiFor(state)
@@ -300,15 +305,23 @@ test('验收 06250/06251 进入地下世界 v.I/v.II：山谷地点入场、遭�
   const v2 = setupInitial(stateFor(2))
   v2.scenarioZones.setAside = [...Object.values(SET_ASIDE_GROUP_DECKS).flat(), CODES.richardUptonPickman]
   v2.acts = [clone(ACT_ONE_VARIANTS.v2), ...v2.acts.slice(1)]
-  const v2Api = apiFor(v2)
+  const v2Api = apiFor(v2, { choose: () => '1' })
   pnr.behavior.actLeftPlay(v2, v2.acts[0], v2Api)
   assert.ok(v2Api.calls.some(call => call[0] === 'giveAsset' && call[2] === '06266'), '06251：选一位调查员控制放一边的皮克曼')
-  assert.equal(v2.scenarioFlags.pickmanSeat, 0)
+  assert.equal(v2.scenarioFlags.pickmanSeat, 1)
+  assert.ok(!v2.scenarioZones.setAside.includes('06266'))
   assert.ok(!v2.scenarioZones.removed.some(code => REMOVE_FROM_GAME_DECKS.ghouls.includes(code)), 'v.II 不移除食尸鬼组')
-  // 缺陷复现（见报告失败清单）：印刷「皮克曼离场时移出游戏」只写了声明，无引擎读点。
-  assert.equal(registeredEntry('06251')?.flags?.removeStoryAssetOnLeave, '06266', '条目声明 removeStoryAssetOnLeave')
-  assert.notEqual(registeredEntry('06266')?.removeFromGameOnLeave, true, '06266 未声明 removeFromGameOnLeave（无离场移除读点）')
-  assert.equal(v2.scenarioFlags.pickmanRemovedOnLeave, true, 'behavior 只写未读的 pickmanRemovedOnLeave 标记')
+  const pickman = v2.investigators[1].assets.find(asset => asset.code === '06266')
+  const production = fixture('01001', 2)
+  production.investigators[1].assets.push(pickman)
+  const ordinary = { ...pickman, id: 'ordinary', removeFromGameOnLeave: false }
+  production.investigators[0].assets.push(ordinary)
+  const runtime = scenarioRuntime(production, [])
+  assert.equal(runtime.discardAsset(1, pickman.id), '06266')
+  assert.ok(production.removedFromGame.includes('06266'))
+  assert.ok(!production.investigators[1].discard.includes('06266'))
+  assert.equal(runtime.discardAsset(0, ordinary.id), '06266')
+  assert.ok(production.investigators[0].discard.includes('06266'))
 })
 
 test('验收 06252/06253 深入/无边黑暗：深海地点入场+洗入组；无边黑暗推进→结局 1', () => {
@@ -596,48 +609,73 @@ test('验收 06265/06265b 漆黑之海 + 大海中央：团队线索门槛；足
 })
 
 // ---------------------------------------------------------------------------
-// 缺陷复现：06268 / 06270 的「最近敌人」只查同地点/相邻（见报告失败清单）
+// 复验 06268、06270、06272 的真实距离、移动与区域结算
 // ---------------------------------------------------------------------------
 
-test('验收 06268/06270 缺陷复现：「最近的敌人」只查同地点与相邻地点，远处敌人不结算', async () => {
-  const state = setupInitial(stateFor(2))
-  placeLocation(state, 'cragOfTheGhouls')
-  state.investigators[0].location = 'cragOfTheGhouls'
-  state.investigators[0].clues = 2
-  // 唯一的敌人在 2 条连接之外（crag → plain → vaults），「最近的敌人」仍应是它。
-  state.enemies.push({ id: 'far', code: '06267', originalCode: '06267', location: 'vaultsOfZin', defeated: false })
-  const requests = []
-  const api = apiFor(state, {
-    choose: request => { requests.push(request); return request.options?.[0]?.id },
-    testResult: { success: false, value: 1, difficulty: 3 },
-  })
-  const trap = (await import('../src/cards/encounter-entries/theDreamEaters/pointOfNoReturn/06268.js')).default
-  trap.encounterResolve(state, state.investigators[0], { code: '06268' }, api)
-  const optionIds = requests.flatMap(request => (request.options || []).map(option => option.id))
-  assert.ok(!optionIds.includes('enemy'), '06268 缺陷复现：远处敌人时「放到最近敌人」选项被错误过滤（印刷允许全局最近敌人）')
+function pathState() {
+  const state = fixture()
+  const ids = ['a', 'b', 'c', 'd']
+  state.locations = ids.map((id, index) => ({
+    id, name: id, code: '01111', revealed: true, clues: 0, attachments: [],
+    connections: [ids[index - 1], ids[index + 1]].filter(Boolean),
+  }))
+  state.investigators[0].location = 'a'
+  return state
+}
 
-  const ambush = (await import('../src/cards/encounter-entries/theDreamEaters/pointOfNoReturn/06270.js')).default
-  const state2 = setupInitial(stateFor(2))
-  placeLocation(state2, 'cragOfTheGhouls')
-  state2.investigators[0].location = 'cragOfTheGhouls'
-  state2.enemies.push({ id: 'far', code: '06267', originalCode: '06267', location: 'vaultsOfZin', defeated: false })
-  const api2 = apiFor(state2, { testResult: { success: false, value: 1, difficulty: 4 } })
-  ambush.encounterResolve(state2, state2.investigators[0], { code: '06270' }, api2)
-  assert.ok(!api2.calls.some(call => ['moveEnemy', 'engage'].includes(call[0])),
-    '06270 缺陷复现：失败后远处「最近的敌人」不重整/不移动/不交战（印刷要求移动到你的地点并交战）')
+function runResolution(state, resolve, select = () => null) {
+  resolveTransaction(state, 0, { action: 'acceptanceShard7' }, resolve)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 20, '选择必须收敛')
+    const choice = state.pendingChoice
+    const id = select(choice) ?? choice.options.find(item => item.id === 'self')?.id ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: id }, resolve)
+  }
+}
+
+function failTest(state, failedBy) {
+  return {
+    ...scenarioRuntime(state, []),
+    test: (seat, skill, difficulty, resolve) => resolve({ success: false, failedBy, difficulty, value: difficulty - failedBy }),
+  }
+}
+
+test('验收 06268 鲜血的滋味：可把线索放到相距三个连接的最近敌人上', () => {
+  const state = pathState()
+  enemy(state, { location: 'd', engagedSeat: null })
+  state.investigators[0].clues = 2
+  const execute = current => registeredEntry('06268').encounterResolve(current, current.investigators[0], null, failTest(current, 2))
+  runResolution(state, execute, choice => choice.options.some(option => option.id === 'enemy') ? 'enemy' : null)
+  assert.equal(state.investigators[0].clues, 0)
+  assert.equal(state.enemies[0].clues, 2)
+  assert.equal(state.investigators[0].damage, 0)
 })
 
-test('验收 06272 缺陷复现：附属目标按「离调查员 ≥2」而非「离最近隧道 ≥2」选择', async () => {
-  const state = setupInitial(stateFor(2))
-  // 隧道在 vaultsOfZin；调查员在相邻的 cityOfGugs。
-  loc(state, 'vaultsOfZin').attachments = [{ id: 'tunnel0', code: '06272', originalCode: '06272' }]
-  state.investigators[0].location = 'cityOfGugs'
-  const tunnel = (await import('../src/cards/encounter-entries/theDreamEaters/_shared/terror_of_the_vale/06272.js')).default
-  const api = apiFor(state)
-  tunnel.encounterResolve(state, state.investigators[0], { code: '06272' }, api)
-  const attached = api.calls.find(call => call[0] === 'attachToLocation')
-  assert.equal(attached?.[1], 'cityOfGugs',
-    '06272 缺陷复现：当前实现退回到调查员所在地点；印刷要求离最近隧道 ≥2 条连接（如 towerOfKoth/plainOfTheGhouls）')
+test('验收 06270 意外伏击：失败差值达到 3，远处最近敌人重整、移动、交战并立即攻击', () => {
+  const state = pathState()
+  enemy(state, { location: 'd', exhausted: true, damage: 1, engagedSeat: null })
+  const execute = current => registeredEntry('06270').encounterResolve(current, current.investigators[0], null, failTest(current, 3))
+  runResolution(state, execute)
+  assert.equal(state.enemies[0].location, 'a')
+  assert.equal(state.enemies[0].exhausted, false)
+  assert.equal(state.enemies[0].engagedSeat, 0)
+  assert.equal(state.investigators[0].damage, 1)
+})
+
+test('验收 06272 巨噬蠕虫隧道：按既有隧道的距离选址，并从胜利区取出敌人横置生成', () => {
+  const state = pathState()
+  loc(state, 'b').attachments.push({ id: 'oldTunnel', code: '06272' })
+  state.victoryDisplay = [{ id: 'victoryDhole', code: '06271', victory: 1 }]
+  const tunnel = registeredEntry('06272')
+  const execute = current => tunnel.encounterResolve(current, current.investigators[0], null, scenarioRuntime(current, []))
+  assert.equal(execute(state), true)
+  assert.equal(loc(state, 'c').attachments.length, 0)
+  assert.equal(loc(state, 'd').attachments[0].code, '06272')
+  assert.equal(state.victoryDisplay.length, 0)
+  assert.equal(state.enemies[0].code, '06271')
+  assert.equal(state.enemies[0].location, 'd')
+  assert.equal(state.enemies[0].exhausted, true)
+  assert.equal(state.enemies[0].engagedSeat, null)
 })
 
 // ---------------------------------------------------------------------------
@@ -668,7 +706,7 @@ test('验收 06271 滑行的巨噬蠕虫：生成点=最近隧道地点、失败
   assert.deepEqual(connected, ['seaOfBones'], '06271：移动时所有带巨噬蠕虫隧道的地点视作互相连接')
 })
 
-test('验收 06273 漆黑蜘蛛：生成点=无人漆黑之海；攻击伤害/恐惧二选一；蜂拥 X 读取缺陷复现', () => {
+test('验收 06273 漆黑蜘蛛：生成点=无人漆黑之海；攻击伤害/恐惧二选一；蜂拥 X 随参考卡伤害变化', () => {
   const state = setupInitial(stateFor(2))
   for (const id of SEA_OF_PITCH_IDS) placeLocation(state, id)
   state.investigators[0].location = 'seaOfPitch262'
@@ -683,34 +721,34 @@ test('验收 06273 漆黑蜘蛛：生成点=无人漆黑之海；攻击伤害/�
   const horrorApi = apiFor(state, { choose: () => 'horror' })
   assert.deepEqual(encounterRules.beforeEnemyHarm(state, spider, state.investigators[0], { damage: 2, horror: 1 }, horrorApi),
     { damage: 0, horror: 1 }, '06273：攻击改为只造成恐惧')
-  // 缺陷复现（见报告失败清单）：蜂拥 X 读 scenarioFlags.referenceDamage，而本章权威计数是 markerCounts.reference。
-  const spec = swarmingSpec('Swarming X. X is the amount of damage on the scenario reference card.')
-  assert.equal(spec.kind, 'scenarioDamage')
-  const chapterState = { markerCounts: { reference: 3 } }
-  assert.equal(referenceDamage(chapterState), 3, '章节权威参考卡伤害 = markerCounts.reference')
-  assert.equal(swarmingXFromState(chapterState, 'scenarioDamage'), 0, '06273 实际 Swarming X = 0（未接线：应读章节权威计数）')
-  assert.equal(swarmingXFromState({ scenarioFlags: { referenceDamage: 3 } }, 'scenarioDamage'), 3, '仅外部写非权威字段时才生效')
+  const production = pathState()
+  production.scenario = clone(definition)
+  production.markerCounts = { reference: 3 }
+  production.scenarioFlags.referenceDamage = 9
+  const host = enemy(production, {
+    code: '06273', originalCode: '06273', location: 'a',
+    swarming: swarmingSpec(ALL_CARDS['06273'].text), engagedSeat: 0,
+  })
+  encounterRules.enemySpawned(production, host, scenarioRuntime(production, []))
+  assert.equal(referenceDamage(production), 3)
+  assert.equal(swarmingXFromState(production, 'scenarioDamage'), 3)
+  assert.equal(swarmCardsOf(host).length, 3)
+  assert.equal(production.investigators[0].deck.length, 27)
 })
 
-test('验收 06274 阿特拉克·纳克亚之影：难度=2+参考卡伤害（读取缺陷复现）', () => {
-  const state = setupInitial(stateFor(2))
-  state.markerCounts.reference = 3
-  state.scenarioFlags = {}
-  const seen = []
-  const api = apiFor(state, {
-    testResult: { success: false, value: 0, difficulty: 2 },
+test('验收 06274 阿特拉克·纳克亚之影：以参考卡伤害加成难度，失败受伤害与恐惧', () => {
+  const state = pathState()
+  state.markerCounts = { reference: 3 }
+  state.scenarioFlags.referenceDamage = 9
+  const execute = current => shadowOfAtlachNacha.encounterResolve(current, current.investigators[0], null, {
+    ...scenarioRuntime(current, []),
+    test: (seat, skill, difficulty, resolve) => {
+      assert.deepEqual([seat, skill, difficulty], [0, 'willpower', 5])
+      resolve({ success: false, value: 0, difficulty })
+    },
   })
-  api.test = (seat, skill, difficulty, resolve) => { seen.push([seat, skill, difficulty]); resolve({ success: false, value: 0, difficulty }) }
-  shadowOfAtlachNacha.encounterResolve(state, state.investigators[0], { code: '06274' }, api)
-  assert.deepEqual(seen.at(-1), [0, 'willpower', 2], '06274 实际难度 = 2（未读章节权威参考卡伤害）')
-  assert.equal(referenceDamage(state), 3, '章节权威参考卡伤害 = 3 → 印刷难度应为 5')
-  // 只有外部写 scenarioFlags.referenceDamage 时才 +1/点（非权威字段）。
-  const withFlag = setupInitial(stateFor(2))
-  withFlag.scenarioFlags = { referenceDamage: 3 }
-  const seen2 = []
-  const api2 = apiFor(withFlag)
-  api2.test = (seat, skill, difficulty, resolve) => { seen2.push([seat, skill, difficulty]); resolve({ success: false, value: 0, difficulty }) }
-  shadowOfAtlachNacha.encounterResolve(withFlag, withFlag.investigators[0], { code: '06274' }, api2)
-  assert.deepEqual(seen2.at(-1), [0, 'willpower', 5], '外部写 referenceDamage=3 时难度才为 5')
+  runResolution(state, execute)
+  assert.equal(state.investigators[0].damage, 1)
+  assert.equal(state.investigators[0].horror, 1)
 })
 

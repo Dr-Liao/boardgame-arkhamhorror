@@ -3,7 +3,7 @@
   "unit": "05-a-2",
   "profile": {
     "id": "tcu-deluxe-b-2026-11",
-    "scope": "万象无终 05 段 tcu 豪华包后半（05055b–05108）55 条目录记录。54 条通过五维验收；1 条（05055b）因 R1 直写 setAside 暂不切换。",
+    "scope": "万象无终 05 段 tcu 豪华包后半（05055b–05108）55 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 55,
-    "verified": 54,
-    "unverified": 1,
+    "verified": 55,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 177
   },
@@ -57,9 +57,13 @@
       "code": "05055b",
       "name": "女巫圆环",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态：locationRule.onReveal 内 `const list = state.scenarioZones?.setAside || []` 后 `list.splice(index, 1)` 原地改写 state.scenarioZones.setAside（未走 api.takeFromSetAside）；该写法不在 audit/card-entry-compliance.json 基线内（工具的正则不追别名，属未记录的 R1），按规程 §3 维度 2 判失败。行为本身正确（已另有用例覆盖，spawn 05057 到圆环）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard2.test.mjs",
+          "test": "05055b 女巫圆环：揭示时把放在一边的安妮特·梅森生成在圆环"
+        }
+      ]
     },
     {
       "code": "05056",

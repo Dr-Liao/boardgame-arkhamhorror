@@ -50,11 +50,6 @@ export const encounterRules = {
     return api.choose({ kind: 'spawn', source: code, seat: seat ?? state.campaign.leadSeat,
       prompt: '选择符合生成条件的地点。', options: candidates.map(loc => ({ id: loc.id, label: loc.name })) })
   },
-  statModifier(state, inv) {
-    // 剧情资产的 +1 修正由 entries/<code>.js 的 modifiers 声明（02061/02080/02140/02217/02218）；
-    // 内容层只保留「夜鹰所在地点全属性 -1」这条跨实体规则。
-    return -state.enemies.filter(enemy => registeredEntry(original(enemy))?.flags?.nightgaunt && enemy.location === inv.location && textActive(state, enemy)).length
-  },
   assetLeftPlay(state, inv, asset) {
     if (!['02138', '02139'].includes(asset.code) || hasThreatFlag(inv, 'blanksAllies')) return
     asset.removedFromGame = true

@@ -13,7 +13,7 @@ export default {
     const brood = state.enemies.filter(enemy => enemy.code === '02255')
     const exposed = state.investigators.filter(target =>
       !target.defeated && !target.resigned && brood.some(enemy => enemy.location === target.location))
-    if (!exposed.length) api.drawEncounter(inv.seat)
+    if (!exposed.length) api.drawEncounter(inv.seat, { surgeDraw: true })
     else for (const target of exposed) api.test(target.seat, 'agility', 3, result => {
       if (!result.success) api.damage(target.seat, failedBy(result, 3))
     })

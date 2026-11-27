@@ -1,6 +1,11 @@
 import { registeredEntry } from './ability.js'
 import { ALL_CARDS } from '../cards/cards-data.js'
 
+export function enemyTextBlanked(state, enemy) {
+  const blank = enemy?.textBlanked
+  return Boolean(blank && blank.round === state.round && blank.phase === state.phase)
+}
+
 export function assetTextBlankedExceptForced(asset) {
   return asset?.attachments?.some(card => registeredEntry(card.originalCode || card.code)
     ?.treacheryRule?.blankHostExceptForced) === true
@@ -13,12 +18,19 @@ export function assetTextBlankedExceptForced(asset) {
 // modifiers.sourceBlanked（被动与声明式修正）、ability-rules.descriptorUsable（能力层描述子：
 // legalMoves / 反应窗口 / 玩家窗口的唯一枚举来源）。只做前两处会让被空白化的支援仍能发动能力
 // （06013 门之匣 + 04099 实机复现：旧 DSL 已被清空，描述子却还在玩家窗口里开选项）。
-export function assetTextBlanked(asset, inv) {
+export function assetTextBlanked(asset, inv, state = null) {
   // P7 TDC 11688 黏土恐怖 [fast]：「将本支援印刷文本框视为空白直到本轮结束（特性除外）」。
   // 空白标记由 api.scenario.blankStoryAssetText 写入，turn.js 在轮次推进时清除。
-  if (asset?.textBlank === true || asset?.inactiveFaceDown === true) return true
+  if (asset?.textBlank === true || asset?.inactiveFaceDown === true || asset?.attachedEnemyTextBlankId) return true
+  if (asset?.attachments?.some(card => registeredEntry(card.originalCode || card.code)?.treacheryRule?.blankHost)) return true
+  const host = asset?.attachedToAsset && inv?.assets?.find(card => card.id === asset.attachedToAsset)
+  if (host && !host.textBlank && !host.inactiveFaceDown && registeredEntry(host.code)?.assetRule?.blankAttachments) return true
   const traits = ALL_CARDS[asset?.code]?.traits || []
   if (!traits.length) return false
+  const location = state?.locations?.find(item => item.id === inv?.location)
+  const locationTrait = location?.revealed && registeredEntry(location.originalCode || location.code)
+    ?.locationRule?.blankAssetsWithTrait
+  if (locationTrait && traits.some(trait => trait.toLowerCase() === locationTrait.toLowerCase())) return true
   const threat = inv?.threat || []
   if (threat.some(item => item.blankItemAssets) && traits.includes('Item')) return true
   const blankedTraits = threat.flatMap(item => registeredEntry(item.originalCode || item.code)?.blanksTraits || [])
@@ -27,5 +39,5 @@ export function assetTextBlanked(asset, inv) {
 }
 
 export function assetRegulationEnabled(state, inv, asset) {
-  return asset?.ignoreRegulationRound !== state.round && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset)
+  return asset?.ignoreRegulationRound !== state.round && !assetTextBlanked(asset, inv, state) && !assetTextBlankedExceptForced(asset)
 }

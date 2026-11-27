@@ -18,6 +18,15 @@ export default {
     },
     backEffect: 'exNihilo',
   },
-  note: 'approximation: [reaction] 在 behavior.afterTest 里自动结算（引擎没有条目级反应窗口）；[fast] 花费 1 线索 +2 没有免费触发读点，未接线（披露）。',
-  abilities: [],
+  note: '巢穴成功反应与幕背面由章节结算。',
+  abilities: [{
+    kind: 'free',
+    actionKind: 'activate',
+    range: 'anywhere',
+    trigger: ['test.beforeCommit', 'test.afterCommit'],
+    label: '花费 1 个线索：本次技能检定得到 +2 技能值',
+    cost: { action: false, clues: 1 },
+    duringOwnSkillTest: true,
+    resolve: ({ api }) => api.addTestPendingBonus(2),
+  }],
 }

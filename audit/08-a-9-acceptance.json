@@ -3,7 +3,7 @@
   "unit": "08-a-9",
   "profile": {
     "id": "eote-campaign-f-2026-11",
-    "scope": "地球边缘 08 段 eoec 战役共享卡（08698–08738）41 条目录记录。23 条通过五维验收；18 条等待 pending 原语或接线错误暂不切换。",
+    "scope": "地球边缘 08 段 eoec 战役共享卡（08698–08738）41 条目录记录。41 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 41,
-    "verified": 23,
-    "unverified": 18,
+    "verified": 41,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 176
+    "testsPassed": 172
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
-      "sha256": "09f05fdef8e462d49b331c309684b4bcd715b8cb83367c417a209996225954f6"
+      "sha256": "37ea3fa8e3aa2bdfc49e2b2bfd68e52f02ad3550398256d57538c438cc6ee1c9"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
-      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+      "sha256": "92c6bf729a67340ce191066ab6b8fe1fd3be2e7cf1f45e3f47bef9f0f501c182"
     },
     {
       "file": "games/arkhamhorror/tests/eote-primitives-frost.test.mjs",
@@ -54,10 +54,6 @@
     {
       "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
       "sha256": "21761e92e64ab38d14ded302954fddcf765e29ca215c5e2ca1c6216ed5c1d36d"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
-      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
     }
   ],
   "entries": [
@@ -77,9 +73,13 @@
       "code": "08699",
       "name": "穿越冰雪",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「进入/离开附属地点时额外敏捷(2)检定（失败取消移动、1 伤 1 恐、弃本卡）」未实现：条目只落 `flags.moveEntryTest` 数据，引擎无该读点（primitive request p7-shared-08699 仍 pending）；显现附属部分已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08699 穿越冰雪：移动额外敏捷 2 检定，失败停在原位并弃掉附属"
+        }
+      ]
     },
     {
       "code": "08700",
@@ -89,7 +89,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
-          "test": "08700 迷失的研究员：入场 1 毁灭；被击败毁灭留在地点；谈判把毁灭翻为线索"
+          "test": "08700 迷失的研究员：入场带毁灭，谈判翻为线索，击败时将毁灭留在地点"
         }
       ]
     },
@@ -101,7 +101,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
-          "test": "08701 狂乱的探险家：入场 1 毁灭；成功躲避且超 2 点把毁灭翻为线索"
+          "test": "08701 狂乱的探险家：入场带毁灭，成功躲避达到 2 点可翻为线索"
         }
       ]
     },
@@ -109,25 +109,37 @@
       "code": "08702",
       "name": "身陷疯狂",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「与附属[[附身]]敌人的攻击/躲避/谈判难度 +1」未实现：`flags.difficultyBonus` 无引擎读点（p7-shared-08702 pending）；附属+毁灭部分已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08702 身陷疯狂：附属附身敌人并增加攻击、躲避和谈判的检定难度"
+        }
+      ]
     },
     {
       "code": "08703",
       "name": "渎神幻象",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「你抽取的每张忒咳哩-哩弱点效果额外结算一次」未实现：`flags.tekeliliDoubleResolution` 无读点（p7-shared-08703 pending）；洗牌+威胁区实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08703 渎神幻象：把忒咳哩-哩洗入牌库并令该弱点结算两次"
+        }
+      ]
     },
     {
       "code": "08704",
       "name": "窥看不可说之事",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「抽出忒咳哩-哩后立即结算其效果」未实现：只完成抽牌+洗入任意调查员牌库（p7-shared-08704 pending）；涌动分支已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08704 窥看不可说之事：先结算忒咳哩-哩，再洗进选定调查员牌库"
+        }
+      ]
     },
     {
       "code": "08705",
@@ -145,25 +157,37 @@
       "code": "08706",
       "name": "瘴气折磨",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「被附属支援不能重整 / 回合结束受 1 伤或 1 恐 / 行动弃掉本卡」全部未实现（p7-shared-08706 pending）；附属+横置实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08706 瘴气折磨：横置伙伴，在回合末伤害伙伴并阻止重整"
+        }
+      ]
     },
     {
       "code": "08707",
       "name": "朦胧瘴气",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「在附属地点结束回合：控制的有神智卡各受 1 直接恐惧；轮末弃本卡」未实现（p7-shared-08707 pending）；附属实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08707 朦胧瘴气：回合结束给调查员和支援各 1 直接恐惧，轮末弃除自身"
+        }
+      ]
     },
     {
       "code": "08708",
       "name": "巨型白化企鹅",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「进入/离开本敌人所在地点额外花 1 行动」未实现：`flags.moveSurchargeAtEnemyLocation` 无读点（p7-shared-08708 pending）；冷漠来自卡面数据。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08708 巨型白化企鹅：冷漠，进入或离开企鹅所在地额外花费 1 行动"
+        }
+      ]
     },
     {
       "code": "08709",
@@ -181,9 +205,13 @@
       "code": "08710",
       "name": "失落的修格斯",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「抽取的忒咳哩-哩按弱点立即结算」未实现（p7-shared-08710 pending）；交战抽牌与无牌攻击分支实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08710 失落的修格斯：交战立即结算弱点并还到底，空牌库时改为攻击"
+        }
+      ]
     },
     {
       "code": "08711",
@@ -201,9 +229,13 @@
       "code": "08712",
       "name": "极地幻景",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「发现/控制附属地点线索后弃掉手中所有非弱点卡并弃本卡」未实现（p7-shared-08712 pending）；附属实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08712 极地幻景：调查附属地点并发现线索后，仅弃掉非弱点手牌并弃除幻景"
+        }
+      ]
     },
     {
       "code": "08713",
@@ -233,9 +265,13 @@
       "code": "08715",
       "name": "丹佛斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "整条反应「同地点调查员结算忒咳哩-哩弱点后，横置+1 秘密：该调查员抽 2」未实现（abilities 为空，p7-shared-08715 pending）；伙伴数据/5 秘密已声明。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08715 丹佛斯：真实结算忒咳哩-哩后横置并花秘密让结算者抽两张"
+        }
+      ]
     },
     {
       "code": "08716",
@@ -277,9 +313,13 @@
       "code": "08719",
       "name": "詹姆斯·“曲奇”·弗雷德里克斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "（1）「成功攻击非精英后本轮不能攻击」读点缺失（p7-shared-08719 pending）；（2）`resolve` 用 `ctx?.target` 取目标，但引擎 resolve 上下文键是 `target`，经合法行动触发时永远找不到敌人 → 攻击为 no-op。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08719 “曲奇”·弗雷德里克斯：实际攻击以基础战斗 5，非精英本轮无法借机攻击"
+        }
+      ]
     },
     {
       "code": "08720",
@@ -297,9 +337,13 @@
       "code": "08721",
       "name": "罗尔德·埃尔斯沃思",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "整条 [free] 能力「把地点附属诡计的印刷文本框视为空白至回合结束」未实现（abilities 为空，p7-shared-08721 pending）；伙伴数据/5 补给已声明。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08721 罗尔德·埃尔斯沃思：横置花补给，令选定地点附属在本回合失效"
+        }
+      ]
     },
     {
       "code": "08722",
@@ -365,17 +409,25 @@
       "code": "08727",
       "name": "忒咳哩-哩",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「非你的回合结算：你的下一个回合失去 1 行动」未实现（只写 info 日志，p7-shared-08727 pending）；自己回合分支实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08727 忒咳哩-哩：当前自己回合或下一自己回合失去 1 行动"
+        }
+      ]
     },
     {
       "code": "08728",
       "name": "忒咳哩-哩",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「把你的 1 个线索放到所在地点」用 `api.returnClueToLocation` 实现，而该 API 只增加地点线索、不从调查员扣除（其注释是「已作为费用付掉的线索放回」）→ 线索总量 +1 重复，与卡面「移动自己的线索」不等价。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08728 忒咳哩-哩：真实抽取的弱点把调查员的 1 个线索移到所在地"
+        }
+      ]
     },
     {
       "code": "08729",
@@ -405,25 +457,37 @@
       "code": "08731",
       "name": "爱伦·坡作品集",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "整条行动「花 1 充能：目标调查员查找牌库顶 6 张，把其中的忒咳哩-哩放回剧本牌库底、洗牌、抽 1」未实现（abilities 为空，p7-shared-08731 pending）；uses/charges 已声明。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08731 爱伦·坡作品集：支付行动和充能，将顶 6 张中的忒咳哩-哩归还并抽一张"
+        }
+      ]
     },
     {
       "code": "08732",
       "name": "曲奇的特制.32手枪",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "攻击能力用 `ctx?.target` 取目标，引擎 resolve 上下文键是 `target` → 经合法行动触发时找不到敌人、攻击 no-op（uses/fast/+1 伤害子句本身已写）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08732 曲奇的特制 .32：真实枪击基础战斗 5，消耗一枚子弹且造成 2 伤害"
+        }
+      ]
     },
     {
       "code": "08733",
       "name": "戴尔的素描",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "事件卡缺少玩家侧 played 生命周期条目（`src/cards/entries/08733.js` 不存在）：只有战役共享目录的身份/数据登记，事件无法打出结算「抽 3」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08733 戴尔的素描：场景快速事件抽 3 张牌"
+        }
+      ]
     },
     {
       "code": "08734",
@@ -465,9 +529,13 @@
       "code": "08737",
       "name": "高田的物品",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 08733：快速事件缺少玩家侧 played 生命周期条目（`src/cards/entries/08737.js` 不存在），无法打出结算「+3 资源、抽 1、移出游戏」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard9.test.mjs",
+          "test": "08737 高田的物品：快速获得 3 资源并抽 1 张牌，然后移出本场游戏"
+        }
+      ]
     },
     {
       "code": "08738",

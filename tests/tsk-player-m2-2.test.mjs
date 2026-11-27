@@ -15,9 +15,10 @@ import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { registerCardAbilities, registeredEntry, descriptorOfKind } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import {
-  legalMoves, executeDescriptor, commitIcons, getStat, reactionWindow, attachmentTargets,
+  legalMoves, executeDescriptor, commitIcons, getStat, reactionWindow, attachmentTargets, scenarioRuntime,
+  canEquip, healDamageFrom, applyHarm,
 } from '../src/engine/engine.js'
-import { upgradeCustomization } from '../src/engine/tsk-customizable.js'
+import { recordCustomizationChoices, upgradeCustomization } from '../src/engine/tsk-customizable.js'
 
 import e09048 from '../src/cards/entries/09048.js'
 import e09049 from '../src/cards/entries/09049.js'
@@ -216,7 +217,7 @@ test('P6 09050 实验室外套：以 1 点及以内失败的[探寻者]卡检定
   assert.equal(offered, false, '失败 2 点时不提供实验室外套')
 })
 
-test('P6 09051 俄耳甫斯教信条：花 1 秘密指定一个诡计，本轮记录其文本框视为空白', () => {
+test('P6 09051 俄耳甫斯教信条：花 1 秘密，使指定诡计文本框视为空白直到轮末', () => {
   const s = game()
   const orb = asset(s, '09051')
   s.investigators[0].threat.push({ id: 't1', code: TREACHERY })
@@ -225,10 +226,7 @@ test('P6 09051 俄耳甫斯教信条：花 1 秘密指定一个诡计，本轮�
     select: choice => (choice.options.some(option => option.id === '0') ? '0' : null),
   })
   assert.equal(s.investigators[0].assets.find(item => item.id === orb.id).uses, 3, '花费 1 秘密')
-  const record = (s.effects || []).find(effect => effect.sourceCode === '09051')
-  assert.ok(record, '写入本轮持续记录')
-  assert.equal(record.duration, 'endOfRound')
-  assert.match(String(record.label), new RegExp(ALL_CARDS[TREACHERY].nameZh || ALL_CARDS[TREACHERY].name))
+  assert.equal(s.investigators[0].threat[0].textBlankRound, s.round, '在实际诡计实例上记录本轮空白')
 
   // 负面路径：没有秘密时不结算（费用付不起）。
   const empty = game()
@@ -307,26 +305,19 @@ test('P6 09054 威廉·T·马尔森博士：横置并把线索放到地点，2 �
   assert.equal(context.cancelled, true, '取消已抽到的遭遇卡')
 })
 
-test('P6 09055 媒体通行证：发现线索后横置，本回合（或下个回合）额外一次行动', () => {
+test('P6 09055 媒体通行证：发现线索不发动，花费线索后横置并增加本回合行动', () => {
   const s = game()
   const pass = asset(s, '09055')
   const before = s.investigators[0].actionsLeft
-  runDescriptor(s, '09055', 'reaction', {
-    source: pass, ignoreCosts: false,
-    context: { when: 'clueDiscovered', seat: 0, location: s.investigators[0].location, amount: 1 },
-  })
-  assert.equal(s.investigators[0].actionsLeft, before + 1, '本回合额外 1 次行动')
-  assert.equal(s.investigators[0].assets.find(item => item.id === pass.id).exhausted, true, '横置支付')
-
-  // 不是你的回合：改为下个回合额外一次行动。
-  const two = game(2)
-  const pass2 = asset(two, '09055')
-  two.currentSeat = 1
-  runDescriptor(two, '09055', 'reaction', {
-    source: pass2, seat: 0, ignoreCosts: false,
-    context: { when: 'clueDiscovered', seat: 0, location: two.investigators[0].location, amount: 1 },
-  })
-  assert.equal(two.investigators[0].extraActionNextTurn, true, '非本回合时改为下个回合额外一次行动')
+  const location = s.investigators[0].location
+  s.locations.find(item => item.id === location).clues = 1
+  const triggerPass = choice => choice.options.find(option => option.cardCode === '09055')?.id
+  transact(s, draft => scenarioRuntime(draft, []).discoverClue(0, 1), triggerPass)
+  assert.equal(s.investigators[0].actionsLeft, before)
+  assert.equal(s.investigators[0].assets.find(item => item.id === pass.id).exhausted, false)
+  transact(s, draft => scenarioRuntime(draft, []).spendClues(0, 1), triggerPass)
+  assert.equal(s.investigators[0].actionsLeft, before + 1)
+  assert.equal(s.investigators[0].assets.find(item => item.id === pass.id).exhausted, true)
 })
 
 test('P6 09056 外科手术工具：治愈后花补给追加治疗；[action][action] 治愈 3 点伤害', () => {
@@ -378,14 +369,15 @@ test('P6 09057 指纹采集工具：横置花 1 补给调查（+2[智力]），�
 test('P6 09058 格雷氏解剖学：检定[智力](1)后按超过点数逐项记录本轮效果（上限 +3）', () => {
   const s = game()
   const inv = s.investigators[0]
+  inv.damage = 4
   const tome = asset(s, '09058')
   asset(s, '01030')
+  let effectsChosen = 0
   s.chaosBag = ['0']
   runDescriptor(s, '09058', 'action', {
     source: tome, ignoreCosts: false,
     select: choice => {
-      if (choice.options.some(option => option.id === 'heal')) return 'heal'
-      if (choice.options.some(option => option.id === 'damage')) return 'damage'
+      if (choice.options.some(option => option.id === 'heal')) return effectsChosen++ === 0 ? 'heal' : 'damage'
       // 指定卡牌的候选：优先选自己（investigator 候选）。
       const seatOption = choice.options.find(option => String(option.id).startsWith('seat:'))
       if (seatOption) return seatOption.id
@@ -397,6 +389,13 @@ test('P6 09058 格雷氏解剖学：检定[智力](1)后按超过点数逐项记
   const records = (s.effects || []).filter(effect => effect.sourceCode === '09058')
   assert.equal(records.length, 2, '每超过 1 点记录一项效果')
   assert.ok(records.every(effect => effect.duration === 'endOfRound'))
+  healDamageFrom(s, s.investigators[0], 1, [], { healerSeat: 0 })
+  assert.equal(s.investigators[0].damage, 2)
+  applyHarm(s, s.investigators[0], 1, 0, [], { direct: true })
+  assert.equal(s.investigators[0].damage, 4)
+  applyHarm(s, s.investigators[0], 1, 0, [], { direct: true })
+  assert.equal(s.investigators[0].damage, 5)
+  assert.equal((s.effects || []).some(effect => effect.sourceCode === '09058'), false)
 })
 
 test('P6 09059 关键证言：横置指证任意地点的敌人，成功后花 1 证据额外发现其地点的线索；定制 Fabricated Evidence 入场多 2 证据', () => {
@@ -437,9 +436,9 @@ test('P6 09060 狐朋狗友：查看牌库顶 6 张，花 1 资源把具有所�
   const trait = String((ALL_CARDS[ITEM_ASSET].traits || [])[0] || 'Item')
   inv.deck = Array(10).fill(ITEM_ASSET)
   inv.resources = 20
+  recordCustomizationChoices(s, 0, '09060', null, [trait.toLowerCase()])
   runDescriptor(s, '09060', 'played', {
     select: choice => {
-      if (choice.options.some(option => option.id === trait)) return trait
       if (choice.options.some(option => option.id === 'take')) return 'take'
       return null
     },
@@ -449,20 +448,52 @@ test('P6 09060 狐朋狗友：查看牌库顶 6 张，花 1 资源把具有所�
   assert.equal(s.investigators[0].deck.length, 4, '取走的牌离开牌库')
 })
 
-test('P6 09061 敏锐直觉：检定超过 3 点后才可打出，每轮一次并立刻进行一次行动', () => {
-  const s = game()
-  const conditional = registeredEntry('09061').playCondition[0].when
-  assert.equal(conditional({ state: s, inv: s.investigators[0] }), false, '没有检定记录时不能打出')
-  s.lastTestResult = { seat: 0, successBy: 3 }
-  assert.equal(conditional({ state: s, inv: s.investigators[0] }), true, '检定超过 3 点后可以打出')
-
-  runDescriptor(s, '09061', 'played', {
-    select: choice => (choice.options.some(option => option.id === 'done') ? 'done' : null),
+test('P6 09061 敏锐直觉：检定超过 3 点后能打出，整队每轮一次', () => {
+  const s = game(2)
+  s.investigators[0].hand = ['09061']
+  s.investigators[1].hand = ['09061']
+  s.chaosBag = ['+3']
+  s.humanSeats = [0, 1]
+  const choose = choice => choice.options.find(option => option.cardCode === '09061')?.id
+  const succeeded = (seat, successBy) => runTest(s, {
+    seat, skill: 'willpower', difficulty: getStat(s, s.investigators[seat], 'willpower') + 3 - successBy,
+    select: choose,
   })
-  assert.equal(s.investigators[0].gameFlags?.[`honedInstinctUsed:${s.round}`], true, '每轮最多一次（本轮已记账）')
-  const before = s.investigators[0].gameFlags[`honedInstinctUsed:${s.round}`]
-  runDescriptor(s, '09061', 'played')
-  assert.equal(s.investigators[0].gameFlags[`honedInstinctUsed:${s.round}`], before, '同一轮第二次不再结算')
+  succeeded(0, 2)
+  assert.deepEqual(s.investigators[0].hand, ['09061'])
+  succeeded(0, 3)
+  assert.deepEqual(s.investigators[0].discard, ['09061'])
+  succeeded(1, 4)
+  assert.deepEqual(s.investigators[1].hand, ['09061'])
+})
+
+test('P6 09061 敏锐直觉：再选第二行动，技能加值仅在两次授予的行动中生效', () => {
+  const s = game()
+  const inv = s.investigators[0]
+  const base = getStat(s, inv, 'willpower')
+  const before = inv.resources
+  const initialActions = inv.actionsLeft
+  const location = s.locations.find(item => item.id === inv.location)
+  location.shroud = getStat(s, inv, 'intellect') + 4
+  location.clues = 2
+  inv.hand = ['09061']
+  s.chaosBag = ['+3', '+3']
+  upgradeCustomization(s, { seat: 0, code: '09061', checked: [5, 5, 7, 7, 7, 7, 7], availableXp: 10 })
+  let actions = 0
+  runTest(s, { difficulty: base, select: choice => {
+    if (choice.kind === 'reaction') return choice.options.find(option => option.cardCode === '09061')?.id
+    if (choice.options.some(option => option.id === 'act')) return 'act'
+    if (choice.kind !== 'action') return null
+    const label = actions++ === 0 ? /获得 1 资源/ : /调查/
+    return choice.options.find(option => label.test(option.label))?.id
+  } })
+  assert.equal(actions, 2)
+  assert.equal(s.investigators[0].resources, before - ALL_CARDS['09061'].cost + 1)
+  assert.equal(s.investigators[0].actionsLeft, initialActions)
+  assert.equal(s.investigators[0].clues, 1, '+2 足以通过原本会失败的调查')
+  assert.equal(getStat(s, s.investigators[0], 'willpower'), base)
+  assert.ok(s.removedFromGame.includes('09061'))
+  assert.equal(s.investigators[0].discard.includes('09061'), false)
 })
 
 test('P6 09062 易容术：花 1 补给躲避（+2[敏捷]），非精英敌人下个补给阶段不重整', () => {
@@ -483,21 +514,26 @@ test('P6 09062 易容术：花 1 补给躲避（+2[敏捷]），非精英敌人�
   assert.equal(evaded.preventReady?.rounds, 1, '下个补给阶段不重整')
 })
 
-test('P6 09063 非分之财：横置把最多 2 资源从资源池移到卡上；结算时按每 2 资源写下个冒险奖励', () => {
-  const s = game()
+test('P6 09063 非分之财：资源确实移到资产上，撤退时分配下场的起始资源', () => {
+  const s = game(2)
   const inv = s.investigators[0]
-  const treasure = asset(s, '09063')
+  const treasure = asset(s, '09063', { resources: 1 })
   inv.resources = 5
-  runDescriptor(s, '09063', 'free', { source: treasure, ignoreCosts: false })
-  assert.equal(s.investigators[0].resources, 3, '从资源池移动 2 资源')
-  assert.equal(s.investigators[0].assets.find(item => item.id === treasure.id).uses, 2, '卡上 2 资源')
-  assert.equal(s.investigators[0].assets.find(item => item.id === treasure.id).exhausted, true, '横置支付')
-
-  // 撤退/游戏结束结算（近似：主动结算），写入战役记录。
-  const fresh = s.investigators[0].assets.find(item => item.id === treasure.id)
-  fresh.exhausted = false
-  runDescriptor(s, '09063', 'free', { source: fresh, index: 1, ignoreCosts: false })
-  assert.equal(s.campaign.records['09063:bonusResources:0'], 1, '每 2 资源给 1 位调查员下个冒险 +1 资源')
+  move(s, { action: 'ability', assetId: treasure.id, abilityIndex: 0 })
+  settle(s, choice => choice.options.find(option => option.id === '2')?.id)
+  assert.equal(s.investigators[0].resources, 3)
+  const stored = s.investigators[0].assets.find(item => item.id === treasure.id)
+  assert.equal(stored.resources, 3)
+  assert.equal(stored.exhausted, true)
+  assert.equal(s.campaign.startingAdjustmentQueue, undefined)
+  s.locations.find(location => location.id === inv.location).resign = true
+  move(s, { action: 'resign' })
+  settle(s, choice => choice.kind === 'investigator' ? '1' : null)
+  assert.equal(s.investigators[0].resigned, true)
+  const [award] = s.campaign.startingAdjustmentQueue
+  assert.equal(award.owner, s.campaign.investigators[1].id)
+  assert.equal(award.resources, 1)
+  assert.equal(award.applied, false)
 })
 
 test('P6 09064 扒手行窃工具：花 1 补给用[敏捷]调查，成功后获得 1 资源', () => {
@@ -518,18 +554,26 @@ test('P6 09064 扒手行窃工具：花 1 补给用[敏捷]调查，成功后获
 test('P6 09065 暗袋：快速、只能自己回合，附属目标只认[[服装]]/[[护甲]]支援', () => {
   const s = game()
   const inv = s.investigators[0]
-  const coat = asset(s, '09071') // [[服装]]支援
-  asset(s, '01030') // 非服装支援
+  const coat = asset(s, '09071')
+  const armor = asset(s, '09021')
+  asset(s, '01030')
+  asset(s, '09057')
   const entry = registeredEntry('09065')
-  assert.equal(entry.fast, true, '快速')
-  assert.equal(entry.attachTo?.kind, 'asset', '附属到支援')
-  assert.equal(entry.attachTo?.trait, 'clothing', '只认[[服装]]特性')
-  assert.equal(entry.playCondition.length, 1, '声明「只能在你回合期间打出」')
-
-  // 与真实打出管线同一个读点：attachmentTargets 只列出[[服装]]支援。
-  const targets = attachmentTargets(s, s.investigators[0], entry.attachTo, '09065').map(item => item.id)
-  assert.deepEqual(targets, [coat.id], '只列出[[服装]]支援作为宿主')
-  assert.equal(inv.playCondition ?? true, true)
+  const targets = attachmentTargets(s, inv, entry.attachTo, '09065').map(item => item.id)
+  assert.deepEqual(targets, [coat.id, armor.id])
+  inv.assets = inv.assets.filter(item => item.id !== coat.id)
+  assert.equal(canEquip(inv, ALL_CARDS['60305']), false)
+  inv.hand = ['09065']
+  const initialActions = inv.actionsLeft
+  move(s, { action: 'play', cardId: '09065', targetId: armor.id })
+  settle(s, pending => pending.options.some(option => option.id === 'hand') ? 'hand' : null)
+  const updated = s.investigators[0]
+  const host = updated.assets.find(item => item.id === armor.id)
+  assert.equal(updated.actionsLeft, initialActions)
+  assert.equal(host.attachments[0].code, '09065')
+  assert.deepEqual(host.attachments[0].restrictedSlot, { slot: 'hand', traitsAny: ['illicit'], count: 1 })
+  assert.equal(canEquip(updated, ALL_CARDS['60305']), true)
+  assert.equal(canEquip(updated, ALL_CARDS['01030']), false)
 })
 
 test('P6 09066 连打带跑：把手中[[盟友]]放置入场，回合结束时返回手牌', () => {
@@ -641,14 +685,20 @@ test('P6 09070 风险精算：每执行一个行动获得 1 个[wild]图标；�
   assert.ok(s.investigators[0].turnEnded === true || s.investigators[0].actionsLeft === 0, '检定结束后结束你的回合')
 })
 
-test('P6 09071 时髦大衣：横置获得额外 1 资源', () => {
+test('P6 09071 时髦大衣：玩家卡使你在回合内获得资源后，可以横置再获得 1 资源', () => {
   const s = game()
-  const inv = s.investigators[0]
   const coat = asset(s, '09071')
-  inv.resources = 5
-  runDescriptor(s, '09071', 'free', { source: coat, ignoreCosts: false })
-  assert.equal(s.investigators[0].resources, 6, '获得额外 1 资源')
-  assert.equal(s.investigators[0].assets.find(item => item.id === coat.id).exhausted, true, '横置支付')
+  s.investigators[0].resources = 5
+  s.investigators[0].hand = ['01088']
+  const triggerCoat = choice => choice.options.find(option => option.cardCode === '09071')?.id
+  move(s, { action: 'resource' })
+  settle(s, triggerCoat)
+  assert.equal(s.investigators[0].resources, 6)
+  assert.equal(s.investigators[0].assets.find(item => item.id === coat.id).exhausted, false)
+  move(s, { action: 'play', cardId: '01088' })
+  settle(s, triggerCoat)
+  assert.equal(s.investigators[0].resources, 10)
+  assert.equal(s.investigators[0].assets.find(item => item.id === coat.id).exhausted, true)
 })
 
 test('P6 09072 查克·费格斯：打出[[策略]]/[[技巧]]事件时横置，选择使其获得快速或 -2 费用', () => {
@@ -721,7 +771,7 @@ test('P6 09073 痛下黑手：攻击/谈判/躲避已横置敌人 +2 技能值�
   assert.equal(s.lastTestResult.source?.label, '攻击', '对该敌人进行一次攻击行动')
 })
 
-test('P6 09074 破门而入：加入[敏捷]调查，成功超过 1 点自动躲避敌人，超过 3 点返回手牌', () => {
+test('P6 09074 破门而入：加入[敏捷]调查，成功超过 1 点自动躲避敌人，超过 3 点回合结束时返回手牌', () => {
   const s = game()
   const inv = s.investigators[0]
   inv.hand = ['09074']
@@ -730,15 +780,15 @@ test('P6 09074 破门而入：加入[敏捷]调查，成功超过 1 点自动躲
   here.clues = 1
   const target = enemy(s, { fight: 1, evade: 1, health: 5, engagedSeat: null })
   s.chaosBag = ['+2']
-  runDescriptor(s, '09074', 'played', {
-    select: choice => {
-      if (choice.options.some(option => option.id === target.id)) return target.id
-      return null
-    },
-  })
+  move(s, { action: 'play', cardId: '09074' })
+  settle(s, choice => choice.options.find(option => option.id === target.id)?.id)
   const successBy = s.lastTestResult.value - s.lastTestResult.difficulty
   assert.ok(successBy >= 3, `检定超过难度 ≥3（actual ${successBy}）`)
   assert.equal(s.enemies.find(item => item.id === target.id).exhausted, true, '自动躲避本地点的一个敌人')
-  assert.equal(s.investigators[0].hand.includes('09074'), true, '超过 3 点返回手牌（近似：结算后返回）')
-  assert.equal(s.investigators[0].discard.includes('09074'), false, '没有进入弃牌堆')
+  assert.equal(s.investigators[0].hand.includes('09074'), false)
+  assert.equal(s.investigators[0].discard.includes('09074'), true)
+  move(s, { action: 'endTurn' })
+  settle(s)
+  assert.equal(s.investigators[0].hand.includes('09074'), true)
+  assert.equal(s.investigators[0].discard.includes('09074'), false)
 })

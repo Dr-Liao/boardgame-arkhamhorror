@@ -3,10 +3,15 @@
 // 覆盖：
 //   · 通过卡的标题含卡号真实执行证据（toTheForbiddenPeaks 敌人/诡计/探险支援、
 //     cityOfTheElderThings 密谋/幕/敌人/诡计、theHeartOfMadness 参考卡/设施行动）；
-//   · 审计判出失败的「声明无读点」静态复现（implementation missing）。
+//   · 旧报告列出的缺陷通过真实行动、遭遇、检定和查看窗口复验。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import fs from 'node:fs'
+import { configureCityscapes, placeGridLocation } from '../src/engine/grid-map.js'
+import { contentRegistry } from '../content/registered.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
+import { initializeValueKeys, valueKeysAt } from '../src/engine/scenario-keys.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { asset, enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 
 import { behavior as tForbidden } from '../content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/behavior.js'
 import * as tForbiddenDef from '../content/campaigns/edgeOfTheEarth/scenarios/toTheForbiddenPeaks/definition.js'
@@ -39,22 +44,7 @@ import cityCrumbling from '../src/cards/encounter-entries/edgeOfTheEarth/cityOfT
 
 import { behavior as heart } from '../content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/behavior.js'
 import * as heartChaos from '../content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2/chaos.js'
-import heartGate from '../src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08649.js'
 import heartVent from '../src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08650.js'
-import heartForsaken from '../src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08651.js'
-import heartLibrary from '../src/cards/encounter-entries/edgeOfTheEarth/_shared/the_heart_of_madness/08652.js'
-
-const contentText = (...dirs) => dirs.flatMap(dir => {
-  const out = []
-  const walk = d => {
-    for (const e of fs.readdirSync(d, {withFileTypes: true})) {
-      const p = d + '/' + e.name
-      if (e.isDirectory()) walk(p); else if (p.endsWith('.js')) out.push(fs.readFileSync(p, 'utf8'))
-    }
-  }
-  walk(dir)
-  return out.join('\n')
-})
 
 function apiStub(overrides = {}) {
   const calls = []
@@ -176,83 +166,392 @@ test('验收 08648/08650 疯狂之心：参考卡 seal-aware/tower-aware 混乱�
   assert.ok(calls.some(call => call[0] === 'test' && call[1] === 0 && call[2] === 'combat'), '08650 战斗(3)检定被执行')
 })
 
-test('验收 08627/08628/08629/08630/08631/08634/08637/08640 缺陷复现：声明键无读点/效果未接线', () => {
-  const cityBehavior = fs.readFileSync('content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js', 'utf8')
-  // 08627–08629 actTwoActions：behavior 只花费钥匙+日志，没有 heal/returnTekeli/removeElderThing 实现。
-  for (const action of ['healAll', 'returnTekeliWeaknesses', 'removeElderThingTokens']) {
-    assert.equal(cityBehavior.includes(action), false, `08627–08629 actTwoActions 效果 ${action} 无实现`)
+
+function scenarioGame(id, code, count = 1) {
+  const state = fixture('01001', count)
+  state.scenario = structuredClone(contentRegistry.getScenarioData(id))
+  state.acts = structuredClone(state.scenario.acts)
+  state.agendas = structuredClone(state.scenario.agendas)
+  state.actIndex = state.agendaIndex = 0
+  state.scenarioFlags = {}
+  state.scenarioZones = { setAside: [] }
+  state.campaign.id = 'edgeOfTheEarth'
+  state.locations = [{
+    id: 'here', code, originalCode: code, name: code || '测试地点', revealed: true,
+    shroud: 1, clues: 3, maxClues: 3, connections: ['adjacent'],
+  }, {
+    id: 'adjacent', name: '相邻地点', revealed: true, shroud: 1, clues: 3, maxClues: 3, connections: ['here'],
+  }]
+  for (const inv of state.investigators) inv.location = 'here'
+  state.encounterDeck = []
+  return state
+}
+
+const cityGame = (code, count) => scenarioGame('cityOfTheElderThings', code, count)
+const current = (state, id) => state.locations.find(location => location.id === id)
+
+function execute(state, effect, select = () => null) {
+  const invoke = draft => effect(draft, scenarioRuntime(draft, []))
+  resolveTransaction(state, 0, { action: '08-a7-evidence' }, invoke)
+  for (let count = 0; state.pendingChoice; count++) {
+    assert.ok(count < 40, '验收选择必须在有限步数内完成')
+    const choice = state.pendingChoice
+    const optionId = select(choice) ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, invoke)
   }
-  // 08630 隐秘隧道线索禁令、08634 钥匙翻倍、08637 frost 伤害、08640 frost 恐惧：声明键无读点。
-  const cityText = contentText('content/campaigns/edgeOfTheEarth')
-  for (const key of ['blocksClueDiscovery', 'doubleKeyTokenModifier', 'frostForcedDamage', 'frostForcedHorror']) {
-    assert.equal(cityText.includes(key), false, `${key} 在章节内容层无读点（仅条目声明）`)
-  }
-  // 08631 天文馆把花费的「0」钥匙加入混乱袋：实现改为加入 frost（错误效果）。
-  const planetarium = cityBehavior
-  assert.ok(planetarium.includes('拍摄天文图照片'), '08631 行动存在')
-  assert.ok(/planetariumStudy[\s\S]{0,600}addFrostToken/.test(planetarium), '08631 实现加入的是 frost 而非花费的「0」钥匙')
+}
+
+function giveKeys(state, ...values) {
+  initializeValueKeys(state, values.map((value, index) => ({ id: 'key-' + index, value, holder: 'investigator:0' })))
+}
+
+function scenarioAction(state, rule, select = () => null) {
+  const action = legalMoves(state, 0).find(candidate => candidate.rule === rule && !candidate.reason)
+  assert.ok(action, '必须能提交行动 ' + rule)
+  move(state, action)
+  settle(state, select)
+}
+
+test('08627 追寻未知 I：实际花两个邪教徒钥匙，治愈伤害、恐惧及选定创伤', () => {
+  const state = cityGame('08631')
+  state.acts = [{ id: 'act-08627', code: '08627', originalCode: '08627' }]
+  giveKeys(state, 'cultist', 'cultist')
+  Object.assign(state.investigators[0], { damage: 2, horror: 2 })
+  state.campaign.trauma[0] = { physical: 2, mental: 2 }
+  scenarioAction(state, 'actTwo:healAll', choice =>
+    choice.options.find(option => option.id === (choice.kind === 'trauma' ? 'mental' : 'heal'))?.id)
+  assert.equal(valueKeysAt(state, 'investigator:0').length, 0)
+  assert.equal(state.investigators[0].damage, 1)
+  assert.equal(state.investigators[0].horror, 1)
+  assert.deepEqual(state.campaign.trauma[0], { physical: 2, mental: 1 })
 })
 
-test('验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点', () => {
-  const cityBehavior = fs.readFileSync('content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js', 'utf8')
-  const cases = [
-    ['08632', ['bridgeDiscover', 'bridgeTravel']],
-    ['08633', ['towerStudy']],
-    ['08635', ['mapRoomStudy']],
-    ['08636', ['rampartStudy']],
-    ['08638', ['moveKeyToSpires']],
-    ['08639', ['moveClueToHidden']],
-  ]
-  for (const [code, rules] of cases) {
-    for (const rule of rules) {
-      assert.ok(cityBehavior.includes(rule + '(state, inv'), `${code} 的 ${rule} 在章节行为层有处理器`)
-      assert.ok(cityBehavior.includes(rule), `${code} ${rule} 读点存在`)
+test('08628 追寻未知 II：实际花两个石板钥匙，将两位调查员的忒咳哩洗回专属牌堆', () => {
+  const state = cityGame('08631', 2)
+  state.acts = [{ id: 'act-08628', code: '08628', originalCode: '08628' }]
+  giveKeys(state, 'tablet', 'tablet')
+  const tekeli = () => scenarioRuntime(state, []).mechanics.tekeli
+  tekeli().initialize({ cards: ['08723', '08724', '08725', '08726', '08727', '08728', '08729'] })
+  tekeli().shuffleIn(0, 2)
+  tekeli().shuffleIn(1, 3)
+  scenarioAction(state, 'actTwo:returnTekeliWeaknesses')
+  assert.equal(valueKeysAt(state, 'investigator:0').length, 0)
+  assert.equal(tekeli().size(), 16)
+  for (const inv of state.investigators) assert.deepEqual(inv.deck, Array(30).fill('01088'))
+})
+
+test('08629 追寻未知 III：实际花两个古老者钥匙，移除混乱袋内所有古老者标记', () => {
+  const state = cityGame('08631')
+  state.acts = [{ id: 'act-08629', code: '08629', originalCode: '08629' }]
+  giveKeys(state, 'elderthing', 'elderthing')
+  state.chaosBag = ['0', 'elderthing', 'elderthing', 'frost']
+  scenarioAction(state, 'actTwo:removeElderThingTokens')
+  assert.deepEqual(state.chaosBag, ['0', 'frost'])
+  assert.equal(valueKeysAt(state, 'investigator:0').length, 0)
+})
+
+test('08630 隐秘隧道：不能发现线索；任选技能检定，付骷髅钥匙得 +5 并多归还一个线索', () => {
+  for (const pay of [false, true]) {
+    const state = cityGame('08630')
+    state.investigators[0].intellect = pay ? 1 : 8
+    if (pay) giveKeys(state, 'skull')
+    const initial = current(state, 'here').clues
+    execute(state, (draft, api) => api.discoverClue(0, 1, 'here'))
+    execute(state, (draft, api) => api.moveClueToLocation('here', 'adjacent', 1))
+    assert.equal(state.investigators[0].clues, 0)
+    assert.equal(current(state, 'here').clues, initial)
+    assert.equal(current(state, 'adjacent').clues, 3)
+    scenarioAction(state, 'loc:tunnelInvestigate', choice => choice.options.find(option =>
+      option.id === 'intellect' || option.id === (pay ? 'spend' : 'keep'))?.id)
+    assert.equal(state.lastTestResult.skill, 'intellect')
+    assert.equal(state.lastTestResult.value, pay ? 6 : 8)
+    assert.equal(current(state, 'here').clues, initial - (pay ? 2 : 1))
+    assert.equal(state.investigators[0].clues, 0)
+  }
+})
+
+test('08631 古代天文馆：实际花两个零值钥匙，混乱袋加入一个 0 并记录', () => {
+  const state = cityGame('08631')
+  giveKeys(state, 0, 0)
+  state.chaosBag = ['-1', 'frost']
+  const campaignZeroes = state.campaign.chaosBag.filter(token => token === '0').length
+  scenarioAction(state, 'loc:planetariumStudy')
+  assert.deepEqual(state.chaosBag, ['-1', 'frost', '0'])
+  assert.equal(state.campaign.chaosBag.filter(token => token === '0').length, campaignZeroes + 1)
+  assert.equal(valueKeysAt(state, 'investigator:0').length, 0)
+  assert.equal(state.campaign.records.theTeamStudiedTheHistoryOfTheElderThings, true)
+})
+
+test('08634 迷宫房间：实际揭示匹配钥匙的混乱标记，负值翻倍', () => {
+  for (const holder of ['investigator:0', 'location:here', 'location:adjacent']) {
+    const state = cityGame('08634')
+    initializeValueKeys(state, [{ id: 'key-cultist', value: 'cultist', holder }])
+    state.investigators[0].intellect = 8
+    state.chaosBag = ['cultist']
+    move(state, { action: 'investigate' })
+    settle(state)
+    assert.equal(state.lastTestResult.value, holder === 'location:adjacent' ? 6 : 4)
+  }
+})
+
+for (const [code, harm] of [['08637', 'damage'], ['08640', 'horror']]) {
+  test(code + ' 古城地点：同次检定揭示两枚寒霜时只承受 1 点 ' + harm, () => {
+    const state = cityGame(code)
+    state.chaosBag = ['frost', 'frost', '0']
+    state.debugNextTokens = [...state.chaosBag]
+    move(state, { action: 'investigate' })
+    settle(state)
+    assert.equal(state.investigators[0][harm], 1)
+    assert.equal(state.lastTestResult.success, false)
+  })
+}
+
+test('08637 破败街道：发现最后一个线索之后可反应取得相连地点的一个线索', () => {
+  const state = cityGame('08637')
+  current(state, 'here').clues = 1
+  state.investigators[0].intellect = 8
+  move(state, { action: 'investigate' })
+  settle(state, choice => choice.kind === 'reaction' ? choice.options.find(option => option.id !== 'skip')?.id : null)
+  assert.equal(current(state, 'here').clues, 0)
+  assert.equal(current(state, 'adjacent').clues, 2)
+  assert.equal(state.investigators[0].clues, 2)
+})
+
+
+test('08632 石桥：可以选敏捷发现线索，并移动到指定的另一座石桥', () => {
+  const state = cityGame('08632')
+  Object.assign(current(state, 'adjacent'), { code: '08632', originalCode: '08632' })
+  state.locations.push({ id: 'thirdBridge', name: '第三座石桥', originalCode: '08632', revealed: true, clues: 0, connections: [] })
+  Object.assign(state.investigators[0], { combat: 1, agility: 8 })
+  scenarioAction(state, 'loc:bridgeDiscover', choice => choice.options.find(option => option.id === 'agility')?.id)
+  assert.equal(state.lastTestResult.skill, 'agility')
+  assert.equal(state.investigators[0].clues, 1)
+  assert.equal(current(state, 'here').clues, 2)
+  scenarioAction(state, 'loc:bridgeTravel', choice => choice.options.find(option => option.id === 'thirdBridge')?.id)
+  assert.equal(state.investigators[0].location, 'thirdBridge')
+})
+
+test('08633 圆柱塔：抽出的忒咳哩走真实显现，同时获得 2 资源及移除 2 寒霜', () => {
+  const state = cityGame('08633')
+  giveKeys(state, -2, -2)
+  scenarioRuntime(state, []).mechanics.tekeli.initialize({ cards: ['08723', '08724', '08725', '08726', '08727', '08728', '08729'] })
+  state.investigators[0].deck = ['01088', '08724']
+  state.chaosBag = ['0', 'frost', 'frost', 'frost']
+  const resources = state.investigators[0].resources
+  scenarioAction(state, 'loc:towerStudy')
+  assert.equal(state.investigators[0].damage, 1)
+  assert.deepEqual(state.investigators[0].hand, ['01088'])
+  assert.equal(state.investigators[0].resources, resources + 2)
+  assert.deepEqual(state.chaosBag, ['0', 'frost'])
+  assert.equal(valueKeysAt(state, 'investigator:0').length, 0)
+})
+
+test('08635 地图资料室：由玩家选三个不同地点，各揭示并取得一个线索', () => {
+  const state = cityGame('08635')
+  giveKeys(state, -3, -3)
+  const chosen = ['east', 'west', 'north']
+  state.locations.push(...[...chosen, 'hiddenTunnel'].map(id => ({
+    id, name: id, code: id === 'hiddenTunnel' ? '08630' : '08634', revealed: false, shroud: 2,
+    clues: 0, maxClues: 2, connections: [],
+  })))
+  scenarioAction(state, 'loc:mapRoomStudy', choice => {
+    assert.equal(choice.options.some(option => option.id === 'hiddenTunnel'), false)
+    return choice.options.find(option => chosen.includes(option.id))?.id
+  })
+  assert.equal(state.investigators[0].clues, 3)
+  for (const id of chosen) {
+    assert.equal(current(state, id).revealed, true)
+    assert.equal(current(state, id).clues, 1)
+  }
+  assert.equal(current(state, 'hiddenTunnel').revealed, false)
+})
+
+test('08636 无顶堡垒：有毁灭时仍可选择弃掉一个敌人或诡计，不可选精英敌人', () => {
+  for (const mode of ['doom', 'enemy', 'treachery']) {
+    const state = cityGame('08636')
+    giveKeys(state, -1, -1)
+    state.doom = 2
+    const foe = enemy(state, { code: '08642', originalCode: '08642', elite: false, engagedSeat: null })
+    const elite = enemy(state, { elite: true, engagedSeat: null })
+    scenarioRuntime(state, []).threat(0, '08647', { counters: 1 })
+    const treachery = state.investigators[0].threat[0]
+    const target = { doom: 'doom', enemy: 'enemy:' + foe.id, treachery: 'treachery:' + treachery.id }[mode]
+    scenarioAction(state, 'loc:rampartStudy', choice => {
+      assert.equal(choice.options.some(option => option.id === 'enemy:' + elite.id), false)
+      return choice.options.find(option => option.id === target)?.id
+    })
+    assert.equal(state.doom, mode === 'doom' ? 1 : 2)
+    assert.equal(state.enemies.some(card => card.id === foe.id), mode !== 'enemy')
+    assert.equal(state.encounterDiscard.includes('08642'), mode === 'enemy')
+    assert.equal(state.investigators[0].threat.some(card => card.id === treachery.id), mode !== 'treachery')
+    assert.equal(state.encounterDiscard.includes('08647'), mode === 'treachery')
+  }
+})
+
+function cityGrid(code) {
+  const state = cityGame(code)
+  state.locations.push(
+    { id: 'row', name: '同行', revealed: false, clues: 0, maxClues: 0, connections: [] },
+    { id: 'column', name: '同列', revealed: false, clues: 0, maxClues: 0, connections: [] })
+  configureCityscapes(state, { rows: 2, columns: 3 })
+  for (const [id, column, row] of [['here', 0, 0], ['adjacent', 1, 0], ['row', 2, 0], ['column', 0, 1]]) {
+    assert.equal(placeGridLocation(state, id, column, row, {}), id)
+  }
+  return state
+}
+
+test('08638 巨大尖顶：选择同行另一地点的一枚钥匙，团队次限后行动消失', () => {
+  const state = cityGrid('08638')
+  initializeValueKeys(state, [
+    { id: 'first', value: 'cultist', holder: 'location:adjacent' },
+    { id: 'second', value: 'cultist', holder: 'location:row' },
+    { id: 'different', value: 'cultist', holder: 'location:column' },
+  ])
+  scenarioAction(state, 'loc:moveKeyToSpires', choice => {
+    assert.equal(choice.options.some(option => option.id === 'different'), false)
+    return 'second'
+  })
+  assert.deepEqual(valueKeysAt(state, 'location:here').map(key => key.id), ['second'])
+  assert.deepEqual(valueKeysAt(state, 'location:adjacent').map(key => key.id), ['first'])
+  assert.equal(legalMoves(state, 0).some(action => action.rule === 'loc:moveKeyToSpires'), false)
+})
+
+test('08639 埋没通路：把一枚线索移动到选中的同列未揭示地点', () => {
+  const state = cityGrid('08639')
+  current(state, 'column').maxClues = 2
+  scenarioAction(state, 'loc:moveClueToHidden', choice => choice.options.find(option => option.id === 'column')?.id)
+  assert.equal(current(state, 'here').clues, 2)
+  assert.equal(current(state, 'column').clues, 1)
+  assert.equal(current(state, 'column').revealed, false)
+  assert.equal(current(state, 'row').clues, 0)
+  move(state, { action: 'move', locationId: 'column' })
+  settle(state)
+  assert.equal(current(state, 'column').revealed, true)
+  assert.equal(current(state, 'column').clues, 3)
+})
+
+test('08640 古老者之庙：只有各一枚同面钥匙的两个地点也能互换原实体，且每场一次', () => {
+  const state = cityGrid('08640')
+  current(state, 'here').clues = 0
+  initializeValueKeys(state, [
+    { id: 'first', value: 'cultist', holder: 'location:adjacent' },
+    { id: 'second', value: 'cultist', holder: 'location:row' },
+  ])
+  scenarioAction(state, 'loc:swapKeys', choice => choice.options.find(option => option.id === 'row')?.id)
+  assert.deepEqual(valueKeysAt(state, 'location:adjacent').map(key => key.id), ['second'])
+  assert.deepEqual(valueKeysAt(state, 'location:row').map(key => key.id), ['first'])
+  assert.equal(legalMoves(state, 0).some(action => action.rule === 'loc:swapKeys'), false)
+})
+
+
+test('08642 仁慈古老者：实际显现于空地点且带 1 毁灭，真实交涉移出游戏，被击败则密谋加毁灭', () => {
+  const state = cityGame()
+  state.encounterDeck = ['08642']
+  execute(state, (draft, api) => api.drawEncounter(0))
+  const target = state.enemies.find(card => (card.originalCode || card.code) === '08642')
+  assert.ok(target)
+  assert.equal(target.location, 'adjacent')
+  assert.equal(target.doom, 1)
+  state.investigators[0].location = target.location
+  state.investigators[0].willpower = 8
+  const parley = legalMoves(state, 0).find(candidate => candidate.action === 'entityAbility' && candidate.entityId === target.id)
+  assert.ok(parley)
+  move(state, parley)
+  settle(state)
+  assert.ok(state.removedFromGame.includes('08642'))
+  assert.equal(state.doom, 0)
+
+  const attacked = enemy(state, { code: '08642', originalCode: '08642', health: 1, fight: 1 })
+  move(state, { action: 'fight', enemyId: attacked.id })
+  settle(state)
+  assert.equal(state.doom, 1)
+})
+
+test('08643 苏醒古老者：交战夺钥匙、同地点取得钥匙时重整攻击、离场把钥匙放回地点', () => {
+  const state = cityGame()
+  current(state, 'here').clues = 0
+  const target = enemy(state, { code: '08643', originalCode: '08643', health: 6, damage: 1,
+    engagedSeat: null, exhausted: true })
+  initializeValueKeys(state, [
+    { id: 'owned', value: 'cultist', holder: 'investigator:0' },
+    { id: 'ground', value: 'tablet', holder: 'location:here' },
+  ])
+  execute(state, (draft, api) => api.engage(draft.enemies.find(card => card.id === target.id), 0))
+  assert.deepEqual(valueKeysAt(state, 'enemy:' + target.id).map(key => key.id), ['owned'])
+  execute(state, (draft, api) => api.disengage(draft.enemies.find(card => card.id === target.id)))
+  scenarioAction(state, 'key:claim')
+  assert.equal(state.enemies.find(card => card.id === target.id).exhausted, false)
+  assert.equal(state.investigators[0].damage, 1)
+  execute(state, (draft, api) => api.damageEnemy(target.id, 9, 0))
+  assert.ok(valueKeysAt(state, 'location:here').some(key => key.id === 'owned'))
+})
+
+for (const [code, harm, healer] of [['08646', 'damage', '08590'], ['08647', 'horror', '08587']]) {
+  test(code + ' 古城威胁：寒霜可选承受 1 点 ' + harm + ' 或自动失败，实际治疗可弃置诡计', () => {
+    for (const [takeHarm, redirect] of [[true, true], [false, true], [true, false]]) {
+      const state = cityGame()
+      state.investigators[0].intellect = 8
+      state.encounterDeck = [code]
+      execute(state, (draft, api) => api.drawEncounter(0))
+      assert.ok(state.investigators[0].threat.some(card => card.code === code))
+      state.chaosBag = ['frost', '0']
+      state.debugNextTokens = ['frost', '0']
+      move(state, { action: 'investigate' })
+      settle(state, choice => choice.options.find(option => takeHarm ? /承受|受到/.test(option.label) : /自动失败/.test(option.label))?.id)
+      assert.equal(state.lastTestResult.success, takeHarm)
+      assert.equal(state.investigators[0][harm], takeHarm ? 1 : 0)
+
+      const partner = asset(state, healer)
+      const action = legalMoves(state, 0).find(candidate => candidate.assetId === partner.id && !candidate.reason)
+      assert.ok(action, '受到诡计影响时可实际治疗')
+      move(state, action)
+      const healingTarget = harm === 'damage' ? (redirect ? 'treachery' : 'investigator') : (redirect ? 'redirect' : 'skip')
+      settle(state, choice => choice.options.find(option => option.id === healingTarget)?.id)
+      assert.equal(state.investigators[0].threat.some(card => card.code === code), !redirect)
+      assert.equal(state.encounterDiscard.includes(code), redirect)
+      if (!redirect) assert.equal(state.investigators[0][harm], 0)
     }
-  }
-  // 入口数据：6 张地点条目都声明了 actions 数据（由 behavior.actions 以 loc:<rule> 展开）。
-  const paths = [
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08632.js',
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08633.js',
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08635.js',
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08636.js',
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08638.js',
-    'src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08639.js',
-  ]
-  for (const file of paths) {
-    const body = fs.readFileSync(file, 'utf8')
-    assert.match(body, /locationRule:\s*\{/, `${file} 声明 locationRule`)
-    assert.match(body, /actions:\s*\[/, `${file} 声明行动数据`)
-  }
+  })
+}
+
+test('08649 伊夸之门：未揭示时调查员与敌人不能进入，地点不能接收附属', () => {
+  const state = scenarioGame('theHeartOfMadnessPart1')
+  const gate = current(state, 'adjacent')
+  Object.assign(gate, { code: '08649', originalCode: '08649', revealed: false })
+  const mayMove = () => legalMoves(state, 0).some(candidate => candidate.action === 'move' && candidate.locationId === gate.id && !candidate.reason)
+  assert.equal(mayMove(), false)
+  const target = enemy(state, { engagedSeat: null })
+  execute(state, (draft, api) => api.moveEnemy(draft.enemies.find(card => card.id === target.id), gate.id))
+  assert.equal(state.enemies.find(card => card.id === target.id).location, 'here')
+  assert.ok(!scenarioRuntime(state, []).attachEncounterToLocation('08691', gate.id))
+  current(state, gate.id).revealed = true
+  assert.equal(mayMove(), true)
 })
 
-test('验收 08642/08643/08646/08647/08649/08651/08652 缺陷复现：敌人规则/威胁区治愈/大门限制/look 未接线', async () => {
-  const cityBehavior = fs.readFileSync('content/campaigns/edgeOfTheEarth/scenarios/cityOfTheElderThings/behavior.js', 'utf8')
-  const heartText = contentText('content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart1',
-    'content/campaigns/edgeOfTheEarth/scenarios/theHeartOfMadnessPart2')
-  const srcText = contentText('src/engine') + heartText
-  // 08642/08643 敌人规则键在引擎/内容层均无读点。
-  for (const key of ['onDefeatDoom', 'takesKeyOnEngage', 'readiesOnKeyControlled', 'placesKeyOnLeave']) {
-    assert.equal(srcText.includes(key), false, `08642/08643 ${key} 无读点`)
+for (const [code, seal, skill, geometry] of [['08651', 'C', 'willpower', 'spokes'], ['08652', 'B', 'intellect', 'rings']]) {
+  for (const [chapter, id] of [['I', 'theHeartOfMadnessPart1'], ['II', 'theHeartOfMadnessPart2']]) {
+    test(code + ' 疯狂之心 ' + chapter + '：激活封印后仅查看同一' + (geometry === 'spokes' ? '辐条' : '环') + '的未揭示地点', () => {
+      const state = scenarioGame(id, code)
+      const group = state.scenario[geometry].find(slots => slots.length >= 2)
+      const outside = state.scenario[geometry].flat().find(slot => !group.includes(slot))
+      Object.assign(current(state, 'here'), { slot: group[0] })
+      Object.assign(current(state, 'adjacent'), { slot: group[1], code: '08655', originalCode: '08655', revealed: false })
+      state.locations.push({ id: 'outside', slot: outside, code: '08656', originalCode: '08656', revealed: false, connections: [] })
+      state.campaign.eote ||= {}
+      state.campaign.eote.seals = { entries: [{ kind: seal, active: false, placedBySeat: 0, locationId: null }] }
+      Object.assign(state.investigators[0], { [skill]: 8, clues: 1 })
+      const action = legalMoves(state, 0).find(candidate => candidate.action === 'entityAbility' && candidate.entityId === 'here' && !candidate.reason)
+      assert.ok(action)
+      const viewed = []
+      move(state, action)
+      settle(state, choice => {
+        if (choice.source === 'peekLocation') viewed.push([choice.seat, choice.options[0].cardCode])
+        return null
+      })
+      assert.deepEqual(viewed, [[0, '08655']])
+      assert.equal(state.campaign.eote.seals.entries[0].active, true)
+      assert.equal(state.investigators[0].clues, 0)
+      assert.equal(current(state, 'adjacent').revealed, false)
+    })
   }
-  // 引擎读的是 enemyRule.spawnAnyEmpty（扁平键），08642 声明的是嵌套 spawn:'anyEmpty'，值 anyEmpty 无读点。
-  assert.equal(srcText.includes("'anyEmpty'"), false, '08642 enemyRule.spawn=anyEmpty 的取值无读点（引擎用 spawnAnyEmpty 扁平键）')
-  // 08646/08647 威胁区治愈与 frost 强制未接线。
-  for (const key of ['healAsOneDamageApproximation', 'frostWeakness']) {
-    assert.equal(srcText.includes(key), false, `08646/08647 ${key} 无读点`)
-  }
-  // 引擎的 threatHorrorSink 读点是条目顶层字段（05008 写法）；08647 写在 flags 下 → 不受理。
-  const possessedEntry = (await import('../src/cards/encounter-entries/edgeOfTheEarth/cityOfTheElderThings/08647.js')).default
-  assert.equal(possessedEntry.threatHorrorSink, undefined, '08647 未把 threatHorrorSink 放到条目顶层')
-  assert.equal(possessedEntry.flags.threatHorrorSink, true, '08647 只在 flags 下声明（引擎不读）')
-  const frostForced = cityBehavior.includes('threat') && /08646[\s\S]{0,200}forcedFrost/.test(cityBehavior)
-  assert.ok(frostForced, '08646/08647 只写入威胁区计数器，没有 frost 揭示时的强制结算')
-  // 08649 背面进入限制仍是 pending primitive（条目自述）。
-  assert.match(heartGate.note, /primitive-requests\/p7-08649\.json/)
-  assert.equal(heartText.includes('claimedSealsKeptOnResign'), false, '08649 claimedSealsKeptOnResign 无读点')
-  // 08651/08652 的 look 效果只写日志，没有查看/投影读点。
-  for (const entry of [heartForsaken, heartLibrary]) {
-    const resolveSource = entry.abilities[0].resolve.toString()
-    assert.match(resolveSource, /api\.info/, `${entry.code} 行动仅记录日志`)
-    assert.equal(/lookAt|reveal|projection|mechanics\.[a-z]+\.look/.test(resolveSource), false, `${entry.code} 无查看读点`)
-  }
-})
+}

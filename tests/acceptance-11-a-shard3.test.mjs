@@ -6,9 +6,38 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import { drawCards } from '../src/engine/engine.js'
-import { enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
+import { asset, enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 
 const hero = state => state.investigators[0]
+
+test('11115 两个符号累加为对同一选择目标的 2 点伤害；可以跳过且保持重整', () => {
+  for (const skip of [false, true]) {
+    const state = fixture('11014')
+    state.chaosBag = ['skull', 'cultist']
+    const inv = hero(state)
+    inv.combat = 8
+    inv.willpower = 8
+    inv.deck.push('11010')
+    drawCards(state, inv, 1, [])
+    const sword = asset(state, '11115')
+    const target = enemy(state)
+    const other = enemy(state, { engagedSeat: null })
+    const attack = legalMoves(state).find(entry => entry.assetId === sword.id && entry.targetId === target.id)
+    assert.ok(attack)
+    move(state, attack)
+    let choices = 0
+    settle(state, choice => {
+      if (choice.source !== sword.code || choice.kind !== 'enemy') return null
+      choices++
+      return skip ? 'skip' : other.id
+    })
+    assert.deepEqual([...state.lastTestResult.drawn].sort(), ['cultist', 'skull'])
+    assert.equal(choices, 1)
+    assert.equal(state.enemies.find(card => card.id === target.id).damageTaken, 1)
+    assert.equal(state.enemies.find(card => card.id === other.id).damageTaken, skip ? 0 : 2)
+    assert.equal(hero(state).assets.find(card => card.id === sword.id).exhausted, !skip)
+  }
+})
 
 test('11127 病态好奇：成功调查后回合结束不受伤；未成功调查则受 1 伤害并洗回牌库', () => {
   const state = fixture('01001', 2)

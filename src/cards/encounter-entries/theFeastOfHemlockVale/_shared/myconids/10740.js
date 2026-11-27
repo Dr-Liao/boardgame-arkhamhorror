@@ -12,10 +12,7 @@
 //   · 「放进你的威胁区域」= api.threat（scenario-runtime.js 的威胁区唯一写入口，走 afterThreatEntered）；
 //     返回 { placed: true } 阻止它按普通诡计进遭遇弃牌堆（与 07299 同一返回值契约）。
 //   · 「每位调查员仅限 1 张」= 结算前查 inv.threat 里是否已有同卡，已有则不再放置（结算后按常规弃掉）。
-//   · 剩下两段（每条轮第一次抽牌的直接恐惧、[action] 检定/受 1 点直接恐惧换自动成功的摆脱行动）：
-//     引擎侧没有对应读点——威胁区卡牌不是能力窗口来源（ability-rules.js#nonPlayerAbilitySources 不枚举
-//     inv.threat），威胁区摆脱行动只读 threatEffect.discardCost（无检定）与 endTurnTest（回合末检定），
-//     抽牌时点也没有 threatEffect 钩子。因此这两段只落 flags 数据，note 披露为未接线。
+//   · 整批抽牌后触发轮内首次抽牌。可在摆脱检定前选择支付直接恐惧，使该检定自动成功。
 const CODE = '10740'
 const NAME = '迷神孢子'
 const SKILL = 'intellect'
@@ -25,6 +22,7 @@ export default {
   code: CODE,
   scope: 'treachery',
   implemented: true,
+  treacheryRule: { sharedThreatAction: true },
   flags: {
     encounterGroup: 'myconids',
     quantity: 2,
@@ -46,7 +44,37 @@ export default {
     api.info?.(`🍄 「${NAME}」进入 ${inv.name} 的威胁区域。`)
     return { placed: true }
   },
-  note: '显现（进威胁区域 + 每位调查员仅限 1 张）自足实现。「每轮第一次抽牌受 1 点直接恐惧」与'
-    + '「[action] 智力(3) 摆脱，可受 1 点直接恐惧自动成功」没有引擎读点（威胁区卡不在能力窗口来源里，'
-    + '摆脱行动只支持 discardCost / endTurnTest），本批只落 flags 数据留给 P8 威胁区原语，未冒充已实现。',
+  abilities: [{
+    kind: 'forced',
+    trigger: 'cardsDrawn',
+    silent: true,
+    label: '每轮首次从自己的牌库抽牌：受到 1 点直接恐惧',
+    limit: { scope: 'perRound', owner: 'instance' },
+    criteria: ({ inv, source, context }) => context.seat === inv.seat && context.firstThisRound !== false
+      && inv.threat.some(card => card.id === source.id),
+    resolve: ({ inv, api }) => api.directHorror(inv.seat, 1),
+  }, {
+    kind: 'action',
+    actionKind: 'activate',
+    label: '迷神孢子：检定智力(3)，成功则弃掉本卡',
+    resolve: ({ state, inv, source, api }) => {
+      const pay = api.choose({
+        kind: 'cost', source: CODE, seat: inv.seat,
+        prompt: '是否受到 1 点直接恐惧，使本次检定自动成功？',
+        options: [{ id: 'test', label: '照常检定' }, { id: 'horror', label: '受到 1 点直接恐惧' }],
+      }) === 'horror'
+      if (pay) api.directHorror(inv.seat, 1)
+      if (inv.defeated || inv.resigned) return
+      const sourceId = source.id
+      api.test(inv.seat, SKILL, DIFFICULTY, {
+        autoSuccess: pay,
+        source: { type: 'treachery', code: CODE, action: 'activate', ability: true },
+        resolve(result) {
+          if (!result.success) return
+          const current = state.investigators.flatMap(owner => owner.threat).find(card => card.id === sourceId)
+          if (current) api.removeThreat(current)
+        },
+      })
+    },
+  }],
 }

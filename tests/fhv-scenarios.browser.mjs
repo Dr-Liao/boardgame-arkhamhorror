@@ -464,8 +464,20 @@ async function prepareSeatThroughHub(page, request, session, testInfo, viewport)
   state = await fetchSession(request, sessionId)
   expect(state.investigators?.[0]?.code, '真实席位调查员').toBe(INVESTIGATOR_CODE)
 
-  const deck = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
-  await clickMoveButton(page, deck, '使用推荐卡组')
+  const recommended = '**/api/mods/arkhamhorror/arkhamdb/recommended?*'
+  const offline = route => route.fulfill({ status: 503, json: { ok: false, error: '离线验收' } })
+  await page.route(recommended, offline)
+  try {
+    const deck = hub.getByRole('button', { name: '使用推荐卡组', exact: true }).first()
+    await clickMoveButton(page, deck, '使用推荐卡组')
+  } finally {
+    await page.unroute(recommended, offline)
+  }
+  state = await fetchSession(request, sessionId)
+  if (state.legalMoves.some(move => move.action === 'hubConfirmDeck')) {
+    const confirm = hub.getByRole('button', { name: '最终确认牌组', exact: true }).first()
+    await clickMoveButton(page, confirm, '最终确认牌组')
+  }
   const ready = hub.getByRole('button', { name: '确认准备', exact: true }).first()
   await clickMoveButton(page, ready, '确认准备')
   state = await fetchSession(request, sessionId)
@@ -751,6 +763,43 @@ async function assertChapterGuide(page, testInfo, viewport, chapter) {
     { timeout: 10_000 }).toBe(true)
 }
 
+async function exerciseEmissaryView(page, request, testInfo, sessionId, viewport) {
+  const emissary = page.locator('.ah-enemy[data-timed-enemy-view]').first()
+  const details = page.locator('.ah-carddetail-modal')
+  const acceptView = () => page.waitForResponse(response => response.url().endsWith('/api/card-view')
+    && response.request().postDataJSON()?.viewing === true)
+  const stopView = () => page.waitForResponse(response => response.url().endsWith('/api/card-view')
+    && response.request().postDataJSON()?.viewing === false)
+  if (viewport === 'desktop') {
+    await emissary.hover()
+    const zoom = acceptView()
+    await page.keyboard.down('Alt')
+    expect((await (await zoom).json()).durationMs).toBe(15_000)
+    await expect(page.locator('.ah-card-zoom .ah-carddetail-view-warning')).toContainText('15 秒')
+    const stoppedZoom = stopView()
+    await page.keyboard.up('Alt')
+    expect((await (await stoppedZoom).json()).ok).toBe(true)
+  }
+  const first = acceptView()
+  await emissary.dispatchEvent('click')
+  expect((await (await first).json()).durationMs).toBe(15_000)
+  await expect(details.getByRole('status')).toContainText('15 秒')
+  const stopped = stopView()
+  await details.getByRole('button', { name: '关闭卡牌详情' }).click()
+  expect((await (await stopped).json()).ok).toBe(true)
+  expect((await fetchSession(request, sessionId)).investigators[0].defeated).toBe(false)
+
+  const second = acceptView()
+  await emissary.dispatchEvent('click')
+  expect((await (await second).json()).durationMs).toBe(15_000)
+  await shot(page, testInfo, `${viewport}-cosmic-emissary-gaze`)
+  await expect.poll(async () => {
+    const current = await fetchSession(request, sessionId)
+    return current.investigators[0]?.defeated
+  }, { timeout: 25_000, intervals: [1000] }).toBe(true)
+  await expect.poll(async () => page.locator('.ah-carddetail-view-warning').count(), { timeout: 6000 }).toBe(0)
+}
+
 // ---------------------------------------------------------------------------
 // 失败证据（内容/UI 真实缺陷时不跳过、不伪造，保留现场截图与界面错误文本）
 // ---------------------------------------------------------------------------
@@ -811,6 +860,7 @@ for (const [viewport, width, height] of VIEWPORTS) {
         await assertChapterGuide(page, testInfo, viewport, chapter)
         await shot(page, testInfo, `${viewport}-${chapter.id}`)
         await assertNoHorizontalOverflow(page)
+        if (chapter.id === 'fateOfTheVale') await exerciseEmissaryView(page, request, testInfo, sessionId, viewport)
         expect(pageErrors, `pageerror: ${pageErrors.join(' | ')}`).toEqual([])
       } catch (error) {
         await captureBlockedEvidence(page, testInfo, viewport, chapter, error)

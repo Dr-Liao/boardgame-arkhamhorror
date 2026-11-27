@@ -1,3 +1,4 @@
+import { replaceHand } from './hand-icons.js'
 import { assertFields, integer } from './mechanic-state.js'
 
 const validId = value => typeof value === 'string' && value.length > 0
@@ -112,7 +113,7 @@ export function deckAfterSurvey(state, inv, deck, survey) {
 export function restoreSurveyInvestigator(inv, parcel, round) {
   inv.resources = parcel.resources
   inv.clues = parcel.clues
-  inv.hand = [...parcel.hand]
+  replaceHand(inv, [...parcel.hand])
   inv.assets = parcel.assets.map(asset => ({ ...structuredClone(asset), enteredRound: round }))
   inv.surveyOpening = true
 }

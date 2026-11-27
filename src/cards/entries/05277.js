@@ -10,24 +10,12 @@
 // 窗口内把选择记到 inv.playUpgrades05277 并累加 context.costIncrease（引擎支付前加费）；
 // played 的 resolve 只读该选择决定伤害/目标范围，不再在 resolve 内补付资源。
 
+import { connectedLocationsWithin } from './_shared.js'
+
 const UPGRADE_COST = 2
 
-// 「与你所在地点之间连接次数不超过 2 的地点」：距离 1–2，不含自身地点。
-function locationsWithinTwo(state, fromId) {
-  const within = new Set()
-  const first = state.locations.find(location => location.id === fromId)?.connections || []
-  for (const id of first) {
-    if (id === fromId || !state.locations.some(location => location.id === id)) continue
-    within.add(id)
-    for (const second of state.locations.find(location => location.id === id)?.connections || []) {
-      if (second !== fromId) within.add(second)
-    }
-  }
-  return within
-}
-
 function targetsAt(state, inv, range) {
-  const locations = range ? locationsWithinTwo(state, inv.location) : new Set([inv.location])
+  const locations = new Set(range ? connectedLocationsWithin(state.locations, inv.location, 2).map(location => location.id) : [inv.location])
   return state.enemies.filter(enemy => !enemy.defeated && !enemy.elite && locations.has(enemy.location))
 }
 

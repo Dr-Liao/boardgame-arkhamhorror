@@ -553,7 +553,7 @@ test('06081 可疑的护工：与它交战时不能调查；不能攻击/被攻�
   const error = chapter.behavior.investigationError(state, state.investigators[0], locationOf(state, 'waitingRoom'))
   assert.ok(typeof error === 'string' && error.length > 0)
   assert.equal(chapter.behavior.investigationError(state, state.investigators[1], locationOf(state, 'waitingRoom')), undefined)
-  const flags = entry06081.flags
+  const flags = entry06081.enemyRule
   assert.equal(flags.cannotAttack, true)
   assert.equal(flags.cannotBeAttacked, true)
   assert.equal(flags.cannotBeDamaged, true)

@@ -28,10 +28,12 @@
 //   · 「翻面后保留全部标记与附属」由 physical-faces.js#applyPhysicalFace 保证（同一实体替换印刷字段）。
 //   · 法典（Codex 4/6/8/Σ/Θ）以 behavior.codex 的确定性分支实现；法典籍面选择面板与
 //     `mechanics.codex` 声明留给主进程（P8），这里不声明未接线的 mechanics 字段。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { applyPhysicalFace, planPhysicalFace } from '../../../../../src/engine/physical-faces.js'
 import { adjacentGridSpaces, connectGrid, gridPosition } from '../../../../../src/engine/grid-map.js'
+import { roadDistance } from '../../../../../src/engine/map-graph.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import {
   abominationAtInvestigator, hasTrait, isHardSide, locationIsDark,
@@ -149,9 +151,7 @@ export function suppressedDarkIds(state) {
   const suppressed = new Set()
   const until = flagsFor(state).lostSisterLightUntil
   if (until && typeof until === 'object') {
-    for (const [locationId, round] of Object.entries(until)) {
-      if (Number(round) >= Number(state?.round || 1)) suppressed.add(locationId)
-    }
+    for (const id of Object.keys(until)) suppressed.add(id)
   }
   for (const location of state?.locations || []) {
     const attachedGrowth = (location.attachments || [])
@@ -398,12 +398,12 @@ export function flipHybrid(state, enemy, nextCode, api = {}) {
   // Forced - 翻到这些面之后的强制效果（印刷文本见 cards-data）。
   if (group === 'limulus' && String(nextCode) === HYBRID_FACES.limulus.day) {
     const amount = investigatorCount(state)
-    dealDamageToEnemy(state, enemy, amount, api)
+    dealDamageToEnemy(state, enemy, amount, api, { code: String(nextCode), sourceEnemyId: enemy.id })
     info(api, `「${enemy.name}」翻至(在光中)面：受到 ${amount} 点伤害。`)
   }
   if (group === 'crustacean' && String(nextCode) === HYBRID_FACES.crustacean.night) {
     for (const inv of activeInvestigators(state).filter(inv => inv.location === enemy.location)) {
-      harmInvestigator(state, inv, { damage: 1 }, api)
+      harmInvestigator(state, inv, { damage: 1 }, api, { code: String(nextCode), sourceEnemyId: enemy.id })
     }
     info(api, `「${enemy.name}」翻至(在黑暗中)面：所在地点的每位调查员受到 1 点伤害。`)
   }
@@ -411,11 +411,11 @@ export function flipHybrid(state, enemy, nextCode, api = {}) {
   return enemy
 }
 
-function dealDamageToEnemy(state, enemy, amount, api = {}) {
+function dealDamageToEnemy(state, enemy, amount, api = {}, presentation) {
   if (!(amount > 0)) return 0
   // 引擎的 damageEnemy(enemyId, amount, seat, source) 自带击败结算；只在没有引擎时本地结算。
   if (typeof api?.damageEnemy === 'function') {
-    api.damageEnemy(enemy.id, amount)
+    api.damageEnemy(enemy.id, amount, undefined, null, presentation)
     return amount
   }
   enemy.damageTaken = (Number(enemy.damageTaken) || 0) + amount
@@ -424,9 +424,9 @@ function dealDamageToEnemy(state, enemy, amount, api = {}) {
   return amount
 }
 
-function harmInvestigator(state, inv, { damage = 0, horror = 0 } = {}, api = {}) {
+function harmInvestigator(state, inv, { damage = 0, horror = 0 } = {}, api = {}, presentation) {
   if (damage > 0) {
-    if (typeof api?.damage === 'function') api.damage(inv.seat, damage)
+    if (typeof api?.damage === 'function') api.damage(inv.seat, damage, presentation)
     else inv.damage = (Number(inv.damage) || 0) + damage
   }
   if (horror > 0) {
@@ -688,14 +688,9 @@ export function actions(state, inv) {
     })
   }
 
-  // 露天洞穴：熄灭 [[黑暗]] 直到下个调查阶段（团队每轮一次）。印刷为 [fast]，见模块头近似说明。
-  if (here.id === 'openCave1' || here.id === 'openCave2') {
-    const usedRound = Number(flags.lostSisterOpenCaveRound) === round
-    moves.push({
-      action: 'scenarioAction', rule: `lostSisterOpenCaveLight:${here.id}`, locationId: here.id,
-      label: '☀️ 露天洞穴：检定[agility](2+此处的重整敌人)，成功则失去[[黑暗]]（团队每轮一次）',
-      reason: usedRound ? '本团队本轮已经尝试过' : null,
-    })
+  for (const source of (here.attachments || []).filter(card => codeOf(card) === LUMINOUS_GROWTH_CODE)) {
+    moves.push({ action: 'scenarioAction', rule: `lostSisterDiscardGrowth:${source.id}`,
+      label: '荧光增生：检定[agility](3)，成功后弃掉本卡' })
   }
 
   // 幕 2/3 的印刷行动：花费 1[per_investigator] 线索，把相邻黑暗地点的敌人拉到你所在地点。
@@ -713,6 +708,15 @@ export function actions(state, inv) {
   return moves
 }
 
+export function fastActions(state, inv) {
+  if (state.phase !== 'investigation' || inv?.seat !== state.currentSeat) return []
+  const location = locationOf(state, inv?.location)
+  if (!location?.revealed || !entryOf(codeOf(location))?.flags?.canLoseDarkTrait
+    || flagsFor(state).lostSisterOpenCaveRound === state.round) return []
+  return [{ action: 'scenarioAction', rule: `lostSisterOpenCaveLight:${location.id}`, actions: 0,
+    label: '露天洞穴：检定[agility](2+此处的重整敌人)，成功则暂时失去[[黑暗]]' }]
+}
+
 export function lureTargets(state, inv, { darkness = true } = {}) {
   const here = locationOf(state, inv?.location)
   if (!here) return []
@@ -727,9 +731,30 @@ export function performAction(state, inv, move, api = {}) {
   if (rule === 'lostSisterAkwanParley') {
     const top = lookAtCavernsTop(state, 3)
     if (!top.length) return false
-    // 印刷是「看过之后任意顺序放回」：这里按原顺序放回（顺序调整留给玩家面板），披露于模块头。
-    info(api, `阿克望谈判：岩穴牌库顶 ${top.length} 张按任意顺序放回（当前未提供重排面板）。`)
+    const remaining = top.map((code, index) => ({ id: String(index), code, label: LOCATIONS[code]?.name || code }))
+    const ordered = []
+    while (remaining.length > 1) {
+      const id = api.choose?.({ kind: 'card', seat: inv.seat, source: codeOf(locationOf(state, inv.location)),
+        prompt: `选择从顶向下的第 ${ordered.length + 1} 张岩穴`,
+        options: remaining.map(({ id, label }) => ({ id, label })) }) ?? remaining[0].id
+      const index = remaining.findIndex(card => card.id === id)
+      if (index < 0) return false
+      ordered.push(remaining.splice(index, 1)[0].code)
+    }
+    ordered.push(remaining[0].code)
+    cavernsDeck(state).splice(0, ordered.length, ...ordered)
     setFlag(state, 'lostSisterAkwanParleyUsed', true)
+    return true
+  }
+  if (rule.startsWith('lostSisterDiscardGrowth:')) {
+    const location = locationOf(state, inv.location)
+    const id = rule.slice('lostSisterDiscardGrowth:'.length)
+    const source = location?.attachments?.find(card => card.id === id && codeOf(card) === LUMINOUS_GROWTH_CODE)
+    if (!source) return false
+    const { skill, difficulty } = entryOf(codeOf(source)).flags.discardTest
+    api.test?.(inv.seat, skill, difficulty, result => {
+      if (result.success && api.discardAttachment?.(source)) syncHybridAt(state, location.id, api)
+    })
     return true
   }
   if (rule.startsWith('lostSisterRemember:')) {
@@ -843,26 +868,26 @@ export function beforeMove(state, inv, destination, api = {}, options = {}) {
   // 乱藻海滩：离开时揭示混乱标记，命中符号则取消移动或弃掉一个[[道具]]支援。
   const from = locationOf(state, inv.location)
   if (from && from.id === 'weedChokedBeach') {
-    const token = safeCall(api, 'revealChaosToken') || safeCall(api, 'drawChaosToken')
+    const token = api.revealToken?.(inv.seat)
     const face = typeof token === 'string' ? token : String(token?.face || '')
     const triggers = ['skull', 'tablet', 'elderthing', 'elder_thing', 'autofail', 'auto_fail']
     if (triggers.includes(face)) {
-      const items = (inv.assets || []).filter(asset => (asset.traits || [])
-        .some(trait => String(trait).toLowerCase() === 'item'))
+      const items = (inv.assets || []).filter(asset => hasTrait(ALL_CARDS[asset.code] || asset, 'Item')
+        && api.canDiscardAsset?.(inv.seat, asset.id) !== false)
       const answer = typeof api.choose === 'function'
         ? api.choose({
           kind: 'choice', seat: inv.seat, prompt: '乱藻海滩：取消移动，或弃掉一个[[道具]]支援',
           options: [
             { id: 'cancel', label: '取消移动效果' },
-            ...(items.length ? [{ id: 'discard', label: '弃掉一个[[道具]]支援' }] : []),
+            ...items.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.name || asset.code })),
           ],
         })
-        : items.length ? 'discard' : 'cancel'
-      if (answer !== 'discard' || !items.length) {
+        : items[0]?.id || 'cancel'
+      const asset = items.find(item => item.id === answer)
+      if (!asset) {
         info(api, `乱藻海滩：揭示了 ${face}，移动被取消。`)
         return false
       }
-      const asset = items[0]
       const discarded = safeCall(api, 'discardAsset', inv.seat, asset.id)
       if (discarded === false) return false
       if (discarded == null) {
@@ -924,8 +949,8 @@ export function enemyStatModifier(state, enemy, stat) {
     return 0
   }
   // 荧光增生：所附属地点的敌人得到 +1 攻击值。
-  if ((stat === 'fight' || stat === 'evade') && luminousGrowthLocations(state).has(enemy.location)) {
-    return stat === 'fight' ? 1 : 0
+  if (stat === 'fight' && luminousGrowthLocations(state).has(enemy.location)) {
+    return entryOf(LUMINOUS_GROWTH_CODE)?.flags?.enemyFightBonus ?? 0
   }
   return 0
 }
@@ -941,7 +966,8 @@ export function luminousGrowthLocations(state) {
 /** 荧光增生：所附属地点的敌人 +1 伤害值（攻击加成钩子）。 */
 export function enemyAttackModifier(state, enemy) {
   if (!enemy) return {}
-  return luminousGrowthLocations(state).has(enemy.location) ? { damage: 1 } : {}
+  return luminousGrowthLocations(state).has(enemy.location)
+    ? { damage: entryOf(LUMINOUS_GROWTH_CODE)?.flags?.enemyDamageBonus ?? 0 } : {}
 }
 
 /** 虾类混种（白日面）：受到攻击伤害时减至 1。 */
@@ -962,19 +988,6 @@ export function canOpportunityAttack(state, enemy) {
 // ---------------------------------------------------------------------------
 
 export function roundEnded(state, api = {}) {
-  // 露天洞穴的熄暗只到一个调查阶段开始。
-  const until = flagsFor(state).lostSisterLightUntil
-  if (until && typeof until === 'object') {
-    for (const [locationId, round] of Object.entries(until)) {
-      if (Number(round) <= Number(state.round || 1)) {
-        delete until[locationId]
-        const location = locationOf(state, locationId)
-        if (location) location.dark = isDarkLocation(state, location)
-        syncHybridAt(state, locationId, api)
-      }
-    }
-    if (!Object.keys(until).length) clearFlag(state, 'lostSisterLightUntil')
-  }
   syncHybrids(state, api)
   return true
 }
@@ -1181,7 +1194,7 @@ function discardRandomCard(state, inv, api) {
   const hand = inv.hand || []
   if (!hand.length) return null
   const index = Math.floor(Math.random() * hand.length)
-  const [code] = hand.splice(index, 1)
+  const [code] = spliceHand(inv, index, 1)
   inv.discard = [...(inv.discard || []), code]
   info(api, `${inv.name} 随机弃掉 1 张手牌（${ALL_CARDS[code]?.nameZh || code}）。`)
   return code
@@ -1192,6 +1205,8 @@ function discardRandomCard(state, inv, api) {
 // ---------------------------------------------------------------------------
 
 export function resolveChaosToken(state, inv, token) {
+  const symbols = entryOf(scenario.referenceCode)?.flags?.chaosSymbols
+  if (symbols && !symbols.includes(String(token))) return null
   return theLostSisterChaosToken(state, inv, token)
 }
 
@@ -1202,8 +1217,8 @@ export function chaosTokenValue(state, tokenFace, inv = null) {
 /** 困难/专家：地点有[[异形]]敌人且抽出[elder_thing] → 本次检定自动失败。 */
 export function testAutoFail(state, inv, context = {}) {
   if (!isHardSide(state)) return false
-  const drawn = context?.drawn || []
-  if (!drawn.includes('elderthing')) return false
+  const symbol = entryOf(scenario.referenceCode)?.flags?.hardAutoFail ?? 'elderthing'
+  if (!context?.drawn?.includes(symbol)) return false
   return abominationAtInvestigator(state, inv)
 }
 export function applyTokenEffect(state, inv, effect = {}, api = {}) {
@@ -1365,7 +1380,57 @@ function healEnemy(state, enemy, amount, api) {
   return true
 }
 
+export function afterTest(state, inv, result, api = {}, { test } = {}) {
+  if (!inv || !test) return
+  const location = locationOf(state, inv.location)
+  const flags = location?.revealed ? entryOf(codeOf(location))?.flags : null
+  if (result.success === false) {
+    if (test.actionKind === 'fight' && flags?.forcedOnFightFailure) harmInvestigator(state, inv, flags.forcedOnFightFailure, api)
+    if (test.actionKind === 'evade' && flags?.forcedOnEvadeFailure) api.loseActions?.(inv.seat, flags.forcedOnEvadeFailure.loseActions)
+    if (test.actionKind === 'investigate' && flags?.forcedOnInvestigateFailure) harmInvestigator(state, inv, flags.forcedOnInvestigateFailure, api)
+    return
+  }
+  if (!['fight', 'investigate'].includes(test.actionKind)) return
+  for (const enemy of state.enemies.filter(item => item.location === inv.location && !item.exhausted
+    && entryOf(codeOf(item))?.flags?.attachToItemOnSuccess && !api.enemyTextBlanked?.(item))) {
+    const items = inv.assets.filter(asset => asset.id !== enemy.attachedToAssetId
+      && hasTrait(ALL_CARDS[asset.code], 'Item'))
+    if (!items.length) continue
+    const id = items.length === 1 ? items[0].id : api.choose?.({
+      kind: 'asset', seat: inv.seat, source: enemy.id, prompt: '选择洞穴苔藓附属的道具',
+      options: items.map(asset => ({ id: asset.id, label: ALL_CARDS[asset.code]?.name || asset.code })),
+    })
+    const asset = items.find(item => item.id === id)
+    if (asset) api.attachEnemyToControlledAsset?.(enemy, inv.seat, asset)
+  }
+}
+
+export function enemyAttackedSuccessfully(state, inv, enemy, api = {}, { weaponCode } = {}) {
+  const response = entryOf(codeOf(enemy))?.flags?.forcedOnMeleeAttackTaken
+  if (response && hasTrait(ALL_CARDS[weaponCode], 'Melee') && !api.enemyTextBlanked?.(enemy)) {
+    harmInvestigator(state, inv, { damage: response.damage }, api)
+  }
+}
+
 export const events = {
+  lostSisterLuminousGrowth(state, { seat }, api = {}) {
+    const inv = state.investigators[seat]
+    if (!inv) return false
+    const eligible = state.locations.filter(location => location.revealed && isDarkLocation(state, location)
+      && !(location.attachments || []).some(card => codeOf(card) === LUMINOUS_GROWTH_CODE))
+      .map(location => ({ location, distance: roadDistance(state.locations, inv.location, location.id) }))
+    const nearest = Math.min(...eligible.map(item => item.distance))
+    if (!Number.isFinite(nearest)) return false
+    const choices = eligible.filter(item => item.distance === nearest).map(({ location }) =>
+      ({ id: location.id, label: location.name }))
+    const id = choices.length === 1 ? choices[0].id : api.choose?.({
+      kind: 'location', seat, source: LUMINOUS_GROWTH_CODE, prompt: '选择荧光增生附属的地点', options: choices,
+    })
+    const source = id && api.attachEncounterToLocation?.(LUMINOUS_GROWTH_CODE, id)
+    if (!source) return false
+    syncHybridAt(state, id, api)
+    return true
+  },
   /** 10586 重属自然：白日[combat] / 黑夜[willpower] (3)，失败二选一。 */
   lostSisterReclaimedByNature(state, payload = {}, api = {}) {
     const inv = (state.investigators || [])[payload.seat]
@@ -1398,7 +1463,7 @@ export const events = {
     }
     const choice = askChoice(api, inv.seat, '重属自然（白日）：受到 2 点伤害，或让最近的敌人攻击你', ['damage', 'attack'])
     if (choice === 'attack') {
-      const attacked = safeCall(api, 'enemyAttacks', nearest, inv)
+      const attacked = typeof api.attack === 'function' ? (api.attack(nearest, inv), true) : false
       if (attacked === false || attacked == null) {
         info(api, `「${nearest.name}」攻击 ${inv.name}。`)
         harmInvestigator(state, inv, { damage: Number(nearest.damage) || 1, horror: Number(nearest.horror) || 0 }, api)
@@ -1500,7 +1565,10 @@ export const behavior = {
   locationPlaced,
   locationRevealed,
   actions,
+  fastActions,
   performAction,
+  afterTest,
+  enemyAttackedSuccessfully,
   cluesGained,
   investigatorEntryError,
   beforeMove,

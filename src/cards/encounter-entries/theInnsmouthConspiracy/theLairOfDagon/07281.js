@@ -30,10 +30,7 @@
 //   src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07281.js
 //
 // 引擎读点：
-//   · 正面实体规则 / [fast] 清屏障：与 07280 同一句印刷模板，逐条读点见 07280.js
-//     （modifiers scene 行 + parleyMovesFor/doEntityAbility + additionalKeyCost）。
-//     同句模板的共享工厂请求：
-//     artifacts/migration/tic/p7/primitive-requests/w5-07280-oath-shared-rules.json
+//   · 正面嫌犯修正与 [fast] 清屏障由 dagonOathFront() 共享。
 //   · 目标 = act-agenda.js#checkAct 读 `actRule.objective`；「解锁最终深渊」由 07290 的
 //     locationRule 行动写 `state.scenarioFlags.remembered`（07290.js#abilities[0]）。
 //   · 背面 = content entry-rules.actReveal → 本文件 actRule.onReveal（api 是 scenarioRuntime）：
@@ -49,7 +46,7 @@
 //
 // implemented: true
 
-import { ALL_CARDS, hasTrait, originalOf } from '../../_shared.js'
+import { dagonOathFront, originalOf } from '../../_shared.js'
 
 const GRAND_ENTRYWAY = '07283'
 const LAIR_OF_DAGON = '07291'
@@ -59,17 +56,8 @@ const LAIR_OFFSET = Object.freeze({ x: 1, y: 3 })
 // 背面诅咒数量按当前密谋次序（act2Back.curseByCurrentAgendaStep：1a→10、2a→5、3a→0）。
 const CURSE_BY_AGENDA_STEP = Object.freeze({ 1: 10, 2: 5, 3: 0 })
 
-const suspect = { when: ({ state, entity }) => (state.enemies || []).includes(entity) && hasTrait(entity, 'Suspect') }
-
-const isObstacle = attachment => hasTrait(ALL_CARDS[originalOf(attachment)], 'Obstacle')
-
 const locationByCode = (state, code) =>
   state.locations.find(location => String(originalOf(location)) === code) || null
-
-const obstacleAttachmentsAt = (state, locationId) => {
-  const location = state.locations.find(candidate => candidate.id === locationId)
-  return (location?.attachments || []).filter(isObstacle)
-}
 
 // 把放在一边的达贡巢穴放到宏伟入口下方印刷位置（lair 槽）。
 function placeLairOfDagon(state, api) {
@@ -90,11 +78,7 @@ function placeLairOfDagon(state, api) {
 
 export default {
   code: '07281', scope: 'act', implemented: true,
-  modifiers: [
-    { target: 'enemyHealth', amount: ({ state }) => state.numInvestigators, condition: suspect },
-    { target: 'loses:aloof', condition: suspect },
-    { target: 'cannot:parley', condition: suspect },
-  ],
+  ...dagonOathFront(),
   actRule: {
     objective(state) {
       return (state.scenarioFlags?.remembered || []).includes('UnlockedTheFinalDepths')
@@ -113,15 +97,4 @@ export default {
       api.info?.(`「第二誓约」背面：达贡巢穴完全淹没、达贡（深入沉睡）入场，加入 ${curses} 个诅咒标记。`)
     },
   },
-  abilities: [{
-    kind: 'free', actionKind: 'activate', range: 'anywhere',
-    label: '花费蓝色、红色、白色或黄色钥匙：弃掉你所在地点的每张[[屏障]]卡牌',
-    additionalKeyCost: { colors: ['blue', 'red', 'white', 'yellow'], scope: 'self' },
-    criteria: ({ state, inv }) => obstacleAttachmentsAt(state, inv.location).length > 0,
-    resolve: ({ state, inv, api }) => {
-      const obstacles = obstacleAttachmentsAt(state, inv.location)
-      for (const attachment of obstacles) api.scenario.detachEncounterAttachment(attachment)
-      if (obstacles.length) api.info?.(`🪨 弃掉所在地点的 ${obstacles.length} 张[[屏障]]。`)
-    },
-  }],
 }

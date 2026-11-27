@@ -11,11 +11,7 @@
 //   · 充能只经 api.spendUses / api.addUses 写（支援 uses 实例字段）。
 //   · [fast] 交换：见 approximation。
 //
-// approximation（缺读点见 artifacts/migration/fhv/primitive-requests/10036.json）：
-//   ① 「花费 1-3 充能」：费用表达式不能在询问后再付，因此声明 cost.uses:1（至少 1 点），
-//      结算内用 api.choice 追加花费 0-2 点（受剩余充能限制），总计 1-3 点。
-//   ② 交换缺「绑定卡就地交换」原语：这里要求瓦卢西亚之瞳在手牌（由 10035 的快速交换放入），
-//      交换后幽嘶之刃返回手牌、瓦卢西亚之瞳放置入场、幽嘶之刃的充能全部弃掉。
+// 绑定卡交换直接在原支援槽位完成。
 const CODE = '10036'
 const EYES = '10035'
 
@@ -49,25 +45,15 @@ function fightWithCharges({ inv, source, target, api }) {
 }
 
 function swapToEyes({ inv, source, api }) {
-  if (!(inv.hand || []).includes(EYES)) {
-    api.info('幽嘶之刃：瓦卢西亚之瞳不在手牌，无法交换（缺绑定卡就地交换原语）。')
-    return
-  }
-  const charges = Math.max(0, Number(source?.uses) || 0)
-  if (!api.putAssetIntoPlay(inv.seat, EYES)) {
-    api.info('幽嘶之刃：瓦卢西亚之瞳无法放置入场（槽位不满足）。')
-    return
-  }
-  if (charges) api.spendUses(source, charges)
-  if (source) api.returnAssetToHand(inv.seat, source)
-  api.info(`🗡 幽嘶之刃：与瓦卢西亚之瞳交换，弃掉 ${charges} 点充能；幽嘶之刃返回手牌。`)
+  if (!api.bonded.swapAsset(inv.seat, source, EYES, { transferUses: false })) return
+  api.info('幽嘶之刃与瓦卢西亚之瞳交换，弃掉幽嘶之刃上的充能。')
 }
 
 export default {
   code: CODE,
   name: 'Blade of Yoth',
-  simplified: true,
-  note: 'approximation: ① 花费 1-3 充能用 cost.uses:1 + 结算内追加花费近似（费用表达式不能先问再付）；② 缺「绑定卡就地交换」原语，交换以「瓦卢西亚之瞳从手牌入场 + 幽嘶之刃返回手牌」近似。',
+  uses: 0,
+  usesType: 'charges',
   abilities: [
     {
       kind: 'action',
@@ -78,7 +64,7 @@ export default {
       resolve: fightWithCharges,
     },
     {
-      kind: 'action',
+      kind: 'free',
       cost: { action: false },
       label: '快速：与瓦卢西亚之瞳交换，弃掉所有充能',
       resolve: swapToEyes,

@@ -22,8 +22,8 @@
 //      翻回 + 10 毁灭」；幕背按版本进 R1/R2/R5/R6。
 //   8. 结局：R1→R8、R5→R8；时间 1/2/3 点；密钥持有者写战役记录。
 import { registeredEntry } from '../../../../../src/engine/ability.js'
-import { isPendingChoice } from '../../../../../src/engine/resolution.js'
-import { randomValue } from '../../../../../src/engine/rules-state.js'
+import { isPendingChoice } from '../../../../../src/engine/resolution-error.js'
+import { doomCards, randomValue } from '../../../../../src/engine/rules-state.js'
 import { encounterResolveFor, enemyRuleFor } from '../../../../../src/cards/card-rules.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
@@ -43,24 +43,6 @@ const LEAD_SEAT = state => Number(state?.campaign?.leadSeat ?? state?.currentSea
 const isInvestigatorEntity = entry => entry && !entry.defeated && !entry.resigned
 
 export const scenarioApproximations = Object.freeze([
-  '钥匙节点（Key Locus）用**敌人实例**承载：印刷是剧情支援，但引擎没有「把在场支援当作敌人攻击」的读点，'
-    + '而「可以攻击钥匙节点，如同它是攻击值 4 的敌人」是本章的核心交互。因此 09653a/09653b 在 definition 的 '
-    + '`enemies` 表里各有一条定义（fight 4 / 无躲避 / 伤害与恐惧 0 / 具体生命），条目仍是剧情支援 scope。'
-    + '副作用：引擎的自动交战会把它当普通敌人（伤害 0、恐惧 0，不影响结算）。见 primitive-requests/09653a.json。',
-  '钥匙节点「生命值 3×调查员」用 `healthPerInvestigator: 3` 表达（引擎 spawnEnemy 的计算读点）；'
-    + '版本一的「最后堡垒」是固定 6 点生命。',
-  '暗红骑士（版本一）用 `state.storyAssets` 的剧情支援实例表达（引擎没有「由所有调查员控制、无槽位」的形态）：'
-    + '它的 [fast] 资源搬运实现为章节提供的剧本行动（`knightToAsset` / `knightFromAsset`），'
-    + '资源记在实例的 `resources` 字段；被敌军攻击的伤害由本章 `enemyPhaseEnd` 结算。',
-  '证券交易所（版本一）「敌人不能进入/生成在此」：生成改道由 `spawnLocation` 钩子接线（改为连接地点）；'
-    + '**移动**路径没有内容层钩子（`enemyConnections` 只能加边），敌人仍可能走进来。见 primitive-requests/09642.json。',
-  '版本一密谋「检查毁灭阈值时，其它卡上的毁灭改为从总数中扣减」用 `doomPlaced` 钩子近似：'
-    + '其它卡每次放置 N 个毁灭时，把密谋上的毁灭 -2N（净效果 = 该卡贡献 -N）。毁灭被移除时不会反向补回。',
-  '维多利亚学院「将要抽取正好 1 张时改为看 2 张抽 1 张」用**快速剧本行动**（0 行动）近似：'
-    + '引擎没有「替换抽 1 张」的窗口（`cardDrawn` 是抽完之后），行动里用 `api.lookAt` 看牌库顶 2 张并取 1 张，'
-    + '其余洗回牌库。见 primitive-requests/09646.json。',
-  '妇女市集「战斗时花 1 行动，否则该敌人本次攻击值 +2」用两件东西近似：`enemyStatModifier` 给 +2，'
-    + '另给一个「花 1 行动免除」的剧本行动（先付后打）。见 primitive-requests/09649.json。',
   '节点脉冲的「附属到有钥匙节点的最近地点」用 `api.attachEncounterToLocation` 真实附属：'
     + '「附属地点没有钥匙节点时弃掉」由本章在钥匙节点被击败 / 轮末 / 阶段开始时检查并 `api.detachLocationAttachment`。',
   '版本二的「结社刺客 (A) 结算隐匿」用 P2 的隐匿原语：1 张真身迷你卡（kind `enemy09727a`）+ 每位调查员 1 张诱饵，'
@@ -73,7 +55,7 @@ export const scenarioApproximations = Object.freeze([
 
 export const scenarioGaps = Object.freeze([
   '共享遭遇组（猩红巫术/空间异常/腐败扩散/黑暗异教徒/扫荡团伙）的卡牌行为属于共享组，本章只声明 '
-    + 'requiredEncounterGroupIds；敌人不能进入证券交易所的移动限制见 scenarioApproximations 与 09642 请求。',
+    + 'requiredEncounterGroupIds。',
   '世界地图的时间阈值（状况报告 α–ω）与启程循环由战役流程层结算；本章只累加 `time` 记录。',
   '「其它卡上的毁灭扣减毁灭总数」的**移除**方向（毁灭被移除时总数回升）未实现：只处理放置方向（见近似披露）。',
 ])
@@ -153,8 +135,6 @@ export function chapterState(state) {
   if (data.beastFledRound == null) data.beastFledRound = null
   if (data.qaitbayLockRound == null) data.qaitbayLockRound = null
   if (data.cornicheBoostRound == null) data.cornicheBoostRound = null
-  if (data.zanettPaidRound == null) data.zanettPaidRound = null
-  if (data.zanettPaidSeat == null) data.zanettPaidSeat = null
   data.keyLociDefeated ||= []
   data.pulses ||= []
   data.replacementUsed ||= {}
@@ -425,8 +405,34 @@ export function defeatKnightAsset(state, api) {
   data.claretKnightDefeated = true
   api?.info?.('💀 暗红骑士被击败：密谋 1 的目标达成，推进密谋。')
   syncCountsAsKeyLocus(state)
-  syncWindsorCost(state)
   if (codeOf(state.agendas?.[state.agendaIndex]) === RAW_CODES.agendaV1) api?.advanceAgenda?.()
+  return true
+}
+
+function putKeyLocusInPlay(state, code, location, prior = null) {
+  const printed = KEY_LOCUS_DATA[code]
+  const asset = { id: prior?.id || `story:${code}:${location}`, code, originalCode: code,
+    name: cardNameOf(code), location, health: printed.healthPerInvestigator
+      ? printed.health * state.numInvestigators : printed.health,
+    ...(code === RAW_CODES.keyLocusDefensiveBarrier ? { fight: printed.fight } : {}), exhausted: false,
+    damage: prior?.damageTaken || 0, doom: prior?.doom || 0, keyLocus: true, keyLocusFace: printed.face,
+  }
+  state.storyAssets ||= []
+  state.storyAssets.push(asset)
+  return asset
+}
+
+function damageKeyLocus(state, api, asset, amount) {
+  const printed = KEY_LOCUS_DATA[codeOf(asset)]
+  if (!printed || !state.storyAssets?.includes(asset)) return false
+  asset.damage += amount
+  if (asset.damage < asset.health) return true
+  state.storyAssets.splice(state.storyAssets.indexOf(asset), 1)
+  chapterState(state).keyLociDefeated.push(asset.code)
+  if (printed.defeatedToVictory) api.addStoryToVictory(asset.code, { sourceId: asset.id })
+  else api.removeFromGameCards([asset.code])
+  syncCountsAsKeyLocus(state)
+  discardOrphanPulses(state, api)
   return true
 }
 
@@ -443,6 +449,8 @@ export function enemyAttacksKeyLoci(state, api) {
     for (const target of keyLocusEntities(state).filter(entry => entry.location === enemy.location)) {
       if (state.enemies.includes(target)) {
         api?.damageEnemy?.(target.id, amount, null, enemy.code)
+      } else if (KEY_LOCUS_DATA[codeOf(target)]) {
+        damageKeyLocus(state, api, target, amount)
       } else {
         damageKnightAsset(state, api, amount)
       }
@@ -451,15 +459,6 @@ export function enemyAttacksKeyLoci(state, api) {
   }
   if (hits.length) api?.info?.(`⚔️ 敌军阶段：${hits.length} 次攻击落在钥匙节点上（恐惧按伤害结算）。`)
   return hits
-}
-
-/** 维多利亚学院 / 温莎宫酒店的持续修正：钥匙节点在同一地点时费用 +1，否则 -1（只接 +1 的一半）。 */
-export function syncWindsorCost(state) {
-  const windsor = (state.locations || []).find(location =>
-    codeOf(location) === RAW_CODES.windsorPalaceHotel)
-  if (!windsor) return
-  if (locationHasKeyLocus(state, windsor.id)) windsor.playCostIncrease = 1
-  else delete windsor.playCostIncrease
 }
 
 // ---------------------------------------------------------------------------
@@ -583,13 +582,8 @@ export function setupVersion(state, api) {
   // 钥匙节点：四个[[节点地]]各一张（版本一「最后堡垒」面，版本二/三「防御屏障」面）。
   const loci = []
   for (const id of locusSitesInPlay(state)) {
-    const enemy = typeof api?.spawn === 'function' ? api.spawn(codes.keyLocus, id) : null
-    if (enemy) {
-      enemy.keyLocus = true
-      enemy.keyLocusFace = KEY_LOCUS_DATA[codes.keyLocus].face
-      enemy.keyLocusOrigin = 'enemy'
-      loci.push({ locationId: id, enemyId: enemy.id })
-    }
+    const locus = putKeyLocusInPlay(state, codes.keyLocus, id)
+    loci.push({ locationId: id, id: locus.id })
     // 版本一：这些地点各放 1 个毁灭标记。
     if (version === 'v1') {
       if (typeof api?.doomOn === 'function') api.doomOn(locationOf(state, id), 1)
@@ -635,7 +629,6 @@ export function setupVersion(state, api) {
   // 版本二：收齐诱饵与结社刺客/打手迷你卡放在一边，队长抽结社刺客 (A) 结算隐匿。
   if (version === 'v2') startConcealedAssassin(state, api)
   syncCountsAsKeyLocus(state)
-  syncWindsorCost(state)
   api?.info?.(`🗺️ 战争疮痍（${VERSION_SETUPS[version].title}）：`
     + `${LOCUS_SITE_IDS.length} 张钥匙节点已放到[[节点地]]，证券交易所=${bourse?.name || '?'}，`
     + `地下陵墓=${catacombs?.name || '?'}。`)
@@ -720,8 +713,6 @@ export const ACTION_RULES = Object.freeze({
   ancientTombDraw: 'ancientTombDraw',
   commercialResources: 'commercialResources',
   bloodyNexusEvade: 'bloodyNexusEvade',
-  victoriaDraw: 'victoriaDraw',
-  zanettTax: 'zanettTax',
   knightToAsset: 'knightToAsset',
   knightFromAsset: 'knightFromAsset',
 })
@@ -769,8 +760,7 @@ function keyLocusDamageAction(state, inv, api, move) {
   if (clue < 1) return false
   if (typeof api?.spendClues === 'function') api.spendClues(inv.seat, 1)
   else inv.clues = clue - 1
-  if (typeof api?.damageEnemy === 'function') api.damageEnemy(locus.id, 2, inv.seat, RAW_CODES.keyLocusDefensiveBarrier)
-  else locus.damageTaken = (Number(locus.damageTaken) || 0) + 2
+  damageKeyLocus(state, api, locus, 2)
   api?.info?.(`🪨 花费 1 个线索：对钥匙节点「${locus.name}」造成 2 点伤害。`)
   void move
   return true
@@ -789,8 +779,8 @@ function keyLocusHealAction(state, inv, api) {
       api?.info?.(`🪨 「${locus.name}」：检定失败，没有治愈。`)
       return
     }
-    if (typeof api?.healEnemy === 'function') api.healEnemy(locus, heal)
-    else locus.damageTaken = Math.max(0, (Number(locus.damageTaken) || 0) - heal)
+    if (!state.storyAssets?.includes(locus)) return
+    locus.damage = Math.max(0, locus.damage - heal)
     api?.info?.(`🪨 花费 1 个线索并检定[意志](2)：治愈「${locus.name}」${heal} 点伤害。`)
   }, 0, { code: RAW_CODES.keyLocusLastBastion, name: '钥匙节点（最后堡垒）', action: 'activate' })
   return true
@@ -829,10 +819,10 @@ function bourseRemoveDoomAction(state, inv, api) {
   for (const location of state.locations || []) {
     if ((Number(location.doom) || 0) > 0) candidates.push({ id: `location:${location.id}`, label: `地点：${location.name}`, location })
   }
-  for (const owner of aliveInvestigators(state)) {
-    for (const asset of owner.assets || []) {
-      if ((Number(asset.doom) || 0) > 0) candidates.push({ id: `asset:${owner.seat}:${asset.id}`, label: `支援：${cardNameOf(asset.code)}`, asset })
-    }
+  const assets = [...(inv.assets || []), ...(state.storyAssets || []).filter(asset =>
+    asset.controlledByAll || asset.controllerSeat === inv.seat)]
+  for (const asset of assets) {
+    if ((Number(asset.doom) || 0) > 0) candidates.push({ id: `asset:${inv.seat}:${asset.id}`, label: `支援：${cardNameOf(asset.code)}`, asset })
   }
   if (!candidates.length) return false
   if (!payGroupClues(state, inv, api, required)) return false
@@ -852,24 +842,32 @@ function bourseRemoveDoomAction(state, inv, api) {
 
 function investigateReplacementAction(state, inv, api, kind) {
   const location = locationOf(state, inv.location)
-  if (!location) return false
+  if (!location?.revealed) return false
   const key = `${codeOf(location)}:${state.round}`
   const data = chapterState(state)
   if (data.replacementUsed[key]) {
-    api?.info?.('这个地点的「降低难度」能力本轮已经用过。')
+    api?.info?.('这个地点的调查能力本轮已经用过。')
     return false
   }
+  const mode = chooseOption(api, {
+    kind: 'choice', source: codeOf(location), seat: inv.seat,
+    prompt: '选择按原难度调查，或将难度降低 2 并减少奖励。',
+    options: [{ id: 'normal', label: '按原难度调查' }, { id: 'reduced', label: '难度降低 2' }],
+  }) || 'normal'
+  const reduced = mode === 'reduced'
   data.replacementUsed[key] = true
-  const difficulty = Math.max(0, (Number(location.shroud) || 0) - 2)
+  const difficulty = Math.max(0, (Number(location.shroud) || 0) - (reduced ? 2 : 0))
   api?.test?.(inv.seat, 'intellect', difficulty, result => {
     if (!result?.success) return
     if (kind === 'draw') {
-      if (typeof api?.drawCards === 'function') api.drawCards(inv.seat, 2)
-      api?.info?.(`📜 ${location.name}：降低难度调查成功，改为抽取 2 张卡牌。`)
+      const cards = reduced ? 2 : 3
+      api?.drawCards?.(inv.seat, cards)
+      api?.info?.(`📜 ${location.name}：调查成功，改为抽取 ${cards} 张卡牌。`)
     } else {
-      if (typeof api?.gainResources === 'function') api.gainResources(inv.seat, 2)
-      else inv.resources = (Number(inv.resources) || 0) + 2
-      api?.info?.(`💱 ${location.name}：降低难度调查成功，改为获得 2 资源。`)
+      const resources = reduced ? 2 : 4
+      if (typeof api?.gainResources === 'function') api.gainResources(inv.seat, resources)
+      else inv.resources = (Number(inv.resources) || 0) + resources
+      api?.info?.(`💱 ${location.name}：调查成功，改为获得 ${resources} 资源。`)
     }
   }, 0, { code: codeOf(location), name: location.name, action: 'investigate' })
   return true
@@ -893,67 +891,47 @@ function bloodyNexusEvadeAction(state, inv, api) {
   return true
 }
 
-function victoriaDrawAction(state, inv, api) {
-  const data = chapterState(state)
-  if (data.victoriaUsedRound === state.round) return false
-  data.victoriaUsedRound = state.round
-  if (typeof api?.lookAt === 'function') {
-    api.lookAt(inv.seat, { zone: 'deck', count: 2, choose: 1, source: RAW_CODES.victoriaCollege,
-      prompt: '维多利亚学院：查看牌库顶 2 张，选择 1 张抽取。' })
-  }
-  // 「另一张洗回牌库」：lookAt 把剩余牌放回牌库顶，这里再洗一次牌库。
-  const deck = state.investigators?.[inv.seat]?.deck
-  if (Array.isArray(deck) && typeof api?.shuffle === 'function') {
-    state.investigators[inv.seat].deck = api.shuffle([...deck])
-  }
-  api?.info?.('📚 维多利亚学院：调整本次抽牌（看牌库顶 2 张、抽 1 张、其余洗回）。')
-  return true
-}
-
-function zanettTaxAction(state, inv, api) {
-  const data = chapterState(state)
-  data.zanettPaidRound = state.round
-  data.zanettPaidSeat = inv.seat
-  api?.info?.(`💸 妇女市集：花费 1 个行动 —— 本轮在此攻击敌人时攻击值不提升。`)
-  return true
-}
-
 function knightAssetAction(state, inv, api, direction) {
-  const asset = knightAsset(state)
-  if (!asset) return false
+  const knight = knightAsset(state)
+  if (!knight || knight.exhausted || !knight.controlledByAll) return false
+  const rule = registeredEntry(codeOf(knight))?.assetRule?.resourceShuttle
+  const maximum = rule?.max ?? 3
+  const available = Math.min(maximum, Number(direction === 'in' ? inv.resources : knight.resources) || 0)
+  if (available <= 0) return false
+  const amount = available === 1 ? 1 : Number(chooseOption(api, {
+    kind: 'choice', source: RAW_CODES.claretKnightAsset, seat: inv.seat,
+    prompt: '选择要搬运多少资源。',
+    options: Array.from({ length: available }, (_, index) => ({
+      id: String(index + 1), label: `${index + 1} 个资源`,
+    })),
+  }))
+  if (!Number.isSafeInteger(amount) || amount < 1 || amount > available) return false
   if (direction === 'in') {
-    const available = Math.min(3, Number(inv.resources) || 0)
-    if (available <= 0) return false
-    const amount = Math.max(1, available)
+    const before = inv.resources
     if (typeof api?.loseResources === 'function') api.loseResources(inv.seat, amount)
-    else inv.resources = Math.max(0, (Number(inv.resources) || 0) - amount)
-    asset.resources = (Number(asset.resources) || 0) + amount
-    asset.exhausted = true
-    api?.info?.(`🎩 暗红骑士：${inv.name || '调查员'} 把 ${amount} 资源移到暗红骑士上。`)
+    else inv.resources -= amount
+    const moved = before - inv.resources
+    knight.resources = (Number(knight.resources) || 0) + moved
+    knight.exhausted = true
+    api?.info?.(`🎩 暗红骑士：${inv.name || '调查员'} 把 ${moved} 资源移到暗红骑士上。`)
     return true
   }
-  const available = Math.min(3, Number(asset.resources) || 0)
-  if (available <= 0) return false
-  const target = chooseOption(api, {
-    kind: 'choice', source: RAW_CODES.claretKnightAsset, seat: inv.seat,
-    prompt: '把暗红骑士上的资源移到哪里？',
-    options: [{ id: 'pool', label: '自己的资源池' }, { id: 'asset', label: '你控制的一个支援（充能/子弹/补给/秘密）' }],
-  }) || 'pool'
-  const amount = 1
-  asset.resources = Math.max(0, Number(asset.resources) - amount)
-  asset.exhausted = true
-  if (target === 'asset') {
-    const candidates = (inv.assets || []).filter(assetEntry => ['charge', 'ammo', 'supply', 'secret']
-      .some(usesType => registeredEntry(assetEntry.code)?.usesType === usesType))
-    if (candidates.length && typeof api?.addUses === 'function') {
-      api.addUses(candidates[0], amount)
-      api?.info?.(`🎩 暗红骑士：把 ${amount} 个资源移到「${cardNameOf(candidates[0].code)}」上。`)
-      return true
-    }
+  const candidates = typeof api?.addUses !== 'function' ? [] : (inv.assets || []).filter(asset =>
+    (rule?.usesTypes || ['charge', 'ammo', 'supply', 'secret']).includes(asset.usesType || registeredEntry(asset.code)?.usesType))
+  knight.exhausted = true
+  for (let remaining = amount; remaining > 0; remaining--) {
+    const targetId = candidates.length ? chooseOption(api, {
+      kind: 'choice', source: RAW_CODES.claretKnightAsset, seat: inv.seat,
+      prompt: `移动 1 个暗红骑士上的资源（剩余 ${remaining}）。`,
+      options: [{ id: 'pool', label: '自己的资源池' },
+        ...candidates.map(asset => ({ id: asset.id, label: cardNameOf(asset.code) }))],
+    }) : 'pool'
+    knight.resources -= 1
+    const destination = candidates.find(selected => selected.id === targetId)
+    if (destination) api.addUses(destination, 1)
+    else if (typeof api?.gainResources === 'function') api.gainResources(inv.seat, 1)
+    else inv.resources = (Number(inv.resources) || 0) + 1
   }
-  if (typeof api?.gainResources === 'function') api.gainResources(inv.seat, amount)
-  else inv.resources = (Number(inv.resources) || 0) + amount
-  api?.info?.(`🎩 暗红骑士：把 ${amount} 个资源移到${inv.name || '调查员'}的资源池。`)
   return true
 }
 
@@ -1017,8 +995,10 @@ const agendaCodeOf = state => codeOf((state.agendas || [])[state.agendaIndex])
 export function resolveActBack(state, api, act = null) {
   const code = codeOf(act) || actCodeOf(state)
   if (code === RAW_CODES.actV1) {
-    for (const enemy of [...(state.enemies || [])]) {
-      if (enemy.keyLocus === true && typeof api?.addEnemyToVictory === 'function') api.addEnemyToVictory(enemy)
+    for (const asset of [...(state.storyAssets || [])]) {
+      if (codeOf(asset) !== RAW_CODES.keyLocusLastBastion) continue
+      api.addStoryToVictory(asset.code, { sourceId: asset.id })
+      state.storyAssets.splice(state.storyAssets.indexOf(asset), 1)
     }
     const beast = enemyOf(state, RAW_CODES.beastRavager)
     if (beast && typeof api?.addEnemyToVictory === 'function') api.addEnemyToVictory(beast)
@@ -1113,6 +1093,29 @@ export function checkActObjectives(state, api) {
 // 行为（引擎钩子）
 // ---------------------------------------------------------------------------
 export const behavior = {
+  needsSaveRepair(state) {
+    return state.agendas?.some(agenda => agenda.otherDoomSubtracts === true)
+      || state.enemies?.some(enemy => KEY_LOCUS_DATA[codeOf(enemy)])
+  },
+  saveRepairNote: '战犬：恢复钥匙节点剧情支援并校正旧密谋计数',
+  repairSavedState(state) {
+    const current = state.agendas?.[state.agendaIndex]
+    if (current?.otherDoomSubtracts === true) {
+      const other = doomCards(state).reduce((sum, card) => sum + (card.doom || 0), 0)
+      state.doom = Math.max(0, (state.doom || 0) + 2 * other)
+    }
+    for (const agenda of state.agendas || []) {
+      if (agenda.otherDoomSubtracts !== true) continue
+      delete agenda.otherDoomSubtracts
+      agenda.otherDoomSubtractsAtThreshold = true
+    }
+    for (const enemy of [...(state.enemies || [])]) {
+      if (!KEY_LOCUS_DATA[codeOf(enemy)]) continue
+      state.enemies.splice(state.enemies.indexOf(enemy), 1)
+      putKeyLocusInPlay(state, codeOf(enemy), enemy.location, enemy)
+      for (const inv of state.investigators) inv.engaged = inv.engaged.filter(id => id !== enemy.id)
+    }
+  },
   exposeConcealedByEffect: exposeMini,
   id: CHAPTER_ID,
   implementedEncounterCodes: Object.freeze([...CHAPTER_ENTRY_CODES]),
@@ -1182,12 +1185,16 @@ export const behavior = {
         patrolAttackRider(state, inv, api, context, rider === 'patrolAttackDisengage')
       }
     }
-    // 首领（敌人面）的强制：你在它所在地点检定失败后，如果它是重整状态，它变换身上的每个钥匙。
-    const enemy = (state.enemies || []).find(item => !item.defeated && item.location === inv?.location
-      && [RAW_CODES.claretKnightEnemy, RAW_CODES.beastWolf].includes(String(codeOf(item))))
-    if (enemy && result?.success === false && !enemy.exhausted) {
-      api?.info?.(`🔑 「${enemy.name}」：你在它所在地点检定失败 —— 它变换身上的法罗斯之光。`)
-      resolveKeyShift(state, inv?.seat ?? LEAD_SEAT(state), api, { by: 'enemy' })
+    if (result?.success === false) {
+      const keys = keyApiOf(api)
+      for (const enemy of state.enemies || []) {
+        if (enemy.defeated || enemy.exhausted || enemy.location !== inv?.location
+          || !enemyRuleFor(codeOf(enemy))?.shiftsKeysOnFailedTestAtLocation) continue
+        for (const id of keys?.heldBy?.({ type: 'enemy', enemyId: enemy.id }) || []) {
+          if (id === LIGHT_OF_PHAROS.id) resolveKeyShift(state, inv.seat, api, { by: 'enemy' })
+          else keys.shift(id, { force: true, by: 'enemy' })
+        }
+      }
     }
     // 奎贝堡：调查失败后本轮不能再发现线索 / 揭露迷你卡。
     const here = locationOf(state, inv?.location)
@@ -1206,6 +1213,11 @@ export const behavior = {
   },
 
   // ---- 敌军阶段：巡逻移动 → 版本一「敌人攻击钥匙节点」→ 脉冲检查 ----
+  phaseBegan(state, phase) {
+    const knight = phase === 'upkeep' ? knightAsset(state) : null
+    if (knight) knight.exhausted = false
+  },
+
   enemyPhaseStart(state, api = {}) {
     for (const enemy of [...(state.enemies || [])]) {
       if (enemy.defeated || enemy.exhausted || enemy.engagedSeat != null) continue
@@ -1218,36 +1230,60 @@ export const behavior = {
     enemyAttacksKeyLoci(state, api)
     discardOrphanPulses(state, api)
     syncCountsAsKeyLocus(state)
-    syncWindsorCost(state)
   },
 
   // ---- 敌人数值/攻击限制 ----
-  enemyStatModifier(state, enemy, kind, inv) {
+  enemyStatModifier(state, enemy, kind) {
     const location = locationOf(state, enemy.location)
     if (codeOf(enemy) === RAW_CODES.scarletBeast && hasTrait(location, 'Locus Site')) {
       if (kind === 'fight') return 2
       if (kind === 'evade') return -2
     }
-    if (kind === 'fight' && codeOf(location) === RAW_CODES.zanEtElSettat && inv) {
-      const data = chapterState(state)
-      const paid = data.zanettPaidRound === state.round && data.zanettPaidSeat === inv.seat
-      if (!paid) return 2
-    }
     return 0
+  },
+
+  beforeFightTest(state, inv, enemy, api) {
+    const location = locationOf(state, inv.location)
+    if (!location?.revealed || codeOf(location) !== RAW_CODES.zanEtElSettat) return 0
+    if (inv.actionsLeft < 1) return 2
+    const answer = chooseOption(api, {
+      kind: 'choice', source: RAW_CODES.zanEtElSettat, seat: inv.seat,
+      prompt: `妇女市集：额外花费 1 个行动，或让「${enemy.name}」在这次攻击中的攻击值 +2。`,
+      options: [{ id: 'pay', label: '额外花费 1 个行动' }, { id: 'boost', label: '敌人攻击值 +2' }],
+    })
+    return answer === 'pay' && api.spendAdditionalAction(inv.seat) ? 0 : 2
+  },
+
+  sharedStoryAssetDefeated(state, asset, api) {
+    if (asset === knightAsset(state)) defeatKnightAsset(state, api)
+  },
+
+  damageStoryFightTarget(state, asset, amount, api) {
+    return damageKeyLocus(state, api, asset, amount)
   },
 
   canFightEnemy(state, inv, enemy) {
     if (!inv || !enemy) return undefined
+    const code = codeOf(enemy)
+    if (KEY_LOCUS_DATA[code] && registeredEntry(code)?.assetRule?.keyLocus?.attackableAsEnemy !== true) return false
     if (enemy.location !== inv.location) return undefined
     const provocateur = (state.enemies || []).find(item => !item.defeated && !item.exhausted
-      && codeOf(item) === RAW_CODES.coterieProvocateur && item.location === inv.location)
+      && enemyRuleFor(codeOf(item))?.blocksOtherAttacksWhileReady && item.location === inv.location)
     if (!provocateur) return undefined
-    if (codeOf(enemy) === RAW_CODES.coterieProvocateur) return undefined
+    if (enemy.name === provocateur.name) return undefined
     return false
   },
 
+  canEngageEnemy(_state, _inv, enemy) {
+    return KEY_LOCUS_DATA[codeOf(enemy)] ? false : undefined
+  },
+
+  canEvadeEnemy(_state, _inv, enemy) {
+    return KEY_LOCUS_DATA[codeOf(enemy)] ? false : undefined
+  },
+
   enemySpawned(state, enemy, api) {
-    if (codeOf(enemy) === RAW_CODES.coterieProvocateur) {
+    if (enemyRuleFor(codeOf(enemy))?.spawnNearestKeyLocus) {
       const target = nearestKeyLocusLocation(state, api, enemy.location)
       if (target && enemy.location !== target) {
         if (typeof api?.moveEnemy === 'function') api.moveEnemy(enemy, target)
@@ -1266,7 +1302,6 @@ export const behavior = {
       data.keyLociDefeated.push(code)
       api?.info?.(`🪨 钥匙节点（${keyLocus.name}）被击败。`)
       syncCountsAsKeyLocus(state)
-      syncWindsorCost(state)
       discardOrphanPulses(state, api)
       if (keyLocus.defeatedToVictory) return undefined
       // 最后堡垒：从游戏中移除（不加入胜利区）。
@@ -1289,45 +1324,8 @@ export const behavior = {
     return undefined
   },
 
-  // 「深红斗篷的恶兽（红衣毁灭者）将被击败时：改为治愈全部伤害、横置并移动到地下陵墓」。
-  // 读点两层：enemyDamaged 在伤害结算后做「本该被击败」的替换，enemyCanBeDefeated 拦住同一次击败。
-  enemyDamaged(state, enemy, api) {
-    if (codeOf(enemy) !== RAW_CODES.beastRavager) return
-    const health = Number(enemy.health) || 0
-    if ((Number(enemy.damageTaken) || 0) < health) return
-    const data = chapterState(state)
-    if (data.beastFledRound === state.round) return
-    data.beastFledRound = state.round
-    enemy.damageTaken = 0
-    enemy.exhausted = true
-    if (enemy.engagedSeat != null) {
-      const owner = state.investigators?.[enemy.engagedSeat]
-      if (owner) owner.engaged = (owner.engaged || []).filter(id => id !== enemy.id)
-      enemy.engagedSeat = null
-    }
-    const catacombs = (state.locations || []).find(location =>
-      [RAW_CODES.catacombsBloodyNexus, RAW_CODES.catacombsDenOfTheBeast, RAW_CODES.catacombsAncientTomb]
-        .includes(String(codeOf(location))))
-    if (catacombs && typeof api?.moveEnemy === 'function') api.moveEnemy(enemy, catacombs.id)
-    else if (catacombs) enemy.location = catacombs.id
-    api?.info?.('🐺 深红斗篷的恶兽将被击败：改为治愈全部伤害、横置并退到亚历山大地下陵墓。')
-  },
-
-  enemyCanBeDefeated(state, enemy) {
-    if (codeOf(enemy) !== RAW_CODES.beastRavager) return undefined
-    return chapterState(state).beastFledRound === state.round ? false : undefined
-  },
-
-  // ---- 毁灭：版本一的「扣减」规则 + 地下陵墓（血腥联结）的强制揭示 ----
-  doomPlaced(state, payload, api) {
-    const version = currentVersion(state)
-    if (version === 'v1' && payload?.target && payload.agenda === false) {
-      const amount = Number(payload.amount) || 0
-      if (amount > 0) {
-        state.doom = (Number(state.doom) || 0) - 2 * amount
-        api?.info?.(`🌑 版本一：其它卡上的 ${amount} 个毁灭改为扣减毁灭总数（当前 ${state.doom}）。`)
-      }
-    }
+  // 地下陵墓（血腥联结）只看密谋卡本身的毁灭。
+  doomPlaced(state, _payload, api) {
     const bloody = (state.locations || []).find(location => codeOf(location) === RAW_CODES.catacombsBloodyNexus)
     if (bloody && !bloody.revealed && (Number(state.doom) || 0) >= 6) {
       if (typeof api?.reveal === 'function') api.reveal(bloody.id)
@@ -1348,7 +1346,8 @@ export const behavior = {
   spawnLocation(state, code, defaultLocation) {
     const bourse = (state.locations || []).find(location => codeOf(location) === RAW_CODES.bourseLocusSafeguard)
     if (!bourse || defaultLocation !== bourse.id) return defaultLocation
-    if (keyLocusEntities(state).length <= 1) return defaultLocation
+    const blocked = registeredEntry(codeOf(bourse))?.locationRule?.enemiesCannotEnter
+    if (typeof blocked !== 'function' || !blocked(state, bourse, { code })) return defaultLocation
     const candidates = (bourse.connections || []).filter(id => locationOf(state, id))
     const destination = candidates[0] || defaultLocation
     if (destination !== defaultLocation) {
@@ -1358,25 +1357,48 @@ export const behavior = {
     return defaultLocation
   },
 
-  // ---- 调查：版本地点改写 + 奎贝堡的封锁 ----
+  playCostIncrease(state, inv, card) {
+    const location = locationOf(state, inv.location)
+    if (codeOf(location) !== RAW_CODES.windsorPalaceHotel) return 0
+    // 旧存档保存过粗粒度地点加价，抵消后再按实际打出的卡牌和局面计算。
+    const oldIncrease = Number(location.playCostIncrease) || 0
+    const eligible = location.revealed && card?.type === 'asset'
+      && (hasTrait(card, 'Item') || hasTrait(card, 'Ally'))
+    return (eligible ? (locationHasKeyLocus(state, location.id) ? 1 : -1) : 0) - oldIncrease
+  },
+
+  beforePlayerDraw(state, inv, count, api) {
+    const location = locationOf(state, inv.location)
+    if (count !== 1 || !location?.revealed || codeOf(location) !== RAW_CODES.victoriaCollege
+      || inv.deck.length < 2) return count
+    const data = chapterState(state)
+    if (data.victoriaUsedRound === state.round || data.victoriaUsedRoundBySeat?.[inv.seat] === state.round) return count
+    const source = RAW_CODES.victoriaCollege
+    const decision = chooseOption(api, {
+      kind: 'reaction', source, seat: inv.seat, canSkip: true,
+      prompt: '维多利亚学院：是否查看牌库顶两张并选择一张抽取？',
+      options: [{ id: 'skip', label: '照常抽取' }, { id: 'use', label: '使用维多利亚学院' }],
+    })
+    if (decision !== 'use') return count
+    const top = inv.deck.slice(-2).reverse()
+    const picked = chooseOption(api, {
+      kind: 'card', source, seat: inv.seat,
+      prompt: '选择要抽取的牌，将另一张洗回牌库。',
+      options: top.map((code, index) => ({ id: String(index), label: cardNameOf(code), cardCode: code })),
+    })
+    const code = typeof picked === 'string' ? top[Number(picked)] : null
+    if (!code || !api.takeDeckCard(inv.seat, code)) return count
+    api.shuffleDeck(inv.seat)
+    api.putOnTopOfDeck(inv.seat, code)
+    data.victoriaUsedRoundBySeat ||= {}
+    data.victoriaUsedRoundBySeat[inv.seat] = state.round
+    return count
+  },
+
+  // ---- 调查：奎贝堡的封锁 ----
   investigateResult(state, inv, location, result, api) {
     const code = codeOf(location)
     if (!result?.success) return undefined
-    if (code === RAW_CODES.bourseCommercialCenter || code === RAW_CODES.catacombsAncientTomb) {
-      const key = `${code}:${state.round}`
-      const data = chapterState(state)
-      if (data.replacementUsed[key]) return undefined
-      data.replacementUsed[key] = true
-      if (code === RAW_CODES.bourseCommercialCenter) {
-        if (typeof api?.gainResources === 'function') api.gainResources(inv.seat, 4)
-        else inv.resources = (Number(inv.resources) || 0) + 4
-        api?.info?.('💱 证券交易所（商贸中心）：成功调查改为获得 4 资源（不发现线索）。')
-      } else {
-        if (typeof api?.drawCards === 'function') api.drawCards(inv.seat, 3)
-        api?.info?.('📜 亚历山大地下陵墓（古代坟墓）：成功调查改为抽取 3 张卡牌（不发现线索）。')
-      }
-      return false
-    }
     if (code === RAW_CODES.qaitbayCitadel && chapterState(state).qaitbayLockRound === state.round) {
       api?.info?.('🏰 奎贝堡：本轮你已经调查失败，不能再发现线索。')
       return false
@@ -1402,7 +1424,6 @@ export const behavior = {
   roundEnded(state, api) {
     discardOrphanPulses(state, api)
     syncCountsAsKeyLocus(state)
-    syncWindsorCost(state)
   },
 
   // ---- 幕 / 密谋 ----
@@ -1445,8 +1466,6 @@ export const behavior = {
       case ACTION_RULES.ancientTombDraw: return investigateReplacementAction(state, inv, api, 'draw')
       case ACTION_RULES.commercialResources: return investigateReplacementAction(state, inv, api, 'resources')
       case ACTION_RULES.bloodyNexusEvade: return bloodyNexusEvadeAction(state, inv, api)
-      case ACTION_RULES.victoriaDraw: return victoriaDrawAction(state, inv, api)
-      case ACTION_RULES.zanettTax: return zanettTaxAction(state, inv, api)
       case ACTION_RULES.knightToAsset: return knightAssetAction(state, inv, api, 'in')
       case ACTION_RULES.knightFromAsset: return knightAssetAction(state, inv, api, 'out')
       default: return false
@@ -1594,16 +1613,18 @@ function moveActions(state, inv, moves) {
         + `（${LIGHT_OF_PHAROS.resourcesToControl} 个后由调查员控制）`,
     })
   }
-  if (code === RAW_CODES.bourseCommercialCenter) {
+  const canUseSpecialInvestigation = location?.revealed
+    && !chapterState(state).replacementUsed[`${code}:${state.round}`]
+  if (code === RAW_CODES.bourseCommercialCenter && canUseSpecialInvestigation) {
     moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.commercialResources, locationId: inv.location,
-      label: '调查（难度 -2）：成功改为获得 2 资源（团队每轮一次）',
+      action: 'scenarioAction', actionKind: 'investigate', rule: ACTION_RULES.commercialResources, locationId: inv.location,
+      label: '调查：成功改为获得 4 资源，或难度降低 2 时获得 2 资源（团队每轮一次）',
     })
   }
-  if (code === RAW_CODES.catacombsAncientTomb) {
+  if (code === RAW_CODES.catacombsAncientTomb && canUseSpecialInvestigation) {
     moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.ancientTombDraw, locationId: inv.location,
-      label: '调查（难度 -2）：成功改为抽取 2 张卡牌（团队每轮一次）',
+      action: 'scenarioAction', actionKind: 'investigate', rule: ACTION_RULES.ancientTombDraw, locationId: inv.location,
+      label: '调查：成功改为抽取 3 张牌，或难度降低 2 时抽取 2 张牌（团队每轮一次）',
     })
   }
   if (code === RAW_CODES.catacombsBloodyNexus && location?.revealed) {
@@ -1613,25 +1634,9 @@ function moveActions(state, inv, moves) {
       ...(chapterState(state).bloodyNexusUsed ? { reason: '本场游戏已经用过这个能力', used: true } : {}),
     })
   }
-  if (code === RAW_CODES.victoriaCollege && chapterState(state).victoriaUsedRound !== state.round) {
-    moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.victoriaDraw, locationId: inv.location, actions: 0, fast: true,
-      label: '快速：查看牌库顶 2 张，抽 1 张，其余洗回（每轮一次）',
-    })
-  }
-  if (code === RAW_CODES.zanEtElSettat && (state.enemies || []).some(enemy =>
-    !enemy.defeated && enemy.location === inv.location)) {
-    const data = chapterState(state)
-    const paid = data.zanettPaidRound === state.round && data.zanettPaidSeat === inv.seat
-    moves.push({
-      action: 'scenarioAction', rule: ACTION_RULES.zanettTax, locationId: inv.location,
-      label: '花费 1 个行动：本轮在妇女市集攻击敌人时攻击值不提升',
-      ...(paid ? { reason: '本轮已经付过', used: true } : {}),
-    })
-  }
   // 暗红骑士（剧情支援面）的 [fast] 资源搬运。
   const knight = knightAsset(state)
-  if (knight && knight.location === inv.location) {
+  if (knight?.controlledByAll && !knight.exhausted) {
     moves.push({
       action: 'scenarioAction', rule: ACTION_RULES.knightToAsset, locationId: inv.location, actions: 0, fast: true, reactionSourceCode: codeOf(knight),
       label: '快速，横置暗红骑士：把你最多 3 个资源移到暗红骑士上',
@@ -1639,7 +1644,7 @@ function moveActions(state, inv, moves) {
     })
     moves.push({
       action: 'scenarioAction', rule: ACTION_RULES.knightFromAsset, locationId: inv.location, actions: 0, fast: true, reactionSourceCode: codeOf(knight),
-      label: '快速，横置暗红骑士：把暗红骑士上的 1 个资源移到你的资源池或支援上',
+      label: '快速，横置暗红骑士：把暗红骑士上最多 3 个资源移到你的资源池或支援上',
       ...((Number(knight.resources) || 0) < 1 ? { reason: '暗红骑士上没有资源' } : {}),
     })
   }

@@ -2,7 +2,7 @@
 // Detailed evidence: audit/07-a-1-acceptance.json. Not a promise of all-combination equivalence.
 export const TIC_SHARD1_ACCEPTANCE_PROFILE = {
   "id": "tic-deluxe-a-2026-11",
-  "scope": "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。54 条全部通过五维验收。",
+  "scope": "印斯茅斯暗潮 07 段 tic 豪华包前半（07001–07054）54 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TIC_SHARD1_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TIC_SHARD1_ACCEPTANCE_SHA256 = '14edbea5bd9cfc55ff6c654644a3cd011e436bdc80de99e728dd5cd228e4b6f7'
+export const TIC_SHARD1_ACCEPTANCE_SHA256 = '48069810a6af7154ac160cbe8a9ed6f6320aa2ecbf6e60901b1690d3577818f2'
 const verified = new Set(["07001","07002","07003","07004","07005","07006","07007","07008","07009","07010","07011","07012","07013","07014","07015","07016","07017","07018","07019","07020","07021","07022","07023","07024","07025","07026","07027","07028","07029","07030","07031","07032","07033","07034","07035","07036","07037","07038","07039","07040","07041","07042","07043","07044","07045","07046","07047","07048","07049","07050","07051","07052","07053","07054"])
 export const ticShard1CardVerified = code => verified.has(code)

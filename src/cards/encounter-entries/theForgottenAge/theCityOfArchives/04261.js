@@ -7,4 +7,4 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-export default { code: '04261', scope: 'treachery', treacheryRule: {"threatArea":true,"threat":{"noDrawAction":true},"surge":false} }
+export default { code: '04261', scope: 'treachery', treacheryRule: {"threat":{"noDrawAction":true},"surge":false} }

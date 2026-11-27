@@ -971,7 +971,7 @@ export const behavior = {
     encounterRules.afterEvade?.(state, inv, enemy, result, api)
     const evadeFlags = entryFlags(String(original(enemy))) || {}
     if (evadeFlags.onEvadeDamage && result?.success) {
-      api?.damage?.(inv.seat, evadeFlags.onEvadeDamage)
+      api?.damage?.(inv.seat, evadeFlags.onEvadeDamage, { code: original(enemy), sourceEnemyId: enemy.id })
       api?.info?.(`你成功躲避${enemy.name}：受到 ${evadeFlags.onEvadeDamage} 点伤害。`)
     }
   },

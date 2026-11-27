@@ -10,14 +10,11 @@
 //   · 「攻击，可用[agility]代替[combat]」= kind 'action' + countsAs 'fight' + target enemy；
 //     技能选择交给 api.fight 的 opts.skill（actionTestSkill 的替换读点），伤害 +1 = opts.damageBonus。
 //   · 「与敌人谈判时技能检定失败后」= skillTestFail 窗口（tests.js 在失败的 ST.6 开窗）。
-//     目前在条件里读 state.skillTest.actionKind === 'parley'（api.test 的 options.actionKind 写点）。
+//     读取本次检定的谈判行动和敌人目标。
 //   · 「从手牌放置入场」= kind 'reaction' + fromHand + noPlayCost，resolve 用 api.putIntoPlay
 //     （从手牌取出并创建资产实例，走入场窗口/槽位）。
 //
-// approximation（逐条披露，见 artifacts/migration/fhv/primitive-requests/10065.json）：
-//   ① skillTestFail 的窗口 context 不带 actionKind，只有「本次检定由 api.test 显式传了
-//      actionKind:'parley'」的谈判检定能判定；用 played 描述子 countsAs 'parley' 发起的谈判
-//      （如 09052 存在之谜）不会写 state.skillTest.actionKind，反应不触发。
+// 反应同时验证谈判行动和检定的敌人目标。
 const CODE = '10065'
 
 function chooseFightSkill(inv, api) {
@@ -32,8 +29,6 @@ function chooseFightSkill(inv, api) {
 export default {
   code: CODE,
   name: 'British Bull Dog',
-  simplified: true,
-  note: 'approximation: skillTestFail 窗口 context 不带 actionKind；「与敌人谈判时」只能读 state.skillTest.actionKind（由 api.test 显式传 parley 的检定），countsAs:parley 的 played 描述子发起的检定不触发，见 primitive-requests/10065.json。',
   uses: 3,
   usesType: 'ammo',
   abilities: [
@@ -57,7 +52,8 @@ export default {
       fromHand: true,
       noPlayCost: true,
       label: '与敌人谈判的技能检定失败后：把手牌中的不列颠斗牛犬左轮手枪放置入场',
-      criteria: [({ state, inv }) => state.skillTest?.seat === inv.seat && state.skillTest?.actionKind === 'parley'],
+      criteria: [({ state, inv }) => state.skillTest?.seat === inv.seat && state.skillTest?.actionKind === 'parley'
+        && state.skillTest.target?.kind === 'enemy'],
       resolve: ({ inv, api }) => {
         const placed = api.putIntoPlay(inv.seat, CODE)
         if (placed) api.info('🔫 谈判破裂：不列颠斗牛犬左轮手枪已从手牌放置入场。')

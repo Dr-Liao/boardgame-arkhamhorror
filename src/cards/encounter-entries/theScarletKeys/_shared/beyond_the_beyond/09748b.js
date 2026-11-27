@@ -3,9 +3,9 @@
 //   [action] 受到 1 点恐惧：查看阴影中一个地点或异界牌库顶卡牌的已揭示面。(团队每场游戏一次。)
 // 背面：隐匿 1。强制 - 揭露此地点：左边失去 2 资源；中间失去 1 行动。
 // 读点与近似同 09748a（move 窗口 + api.map.position 判定上/下）。
-const CODE = '09748b'
+import { alienFrontierLook } from './_shared.js'
 
-const miniCards = state => state?.scenarioFlags?.mechanics?.tsk?.concealed?.miniCards || []
+const CODE = '09748b'
 
 export default {
   code: CODE,
@@ -33,28 +33,7 @@ export default {
         },
       })
     },
-  }, {
-    kind: 'action',
-    actionKind: 'activate',
-    label: '[action] 受到 1 点恐惧：查看阴影地点或异界牌库顶的已揭示面（团队每场游戏一次）',
-    cost: { action: 1, horror: 1 },
-    resolve: ({ state, inv, api }) => {
-      if (api.scenarioFlag?.('alienFrontierLookUsed') === true) return false
-      const cards = miniCards(state).filter(card => !card.flipped)
-      const options = [
-        ...cards.map(card => ({ id: 'mini:' + card.id, label: '阴影中的地点（' + card.locationId + '）' })),
-        { id: 'otherworld', label: '异界牌库顶牌' },
-      ]
-      const picked = String(api.choice({
-        kind: 'effect', source: CODE, seat: inv.seat,
-        prompt: '选择要查看已揭示面的目标（阴影中的地点，或异界牌库顶牌）。', options,
-      }))
-      api.setScenarioFlag?.('tskLooked:' + picked, true)
-      api.setScenarioFlag?.('alienFrontierLookUsed', true)
-      api.info?.('「异星边境」：查看已揭示面（仅该调查员可见）。')
-      return true
-    },
-  }, {
+  }, alienFrontierLook(CODE), {
     kind: 'forced',
     trigger: 'tskExposed',
     label: '揭露此地点：左边失去 2 资源，中间失去 1 行动',
@@ -72,5 +51,4 @@ export default {
       }
     },
   }],
-  note: 'approximation: 上/下方向用地图坐标同一列近似；坐标缺失时不结算检定；私人查看只记旗标。',
 }

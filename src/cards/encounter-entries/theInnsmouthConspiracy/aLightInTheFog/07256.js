@@ -4,7 +4,7 @@ export default {
   code: '07256', scope: 'treachery',
   encounterResolve(state, inv, card, api) {
     const candidates = state.enemies.filter(enemy => !enemy.defeated && !enemy.removedFromGame && hasTrait(enemy, 'Deep One'))
-    if (!candidates.length) { api.drawEncounter(inv.seat); return false }
+    if (!candidates.length) { api.drawEncounter(inv.seat, { surgeDraw: true }); return false }
     const difficulty = Math.max(...candidates.map(enemy => api.enemyFight(enemy, inv.seat)))
     const highest = candidates.filter(enemy => api.enemyFight(enemy, inv.seat) === difficulty)
     if (highest.length > 1) api.choice({

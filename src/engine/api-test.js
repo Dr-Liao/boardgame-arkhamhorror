@@ -1,3 +1,5 @@
+import { handCardIcons, spliceHand } from './hand-icons.js'
+import { replaceNormalTestEffect } from './test-deferred-effects.js'
 import { replacePlayerZoneCards } from './player-zones.js'
 // 能力 API · 检定与投入（Phase 6 · 6d-10，abilityApi 第四批）。
 //
@@ -75,6 +77,7 @@ export function createTestApi(state, events, deps) {
       item.destination = 'attached'
       return true
     },
+    replaceNormalTestEffect: resolve => replaceNormalTestEffect(state, resolve),
     addTestValue: amount => { if (state.skillTest) state.skillTest.value = (state.skillTest.value || 0) + amount },
     revealChaosBeforeCommit: context => {
       if (context?.when !== 'testInitiated' || !state.skillTest || context.revealBeforeCommit) return false
@@ -169,7 +172,8 @@ export function createTestApi(state, events, deps) {
       const inv = state.investigators[seat]
       const owner = state.investigators[options?.ownerSeat ?? seat]
       if (options?.from === 'discard' && (!owner?.discard.includes(code) || deps.discardLocked(state, owner))) return false
-      return canCommitToTest(state, inv, code, deps, options)
+      const index = options?.from === 'discard' ? -1 : options?.handIndex ?? owner?.hand.indexOf(code)
+      return canCommitToTest(state, inv, code, deps, { ...options, extraIcons: handCardIcons(state, owner, index) })
     },
     revealAndCommitSkill: (seat, options = {}) => {
       const inv = state.investigators[seat]
@@ -212,12 +216,14 @@ export function createTestApi(state, events, deps) {
         const index = options.handIndex == null ? owner.hand.indexOf(code)
           : owner.hand[options.handIndex] === code ? options.handIndex : -1
         if (index < 0) continue
-        if (!canCommitToTest(state, owner, code, deps, options)) continue
+        const extraIcons = [...handCardIcons(state, owner, index), ...(options.extraIcons || [])]
+        if (!canCommitToTest(state, owner, code, deps, { ...options, extraIcons })) continue
         if (!options.ignoreAdditionalCosts && !payCommitResourceCost(state, owner, code, deps)) continue
-        owner.hand.splice(index, 1)
-        const icons = commitIcons(state, owner, code, state.skillTest.skill)
+        spliceHand(owner, index, 1)
+        const icons = commitIcons(state, owner, code, state.skillTest.skill, extraIcons)
         state.skillTest.value = (state.skillTest.value || 0) + icons
         state.skillTest.committed.push({ seat: owner.seat, code, icons,
+          ...(extraIcons.length ? { skillIcons: extraIcons } : {}),
           ...(options.source ? { sourceCode: options.source } : {}),
           ...(options.onSuccessDestination ? { onSuccessDestination: options.onSuccessDestination } : {}),
           ...(options.onFailDestination ? { onFailDestination: options.onFailDestination } : {}) })
@@ -226,6 +232,22 @@ export function createTestApi(state, events, deps) {
         added += icons
       }
       return added
+    },
+    resolveElderSignForTest: (seat, context) => {
+      const inv = state.investigators[seat]
+      if (!inv || state.skillTest?.seat !== seat || context?.when !== 'testWouldFail') return false
+      context.elderSignEffect = deps.elderSignEffect(state, inv, events)
+      return true
+    },
+    allowIgnoreTestTriggers: () => {
+      if (!state.skillTest) return false
+      state.skillTest.allowIgnoreTestTriggers = true
+      return true
+    },
+    retryCurrentTest: context => {
+      if (context?.when !== 'testEnds' || context.result?.success !== false || state.skillTest?.seat !== context.seat) return false
+      context.retry = true
+      return true
     },
     reduceNextTestDifficulty: (seat, amount) => {
       const inv = state.investigators[seat]

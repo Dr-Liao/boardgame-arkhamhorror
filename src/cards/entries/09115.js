@@ -10,10 +10,6 @@
 // 读点：
 //   · 手牌来源强制能力 + cardDrawn 窗口（与 09106 同一「显现」实现）；
 //   · 取走牌库顶 3 张：api.takeDeckCard（唯一写点）；加入手牌 api.putInHand；
-//     弱点洗回 api.putOnTopOfDeck + api.shuffleDeck；其它牌移出游戏 api.exileCard；
-//   · 是否弱点读 cards-data 的 subtype（与 isWeaknessCard 同口径：weakness / basicweakness）。
-// approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似；被移出游戏的牌记入 state.exiled
-//   （引擎 exilePlayerCard 的记账口径，与「移出游戏」共用）。
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const code = '09115'
@@ -25,7 +21,6 @@ const isWeakness = cardCode => {
 
 export default {
   code,
-  note: 'approximation: 「每轮最多 2 张抉择」按本卡每轮 2 次近似（缺特质作用域上限）；移出游戏记入 exiled 账本。',
   playCondition: [{ when: () => false, message: '「随心而动」具有显现，只能在抽到时结算' }],
   abilities: [
     {
@@ -33,9 +28,9 @@ export default {
       fromHand: true,
       noPlayCost: true,
       trigger: 'cardDrawn',
-      limit: { scope: 'perRound', owner: 'investigator', count: 2 },
+      limit: { scope: 'perRound', owner: 'group', count: 2, sharedKey: 'dilemma' },
       label: '显现：每位调查员揭示牌库顶 3 张为三堆，选一堆抽取，其余弱点洗回、其它移出游戏',
-      criteria: [({ inv, context }) => context?.cardCode === code && (inv.hand || []).includes(code)],
+      criteria: [({ inv, context }) => context?.cardCode === code && context.seat === inv.seat && (inv.hand || []).includes(code)],
       resolve: ({ state, inv, api }) => {
         api.discardFromHand(inv.seat, code)
         const owners = state.investigators.filter(owner => !owner.defeated && !owner.resigned && !owner.storyInvestigator)
@@ -60,17 +55,17 @@ export default {
         })
         const chosen = Math.max(0, Math.min(2, Number(pileIndex) || 0))
         for (const pile of piles) {
-          for (const [index, cardCode] of pile.cards.entries()) {
-            if (index === chosen) {
-              api.putInHand(pile.seat, cardCode)
-              continue
-            }
-            if (isWeakness(cardCode)) {
-              api.putOnTopOfDeck(pile.seat, cardCode)
-              api.shuffleDeck(pile.seat)
-            } else {
-              api.exileCard(cardCode, { seat: pile.seat })
-            }
+          if (pile.cards[chosen]) {
+            api.putOnTopOfDeck(pile.seat, pile.cards[chosen])
+            api.drawCardsLogged(pile.seat, 1)
+          }
+          const others = pile.cards.filter((_, index) => index !== chosen)
+          const weaknesses = others.filter(isWeakness)
+          for (const weakness of weaknesses) api.putOnTopOfDeck(pile.seat, weakness)
+          if (weaknesses.length) api.shuffleDeck(pile.seat)
+          for (const card of others.filter(item => !isWeakness(item))) {
+            api.putOnTopOfDeck(pile.seat, card)
+            api.moveCard({ from: 'deck', to: 'removedFromGame', code: card }, { seat: pile.seat })
           }
         }
         api.info(`🌙 「随心而动」：所有调查员抽取第 ${chosen + 1} 堆中自己的卡牌；其余弱点洗回牌库、其它牌移出游戏。`)

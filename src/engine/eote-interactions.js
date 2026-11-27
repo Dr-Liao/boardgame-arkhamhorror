@@ -298,7 +298,8 @@ export function createEoteInteractions (state, deps = {}) {
       } else if (target !== undefined && !TEKELI_RETURN_DESTINATIONS.includes(target)) {
         throw new TypeError(`未知的忒咳哩-哩结算去向 ${String(target)}`)
       }
-      const shuffled = tekeliShuffleIn(state, seat, count, { shuffle: deps.shuffle })
+      const shuffled = deps.shuffleTekeliIn?.(seat, count, { shuffle: deps.shuffle })
+        ?? tekeliShuffleIn(state, seat, count, { shuffle: deps.shuffle })
       return shuffled !== false
     },
     /** 受信任抽取：默认只返回布尔值；deps.revealCode===true 才把卡号交给调用方。 */

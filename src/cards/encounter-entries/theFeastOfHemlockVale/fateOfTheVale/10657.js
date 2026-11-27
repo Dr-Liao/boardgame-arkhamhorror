@@ -16,6 +16,15 @@ export default {
       requiresPrismaticShard: '10522',
     },
   },
-  note: '近似：v.I 的 [reaction]（抽走单面敌人、其余移出游戏）由 behavior.afterTest 的深渊揭示结算；「自己动手」条件读引擎既有支援区（棱柱碎片 10522）。',
-  abilities: [],
+  note: '巢穴成功反应由章节结算。选择自己动手需要控制棱柱碎片。',
+  abilities: [{
+    kind: 'free',
+    actionKind: 'activate',
+    range: 'anywhere',
+    trigger: ['test.beforeCommit', 'test.afterCommit'],
+    label: '花费 1 个线索：本次技能检定得到 +2 技能值',
+    cost: { action: false, clues: 1 },
+    duringOwnSkillTest: true,
+    resolve: ({ api }) => api.addTestPendingBonus(2),
+  }],
 }

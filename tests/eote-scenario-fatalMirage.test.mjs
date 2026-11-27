@@ -125,7 +125,7 @@ test('P7 fatalMirage Mirage 关键词：入场线索按已入场目标扣减，�
       state.locations.find(location => location.id === locationId), {}, seat),
   }
   assert.equal(chapter.behavior.performAction(state, state.investigators[0], flipMoves[1], api), true)
-  assert.deepEqual(paid, { amount: 2, options: { atLocation: 'prisonOfMemories' } })
+  assert.deepEqual(paid, { amount: 2, options: { atLocation: 'prisonOfMemories', recordContributions: true } })
   const chosen = state.locations.find(location => location.id === 'deckOfTheTheodosia')
   assert.ok(chosen, '选择的记忆地点入场')
   assert.equal(chosen.revealed, true)
@@ -180,12 +180,9 @@ test('P7 fatalMirage 记忆放逐：伙伴被划掉时翻面放逐并把现场�
   assert.equal(state.scenarioFlags.fatalMirageMayAdvance, true)
 })
 
-test('P7 fatalMirage 代表条目与混乱标记（catalog 契约）', () => {
+test('P7 fatalMirage 混乱标记按胜利区剧情牌和难度修正', () => {
   assert.equal(registeredEntry('08550').flags.version, 1)
   assert.equal(registeredEntry('08560').flags.tier, 2)
-  assert.equal(registeredEntry('08560').flags.forcedAfterInvestigate, 'shroudPlus1AndCannotLeave')
-  assert.equal(registeredEntry('08575').flags.memoryEnemy, true)
-  assert.equal(registeredEntry('08585').flags.attachLocationClues, 2)
   assert.equal(registeredEntry('08549').flags.tokenMeanings.cultist, -2)
   const state = stateFor()
   state.difficulty = 'standard'

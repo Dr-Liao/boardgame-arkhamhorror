@@ -16,6 +16,7 @@ import { reactionSource } from './reaction-source.js'
 
 export function createSkillEffects(deps) {
   const {
+    abilityApi,
     campaignState,
     carcosaInvestigatorEffect,
     carcosaPlayerEffect,
@@ -295,6 +296,7 @@ function makeRuntime(state, events) {
       return lost
     },
     // 2026-10-25：05003/05011 卡牌效果获得资源也要经过资源寄存（家族遗产）。
+    transferResources: (from, to, amount) => abilityApi(state, events).transferResources(from, to, amount),
     gainResources: (seat, amount) => {
       const inv = state.investigators[seat]
       if (!inv || !(amount > 0)) return 0

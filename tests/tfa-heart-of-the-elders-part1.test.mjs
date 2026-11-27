@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 // （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal / entityRuleActive 会恒为 0/false。
 import '../src/engine/engine.js'
 import { payLocationActionCost } from '../src/engine/location-action-cost.js'
-import { tokenLabel } from '../src/engine/engine.js'
+import { scenarioRuntime, tokenLabel } from '../src/engine/engine.js'
 import * as chapter from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
 import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES, RUINS_CANDIDATES,
@@ -86,9 +86,22 @@ function makeApi(state, options = {}) {
     value = (Math.imul(value, 1664525) + 1013904223) >>> 0
     return value / 0x100000000
   }
+  const runtime = scenarioRuntime(state, [])
   const api = {
     log,
     random,
+    setScenarioFlag: runtime.setScenarioFlag,
+    addToExplorationDeck: runtime.addToExplorationDeck,
+    attachToLocation: runtime.attachToLocation,
+    detachEncounterAttachment: runtime.detachEncounterAttachment,
+    isPoisoned: runtime.isPoisoned,
+    takeFromSetAside: runtime.takeFromSetAside,
+    takeEncounterCard: runtime.takeEncounterCard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    doomOn: runtime.doomOn,
+    suppliesAt: runtime.suppliesAt,
+    takeExplorationCard: runtime.takeExplorationCard,
+    shuffleExploration: runtime.shuffleExploration,
     info: text => log.push(text),
     choose: request => (options.choose ? options.choose(request) : request.options[0].id),
     test: (seat, skill, difficulty, resolve) => (options.test
@@ -417,9 +430,9 @@ test('曲折小道：没有指南针必须支付 3 资源，否则不能探索',
   const rich = run(3)
   assert.equal(rich.allowed, true)
   assert.equal(rich.inv.resources, 0)
-  assert.equal(rich.state.scenarioFlags.exploreDrawPending, true)
   const poor = run(2)
   assert.equal(poor.allowed, false)
+  assert.equal(poor.inv.resources, 2)
 })
 
 test('石柱祭坛：进入后揭示混乱标记，符号则失去 1 行动，无法失去改为 1 点恐惧', () => {
@@ -560,13 +573,12 @@ test('落入陷阱：可从遭遇牌库洗回探索牌库，检定失败每差 1
 
 test('落入陷阱：从探索牌库抽出时不能选择洗回牌库，必须检定', () => {
   const state = placed(stateFor(1))
-  state.scenarioFlags = { exploreDrawPending: true }
   let asked = false
   const api = makeApi(state, {
     choose: request => { asked = true; return request.options[0].id },
     test: ({ resolve, difficulty, skill }) => resolve({ success: true, value: 4, difficulty, skill, drawn: [] }),
   })
-  behavior.resolveEncounter(state, state.investigators[0], definition.treacheries['04215'], api)
+  behavior.resolveEncounter(state, state.investigators[0], definition.treacheries['04215'], api, { encounteredFrom: 'exploration' })
   assert.equal(asked, false, '不提供选择')
   assert.equal(state.investigators[0].damage, 0)
 })
@@ -578,7 +590,7 @@ test('有毒孢子：附属到地点，轮末让中毒者受 2 点恐惧、未�
   poisoned.threat.push({ id: 'p', code: '04102', permanent: true })
   const api = makeApi(state)
   const handled = behavior.resolveEncounter(state, healthy, definition.treacheries['04216'], api)
-  assert.equal(handled, true)
+  assert.deepEqual(handled, { placed: true })
   const location = state.locations.find(entry => entry.id === healthy.location)
   assert.equal(location.attachments.length, 1)
   behavior.roundEnded(state, api)
@@ -636,7 +648,6 @@ test('放置石柱标记：横置羽翼蛇族，并把一张蛇怪洗回遭遇�
   state.actIndex = 1
   const api = makeApi(state)
   behavior.actReveal(state, state.acts[0], api)
-  state.enemies.push({ id: 'basilisk', code: '04220', originalCode: '04220', location: MOUTH })
   state.encounterDiscard.push('04220')
   state.scenarioFlags.pillars = 5
   const inv = state.investigators[0]
@@ -853,7 +864,7 @@ test('04070 河流峡谷：治愈 1 点（有水壶 +2），每场游戏一次',
   assert.ok(move, '河流峡谷应提供治愈行动')
   chapter.behavior.performAction(withCanteen, inv, move, api)
   assert.equal(inv.damage, 0, '有水壶治愈 3 点')
-  assert.equal(chapter.behavior.actions(withCanteen, inv).some(entry => entry.rule === 'healRiverCanyon'), false,
+  assert.equal(chapter.behavior.actions(withCanteen, inv).find(entry => entry.rule === 'healRiverCanyon').used, true,
     '每场游戏一次')
 
   const without = placed(stateFor(1))

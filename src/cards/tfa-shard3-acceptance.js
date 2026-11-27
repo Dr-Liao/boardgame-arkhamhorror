@@ -2,7 +2,7 @@
 // Detailed evidence: audit/tfa-shard3-acceptance.json. Not a promise of all-combination equivalence.
 export const TFA_SHARD3_ACCEPTANCE_PROFILE = {
   "id": "tfa-depth-of-yoth-heart-of-the-elders-2026-11",
-  "scope": "失落时代 04 段 The Depths of Yoth（tdoy，27 条）+ Heart of the Elders（hote，26 条）共 53 条目录记录。40 条通过逐卡实现/原语/交互/证据/合规五维验收；13 条因存量 R1 直写、同句双实现、近似未披露或未用登记原语暂不切换 verified。",
+  "scope": "失落时代 04 段幽嘶深渊与久远腹地共 53 条目录记录，全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard3.test.mjs 及 tfa-*.test.mjs 的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TFA_SHARD3_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TFA_SHARD3_ACCEPTANCE_SHA256 = '4de4d847933657d910b523f9671c0d5e0c50aa98f6b737a496db58127a217cad'
-const verified = new Set(["04205","04206","04206b","04207","04208","04209","04209b","04210","04211","04212","04213","04214","04217","04218","04219","04221","04223","04224","04226","04227","04228","04277","04278","04280","04284","04285","04286","04287","04288","04289","04290","04291","04292","04294","04295","04296","04297","04298","04300","04301"])
+export const TFA_SHARD3_ACCEPTANCE_SHA256 = 'f2d380272530cadfc90720c6e7884dbf711ef79d9e8c77d2eb400073378976d7'
+const verified = new Set(["04205","04206","04206b","04207","04208","04209","04209b","04210","04211","04212","04213","04214","04215","04216","04217","04218","04219","04220","04221","04222","04223","04224","04225","04226","04227","04228","04277","04278","04279","04280","04281","04282","04283","04284","04285","04286","04287","04288","04289","04290","04291","04292","04293","04294","04295","04296","04297","04298","04299","04300","04301","04302","04303"])
 export const tfaShard3CardVerified = code => verified.has(code)

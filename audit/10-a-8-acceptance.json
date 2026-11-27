@@ -3,7 +3,7 @@
   "unit": "10-a-8",
   "profile": {
     "id": "fhv-campaign-e-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10606–10644b）44 条目录记录。37 条通过五维验收；7 条剧情资产/内容引擎读点缺失暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10606–10644b）44 条目录记录。44 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 36,
-    "unverified": 7,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 189
+    "testsPassed": 194
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
-      "sha256": "c26bd16fce45e6c20fd0351414b53dfb5f0ba5f54e04e66d3f30425ae6f0d913"
+      "sha256": "3a1e3037552df787da263ffad65e1713425ccb9720b0658de1451d22ba9e1613"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theTwistedHollow.test.mjs",
@@ -33,11 +33,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theLongestNight.test.mjs",
-      "sha256": "53f28f361cf34fa264065875b2f0052e40c5b270158638f3094d234e343bb00c"
+      "sha256": "ef5631d66d9d59cd7cf3d4c7aa6e7299a140bcf062a2a2047b124fe1a5699e1f"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
-      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+      "sha256": "09746297943b9125717640adf59f5158ea8eaee91141902a2fae2f7a64dc2b0f"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
@@ -129,33 +129,65 @@
       "code": "10610a",
       "name": "山谷提灯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「[reaction] 调查员移动进入并揭示[[森林]]地点时横置提灯：忽略该地点强制效果」与「强制-提灯将离场时改为翻面并放最近地点」无读点：theTwistedHollow/behavior.js 无 assetLeftPlay/storyAssetLeftPlay，resolveLocationReveal 无提灯忽略分支。失黑暗已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10610a 希望信标：在移动时横置取消树林揭示强制，离场改为熄灭并放在最近地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10610b 光明静熄（有福祉）：离场保持熄灭，同地调查员花一个行动控制并点燃"
+        }
+      ]
     },
     {
       "code": "10610b",
       "name": "山谷提灯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[action]：控制提灯，然后翻面」在 behavior.actions() 无对应行动、无引擎剧情资产激活读点；「离场改为放最近地点」缺 assetLeftPlay。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10610b 光明静熄（有福祉）：离场保持熄灭，同地调查员花一个行动控制并点燃"
+        }
+      ]
     },
     {
       "code": "10611a",
       "name": "山谷提灯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[action] 横置提灯：查看连接地点已揭示面并可移动/忽略强制」未实现；「离场翻面放最近地点」缺读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10611a 希望微薄：同地队友可横置提灯查看地点，选择留下"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10611a 希望微薄：在重整阶段重新竖置"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10611a 希望微薄：查看连接地点已揭示面并移动，跳过该森林的揭示强制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10611b 光明静熄（无福祉）：同地点在玩家窗口免费控制并点燃"
+        }
+      ]
     },
     {
       "code": "10611b",
       "name": "山谷提灯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[fast]：控制提灯并翻面」与「离场放最近地点」均无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10611b 光明静熄（无福祉）：同地点在玩家窗口免费控制并点燃"
+        }
+      ]
     },
     {
       "code": "10612",
@@ -221,9 +253,13 @@
       "code": "10617",
       "name": "月光空地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "揭示 willpower(X) 强制已实现；印刷「敌人移动时每个[[田野]]地点视为互连」需要 behavior.enemyConnections，苦痛之影章节没有该读点（条目 note 自述未接线子句）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10617 月光空地：揭示检定意志 X，敌人移动时可从其他地点直达空地"
+        }
+      ]
     },
     {
       "code": "10618",
@@ -373,9 +409,13 @@
       "code": "10630",
       "name": "农庄",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「农庄不能有陷阱、诱饵」已实现（definition noLocationDefenses + 引擎 location-defenses.js:9）；印刷「不能有玩家卡牌附属」无读点：definition cannotHaveAttachments / 条目 flags.cannotHavePlayerAttachments 均无消费者。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10630 农庄：拦截陷阱、诱饵和玩家卡附属"
+        }
+      ]
     },
     {
       "code": "10631",
@@ -513,9 +553,25 @@
       "code": "10642",
       "name": "埃阿斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「[action] 控制埃阿斯」已实现；印刷「每轮第一个行动不触发趁乱攻击」与「[action] 横置埃阿斯：移动两次或到任意[[田野]]」只保留在 flags（firstActionNoOpportunity/moveAbility），behavior.js 无对应读点、actions() 无移动能力行动。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10642 埃阿斯：一个行动横置，选择连接路线走两步或直达任意田野"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10642 埃阿斯：同地队友可接过控制权，移动能力只由控制者发动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10642 埃阿斯：控制谷仓中的原实例，保留伤害且不会重复产生副本"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard8.test.mjs",
+          "test": "10642 埃阿斯：谷仓处可控制埃阿斯，每轮第一个行动免借机攻击"
+        }
+      ]
     },
     {
       "code": "10643",

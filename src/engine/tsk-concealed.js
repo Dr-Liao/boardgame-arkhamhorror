@@ -80,6 +80,36 @@ export function concealedById(state, id) {
   return (stateOf(state)?.miniCards || []).find(card => card.id === id) || null
 }
 
+export function repositionMiniCards(state, placements) {
+  const updates = placements.map(({ id, locationId, position }) => {
+    const card = concealedById(state, id)
+    if (!card || card.flipped) throw new RangeError('只能移动在场且正面朝下的迷你卡')
+    locationAt(state, locationId)
+    if (position != null && !SHADOW_POSITIONS.includes(position)) throw new RangeError('未知的迷你卡位置')
+    return { card, locationId, position: position === undefined ? card.position : position }
+  })
+  if (new Set(updates.map(update => update.card.id)).size !== updates.length) throw new TypeError('同一迷你卡不能重复移动')
+  for (const { card, locationId, position } of updates) Object.assign(card, { locationId, position })
+  return updates.map(({ card }) => ({ ...card }))
+}
+
+export function setMiniCardCodes(state, entries) {
+  const updates = entries.map(({ id, code }) => {
+    const card = concealedById(state, id)
+    if (!card || card.decoy) throw new RangeError('只能更换在场真身迷你卡的卡号')
+    return { card, code: normalizeMiniCode(code) }
+  })
+  if (new Set(updates.map(update => update.card.id)).size !== updates.length) throw new TypeError('同一迷你卡不能重复改牌')
+  for (const { card, code } of updates) Object.assign(card, { code, known: false, knownBy: [] })
+  return updates.map(({ card }) => ({ ...card }))
+}
+
+export function flipDecoyMiniCards(state) {
+  const cards = concealedMiniCards(state).filter(card => card.decoy)
+  for (const card of cards) card.flipped = true
+  return cards.map(card => ({ ...card }))
+}
+
 /** 该地点是否处于阴影（In the Shadows）；不初始化容器。 */
 export function isInShadows(state, locationId) {
   locationAt(state, locationId)
@@ -282,14 +312,17 @@ export function concealTargetScope(state, miniCardId) {
 export function reshuffleConcealed(state, { shuffle } = {}) {
   if (shuffle != null && typeof shuffle !== 'function') throw new TypeError('shuffle 必须是函数')
   const container = stateOf(state)
-  if (!container || container.miniCards.length < 2) return concealedMiniCards(state)
-  const slots = container.miniCards.map(card => ({ locationId: card.locationId, position: card.position }))
+  if (!container?.miniCards.length) return []
+  const slots = container.miniCards.map(({ id, locationId, position }) => ({ id, locationId, position }))
   const mixed = (shuffle || (cards => fisherYates(state, cards)))(container.miniCards.map(card => ({ ...card })))
   validateShuffle(container.miniCards, mixed)
-  mixed.forEach((card, index) => {
-    const slot = slots[index]
-    container.miniCards[index] = { ...container.miniCards[index], locationId: slot.locationId, position: slot.position }
-  })
+  const byId = new Map(container.miniCards.map(card => [card.id, card]))
+  if (new Set(mixed.map(card => card.id)).size !== mixed.length || mixed.some(card => !byId.has(card.id))) {
+    throw new TypeError('shuffle 回调必须保留各迷你卡的实例 id')
+  }
+  container.miniCards = mixed.map((card, index) => ({
+    ...byId.get(card.id), ...slots[index], flipped: false, known: false, knownBy: [],
+  }))
   return concealedMiniCards(state)
 }
 

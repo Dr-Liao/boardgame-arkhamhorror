@@ -5,7 +5,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 
-import '../src/engine/engine.js'
+import { fixture, asset } from './core-fixture.mjs'
+import { hunterStep, scenarioRuntime } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 
@@ -77,15 +78,38 @@ for (const [code, token] of [['11746', 'enemyEngaged'], ['11747', 'enemyEngaged'
     }
   })
 }
-test('11751 持久构造体：击败拉回胜利区构造体已接线，但「猎物 - 最近控制神器支援的调查员」无读点', () => {
-  const entry = entryOf('11751')
-  assert.equal(entry.flags.prey, 'artifactController')
-  assert.ok((entry.abilities || []).some(ability => [].concat(ability.trigger || []).includes('defeatEnemy')))
-  assert.equal(E('scenario-runtime.js').includes('takeFromVictory:'), true, '胜利区取回读点')
-  assert.equal(E('scenario-runtime.js').includes('exhaustEnemy:'), true, '横置生成读点')
-  // 差距：prey 值没有任何消费方（内容/引擎 grep 均 0）。
-  assert.equal(read('../content/campaigns/theDrownedCity/card-data.js').includes('artifactController'), false, '章节遭遇定义不映射该猎物')
-  assert.equal(E('enemies.js').includes('artifactController') + E('enemy-query.js').includes('artifactController'), 0, '引擎无该猎物读点')
+test('11751 持久构造体：击败前取回其他副本并横置生成', () => {
+  const state = fixture('01003')
+  const api = scenarioRuntime(state, [])
+  const location = state.investigators[0].location
+  const first = api.spawn('11751', location)
+  api.damageEnemy(first.id, 2, 0)
+  assert.deepEqual(state.victoryDisplay.map(card => card.id), [first.id])
+  assert.deepEqual(state.enemies, [])
+  const second = api.spawn('11751', location)
+  api.damageEnemy(second.id, 2, 0)
+  assert.deepEqual(state.victoryDisplay.map(card => card.id), [second.id])
+  assert.equal(state.enemies.length, 1)
+  assert.deepEqual([state.enemies[0].exhausted, state.enemies[0].engagedSeat], [true, null])
+})
+
+test('11751 持久构造体：先按最短距离找猎手目标，距离并列时优先神器持有者', () => {
+  const state = fixture('01003', 2)
+  const [nearest, artifactHolder] = state.investigators
+  asset(state, '11552', {}, 1)
+  state.locations = [
+    { id: 'middle', name: '中间', revealed: true, connections: ['left', 'right'] },
+    { id: 'left', name: '左侧', revealed: true, connections: ['middle'] },
+    { id: 'right', name: '右侧', revealed: true, connections: ['middle', 'far'] },
+    { id: 'far', name: '远端', revealed: true, connections: ['right'] },
+  ]
+  nearest.location = 'left'
+  artifactHolder.location = 'right'
+  const construct = scenarioRuntime(state, []).spawn('11751', 'middle')
+  assert.equal(construct.prey, 'artifactController')
+  assert.equal(hunterStep(state, construct), 'right')
+  artifactHolder.location = 'far'
+  assert.equal(hunterStep(state, construct), 'left')
 })
 
 // ---------------------------------------------------------------------------

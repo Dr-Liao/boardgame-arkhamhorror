@@ -211,11 +211,13 @@ export function entityMoves(st, key) {
     // 2026-10-27「如同手牌」通道统一原语：legalMoves 带上 move.uiKey（hunch:<卡号> / beneath:<卡号> /
     // asset:<宿主 id>），直接按挂载键挂回牌桌实体；下面各通道字段的分支保留为兼容回退。
     if (move.uiKey && move.uiKey === key) return true
-    if (kind === 'hand') return move.action === 'play' && !move.fromDiscard && move.cardId === inv?.hand?.[Number(parts[1])] && String(inv?.seat) === parts[0]
+    if (kind === 'sharedPlay') return move.fromSharedSetAside === id
+    if (kind === 'hand') return move.action === 'play' && !move.fromDiscard && !move.fromSharedSetAside && move.cardId === inv?.hand?.[Number(parts[1])] && String(inv?.seat) === parts[0]
     // 支援身上的能力/威胁，以及「这张支援是打出的载体」的通道：
     // 原定计划 fromPlanAssetId、背包 fromBackpackId、宿主附属 fromAttachedEventOf、
     // 银暮匕首的 beneath 通道 channelAssetId。缺了后半段，附属在卡下面的牌在牌桌上无处可点。
     if (kind === 'asset') return move.assetId === id || move.threatId === id
+      || (move.action === 'fight' && move.enemyId === id)
       || move.fromPlanAssetId === id || move.fromBackpackId === id
       || move.fromAttachedEventOf === id || move.channelAssetId === id
     // 压在调查员底下的牌（戴安娜/赛菲娜/画中世界）：id 是卡号。
@@ -277,7 +279,8 @@ export function targetMoves(st, source, target) {
     return target === 'zone:engage' || (type === 'investigator' && id === String(st.currentSeat)) ? moves.filter(m => m.action === 'engage') : []
   }
   if (source.startsWith('investigator:') && String(st.currentSeat) === source.slice(13)) {
-    return (st.legalMoves || []).filter(m => type === 'enemy' ? m.action === 'fight' && m.enemyId === id : type === 'location' && m.action === 'move' && m.locationId === id)
+    return (st.legalMoves || []).filter(m => (type === 'enemy' || type === 'asset')
+      ? m.action === 'fight' && m.enemyId === id : type === 'location' && m.action === 'move' && m.locationId === id)
   }
   if (type === 'slot') {
     const restrictedAlly = id === 'allyRestricted'

@@ -3,8 +3,8 @@
   "unit": "11-a-7",
   "profile": {
     "id": "tdc-campaign-d-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11619–11659）43 条目录记录。41 条通过五维验收；11651/11652 缺场景撤退行动读点暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11619–11659）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 41,
-    "unverified": 2,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 146
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
-      "sha256": "97f2acf21636ea6ddbb4cb1eb18e757a99d50a4f1e6d580a5c915bb5c817661c"
+      "sha256": "a80e61681d1cbda531ad3179b8ec04a9a91f81a80ec1c3fa3a938f8d08df3231"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-courtOfTheAncients.test.mjs",
@@ -557,17 +557,37 @@
       "code": "11651",
       "name": "西墙",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面 [action] 撤退（Retreat）无实现读点：obsidianCanyons behavior/definition 无 resign/retreat 分支，条目也未声明撤退能力（同章 11644/11647 目标「每位存活调查员均已撤退」缺玩家入口）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "11651 西墙与 11652 古代圆顶：调查员可从已揭示地点支付行动撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
     },
     {
       "code": "11652",
       "name": "古代圆顶",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同上；条目 note 自述「[action] 撤退未接」。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "11651 西墙与 11652 古代圆顶：调查员可从已揭示地点支付行动撤退"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
+          "test": "P7 原语：地点不能被移动/离场，巡逻最近空特性地点（11648–11652/11670）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard7.test.mjs",
+          "test": "验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地点：行为分派函数存在且条目声明齐备"
+        }
+      ]
     },
     {
       "code": "11653",

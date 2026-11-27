@@ -2,7 +2,7 @@
 // Detailed evidence: audit/06-a-6-acceptance.json. Not a promise of all-combination equivalence.
 export const TDE_SHARD6_ACCEPTANCE_PROFILE = {
   "id": "tde-dark-side-of-the-moon-2026-11",
-  "scope": "食梦者 06 段 Dark Side of the Moon（dsm，06195–06233）40 条目录记录。33 条通过五维验收；7 条因规则键未接线或交互选择缺失暂不切换。",
+  "scope": "食梦者 06 段 Dark Side of the Moon（dsm，06195–06233）40 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TDE_SHARD6_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TDE_SHARD6_ACCEPTANCE_SHA256 = 'cdcff441163fa113591b61408d96485e51586e01c31ccd06be611f46ea553c7f'
-const verified = new Set(["06195","06196","06197","06198","06199","06200","06201","06202","06204","06205","06207","06208","06209","06211","06213","06214","06214b","06216","06217","06218","06219","06220","06221","06222","06223","06224","06225","06226","06228","06229","06230","06231","06232"])
+export const TDE_SHARD6_ACCEPTANCE_SHA256 = '721ee8618108354c101b2de0cbe6736ee38eebaf1ec8d02df152d2b746c12bb4'
+const verified = new Set(["06195","06196","06197","06198","06199","06200","06201","06202","06203","06204","06205","06206","06207","06208","06209","06210","06211","06212","06213","06214","06214b","06215","06216","06217","06218","06219","06220","06221","06222","06223","06224","06225","06226","06227","06228","06229","06230","06231","06232","06233"])
 export const tdeShard6CardVerified = code => verified.has(code)

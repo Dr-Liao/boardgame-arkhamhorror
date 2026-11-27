@@ -67,6 +67,7 @@ function placeAllLocations(state) {
 function createApi(state, overrides = {}) {
   const api = {
     info: () => {},
+    remember: fact => { (state.scenarioFlags.remembered ||= []).push(fact) },
     choice: request => (request?.options?.[0]?.id ?? null),
     choose: request => api.choice(request),
     random: () => 0.5,
@@ -296,9 +297,11 @@ test('万千骇形：[tablet] 成功时可选并躲避敌人（afterTest 幂等�
 })
 
 test('万千骇形：坟地条目（06174）生成改道数据与团队线索记住事实', () => {
-  assert.equal(burialGround.locationRule.spawnRedirectTrait, 'Ghoul')
   const state = createState({ numInvestigators: 2 })
   state.locations.push({ ...CLONE(state.scenario.locations.burialGround), id: 'burialGround', revealed: true, clues: 2 })
+  assert.equal(behavior.spawnLocation(state, '01160', 'attic', 0, undefined, { fromEncounterDraw: true }), 'burialGround')
+  assert.equal(behavior.spawnLocation(state, '01160', 'attic', 0, undefined), 'attic')
+  assert.equal(behavior.spawnLocation(state, '01159', 'attic', 0, undefined, { fromEncounterDraw: true }), 'attic')
   const moves = []
   burialGround.locationRule.actions({ moves, state, inv: state.investigators[0], location: state.locations[0] })
   assert.equal(moves.length, 1)

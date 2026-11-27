@@ -14,27 +14,33 @@ const traitsOf = (api, code) => (api.cardTraits?.(code) || [])
 export default {
   code: '06128b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api, ctx = {}) {
       const seat = Number.isInteger(ctx.inv?.seat) ? ctx.inv.seat : state.currentSeat
       const locationId = ctx.location?.id || state.investigators?.[seat]?.location || 'skaiRiver'
-      // 场上的蜂拥卡不是独立敌人实体（带 swarmHostId 的实例才是），这里只找头领级敌人。
+      // 将蜂拥卡附于同群头领，避免选到不能承载蜂拥卡的附属实体。
       const creatures = (state.enemies || []).filter(enemy =>
-        enemy.location === locationId && enemy.swarmHostId == null
+        enemy.location === locationId && enemy.hostId == null
         && traitsOf(api, enemy.originalCode || enemy.code).includes(CREATURE))
       if (creatures.length) {
-        const target = creatures[0]
+        const chosen = creatures.length === 1 ? creatures[0].id : api.choose?.({
+          kind: 'enemy', source: '06128b', seat,
+          prompt: '如梦恐惧：选择斯凯河的一个生物敌人放置 1 张蜂拥卡。',
+          options: creatures.map(enemy => ({ id: enemy.id, label: enemy.name || enemy.code })),
+        })
+        const target = creatures.find(enemy => enemy.id === chosen)
+        if (!target) return
         api.swarm?.place?.(target, 1, { source: '06128b' })
         api.info?.(`🌊 如梦恐惧：给「${target.name || target.code}」加 1 张蜂拥卡。`)
         return
       }
       // 从遭遇牌库顶弃牌，直到弃出 1 个[[生物]]敌人；弃掉的其余卡进遭遇弃牌堆（api 统一入口）。
-      for (let index = 0; index < 80; index += 1) {
+      while (true) {
         const codes = api.discardEncounterTop?.(1, { reshuffle: false }) || []
         if (!codes.length) break
         const code = codes[0]
         if (api.cardType?.(code) === 'enemy' && traitsOf(api, code).includes(CREATURE)) {
-          const enemy = api.spawnEngaged?.(code, locationId, seat)
+          if (!api.takeEncounterDiscard?.(code)) return
+          const enemy = api.spawnEngaged?.(code, locationId, seat, { ignoreSpawn: true })
           api.info?.(`🌊 如梦恐惧：遭遇牌库顶弃出「${api.cardName?.(code) || code}」${enemy ? '并与你交战' : '（生成失败）'}。`)
           return
         }

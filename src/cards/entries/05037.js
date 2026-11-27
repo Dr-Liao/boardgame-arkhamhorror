@@ -39,7 +39,7 @@ export default {
       kind: 'played',
       label: '绝望之举',
       // 卡面「攻击。」：不引发借机攻击（与普通攻击行动同一口径）。
-      noOpportunityAttack: true,
+      countsAs: 'fight',
       resolve: ({ state, inv, api }) => {
         // --- 额外费用：弃掉一张占手部槽位的[[道具]]支援（手牌或游戏区域） ---
         const handItems = inv.hand.filter(isSlotItem)

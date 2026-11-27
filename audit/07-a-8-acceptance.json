@@ -3,7 +3,7 @@
   "unit": "07-a-8",
   "profile": {
     "id": "tic-into-the-maelstrom-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 Into the Maelstrom（itm，07301–07338）40 条目录记录。39 条通过五维验收；07315 因缺可选推进原语暂不切换。",
+    "scope": "印斯茅斯暗潮 07 段 Into the Maelstrom（itm，07301–07338）40 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 40,
-    "verified": 39,
-    "unverified": 1,
+    "verified": 40,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 661
+    "testsPassed": 663
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
-      "sha256": "109e12625ee659a769eb6a2799f505e9aa2a67220475f35e6bfa9d3b6d86bb64"
+      "sha256": "4ca8b80b55348c7ad3f94180ec05f66fdf269500ab6071787ef3cbd18b25e955"
     },
     {
       "file": "games/arkhamhorror/tests/tic-parallel-acts.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
-      "sha256": "8929f8453e7a0f4a498d9421cf268fc675735de2741e96d623bffb0511487bc9"
+      "sha256": "efc03e107b1ff876a47c86bbaaa4be42c42eac4b5a24541cc5898c9b8780b769"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -45,7 +45,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
-      "sha256": "f1062c5014ca367f9a5f6ce69c8da542b0fade75d5991e807b69f1b052b42ace"
+      "sha256": "478a28b5839a7c9a0e582f1328639631212dc540457ba54691edb49b06787ff3"
     },
     {
       "file": "games/arkhamhorror/tests/tic-maelstrom-agendas.test.mjs",
@@ -57,7 +57,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+      "sha256": "8e1a6aa3b2eafa4e15101268f7ca36d234c8aacb710ba2309d846f9b92f2c090"
     },
     {
       "file": "games/arkhamhorror/tests/tic-slumbering-bosses.test.mjs",
@@ -73,7 +73,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -309,9 +309,33 @@
       "code": "07315",
       "name": "回到深海",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面目标「如果每位未击败的调查员都在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙，你可以选择推进（you may choose to advance）」缺少玩家选择：条目 actRule.objective 只返回布尔值，引擎 act-agenda.js#checkAct 命中即无条件 advanceAct，无「可选推进」原语/询问；自动推进取代了玩家选择权。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-07-a-shard8.test.mjs",
+          "test": "07315 回到深海：全员在门扉并持有四色钥匙后可选择免费推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
+          "test": "07315 目标：全员在伊哈·恩斯雷门扉且持有蓝红黄绿钥匙时才成立"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
+          "test": "07315 背面：4 人图示用 7 个普通地点与 (-3,-1)/(3,-1) 圣堂坐标"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
+          "test": "07315 背面：DagonHasAwakened 记录让达贡以苏醒狂怒面入场"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-maelstrom-act.test.mjs",
+          "test": "07315 背面：移除旧地点、按 1 人图示布置 Act 2 地图并生成达贡/海德拉"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-scenario-intoTheMaelstrom.test.mjs",
+          "test": "intoTheMaelstrom 幕/议程：07315 目标（全员门扉+四色钥匙）与背面按 2 人图示布置 Act 2 地图并生成两古神"
+        }
+      ]
     },
     {
       "code": "07316",

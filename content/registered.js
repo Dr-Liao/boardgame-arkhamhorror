@@ -1,4 +1,5 @@
 import { createContentRegistry } from './registry.js'
+import { registerScenarioCards } from '../src/engine/scenario-card-index.js'
 import { packs } from './packs/manifests.js'
 import { returnCampaignPacks } from './packs/returnCampaign/manifests.js'
 import { expansionBundles } from './expansions.js'
@@ -268,6 +269,9 @@ let bundle = {
     machinationsThroughTimeChapter],
 }
 export let contentRegistry = createContentRegistry(bundle)
+for (const entry of contentRegistry.listScenarios()) {
+  if (['playable', 'verified'].includes(entry.status)) registerScenarioCards(contentRegistry.getScenarioData(entry.id))
+}
 
 // 工具/测试用只读快照：把当前组合根（含迁移中的占位章节）交给校验工具，
 // 让 tools/check-tcu-registry.mjs 能在替换 registered.js 之前用真实章节做注册期校验。

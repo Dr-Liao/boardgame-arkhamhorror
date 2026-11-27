@@ -3,8 +3,8 @@
   "unit": "11-a-4",
   "profile": {
     "id": "tdc-campaign-a-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11501–11538）43 条目录记录。36 条通过五维验收；7 条声明字段无读点（声明即接线债务）暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11501–11538）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 36,
-    "unverified": 7,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 185
+    "testsPassed": 186
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
-      "sha256": "cb7257b317b1787466a28344d3766a7a2f776087b73bc09cec85fbd96e4ebdfb"
+      "sha256": "803ab479bff25a0faeeeeecce25686ffb50d3080da44723ff29312336506b525"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-oneLastJob.test.mjs",
@@ -33,11 +33,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
-      "sha256": "1432e911ecc0cf2e63dbdf2a3b37ab5e0ceb25508811ec2597f93c15d6c45ad9"
+      "sha256": "b1e2895604e774e89827cabc40f2cdf6913b9eb904339f80923a950661a79ae7"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDrownedQuarter.test.mjs",
-      "sha256": "f7d7fc9606975f6d2eb1acbc54224c669e1bdec16dc8fd20638bd9f3fb6b4af7"
+      "sha256": "96393288155306c3ab1fe357ca841ae49f8fe72c58993dd14c8738aaa70f6ca1"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
@@ -105,9 +105,17 @@
       "code": "11504",
       "name": "盘问帮派",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：flags.parley.clueOnAct = 1 在全仓库没有读点（behavior.parleyAction 直接硬编码「幕上 +1 线索」）；效果可用但声明字段未被读取，改数值不会改变行为。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11504 盘问帮派（希布线）：可与同地点被队友交战的罪犯谈判"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11504b 希布的路边酒馆：显现入场、生成萨迪并把幕 2a/3a 加入幕牌库后推进"
+        }
+      ]
     },
     {
       "code": "11504b",
@@ -125,9 +133,17 @@
       "code": "11505",
       "name": "盘问帮派",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 同 11504：flags.parley.clueOnAct = 1 无读点，behavior.parleyAction 硬编码 +1 线索。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11505 盘问帮派（美月酒廊线）：花费等于剩余生命的线索并推进幕线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11505b 美月酒廊：显现入场、生成内奥米并把幕 2a/3a 加入幕牌库后推进"
+        }
+      ]
     },
     {
       "code": "11505b",
@@ -449,17 +465,25 @@
       "code": "11527",
       "name": "淹没棚屋",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：flags.deepOneMovingConnectsFlooded 无读点；behavior.enemyConnections 直接按 Deep One 特性 + 完全淹没硬编码实现（功能正确、声明死字段）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11527 淹没棚屋：揭示后深潜者移动与完全淹没地点双向相连"
+        }
+      ]
     },
     {
       "code": "11528",
       "name": "破碎遗迹[tdc_rune_v]",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：glyphAction.requiresNotFlooded 无读点；behavior.locationGlyphAction 用 waterLevel > 0 硬编码判断。符文 V 翻译记录功能正确。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11528 破碎遗迹：未淹没时发现符文 V 并记录翻译"
+        }
+      ]
     },
     {
       "code": "11529",
@@ -497,7 +521,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
-          "test": "11531b 海底壁画剧情面：符文 W（寄生虫）翻译并加入胜利区"
+          "test": "11531b 海底壁画：两次通过后同一故事牌进入胜利区并记符文 W"
         },
         {
           "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
@@ -513,25 +537,45 @@
       "code": "11531b",
       "name": "海底壁画[tdc_rune_w]",
       "type": "story",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（故事面与正面的关联由 behavior.friezeFlipAction 用固定 11531b 硬编码）；符文 W 翻译/加入胜利区的效果本身已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11531b 海底壁画：两次通过后同一故事牌进入胜利区并记符文 W"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theWesternWall.test.mjs",
+          "test": "P7 theWesternWall 11531 海底壁画不能离场：条目声明 cannotLeavePlay、背面 11531b 不声明"
+        }
+      ]
     },
     {
       "code": "11532",
       "name": "水下秘库[tdc_rune_z]",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：flags.cannotFlipAgain 无读点——引擎 locations.js:192 读的是地点实例 loc.cannotFlipAgain，behavior.vaultFlipAction 只写 here.flipped 与 twwVaultFlipped，从不写 loc.cannotFlipAgain；实际防重翻由 twwVaultFlipped 承担。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11532 水下秘库：智力检定取当前层级，成功才记录符文 Z"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11532b 水下秘库：翻回同一地点实体并锁住翻面动作"
+        }
+      ]
     },
     {
       "code": "11532b",
       "name": "水下秘库[tdc_rune_z]",
       "type": "story",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "[pending] 声明即接线缺口：flags.storyOf 无读点（同 11531b）；翻回地点面由 behavior.vaultFlipAction 写 here.flipped + twwVaultFlipped 实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard4.test.mjs",
+          "test": "11532b 水下秘库：翻回同一地点实体并锁住翻面动作"
+        }
+      ]
     },
     {
       "code": "11533",

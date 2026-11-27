@@ -19,6 +19,7 @@
 //
 // 契约：只读 state，写变更走 `api.*`（无 api 时写内容层已声明的引擎读点：campaign.records、
 // scenarioFlags.mechanics、campaign.chaosBag、地点的敌人/剧情资产数组）。不 import engine.js。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { recordSetAdd, recordSetValues } from '../../../../../src/campaign/record-sets.js'
@@ -964,7 +965,7 @@ function playWeaponFree(state, seat, api) {
     api.playCardFromHandFree(seat, String(chosen))
     return true
   }
-  inv.hand.splice(index, 1)
+  spliceHand(inv, index, 1)
   inv.assets ||= []
   inv.assets.push({ id: `preludeWeapon-${chosen}`, code: String(chosen), controllerSeat: seat,
     location: inv.location })
@@ -982,7 +983,7 @@ function discardFromHand(state, seat, count, api) {
       '0')
     const position = Number(chosen)
     const safe = Number.isInteger(position) && position >= 0 && position < inv.hand.length ? position : 0
-    const [code] = inv.hand.splice(safe, 1)
+    const [code] = spliceHand(inv, safe, 1)
     inv.discard ||= []
     inv.discard.push(code)
     discarded += 1

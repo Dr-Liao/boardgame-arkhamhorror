@@ -7,9 +7,10 @@
 // 读点：
 //   · 巡逻/反击由 definition 的 `enemies` 表 + 章节 behavior.enemyPhaseStart（tsk-coterie 的
 //     `patrolTargetLocation` / `patrolDestination`）结算；
-//   · 「将被击败」→ behavior.enemyDamaged（伤害达到生命时治愈全部、横置、解除交战并退到地下陵墓）
-//     + behavior.enemyCanBeDefeated（同一次击败返回 false）；
-//   · 「不能离开地下陵墓」是版本一地图牌 09651 的印刷规则（地点侧），本条目只披露（见 note）。
+//   · 「将被击败」→ enemyWouldBeDefeated 中断窗口，替换击败后退到地下陵墓；
+//   · 「不能离开地下陵墓」由版本一地点 09651 的未揭示面限制处理。
+const CATACOMBS_CODES = new Set(['09650', '09651', '09652'])
+
 export default {
   code: '09655a',
   name: '深红斗篷的恶兽',
@@ -18,12 +19,19 @@ export default {
   enemyRule: {
     patrol: { target: 'keyLocus' },
     retaliate: true,
-    cannotBeDefeatedHealsAndFlees: true,
-    fleesTo: 'catacombs',
-    cannotLeaveCatacombsWhileBloodyNexus: true,
     elite: true,
   },
-  note: 'approximation: 「不能离开亚历山大地下陵墓」写在版本一的地点牌背面，本章没有为地点建条目'
-    + '（movement 的内容层钩子只能加边），因此只用 enemyRule 标记披露、运行时未拦截移动；'
-    + '见 primitive-requests/09651.json。「被击败改为治愈+横置+撤退」按「伤害达到生命的那一次」触发。',
+  abilities: [{
+    kind: 'forced', trigger: 'enemyWouldBeDefeated',
+    label: '将要被击败时：治愈全部伤害，横置并退到亚历山大地下陵墓',
+    limit: { scope: 'perWindow', owner: 'instance' },
+    criteria: ({ source, context }) => context?.enemy?.id === source?.id,
+    resolve: ({ state, source, context, api }) => {
+      if (!api.enemyOutcomes.replace(context, { healAllDamage: true })) return
+      api.disengageEnemy(source)
+      api.exhaust(source)
+      const catacombs = state.locations.find(location => CATACOMBS_CODES.has(location.originalCode || location.code))
+      if (catacombs && source.location !== catacombs.id) api.moveEnemy(source, catacombs.id)
+    },
+  }],
 }

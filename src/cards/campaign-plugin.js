@@ -154,16 +154,18 @@ export function createCampaignPlugin(deps) {
     return seat
   }
 
-  function moveRelicOfAges(state, { code = null, location = null, seat = null } = {}, events) {
+  function moveRelicOfAges(state, { code = null, location = null, seat = null, enemyId = null } = {}, events) {
     const previous = state.relicOfAges
     state.relicOfAges = {
       code: code || previous?.code || RELIC_OF_AGES_CODE,
       location: seat != null ? state.investigators[seat]?.location ?? null : location,
       seat: seat ?? null,
+      ...(enemyId ? { enemyId } : {}),
     }
     if (events) {
       const holder = seat != null ? state.investigators[seat]?.name : null
-      info(state, events, `🏺 古代遗物位于${holder ? `${holder} 身上` : locName(state, state.relicOfAges.location) || '一边'}。`)
+      if (enemyId) info(state, events, `🏺 古代遗物附属到敌人（「${locName(state, location) || location}」）。`)
+      else info(state, events, `🏺 古代遗物位于${holder ? `${holder} 身上` : locName(state, state.relicOfAges.location) || '一边'}。`)
     }
     return state.relicOfAges
   }
@@ -186,9 +188,10 @@ export function createCampaignPlugin(deps) {
     return state.explorationDeck.length
   }
 
-  function addToExplorationDeck(state, codes, { top = false } = {}) {
+  function addToExplorationDeck(state, codes, { top = false, bottom = false } = {}) {
     state.explorationDeck ||= []
     if (top) state.explorationDeck.push(...codes)
+    else if (bottom) state.explorationDeck.unshift(...codes)
     else state.explorationDeck = shuffle([...state.explorationDeck, ...codes], () => randomValue(state))
     return state.explorationDeck.length
   }
@@ -205,7 +208,7 @@ export function createCampaignPlugin(deps) {
     }
     if (!options.resumed) {
       if (!payLocationActionCost(state, inv, 'explore', requestChoice)) return
-      payActionCost(state, inv, 'explore', events)
+      if (!payActionCost(state, inv, 'explore', events)) return
       // 剧本可以在探索开始前拦截（如「索桥」要求先检定，失败则取消本次探索）。
       const blocked = scenarioBehavior(state).beforeExplore?.(state, inv, scenarioRuntime(state, events))
       if (blocked === false) return
@@ -262,8 +265,7 @@ export function createCampaignPlugin(deps) {
       if (placed) relocateInvestigator(state, seat, code, events)
     } else {
       // 敌人与诡计走与「遭遇」相同的结算路径。
-      state.encounterDeck.push(code)
-      drawEncounter(state, inv, events)
+      drawEncounter(state, inv, events, { code, from: 'exploration' })
     }
     scenarioBehavior(state).afterExplore?.(state, inv,
       { code, kind: scenarioLocation ? 'location' : 'encounter', runtime: scenarioRuntime(state, events) })

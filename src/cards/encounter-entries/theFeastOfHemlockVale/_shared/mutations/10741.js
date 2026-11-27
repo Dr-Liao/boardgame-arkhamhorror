@@ -16,10 +16,7 @@
 //     落在 enemy.attachments）。
 //   · 「查找遭遇牌库和弃牌堆里的[[突变]]敌人并抽取」= api.drawEncounterByTrait('Mutated', seat)
 //     （scenario-runtime.js：两堆都查、置于遭遇牌库顶后走统一抽牌管线）。
-//   · 「附属敌人被击败后弃牌直到弃掉敌人并在本地点生成」= api.discardEncounterUntilSpawn
-//     （scenario-runtime.js）——但该效果的触发时点（附属敌人被击败）在引擎里没有可读的附属窗口来源
-//     （ability-rules.js#nonPlayerAbilitySources 只枚举在场敌人自身，被击败敌人的附属不在窗口来源里），
-//     所以这次只落 flags 数据，note 披露为未接线。
+//   · 附属敌人被击败时，从遭遇牌库顶弃牌直到遇到敌人，在原地点生成它。
 import { ALL_CARDS, entryDistance } from '../../../_shared.js'
 
 const CODE = '10741'
@@ -43,13 +40,18 @@ export default {
   code: CODE,
   scope: 'treachery',
   implemented: true,
+  treacheryRule: {
+    onAttachedEnemyDefeated({ location, api }) {
+      api.discardEncounterUntilSpawn({ location })
+    },
+  },
   flags: {
     encounterGroup: 'mutations',
     quantity: 2,
     traits: ['Power', 'Colour'],
     attachToNearestNonEliteEnemy: true,
     fallbackDrawTraitEnemy: TRAIT,
-    onAttachedDefeated: { discardUntilTrait: 'enemy', spawnHere: true, trait: TRAIT },
+    onAttachedDefeated: { discardUntil: 'enemy', spawnHere: true },
   },
   encounterResolve(state, inv, card, api) {
     void card
@@ -63,7 +65,7 @@ export default {
       })) || candidates[0]
       api.attachEncounterToEnemy(CODE, target.id)
       api.info?.(`🧬 「${NAME}」附属到「${target.name}」。`)
-      return false
+      return { placed: true }
     }
     const drawn = api.drawEncounterByTrait(TRAIT, inv.seat, { source: CODE })
     api.info?.(drawn
@@ -71,7 +73,4 @@ export default {
       : `🧬 「${NAME}」：没有可附属的敌人，遭遇牌库里也没有[[突变]]敌人。`)
     return false
   },
-  note: '显现自足实现（最近的非[[精英]]敌人 → 附属；否则按[[突变]]特性从遭遇牌库/弃牌堆查找并抽取）。'
-    + '「附属敌人被击败时弃牌直到弃掉敌人并在此生成」的原语已存在（api.discardEncounterUntilSpawn），'
-    + '但被击败敌人的附属不是能力窗口来源，触发时点无读点，本批只落 flags.onAttachedDefeated 数据。',
 }

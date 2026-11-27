@@ -16,10 +16,10 @@ export default {
       const pocket = hooks.pocket()
       hooks.removeSetAsideLocation(pocket)
       if (!(state.explorationDeck || []).includes(pocket)) {
-        state.explorationDeck = [...(state.explorationDeck || []), pocket]
-        state.scenarioFlags.pocketInDeck = true
+        api.addToExplorationDeck([pocket], { top: true })
       }
-      hooks.shuffleInPlace()
+      api.setScenarioFlag('pocketInDeck')
+      api.shuffleExploration()
       api.info?.('🕳️ 时间之窗被洗入探索牌库。')
     },
   },

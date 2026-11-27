@@ -9,7 +9,7 @@ export default {
   code: '02143', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['dunwich'],
   encounterResolve(state, inv, card, api) {
     const horror = state.enemies.find(enemy => enemy.code === '02141')
-    if (!horror) { api.drawEncounter(inv.seat); return false }
+    if (!horror) { api.drawEncounter(inv.seat, { surgeDraw: true }); return false }
     horror.exhausted = false
     // 印刷能力只让它在原地准备并交战，不会跨博物馆传送。
     if (horror.location === inv.location) {

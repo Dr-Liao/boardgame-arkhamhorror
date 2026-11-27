@@ -10,21 +10,15 @@
 //   · 选择「你所在地点的一张卡牌」+ 检定[智力](1) → api.choice（调查员与同地点支援的统一候选）+
 //     api.test 的结果契约（B3：result.successBy）。
 //   · 每点成功的选择 → api.choice 逐次询问，最多 +3。
-// approximation: 引擎没有「下一治疗/受伤 +N」的读点（harm-threat 只有限定在本次结算内的
-//   healDamageFrom / extendHealHorror）。这里把每次选择写成一条 endOfRound 的持续效果记录
-//   （state.effects，随存档往返、按统一过期点清理），真正的读点见
-//   artifacts/migration/tsk/primitive-requests/09058.json（new.nextHealBonus / new.nextDamageBonus）。
-//   测试断言近似后的真实行为：检定成功点数 = 询问次数、上限 +3、记录带当选卡号与 endOfRound。
+// 本轮效果按目标实体和伤害或治疗类型保存，在下一次对应结算后移除。
 const CODE = '09058'
 
-const describeTarget = (item, api) => item.kind === 'investigator'
+const describeTarget = (item, api) => item.kind !== 'asset'
   ? item.label
   : `${api.cardName(item.code)}（${api.cardName(item.ownerCode)}）`
 
 export default {
   code: CODE,
-  simplified: true,
-  note: 'approximation: 逐点选择 + 本轮持续记录由条目实现；「下一治疗/受伤 +N」的伤害管线读点见 primitive-requests/09058.json。',
   abilities: [
     {
       kind: 'action',
@@ -37,6 +31,9 @@ export default {
           for (const asset of other.assets || []) {
             candidates.push({ id: `asset:${asset.id}`, kind: 'asset', label: api.cardName(asset.code), code: asset.code, ownerCode: other.code })
           }
+        }
+        for (const enemy of api.enemiesAt(inv.location)) {
+          candidates.push({ id: `enemy:${enemy.id}`, kind: 'enemy', label: enemy.name, code: enemy.originalCode || enemy.code })
         }
         if (!candidates.length) {
           api.info('「格雷氏解剖学」：你所在地点没有可以指定的卡牌。')
@@ -67,6 +64,7 @@ export default {
               const kind = answer === 'damage' ? 'damage' : 'heal'
               api.addEffect({
                 duration: 'endOfRound', sourceCode: CODE, controllerSeat: inv.seat,
+                harmBonus: { targetId: target.kind === 'investigator' ? target.id : target.id.slice(target.kind.length + 1), kind, amount: 1 },
                 label: `「${describeTarget(target, api)}」本轮下一次${kind === 'heal' ? '被治愈时治愈 +1' : '受到伤害时伤害 +1'}`,
               })
             }

@@ -5,7 +5,6 @@
 export default {
   code: '06133b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api, ctx = {}) {
       const locationId = ctx.location?.id || ctx.inv?.location || 'ilekVad'
       for (const inv of (state.investigators || [])) {

@@ -3,16 +3,6 @@
 //       当你每个回合开始时，移除传神佳墨的 1 充能。如果传神佳墨没有充能，将其弃掉。
 //       你得到所选技能 +1。
 //
-// 读点：uses/usesType/discardWhenEmpty（实例初始化 + 描述子结算后的统一弃置读点）；
-//       turnBegins 强制移除 1 充能；modifiers 的 skill:* 修正；
-//       定制勾选通过 api.tsk.customizable.checked 读取（web 定制面板与这里同一份账本）。
-//
-// approximation（已写 primitive-request/09079.json）：
-//   · 「购买时圈选技能」没有构筑期选择读点。基础所选技能按意志近似；Eldritch Ink（第 4/5 项）
-//     分别把智识/战斗追加为所选技能。
-//   · Shifting Ink 的「置于其他调查员控制下」需要条目级 playUnderAnyAtLocation 的运行时开关，
-//     当前字段是静态布尔，未实现（note）。
-//   · Imbued Ink 的「改为占用法术槽」没有实例级槽位覆盖读点，仅实现额外 2 充能（note）。
 const CUSTOM_CHECKS = Object.freeze([
   { name: 'Shifting Ink', checks: 1, text: 'You may play Living Ink under the control of another investigator at your location.' },
   { name: 'Subtle Depiction', checks: 1, text: 'At the start of your turn, you may choose not to remove 1 charge from Living Ink and ignore its ability for the remainder of the round.' },
@@ -23,70 +13,60 @@ const CUSTOM_CHECKS = Object.freeze([
   { name: 'Vibrancy', checks: 3, text: 'Living Ink grants an additional +1 to the chosen skills and -1 to each other skill.' },
 ])
 
-// 2026-11-16 P2-3：Imbued Ink/Eldritch Ink/Macabre Depiction/Vibrancy 都是多格选项，必须勾满才生效。
-import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
+import { customizationChoiceValues, customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 
-const fullyChecked = (state, inv, index) =>
-  customizationOptionFullyChecked(state, inv?.seat, '09079', index)
-const chosenSkills = (state, inv) => {
-  const chosen = new Set(['willpower'])
-  if (fullyChecked(state, inv, 3)) chosen.add('intellect')
-  if (fullyChecked(state, inv, 4)) chosen.add('combat')
-  return chosen
-}
-const skillAmount = (state, inv, skill) => {
-  const chosen = chosenSkills(state, inv).has(skill)
-  const vibrancy = fullyChecked(state, inv, 6)
-  return (chosen ? 1 : 0) + (vibrancy ? (chosen ? 1 : -1) : 0)
+const code = '09079'
+const skills = ['willpower', 'intellect', 'combat', 'agility']
+const isChecked = (checks, index) => checks.filter(option => option === index).length >= CUSTOM_CHECKS[index].checks
+const ownerOf = (inv, source) => source.ownerSeat ?? inv.seat
+const checked = (state, inv, source, index) => customizationOptionFullyChecked(state, ownerOf(inv, source), code, index)
+const suppressionKey = source => `livingInkSuppressed:${source.id}`
+const suppressed = (state, source) => state.scenarioFlags?.[suppressionKey(source)] === state.round
+
+function skillAmount({ state, inv, source }, skill) {
+  if (suppressed(state, source)) return 0
+  const selected = customizationChoiceValues(state, ownerOf(inv, source), code)
+  const chosen = selected.length ? selected : ['willpower',
+    ...(checked(state, inv, source, 3) ? ['intellect'] : []),
+    ...(checked(state, inv, source, 4) ? ['combat'] : [])]
+  if (checked(state, inv, source, 6)) return chosen.includes(skill) ? 2 : -1
+  return chosen.includes(skill) ? 1 : 0
 }
 
 export default {
-  code: '09079',
-  simplified: true,
-  note: 'approximation: 见 primitive-request/09079.json（购买时所选技能近似为意志；Shifting Ink 的运行时控制权切换与灌墨的槽位替换未实现）',
+  code,
   uses: 3,
   usesType: 'charges',
   discardWhenEmpty: true,
   customizationOptions: CUSTOM_CHECKS,
+  customizationChoices: { kind: 'skill', base: 1, options: { 3: 1, 4: 1 } },
+  customizationEffects: {
+    playUnderAnyAtLocation: checks => isChecked(checks, 0),
+    slots: checks => isChecked(checks, 2) ? ['Arcane'] : null,
+  },
   abilities: [
     {
       kind: 'entersPlay',
-      label: '灌墨：额外 2 充能（法术槽替换由 primitive-request 跟踪）',
+      label: '灌墨：额外 2 充能，占用法术槽而非身体槽',
       resolve: ({ state, inv, source, api }) => {
-        if (!source) return
-        if (fullyChecked(state, inv, 2)) {
-          api.addUses(source, 2)
-          api.info('🖋️ 「传神佳墨」以额外 2 充能入场（灌墨）。')
-        }
+        if (checked(state, inv, source, 2)) api.addUses(source, 2)
       },
     },
     {
       kind: 'forced',
       trigger: 'turnBegins',
-      label: '你回合开始时：移除 1 充能；没有充能则弃掉',
-      criteria: [({ inv, context }) => context?.seat === inv.seat],
+      label: '你的回合开始时移除 1 充能',
+      criteria: [({ inv, context }) => context.seat === inv.seat],
       resolve: ({ state, inv, source, api }) => {
-        if (!source) return
-        if (fullyChecked(state, inv, 1)) {
-          const answer = api.choice({
-            kind: 'reaction', source: '09079', seat: inv.seat, canSkip: true,
-            prompt: '暗纹：是否选择不移除 1 充能，并在本轮忽略传神佳墨的能力？',
-            options: [{ id: 'skip', label: '不移除并忽略能力' }, { id: 'remove', label: '照常移除 1 充能' }],
-          })
-          if (answer === 'skip') {
-            const skillNames = ['willpower', 'intellect', 'combat', 'agility']
-            api.addEffect({
-              duration: 'endOfRound',
-              label: '暗纹：本轮忽略传神佳墨的技能加成',
-              modifiers: skillNames.map(skill => ({ target: `skill:${skill}`, amount: -skillAmount(state, inv, skill) }))
-                .filter(modifier => modifier.amount !== 0),
-            }, inv.seat)
-            api.info('🖋️ 「传神佳墨」：暗纹生效，本轮不移除充能且忽略其技能加成。')
-            return
-          }
+        if (checked(state, inv, source, 1) && api.choice({
+          kind: 'effect', source: code, seat: inv.seat, canSkip: true,
+          prompt: '暗纹：可以保留 1 充能并在本轮忽略传神佳墨的能力。',
+          options: [{ id: 'remove', label: '移除 1 充能' }, { id: 'retain', label: '保留 1 充能并忽略能力' }],
+        }) === 'retain') {
+          api.setScenarioFlag(suppressionKey(source), state.round)
+        } else {
+          api.spendUses(source, 1)
         }
-        api.spendUses(source, 1)
-        api.info('🖋️ 「传神佳墨」：移除 1 充能。')
       },
     },
     {
@@ -94,19 +74,10 @@ export default {
       trigger: 'symbolRevealed',
       label: '冥纹：揭示符号标记后，横置并放置 1 充能',
       cost: { exhaust: true },
-      criteria: [({ state, inv, context }) => fullyChecked(state, inv, 5)
-        && (context?.seat == null || context.seat === inv.seat)],
-      resolve: ({ source, api }) => {
-        if (!source) return
-        api.addUses(source, 1)
-        api.info('🖋️ 「传神佳墨」：冥纹生效，放置 1 充能。')
-      },
+      criteria: [({ state, inv, source, context }) => context.seat === inv.seat
+        && checked(state, inv, source, 5) && !suppressed(state, source)],
+      resolve: ({ source, api }) => api.addUses(source, 1),
     },
   ],
-  modifiers: [
-    { target: 'skill:willpower', amount: ({ state, inv }) => skillAmount(state, inv, 'willpower') },
-    { target: 'skill:intellect', amount: ({ state, inv }) => skillAmount(state, inv, 'intellect') },
-    { target: 'skill:combat', amount: ({ state, inv }) => skillAmount(state, inv, 'combat') },
-    { target: 'skill:agility', amount: ({ state, inv }) => skillAmount(state, inv, 'agility') },
-  ],
+  modifiers: skills.map(skill => ({ target: `skill:${skill}`, amount: context => skillAmount(context, skill) })),
 }

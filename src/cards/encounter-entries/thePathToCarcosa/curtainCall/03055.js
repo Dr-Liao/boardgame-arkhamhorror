@@ -1,3 +1,4 @@
+import { spliceHand } from '../../_shared.js'
 // 03055 演员休息室
 // 归属：关卡专用 · curtainCall（卡尔克萨之路 · 谢幕）
 // 遭遇组：curtain_call
@@ -19,7 +20,7 @@ export default {
           location.clues--
           api.gainClues(inv.seat, 1)
         }
-        inv.discard.push(...inv.hand.splice(0))
+        inv.discard.push(...spliceHand(inv, 0))
       }, 3, { type: 'scenario', label: '调查', code: '03055' })
       return true
     },

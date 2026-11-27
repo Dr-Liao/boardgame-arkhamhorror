@@ -11,8 +11,8 @@ export default { code: '04130b', scope: 'enemy', enemyRule: {"victory":1},
   enemyScript: {
     onSpawn(state, enemy, api) {
       if (state.scenarioFlags?.alejandro?.enemyId === enemy.id) return
-      state.scenarioFlags ||= {}
-      state.scenarioFlags.alejandro = { code: '04051', location: enemy.location, enemyId: enemy.id }
+      api.takeFromSetAside('04051')
+      api.setScenarioFlag('alejandro', { code: '04051', location: enemy.location, enemyId: enemy.id })
       api?.info?.('🧭 亚历山卓·维拉被敌人带走。')
     },
   } }

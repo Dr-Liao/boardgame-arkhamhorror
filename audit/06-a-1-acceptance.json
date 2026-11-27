@@ -3,7 +3,7 @@
   "unit": "06-a-1",
   "profile": {
     "id": "tde-beyond-gates-a-2026-11",
-    "scope": "食梦者 06 段 tde 豪华包前半（06001–06056）57 条目录记录。53 条通过五维验收；4 条因进入限制/动态帷幕规则键未接线暂不切换。",
+    "scope": "食梦者 06 段 tde 豪华包前半（06001–06056）57 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 57,
-    "verified": 53,
-    "unverified": 4,
+    "verified": 57,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 529
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
-      "sha256": "36d8ff7e994bf4c4690e623efae2f9141df7023ff0ef469f017128fd94f57527"
+      "sha256": "ed0a2a58a56f94e1a7852e3df570ca83e34888e9c1431f1736ee5492689cf0ba"
     },
     {
       "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
@@ -773,9 +773,17 @@
       "code": "06046",
       "name": "火焰洞穴",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「只能在『七十级台阶』上的全部线索被发现后进入」只写在 locationRule.entryError；全仓无 locationRule.entryError 读点（引擎只读 scenarioBehavior.moveError / investigatorEntryError，章节 behavior 也没有 moveError 分派），进入限制实际未生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06046 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06046 火焰洞穴 火焰洞穴：进入前需清空七十级台阶线索；神话结束本地调查员各受 1 伤"
+        }
+      ]
     },
     {
       "code": "06047",
@@ -797,17 +805,33 @@
       "code": "06048",
       "name": "楼梯底部",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「只能在『七百级台阶』上的全部线索被发现后进入」只写在 locationRule.entryError；引擎与本章 behavior 均无读点，进入限制未生效（同 06046 的缺口）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06048 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06048 楼梯底部 楼梯底部：进入前需清空七百级台阶线索；进入时意志检定失败逐张弃/受恐惧"
+        }
+      ]
     },
     {
       "code": "06049",
       "name": "魔幻小路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "两处卡面规则只有声明没有读点：①「楼梯底部的全部线索被发现前不能进入」写在 locationRule.entryError（引擎/章节 behavior 无读点）；②「场上每有一张未揭示的魔幻森林，本地隐藏值 +1」写在 locationRule.shroudPerUnrevealedEnchantedWoods，但本章 behavior 没有 locationShroudModifier，动态帷幕未实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06049 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06049 魔幻小路 魔幻小路：隐藏值按未揭示魔幻森林数增加；行动可放 1 线索"
+        }
+      ]
     },
     {
       "code": "06050",
@@ -865,9 +889,21 @@
       "code": "06053",
       "name": "魔幻森林",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「当你调查本地点时，你手牌中每有 1 张卡牌，本地点帷幕 +1」只写成 flags.shroudPerHandCardWhileInvestigating，全仓无读点（本章 behavior 没有 locationShroudModifier，也没有任何地方读该 flag），动态帷幕未生效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06053 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard1.test.mjs",
+          "test": "TDE 06053 魔幻森林 魔幻森林：调查时隐藏值按手牌数增加"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 跨章共享卡 definition 印刷字段一致（06053 等）"
+        }
+      ]
     },
     {
       "code": "06054",

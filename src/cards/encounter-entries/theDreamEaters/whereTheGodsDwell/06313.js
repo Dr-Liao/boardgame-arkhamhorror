@@ -6,10 +6,11 @@
 //   · `flags.whisperBonusDamage: 2` → 章节 behavior.enemyAttackModifier 在攻击者手牌里有
 //     「混沌低语」（flags.whisperingChaos 的四张之一）时返回 { damage: +2 }；
 //   · 揭示那张「混沌低语」→ 章节 behavior.enemyAttackStarted（带 api）调用 api.cardReveal。
-// 猎物/猎手由卡文解析进 definition。
+// 用引擎猎物排序键表达「手牌最多」；猎手关键词由印刷资料解析。
 export default {
   code: '06313',
   scope: 'enemy',
   implemented: true,
+  enemyRule: { prey: 'mostCardsInHand' },
   flags: { whisperBonusDamage: 2 },
 }

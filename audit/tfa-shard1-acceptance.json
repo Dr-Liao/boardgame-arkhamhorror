@@ -3,8 +3,8 @@
   "unit": "04-a-1",
   "profile": {
     "id": "tfa-deluxe-threads-of-fate-2026-11",
-    "scope": "失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。逐卡结论与剩余问题见本分片报告。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互（真实 legalMoves/applyMove/pendingChoice）→ 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard1.test.mjs 与 tfa-*.test.mjs 的真实用例标题。缺陷与缺口逐条披露，未声称等价。",
+    "scope": "失落时代 04 段 The Forgotten Age 豪华包（tfa，60 条）+ Threads of Fate（tof，46 条）共 106 条目录记录，锁定审计时未验收清单。逐卡结论与用例标题见验收账本。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互（真实 legalMoves/applyMove/pendingChoice）→ 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard1.test.mjs 与 tfa-*.test.mjs 的真实用例标题。本次复验覆盖原报告 F1–F23。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,31 +17,31 @@
   },
   "summary": {
     "total": 106,
-    "verified": 91,
-    "unverified": 15,
+    "verified": 106,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 285
+    "testsPassed": 287
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
-      "sha256": "72f6aed7252b528b4b15cd4a3ae77b4ce48c6e658865f93c520ef6c4886fe326"
+      "sha256": "df8382ec67f56718921e745859b46ac0211c34e52f3ac13feefe6c0977feadd2"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
-      "sha256": "8221ad307ce5f7101f932eda4bb74ccd9d10f4ca8514d1d11eea437eba2cac8b"
+      "sha256": "f199f14fc29c524cc24f827d55ec5c23ef86d03ab6aec1e0fe990606f448a66e"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-doom-of-eztli.test.mjs",
-      "sha256": "618a14fc9528ab9d758ce59bb05c723be0efd22e4608cccc433872f2c4555afd"
+      "sha256": "5433ade961aa42b91d763e9bbd6aad96928deda40a8b21fbc54b1e2365fe27f0"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-threads-of-fate.test.mjs",
-      "sha256": "3267ad7e515e65a56879927eabb4282598edacf76c20e37030ca3977d66d49d1"
+      "sha256": "3f4dee1fa1836a21e533c973dd65d9197b5148fdfd411a219b8a907b1d459647"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
-      "sha256": "e2ee9f05f9a99a1b533fedcfae6c90c2c31bf990377243af9bdbeee73756a81c"
+      "sha256": "444518440c4dd1e300da99574f838d2f30777d9873b226e67c669dec564d4077"
     },
     {
       "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
@@ -77,33 +77,49 @@
       "code": "04044",
       "name": "荒野探险",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioZones.setAside.splice / state.encounterDeck.push。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04044 荒野探险：洗入伊格的使徒并按卡面检定（未中毒者获得中毒）"
+        }
+      ]
     },
     {
       "code": "04045",
       "name": "入侵者",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：通过 tainted 局部引用 entry.deck.push / entry.removedCards 直写战役牌组。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04045 入侵者：未中毒者把中毒加入牌库，随后所有调查员被击败"
+        }
+      ]
     },
     {
       "code": "04046",
       "name": "探索丛林",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags.ichtacaSpawned / state.encounterDeck / state.clues / inv.clues。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04046 探索丛林：揭示生成伊塔卡；轮末非营地共同支付线索推进"
+        }
+      ]
     },
     {
       "code": "04047",
       "name": "埃兹特里的女猎手",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.enemies.splice / state.victoryDisplay.push / state.acts 重写 / state.explorationDeck。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04047 埃兹特里的女猎手：线索/击败两分支、胜利区与混沌袋记录"
+        }
+      ]
     },
     {
       "code": "04048",
@@ -145,9 +161,17 @@
       "code": "04050",
       "name": "探险营地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明 `flags: { expeditionCamp: true }`，但引擎只按具体 flag 键（partner/captureLocation/brazier…）读取，`expeditionCamp` 全仓无读点，按「声明了没人读」计未实现；另有存量 R1 直写（state.explorationDeck，audit 基线 directStateWrite）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-untamed-wilds.test.mjs",
+          "test": "04050 地图：1 张放底、其余 2 张按玩家选择顺序放顶"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04050 探险营地：撤退/检查补给行动可见，地图把 1 张放底、其余按选择放顶"
+        }
+      ]
     },
     {
       "code": "04051",
@@ -205,9 +229,17 @@
       "code": "04055",
       "name": "暗起波澜",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：enemy.damageTaken（经 helper 外溢的直写）。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-p2-hooks.test.mjs",
+          "test": "04055 暗起波澜：密谋推进不会移除地点上的毁灭标记"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04055 暗起波澜：+1×人数毁灭阈值；推进不移除地点毁灭；背面生成预示者"
+        }
+      ]
     },
     {
       "code": "04056",
@@ -229,9 +261,13 @@
       "code": "04057",
       "name": "进入遗迹",
       "type": "act",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.explorationDeck 赋值 / state.victoryDisplay.push。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04057 进入遗迹：时间石室洗入探索牌库；有粉笔移出游戏，无粉笔记复仇 1"
+        }
+      ]
     },
     {
       "code": "04058",
@@ -401,17 +437,33 @@
       "code": "04070",
       "name": "河流峡谷",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明 `flags: { riverCanyon: true }`，该 flag 键无引擎读点；另有存量 R1 直写（state.scenarioFlags.riverCanyonHealed，audit 基线 directStateWrite）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04070 河流峡谷：每场游戏一次治愈 1 点（水壶 +2）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04070 河流峡谷：选择座位 2 的同地队友，使用后显示已用"
+        }
+      ]
     },
     {
       "code": "04071",
       "name": "索桥",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.explorationDeck.splice / api.place 前的直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04071 索桥：探索前敏捷(2)失败会取消探索并移动到河流峡谷"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04071 索桥：检定成功接续探索，失败从牌库找出河流峡谷"
+        }
+      ]
     },
     {
       "code": "04072",
@@ -725,17 +777,29 @@
       "code": "04092",
       "name": "不祥之兆",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.doom 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04092 不祥之兆：险境，选一个地点放毁灭并使该处调查员受 1 恐惧"
+        }
+      ]
     },
     {
       "code": "04093",
       "name": "先祖恐惧",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.victoryDisplay.push / location.doom / state.doom。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tfa-encounter-p1.test.mjs",
+          "test": "04093 先祖恐惧：放进胜利区时带 1 点复仇"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04093 先祖恐惧：险境+涌动；二选一（放毁灭弃卡 / 进胜利区带复仇 1）"
+        }
+      ]
     },
     {
       "code": "04094",
@@ -765,9 +829,13 @@
       "code": "04096",
       "name": "阴影笼罩",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：target.doom 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04096 阴影笼罩：无[[异教徒]]敌人时受恐惧并涌动；否则最近异教徒放毁灭并按攻击值检定"
+        }
+      ]
     },
     {
       "code": "04097",
@@ -1029,9 +1097,13 @@
       "code": "04122b",
       "name": "哈伦·恩斯通",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.relicOfAges 赋值。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04122b 哈伦·恩斯通（敌人）：生成时接管古代遗物；躲避超过 3 点进胜利区"
+        }
+      ]
     },
     {
       "code": "04123",
@@ -1197,9 +1269,13 @@
       "code": "04130b",
       "name": "亨利·德沃",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags 赋值。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04130b 亨利·德沃（敌人）：生成时接管亚历山卓；反击关键词"
+        }
+      ]
     },
     {
       "code": "04131",
@@ -1325,9 +1401,13 @@
       "code": "04137b",
       "name": "玛利亚·德西瓦",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态（存量基线 audit/card-entry-compliance.json 的 directStateWrite 内，非本轮新增）：state.scenarioFlags.ichtacasPrey 直写。违反「条目只读状态，写入只走 ctx.api」；应按原语排队（api.takeFromSetAside / api.moveCardTo / api.addVictory 等）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-04-a-shard1.test.mjs",
+          "test": "TFA 04137b 玛利亚·德西瓦（敌人）：生成时成为伊塔卡的猎物；胜利 1"
+        }
+      ]
     },
     {
       "code": "04138",

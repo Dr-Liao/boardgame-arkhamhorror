@@ -9,7 +9,7 @@ export default {
       const requested = failedBy(result, difficulty)
       const available = api.mechanics.chaosTokens.room('curse')
       api.mechanics.chaosTokens.add('curse', Math.min(available, requested))
-      if (available < requested) api.drawEncounter(inv.seat)
+      if (available < requested) api.drawEncounter(inv.seat, { surgeDraw: true })
     })
     return false
   },

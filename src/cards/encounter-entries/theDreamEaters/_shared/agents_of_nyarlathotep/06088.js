@@ -10,8 +10,8 @@ export default {
   scope: 'treachery',
   implemented: true,
   hiddenRule: {
-    cannotCommitOddSkillIcons: true,
-    discardEvenSkillIconsAction: true,
+    parity: { commit: 'icons' },
+    discard: { even: 'icons' },
   },
   // TDE card-data.encounterDefinitions 已合并条目 hiddenRule：投入限制由引擎 hidden-rules 读点解释。
 }

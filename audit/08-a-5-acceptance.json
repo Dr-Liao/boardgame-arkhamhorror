@@ -3,7 +3,7 @@
   "unit": "08-a-5",
   "profile": {
     "id": "eote-campaign-b-2026-11",
-    "scope": "地球边缘 08 段 eoec 战役卡（08546–08573）45 条目录记录。22 条通过五维验收；23 条幻景地点/冰原规则仅 flags 声明无读点暂不切换。",
+    "scope": "地球边缘 08 段 eoec 战役卡（08546–08573）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,31 +17,27 @@
   },
   "summary": {
     "total": 45,
-    "verified": 22,
-    "unverified": 23,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 204
+    "testsPassed": 224
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
-      "sha256": "e29b9feb6ae90f8a8d0d6e24c470637b669d43b30018b60c90a87311af1adaf8"
+      "sha256": "a8efab1d3c75dda254d47ea9218ee78da4ca91ed08c9c0df436e6fd288b03890"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-fatalMirage.test.mjs",
-      "sha256": "9625cd3ace52514d9f8f71346f0d6093577677de52af8deea7fce400fe07f353"
+      "sha256": "82e9b7cf47b295a615166362384332323dc7853839a362bd14f5d42c85f7dc90"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-iceAndDeathPart3.test.mjs",
-      "sha256": "9195a3d38ff0f21a47325c978b01eefbb5e9b199547f8cb6425f1bde3c94829b"
+      "sha256": "b2e96bdd7498739c0171d3ee2abb8c68284c611d9ed89e518cec991f622a3fee"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
-      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
-    },
-    {
-      "file": "games/arkhamhorror/tests/eote-all-cards.test.mjs",
-      "sha256": "fe9bd752dd3444a13d4f0aa0e9b25bb7a6860856b9db8bf7792068bb997be516"
+      "sha256": "92c6bf729a67340ce191066ab6b8fe1fd3be2e7cf1f45e3f47bef9f0f501c182"
     },
     {
       "file": "games/arkhamhorror/tests/eote-rules.test.mjs",
@@ -73,25 +69,49 @@
       "code": "08546",
       "name": "陷入围攻！",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「每个[[幻灵]]敌人获得胜利 0」无执行读点：场上有胜利 1 的幻灵敌人（如 08522），引擎/章节没有把幻灵敌人胜利值改为 0 的钩子；其余子句（幕目标/营地撤退行动/背面结局 1-2）已实现并有读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08546 陷入围攻！：幕目标/营地撤退行动/背面结局 1 与结局 2"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08546 陷入围攻：无胜利字样的幻灵以胜利 0 入区，原有胜利 1 仍计 1"
+        }
+      ]
     },
     {
       "code": "08547",
       "name": "渗出梦魇",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "两条印刷子句未实现/未接线：(1)「位于渗出梦魇所在地点的[[幻灵]]敌人移动时其地点视为与营地相连」——引擎有 `scenarioBehavior.enemyConnections` 钩子，但 part3 behavior 未实现（无 enemyConnections）；(2)「底下没有正面朝下卡时获得猎手」——条目声明的 `enemyRule.hunterWhenNoBeneath` 在引擎/章节无读取点（仅 setup/08544 议程钩子里手写 hunter）。第三条「被击败时移除底下所有面朝下卡」已接线（`enemies.js#defeatEnemy → behavior.enemyDefeated`）并有本期用例覆盖。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08547 渗出梦魇：无面朝下卡才猎手移动，同地点的幻灵也能走营地连接"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08547 渗出梦魇：被击败时底下所有正面朝下的卡移出游戏"
+        }
+      ]
     },
     {
       "code": "08548",
       "name": "千变幻景",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "整条显现效果未实现：条目只声明 `treacheryRule.spawnBeneathOrHunterAttack` 与 `flags.surgeIfNoSeepingNightmare`，引擎/章节 behavior 均无读取点，也没有按卡号的显现处理（「无渗出梦魇则涌动；否则翻出底下 1 张卡 / 让最近渗出梦魇移动并攻击」均不结算）。现有用例只断言 flag 存在（`tests/eote-scenario-iceAndDeathPart3.test.mjs:236`），属声明级证据。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08548 千变幻景：无垫牌梦魇立即移动攻击，结算后保持重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08548 千变幻景：无梦魇涌动，且真实显现能从梦魇下生成一张敌人"
+        }
+      ]
     },
     {
       "code": "08549",
@@ -102,6 +122,10 @@
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
           "test": "08-a5 08549 致命幻景：剧情卡计数/密谋编号修正 skull，cultist 失败放线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08549 致命幻景：邪教徒标记失败后将调查员一个线索放到所在地"
         }
       ]
     },
@@ -109,25 +133,49 @@
       "code": "08550",
       "name": "虚灵纠缠(版本一)",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08550 虚灵纠缠（版本一）：背面击败剩余调查员并把忒咳哩-哩牌洗入牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08550 虚灵纠缠：真实合法的免费能力支付恐惧并移动到记忆囚笼"
+        }
+      ]
     },
     {
       "code": "08551",
       "name": "虚灵纠缠(版本二)",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08551 虚灵纠缠（版本二）：背面可选精神创伤或洗入 2 张忒咳哩-哩牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08551 虚灵纠缠：真实合法的免费能力支付恐惧并移动到记忆囚笼"
+        }
+      ]
     },
     {
       "code": "08552",
       "name": "虚灵纠缠(版本三)",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "正面 [fast]「受到 1 点恐惧：移动到记忆囚笼」未实现：条目声明 `agendaRule.freeMoveToPrisonOfMemories`，但引擎/章节 behavior 无读取点（fatalMirage behavior.actions 只提供幻景翻面与「推进当前幕」）；背面逐版本结算已实现并有本期用例覆盖。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08552 虚灵纠缠（版本三）：背面剩余调查员被击败并承受 1 点精神创伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08552 虚灵纠缠：真实合法的免费能力支付恐惧并移动到记忆囚笼"
+        }
+      ]
     },
     {
       "code": "08553",
@@ -197,9 +245,21 @@
       "code": "08557",
       "name": "大本营",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（reactionInvestigate：调查差 1 失败时受 1 恐惧换 +1 技能值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08557 大本营：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08557 大本营：调查恰好失败 1 点时付 1 恐惧使检定成功"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08557b 大本营：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08557b",
@@ -217,9 +277,21 @@
       "code": "08558",
       "name": "菲奥多西亚号甲板",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedInvestigate：调查时 +2 隐藏值或额外 1 行动）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08558 菲奥多西亚号甲板：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08558 菲奥多西亚号甲板：调查实际选择帷幕 +2 或再付 1 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08558b 菲奥多西亚号甲板：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08558b",
@@ -237,9 +309,21 @@
       "code": "08559",
       "name": "大学礼堂",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedReveal：翻面时按花费线索弃牌库顶并抽取忒咳哩-哩弱点）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08559 大学礼堂：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08559 大学礼堂：真实翻面按支付的线索弃顶牌、处理忒咳哩与其他弱点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08559b 大学礼堂：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08559b",
@@ -257,9 +341,21 @@
       "code": "08560",
       "name": "树篱迷宫",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedAfterInvestigate：调查后本回合隐藏值 +1 且不能离开）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08560 树篱迷宫：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08560 树篱迷宫：调查后本回合帷幕 +1，离开原先可达的连接地点被禁止"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08560b 树篱迷宫：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08560b",
@@ -277,9 +373,21 @@
       "code": "08561",
       "name": "荒废车站",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（shroudBonusIfTreacheryAttached：有诡计附属时 +3 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08561 荒废车站：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08561 荒废车站：附属诡计后真实地点帷幕增加 3"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08561b 荒废车站：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08561b",
@@ -297,9 +405,21 @@
       "code": "08562",
       "name": "沿海水域",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedOnFrostReveal：揭示 frost 后受 1 恐惧，成功额外 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08562 沿海水域：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08562 调查揭示寒霜：实战承受伤害或恐惧，成功才额外发现一个线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08562b 沿海水域：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08562b",
@@ -317,9 +437,21 @@
       "code": "08563",
       "name": "古老者厅室",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedOnCluesDiscovered：单次发现 ≥2 线索后洗入忒咳哩-哩牌）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08563 古老者厅室：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08563 古老者厅室：一次实际获得 2 线索才洗入一张忒咳哩"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08563b 古老者厅室：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08563b",
@@ -337,9 +469,21 @@
       "code": "08564",
       "name": "河景剧院",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedTekeliliDraw：抽忒咳哩-哩额外结算一次后发现 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08564 河景剧院：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08564 河景剧院：实际抽到忒咳哩后效果结算两次，获得 1 线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08564b 河景剧院：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08564b",
@@ -357,9 +501,21 @@
       "code": "08565",
       "name": "耸立岩石",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（forcedOnFrostReveal：揭示 frost 后受 1 伤害，成功额外 1 线索）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08565 耸立岩石：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08565 调查揭示寒霜：实战承受伤害或恐惧，成功才额外发现一个线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08565b 耸立岩石：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08565b",
@@ -377,9 +533,21 @@
       "code": "08566",
       "name": "飞机场",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：高田弘子在本地点时 -2 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08566 飞机场：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08566 飞机场：高田在场降低帷幕，调查必须有 1 资源且实际扣除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08566b 飞机场：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08566b",
@@ -397,9 +565,21 @@
       "code": "08567",
       "name": "阿拉斯加荒野",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：伊里亚在本地点时 -2 隐藏值）在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08567 阿拉斯加荒野：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08567 阿拉斯加荒野：合法移动可付额外行动或洗入 1 张忒咳哩"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08567b 阿拉斯加荒野：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08567b",
@@ -417,9 +597,21 @@
       "code": "08568",
       "name": "凌乱宿舍",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：丹佛斯在本地点时 -2 隐藏值（+忒咳哩-哩改洗入牌库））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08568 凌乱宿舍：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08568 凌乱宿舍：实际抽到忒咳哩并结算后洗回自己的牌库"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08568b 凌乱宿舍：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08568b",
@@ -437,9 +629,21 @@
       "code": "08569",
       "name": "戴尔的教室",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：戴尔在本地点时 -2 隐藏值（+[action] 洗牌治愈））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08569 戴尔的教室：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08569 戴尔的教室：实际行动洗入 1 张忒咳哩并治愈同地点调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08569b 戴尔的教室：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08569b",
@@ -457,9 +661,21 @@
       "code": "08570",
       "name": "医务室",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：辛哈医生在本地点时 -2 隐藏值（+首次进入扣伤害））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08570 医务室：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08570 医务室：第一次实际进入降至剩余 6 生命，再次进入不受伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08570b 医务室：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08570b",
@@ -477,9 +693,21 @@
       "code": "08571",
       "name": "肯斯勒博士的办公室",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：肯斯勒博士在本地点时 -2 隐藏值（+成功调查后受恐惧/弃秘密））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08571 肯斯勒博士的办公室：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08571 肯斯勒博士的办公室：成功调查可耗 1 秘密替代恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08571b 肯斯勒博士的办公室：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08571b",
@@ -497,9 +725,21 @@
       "code": "08572",
       "name": "摩艾石像",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：埃尔斯沃思在本地点时 -2 隐藏值（+诡计附属时获得涌动））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08572 摩艾石像：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08572 摩艾石像：同一阶段第一次显现附属产生涌动，第二张附属不会继续涌动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08572b 摩艾石像：剧情卡翻面按卡面选项放置地点或生成记忆敌人"
+        }
+      ]
     },
     {
       "code": "08572b",
@@ -517,9 +757,17 @@
       "code": "08573",
       "name": "奥斯曼前线",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目声明的印刷特殊规则 flag（investigatorShroudBonus：曲奇在本地点时 -2 隐藏值（+非精英敌人 +2 攻击且失去反击））在引擎与 EOTE 章节 behavior 中**均无读取点**；`artifacts/acceptance/08-a-5/probe-defects.mjs` 逐项复现 FAIL。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08573 奥斯曼前线：Mirage 层级/目标映射/入场线索与卡面一致"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard5.test.mjs",
+          "test": "08-a5 08573 奥斯曼前线：非精英敌人战斗 +2 且失去反击，精英不受影响"
+        }
+      ]
     }
   ]
 }

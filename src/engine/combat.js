@@ -1,4 +1,8 @@
+import { ignoreTestKeyword } from './location-effect-scope.js'
+import { spliceHand } from './hand-icons.js'
 import { discardPlayerCards } from './player-zones.js'
+import { exhaustEnemy } from './enemy-exhaustion.js'
+import { fightTargetById, isStoryFightTarget } from './fight-targets.js'
 import { recordRegulatedAction, trackTestAssetSource } from './action-history.js'
 import { enemyBody, enemyInEngagement, enemyIsBody } from './enemy-parts.js'
 import { sourceCardDef } from './card-lookup.js'
@@ -9,10 +13,11 @@ import { hasWindowListener } from './window-listeners.js'
 import { eventWindowContext } from './event-window.js'
 import { directDamageSource } from '../integration/direct-damage.js'
 import { currentEffectSource, damageSourceMatches } from './effect-provenance.js'
-import { enemyHasAttackKeyword, resolveElusiveAfterAttack } from './enemy-keyword-movement.js'
+import { consumeHarmBonus } from './effect-state.js'
+import { enemyHasAttackKeyword, enemyIsMassive, resolveElusiveAfterAttack } from './enemy-keyword-movement.js'
 import { enemyProtectionBlocks } from './enemy-entry.js'
-import { enemyCannotBeExhausted } from './enemy-restrictions.js'
-import { adjustEnemyDamage, enemyDamagePlaced } from './enemy-damage.js'
+import { enemyCannotBeDamaged, enemyCannotBeExhausted } from './enemy-restrictions.js'
+import { adjustEnemyDamage, enemyDamagePlaced, enemyDamageRedirectTarget } from './enemy-damage.js'
 // 战斗与躲避（进战斗 / 躲敌人）从 engine.js 拆出的第三个模块（Phase 6 · 6d-3）。
 //
 // 这一对动作是「按域拆分」的第一个示例：roadmap 里规划的 combat/ 域。
@@ -126,6 +131,10 @@ function distributeAttackDamage(state, inv, amount, opts, weaponCode, attackFx, 
 }
 
 function doFight(state, seat, opts, events, noSpend) {
+  const configured = state._configuredAbilityFight
+  if (configured?.seat === seat && opts.assetId === configured.sourceId) {
+    opts = { ...opts, enemyId: configured.targetId ?? opts.enemyId, skill: configured.skill ?? opts.skill }
+  }
   const areaDamage = opts.areaDamage
   if (areaDamage && (!Number.isSafeInteger(areaDamage.enemyAmount) || areaDamage.enemyAmount < 1
     || !Number.isSafeInteger(areaDamage.investigatorDamageOnSymbol) || areaDamage.investigatorDamageOnSymbol < 0)) {
@@ -138,7 +147,8 @@ function doFight(state, seat, opts, events, noSpend) {
     return
   }
   // 目标可能在「枪法如神」窗口里被改成连接地点上的敌人，因此用 let。
-  let enemy = state.enemies.find((e) => e.id === opts.enemyId)
+  let enemy = fightTargetById(state, opts.enemyId)
+  if (isStoryFightTarget(state, enemy) && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return
   if (enemyIsBody(enemy)) return
   if (hiddenFightBlocked(state, inv, enemy)) return
   // 「不能被攻击」（失落时代 P2 通用开关，04048 守卫者；D1 起也可由敌人卡面声明）。
@@ -208,7 +218,7 @@ function doFight(state, seat, opts, events, noSpend) {
     }
     if (context.fightConfiguration?.enemyEvade) opts.useEnemyEvade = true
     if (context.redirectEnemyId) {
-      const redirected = state.enemies.find(item => item.id === context.redirectEnemyId)
+      const redirected = fightTargetById(state, context.redirectEnemyId)
       if (redirected && (redirected.location === inv.location
         || (opts.atConnectingLocation && connectingIds.includes(redirected.location)))) {
         enemy = redirected
@@ -219,6 +229,8 @@ function doFight(state, seat, opts, events, noSpend) {
   if (!enemy) { info(state, events, `${inv.name} 找不到可攻击的敌人。`); return }
   if (enemyIsBody(enemy)) return
   const body = enemyBody(state, enemy)
+  const storyTarget = isStoryFightTarget(state, enemy)
+  if (storyTarget && scenarioBehavior(state).canFightEnemy?.(state, inv, enemy) === false) return
   // 冷漠（aloof）：未与调查员交战的冷漠敌人不能被攻击。必须先主动交战（或使用
   // 写明「忽略冷漠」的攻击，例如 04104 枪法如神通过 opts.ignoreAloof 放行）。
   if (aloofPreventsAttack(state, inv, enemy, opts)) {
@@ -269,7 +281,9 @@ function doFight(state, seat, opts, events, noSpend) {
   const skill = actionTestSkill(state, inv, 'combat', opts.skill || 'combat', requestChoice)
   const loc = state.locations.find(item => item.id === inv.location)
   const clueCombat = opts.ifCluesAtLocationCombatBonus && loc && loc.clues > 0 ? opts.ifCluesAtLocationCombatBonus : 0
-  let difficulty = opts.useEnemyEvade ? enemyEvadeValue(state, enemy, inv) : enemyFightValue(state, enemy, inv)
+  const fightAdjustment = scenarioBehavior(state).beforeFightTest?.(state, inv, enemy, scenarioRuntime(state, events)) || 0
+  let difficulty = storyTarget ? enemy.fight + fightAdjustment
+    : opts.useEnemyEvade ? enemyEvadeValue(state, enemy, inv) : enemyFightValue(state, enemy, inv) + fightAdjustment
   // 「临时武器」等：本次攻击把敌人攻击值降低。
   if (opts.enemyFightMod) difficulty = Math.max(0, difficulty + opts.enemyFightMod)
   // 「暴露弱点」：本阶段下次攻击把攻击值视为 0。
@@ -312,14 +326,17 @@ function doFight(state, seat, opts, events, noSpend) {
     ? attachedEnemyCombatBonus : 0
   recordRegulatedAction(state, inv, 'fight', registeredEntry)
   return performTest(state, seat, skill, difficulty, { source: { label: '攻击', enemyId: enemy.id, name: enemy.name, code: enemy.originalCode || enemyDef(enemy.code)?.originalCode || enemy.code,
-    ...(opts.damageIfCommittedSkill || opts.trackAssetSource || opts.assetId && trackTestAssetSource(state, inv, registeredEntry) ? { assetId: opts.assetId } : {}) }, baseValue: opts.baseValue,
+    ...(opts.damageIfCommittedSkill || opts.trackAssetSource || weapon && inv.nextAssetAttackTokenTreatment
+      || opts.assetId && trackTestAssetSource(state, inv, registeredEntry) ? { assetId: opts.assetId } : {}) }, baseValue: opts.baseValue,
     ...(opts.onToken ? { onToken: opts.onToken } : {}),
     ...(opts.transferCombatModifiers ? { modifierSkills: ['combat'] } : {}),
     ...(opts.autoSuccess ? { autoSuccess: true } : {}),
     basicAction: opts.basicAction,
       initiatedContext,
-      testTarget: { kind: 'enemy', id: enemy.id, actionKind: 'fight' },
+      testTarget: { kind: storyTarget ? 'asset' : 'enemy', id: enemy.id, actionKind: 'fight' },
       extraChaosChoices: opts.extraChaosChoices || 0,
+    doubleNegative: registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.doubleNegativeOnFight === true
+      && !enemyTextBlanked(state, enemy),
     autoFailOnTokens: opts.autoFailOnTokens,
     skillBonus: opts.conditionalBonus || attachedEnemyCombatBonus || opts.transferCombatModifiers
       ? () => (opts.combatBonus || 0) + clueCombat + (opts.addSkill ? getStat(state, inv, opts.addSkill) : 0)
@@ -349,7 +366,7 @@ function doFight(state, seat, opts, events, noSpend) {
       // P5 地球边缘：攻击成功回调（08008 可靠的长鞭：成功后可改为自动躲避并横置）。
       // 与 doEvade 的 opts.onSuccess 同形；既有调用方不传 onSuccess，行为零变化。
       opts.onSuccess?.({ state, inv, enemy, result: r, events, opts })
-      const movedDamage = Math.min(inv.damage, r.homeFrontDamage || 0)
+      const movedDamage = storyTarget ? 0 : Math.min(inv.damage, r.homeFrontDamage || 0)
       if (movedDamage > 0) {
         inv.damage -= movedDamage
         info(state, events, `「${cardName(r.homeFrontCode)}」：从 ${inv.name} 身上移动 ${movedDamage} 点伤害到「${enemy.name}」。`)
@@ -429,7 +446,7 @@ function doFight(state, seat, opts, events, noSpend) {
         }
       }
       const protection = enemyProtectionBlocks(state, inv, enemy, 'damage')
-      const blockedDamage = protection || allowedDamageSources && !enemyTextBlanked(state, enemy)
+      const blockedDamage = protection || enemyCannotBeDamaged(state, enemy, enemyTextBlanked) || allowedDamageSources && !enemyTextBlanked(state, enemy)
         && !damageSourceMatches(state, allowedDamageSources, opts.assetId || opts.sourceCode || null, sourceCardDef)
       if (opts.distributedDamage == null && (blockedDamage || (!enemyTextBlanked(state, enemy)
         && (entityRuleActive(state, enemy, 'cannot:beDamaged')
@@ -491,10 +508,21 @@ function doFight(state, seat, opts, events, noSpend) {
         const dealt = distribution.damage.get(enemy) || 0
         const defeated = distribution.defeated.has(enemy)
         scenarioBehavior(state).enemyAttackedSuccessfully?.(state, inv, enemy, scenarioRuntime(state, events),
-          { defeated, enemyId: enemy.id, damage: dealt })
+          { defeated, enemyId: enemy.id, damage: dealt, weaponCode })
         r.attackResult = { enemyId: enemy.id, damage: dealt, defeated, enemyCode: enemy.originalCode || enemy.code }
         const total = [...distribution.damage.values()].reduce((sum, value) => sum + value, 0)
         info(state, events, `⚔️ ${inv.name} 攻击成功，分配了 ${total} 点伤害。`)
+        return
+      }
+      if (storyTarget) {
+        const damage = opts.stormOfSpirits ? Math.max(2, dmg) : dmg
+        if (opts.stormOfSpirits) for (const other of state.enemies.filter(item => item.location === enemy.location)) {
+          damageEnemy(state, other, 2, seat, events, opts.assetId || opts.sourceCode || null)
+        }
+        const result = scenarioBehavior(state).damageStoryFightTarget?.(state, enemy, damage, scenarioRuntime(state, events))
+        r.attackResult = { enemyId: enemy.id, enemyCode: enemy.originalCode || enemy.code,
+          damage: result ? damage : 0, defeated: !state.storyAssets.includes(enemy) }
+        info(state, events, `⚔️ ${inv.name} 攻击成功，对「${enemy.name}」造成 ${r.attackResult.damage} 点伤害。`)
         return
       }
       // 「横置时每次攻击伤害 -1」（03241b 死亡鬼灵）。
@@ -543,6 +571,12 @@ function doFight(state, seat, opts, events, noSpend) {
       const damageSource = opts.assetId || opts.sourceCode || null
       const placeAttackDamage = () => {
         dmg = adjustEnemyDamage(state, enemy, dmg, seat, damageSource, events, deps)
+        if (dmg > 0) dmg += consumeHarmBonus(state, enemy, 'damage')
+        const redirect = dmg > 0 && enemyDamageRedirectTarget(state, enemy)
+        if (redirect && damageEnemy(state, redirect, dmg, seat, events, damageSource, { redirected: true })) {
+          dmg = 0
+          return
+        }
         enemy.damageTaken += dmg
         enemyDamagePlaced(state, enemy, dmg, seat, damageSource, events, deps)
       }
@@ -621,7 +655,7 @@ function doFight(state, seat, opts, events, noSpend) {
       const prepared=attackDefeated?prepareEnemyOutcome(state,'defeat',enemy,events,{seat,source:opts.assetId||opts.sourceCode||null}):null
       if(prepared?.replaced||prepared?.cancelled)attackDefeated=false
       scenarioBehavior(state).enemyAttackedSuccessfully?.(state, inv, enemy, scenarioRuntime(state, events),
-        { defeated: attackDefeated, enemyId: enemy.id, damage: dmg })
+        { defeated: attackDefeated, enemyId: enemy.id, damage: dmg, weaponCode })
       if (attackDefeated) attackDefeated = defeatEnemy(state, enemy, events, {
         seat, source: opts.assetId || opts.sourceCode || null, prepared, victoryAttachment: opts.victoryAttachment,
       })
@@ -652,7 +686,7 @@ function doFight(state, seat, opts, events, noSpend) {
         prompt: `对「${enemy.name}」的攻击失败` }, events)
       // 参考 Investigator/Runner.hs：目标恰与一名其他调查员交战时，攻击者误伤该调查员 1 点。
       const engaged = state.investigators.filter(other => !other.defeated && !other.resigned
-        && (other.engaged.includes(body.id) || (body.massive && other.location === body.location)))
+        && (other.engaged.includes(body.id) || (enemyIsMassive(state, body) && other.location === body.location)))
       if (!attackFail.redirected && !opts.noFriendlyFire && engaged.length === 1 && engaged[0].seat !== seat) {
         const missDamage = opts.failByAmountToEngaged
           ? Math.max(1, Math.min(opts.failMaxDamage || 5, r.failedBy ?? difficulty - r.value))
@@ -663,10 +697,12 @@ function doFight(state, seat, opts, events, noSpend) {
       // 反击：横置时通常不能反击，但 04062 瓦卢西亚的预示者等「横置时也能反击」的
       // 敌人（retaliateWhileExhausted）必须放行（失落时代 P2 钩子）。
       // Phase 2（C1）：ignore:retaliate 让攻击者的反击失效（卡面声明，引擎只问读点）。
-      if (!opts.ignoreRetaliate && !ruleIgnored(state, inv, 'retaliate')
-        && enemyHasAttackKeyword(state, enemy, 'retaliate', enemy.retaliate || opts.grantRetaliate || r.grantedEnemyKeywords?.includes('retaliate'), registeredEntry)
+      if (!storyTarget && !opts.ignoreRetaliate && !ruleIgnored(state, inv, 'retaliate')
+        && enemyHasAttackKeyword(state, enemy, 'retaliate', enemy.retaliate || opts.grantRetaliate || r.grantedEnemyKeywords?.includes('retaliate')
+          || entityRuleActive(state, enemy, 'gains:retaliate')
+          || scenarioBehavior(state).enemyAttackKeyword?.(state, enemy, 'retaliate'), registeredEntry)
         && (!body.exhausted || enemy.retaliateWhileExhausted || opts.grantRetaliate)
-        && !enemyTextBlanked(state, enemy)) {
+        && !enemyTextBlanked(state, enemy) && !ignoreTestKeyword(state, inv, '反击', enemy, requestChoice)) {
         enemyAttack(state, enemy, inv, events, `⚡ 「${enemy.name}」反击 ${inv.name}：${enemy.damage} 点伤害、${enemy.horror} 点恐惧。`, { kind: 'retaliate' })
       }
     }
@@ -674,7 +710,8 @@ function doFight(state, seat, opts, events, noSpend) {
       const asset = inv.assets.find(item => item.id === opts.assetId)
       if (asset) { leaveAsset(state, inv, asset); if (!asset.removedFromGame && !asset.returnedToHand) inv.discard.push(asset.code) }
     }
-    resolveElusiveAfterAttack(state, enemy, registeredEntry, () => scenarioRuntime(state, events), item => enemyTextBlanked(state, item))
+    resolveElusiveAfterAttack(state, enemy, registeredEntry, () => scenarioRuntime(state, events),
+      item => enemyTextBlanked(state, item), () => ignoreTestKeyword(state, inv, '逃逸', enemy, requestChoice))
   } })
 }
 
@@ -688,7 +725,7 @@ function doEvade(state, seat, opts, events, noSpend) {
   const enemy = state.enemies.find((e) => e.id === opts.enemyId)
   if (enemyIsBody(enemy)) return
   if (!noSpend) payActionCost(state, inv, 'evade', events)
-  if (!enemy) { info(state, events, `${inv.name} 找不到可躲避的敌人。`); return }
+  if (!enemy || enemy.attachedToAssetId) { info(state, events, `${inv.name} 找不到可躲避的敌人。`); return }
   // 2026-10-25 第六轮修复 05282：可躲避连接地点上未与任何调查员交战的敌人。
   const connectingLocation = state.locations.find(loc => loc.id === inv.location)?.connections?.includes(enemy.location)
   const body = enemyBody(state, enemy)
@@ -699,9 +736,10 @@ function doEvade(state, seat, opts, events, noSpend) {
   if (!canEvade) { info(state, events, `${inv.name} 找不到可躲避的交战敌人。`); return }
   const mods = enemyStatMods(state)
   if (opts.auto) {
-    if (!enemyCannotBeExhausted(state, body, enemyTextBlanked)) body.exhausted = true
+    const canExhaust = !enemyCannotBeExhausted(state, body, enemyTextBlanked)
     if (canDisengage(state, inv, body)) disengageEnemy(state, body)
     else info(state, events, `${inv.name} 无法与「${enemy.name}」解除交战。`)
+    if (canExhaust) exhaustEnemy(state, body, seat, events, reactionWindow)
     info(state, events, `💨 ${inv.name} 摆脱了「${enemy.name}」！`)
     afterEvade(state, inv, enemy, events, null)
     return
@@ -747,7 +785,7 @@ function doEvade(state, seat, opts, events, noSpend) {
         })
         const code = hand[Number(picked)] || hand[0]
         const index = inv.hand.indexOf(code)
-        if (index >= 0) inv.hand.splice(index, 1)
+        if (index >= 0) spliceHand(inv, index, 1)
         discardPlayerCards(state, inv, code)
         info(state, events, `🃏 ${inv.name} 弃掉「${cardName(code)}」。`)
       }
@@ -770,14 +808,17 @@ function doEvade(state, seat, opts, events, noSpend) {
         }) === 'damage'
       if (damageInstead) {
         enemy.defeatedBy = seat
-        damageEnemy(state, enemy, 1, seat, events)
+        damageEnemy(state, enemy, 1, seat, events, null, { code: 'imDoneRunnin', sourceSeat: seat })
         info(state, events, `💥 「${enemy.name}」被躲避后受到 1 点伤害（${enemy.damageTaken}/${enemy.health}），不横置、不解除交战。`)
       }
       if (!damageInstead) {
-        body.exhausted = !opts.noExhaustOnSuccess
+        if (opts.noExhaustOnSuccess) body.exhausted = false
         if (!evadeTest?.keepEngaged) {
           if (canDisengage(state, inv, body)) disengageEnemy(state, body)
           else info(state, events, `${inv.name} 无法与「${enemy.name}」解除交战。`)
+        }
+        if (!opts.noExhaustOnSuccess && !enemyCannotBeExhausted(state, body, enemyTextBlanked)) {
+          exhaustEnemy(state, body, seat, events, reactionWindow)
         }
       }
       if (evadeTest?.drawOnSuccess) {
@@ -809,6 +850,7 @@ function doEvade(state, seat, opts, events, noSpend) {
       }
       // 「潜行」等：成功但不横置敌人时，日志不能写成"被横置"。
       const exhaustText = opts.noExhaustOnSuccess ? '' : '被横置并'
+      opts.beforeEvadeSuccess?.({ enemy, result: r })
       const outcomeText = evadeTest?.keepEngaged ? '保持交战。' : `${exhaustText}脱离交战。`
       info(state, events, `💨 ${inv.name} 躲避成功（${SKILL_NAMES[evadeSkill]} ${r.value} vs ${evadeBase}），「${enemy.name}」${outcomeText}`)
       triggerReaction(state, seat, 'evadeSuccess', events, { enemy, location: inv.location, successBy: r.value - evadeBase },{skipAbilityWindow:true})
@@ -874,9 +916,10 @@ function doEvade(state, seat, opts, events, noSpend) {
       reactionWindow(state, 'evadeFail', { when: 'evadeFail', seat, location: inv.location, enemy,
         failedBy: r.failedBy ?? Math.max(0, r.difficulty - r.value), prompt: `躲避「${enemy.name}」失败` }, events)
       // Phase 2（C1）：ignore:alert 让躲避失败时的警戒反击失效。
-      if (state.enemies.includes(enemy)
-        && enemyHasAttackKeyword(state, enemy, 'alert', enemy.alert || evadeTest?.alert || r.grantedEnemyKeywords?.includes('alert'), registeredEntry)
-        && !ruleIgnored(state, inv, 'alert') && !body.exhausted && (evadeTest?.alert || !enemyTextBlanked(state, enemy))) {
+      if (!opts.ignoreAlert && state.enemies.includes(enemy)
+        && enemyHasAttackKeyword(state, enemy, 'alert', enemy.alert || opts.grantAlert || evadeTest?.alert || r.grantedEnemyKeywords?.includes('alert'), registeredEntry)
+        && !ruleIgnored(state, inv, 'alert') && !body.exhausted && (evadeTest?.alert || !enemyTextBlanked(state, enemy))
+        && !ignoreTestKeyword(state, inv, '警戒', enemy, requestChoice)) {
         enemyAttack(state, enemy, inv, events, `⚡ 「${enemy.name}」警戒反击 ${inv.name}。`, { kind: 'alert' })
       }
       // 「你尝试躲避它时检定失败后：其攻击你」（03241b 死亡鬼灵）。

@@ -1,5 +1,8 @@
 import { isDeepStrictEqual } from 'node:util'
 import { transactionEvents, presentationCount } from './presentation-events.js'
+import { flushCardOutcomeAudio } from './card-outcome-audio.js'
+import { ChoicePause, ResolutionCheckpoint, SkillTestInterrupted } from './resolution-error.js'
+export { ChoicePause, isPendingChoice } from './resolution-error.js'
 
 // 续算时这些字段取自当前状态而非事务快照：存档迁移只会刷新顶层状态，
 // 若从 base 恢复版本号，旧存档回答待决选择后会退回旧版本而无法继续行动。
@@ -11,21 +14,6 @@ const clone = value => JSON.parse(JSON.stringify(value))
 const cloneMove = move => {
   const { label, explanation, ...rest } = move || {}
   return clone(rest)
-}
-
-export class ChoicePause extends Error {
-  constructor(choice) {
-    super('等待规则选择')
-    this.choice = choice
-  }
-}
-
-class ResolutionCheckpoint extends Error {
-  constructor(seat, move) {
-    super('规则事务检查点')
-    this.seat = seat
-    this.move = move
-  }
 }
 
 class ResolutionCancelled extends Error {
@@ -45,11 +33,9 @@ export function resolutionCheckpoint(state, seat, move) {
   throw new ResolutionCheckpoint(seat, move)
 }
 
-// 内容层的「可选询问」辅助函数只应吞掉普通业务错误；ChoicePause / ResolutionCheckpoint
-// 是引擎用异常表达的控制流，必须原样重抛，否则待决选择会被静默默认或让事务游标失配
-// （2026-11-13 P0：sanguineShadows/dogsOfWar/onThinIce/shadesOfSuffering/congressOfTheKeys）。
-export function isPendingChoice(error) {
-  return error instanceof ChoicePause || error instanceof ResolutionCheckpoint
+export function canInterruptSkillTest(state, seat) {
+  const test = state.skillTest
+  return !!test && test.seat === seat && !['ST.7', 'ST.8'].includes(test.stage)
 }
 
 // `seats` lets several seats race to answer; `seat` stays the primary responder used for replay.
@@ -60,6 +46,20 @@ export function isPendingChoice(error) {
 export function requestChoice(state, { kind, source, seat, seats = null, prompt, options, canSkip = false, autoOptionId = null, autoTriggerOptionId = null, cardCode = null, payment = null }) {
   const context = state._resolution
   if (!context) throw new Error('选择必须在规则事务中执行')
+  flushCardOutcomeAudio(state)
+  context.runInterrupts?.()
+  // Optional choices owned by an eliminated investigator pass. The same human
+  // seat may still be responsible for a mandatory team decision.
+  const unavailable = candidate => context.interruptedSeats?.has(candidate)
+  const test = state.skillTest
+  if (!context.interrupting && test && unavailable(test.seat) && canInterruptSkillTest(state, test.seat)) {
+    throw new SkillTestInterrupted(test.seat)
+  }
+  let forcedAnswer = null
+  if (unavailable(seat)) {
+    if (canSkip && options.some(option => option.id === 'skip')) forcedAnswer = 'skip'
+    else if (['commit', 'mulligan'].includes(kind) && options.some(option => option.id === 'done')) forcedAnswer = 'done'
+  }
   if (!options?.length) throw new Error('选择没有合法选项')
   // P0：选项 id 必须是唯一非空字符串。否则 legalMoves 会产出没有 optionId 的
   // choose 动作，而 validateMove 又会拒绝它，整局陷入无法提交的软锁。
@@ -83,6 +83,10 @@ export function requestChoice(state, { kind, source, seat, seats = null, prompt,
       throw new Error('选择恢复凭据与规则不一致')
     }
     return answer.optionId
+  }
+  if (forcedAnswer != null) {
+    context.answers.push(clone({ choiceId: id, kind, source, seat, optionId: forcedAnswer }))
+    return forcedAnswer
   }
   // Optional reactions belong to the AI's own investigation turn only.
   // Record automatic passes just like answers so paused transactions replay
@@ -146,7 +150,7 @@ function dynamicState(state) {
   return clone(Object.fromEntries(Object.entries(state).filter(([key]) => !omitted.has(key))))
 }
 
-export function resolveTransaction(state, seat, move, execute, { initial = false, sharedFreeWindows = true, filterDiscardChoices = true } = {}) {
+export function resolveTransaction(state, seat, move, execute, { initial = false, sharedFreeWindows = true, filterDiscardChoices = true, interrupt = false } = {}) {
   const revision = state.revision
   const previous = state.continuation
   // 旧存档里的暂停事务必须按它开始时的窗口顺序续算，才能消费原有选择凭据。
@@ -160,9 +164,14 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
     id: revision + 1, base: dynamicState(state), seat, move: cloneMove(move), answers: [], emitted: 0, ...windowRules,
   }
   if (previous && move) {
-    const choice = state.pendingChoice
-    transaction.answers.push({ choiceId: choice.id, kind: choice.kind, source: choice.source, seat: choice.seat, optionId: move.optionId })
+    if (interrupt) {
+      (transaction.interrupts ||= []).push({ at: transaction.answers.length, seat, move: cloneMove(move) })
+    } else {
+      const choice = state.pendingChoice
+      transaction.answers.push({ choiceId: choice.id, kind: choice.kind, source: choice.source, seat: choice.seat, optionId: move.optionId })
+    }
   }
+  if (previous) transaction._resumeAnswerCount = transaction.answers.length
   // Card tables are replaced at scenario/resource boundaries and read throughout a transaction.
   const { cards, investigatorDefs, ...staticFields } = Object.fromEntries(STATIC_FIELDS.map(key => [key, state[key]]))
   const staticState = clone(staticFields)
@@ -176,9 +185,31 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
     draft.pendingChoice = null
     draft.continuation = null
     draft._resolution = { id: transaction.id, answers: transaction.answers, cursor: 0, events: [], offerSharedFreeAbilities, filterAssetDiscardOptions }
+    let nextInterrupt = 0
+    if (transaction.interrupts?.length) {
+      const context = draft._resolution
+      const interruptedSeats = new Set()
+      context.interruptedSeats = interruptedSeats
+      // Some lookahead rules clone the draft. The replayable payload is in the
+      // continuation, while this callback belongs only to this execution.
+      Object.defineProperty(context, 'runInterrupts', { value: () => {
+        while (transaction.interrupts[nextInterrupt]?.at === context.cursor) {
+          const effect = transaction.interrupts[nextInterrupt++]
+          const outer = context.interrupting
+          context.interrupting = true
+          try {
+            execute(draft, effect.seat, effect.move, [])
+            if (draft.investigators[effect.seat]?.defeated) interruptedSeats.add(effect.seat)
+          } finally {
+            context.interrupting = outer
+          }
+        }
+      } })
+    }
     try {
       execute(draft, transaction.seat, transaction.move, [])
       if (draft._resolution.cursor !== transaction.answers.length) throw new Error('存在未消费的选择恢复凭据')
+      if (nextInterrupt !== (transaction.interrupts?.length || 0)) throw new Error('存在未消费的规则中断')
     } catch (error) {
       if (error instanceof ResolutionCancelled) {
         if (draft._resolution.cursor !== transaction.answers.length) throw new Error('取消时存在未消费的选择恢复凭据')
@@ -200,7 +231,10 @@ export function resolveTransaction(state, seat, move, execute, { initial = false
       draft.turnSeat = draft.currentSeat
       draft.currentSeat = error.choice.seat
       draft.continuation = { ...transaction, emitted: draft._resolution.events.length }
+      delete draft.continuation._resumeAnswerCount
       if (presentationCount(draft)) draft.continuation._presentationEmitted = presentationCount(draft)
+      const audioCount = presentationCount(draft, true)
+      if (audioCount) draft.continuation._cardAudioEmitted = audioCount
     }
     newEvents.push(...transactionEvents(draft, transaction))
     break

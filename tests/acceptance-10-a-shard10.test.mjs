@@ -7,8 +7,11 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 
 import '../src/engine/engine.js'
+import { damageEnemy, drawEncounter } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import * as prelude from '../content/campaigns/theFeastOfHemlockVale/scenarios/preludeTheFinalEvening/index.js'
+import { preludeChaosToken } from '../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/chaos.js'
+import { enemy, fixture, legalMoves, move, settle } from './core-fixture.mjs'
 
 const read = rel => fs.readFileSync(new URL(rel, import.meta.url), 'utf8')
 const ENGINE = p => read('../src/engine/' + p)
@@ -17,7 +20,6 @@ const PRELUDE = read('../content/campaigns/theFeastOfHemlockVale/scenarios/prelu
 const FATE = read('../content/campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/behavior.js')
 const DAWN2 = read('../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/behavior.js') + read('../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheSecondDay/definition.js')
 const DAWN3 = read('../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/behavior.js') + read('../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/definition.js')
-const CHAOS3 = read('../content/campaigns/theFeastOfHemlockVale/scenarios/dawnOfTheFinalDay/chaos.js')
 const entryOf = code => registeredEntry(code)
 
 for (const [code, day] of [['10677', 2], ['10679', 3]]) {
@@ -147,17 +149,41 @@ for (const code of ['10693b', '10694b', '10695b', '10696b', '10697b', '10698b', 
     assert.equal(ENGINE('scenario-runtime.js').includes('setEnemyAside'), true, '放到一边唯一写入口')
   })
 }
-test('10697b 瑞玟·霍桑：关键词与谈判已接线，但「每轮此地第一张诡计涌动」无引擎/behavior 读点', () => {
-  const entry = entryOf('10697b')
-  assert.equal(entry.flags.firstTreacherySurge, true)
-  assert.equal(WELCOME.includes('firstTreacherySurge') || FATE.includes('firstTreacherySurge') || DAWN3.includes('firstTreacherySurge'), false, '无 behavior 读点')
-  assert.equal(ENGINE('encounter.js').includes('firstTreacherySurge') + ENGINE('reveal.js').includes('firstTreacherySurge'), 0, '无引擎读点')
+test('10697b 瑞玟·霍桑：每轮仅首张诡计获得涌动', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  enemy(state, { code: '10697b', engagedSeat: null })
+  state.encounterDeck = Array(7).fill('10740')
+  drawEncounter(state, inv, [])
+  assert.equal(state.encounterDeck.length, 5)
+  drawEncounter(state, inv, [])
+  assert.equal(state.encounterDeck.length, 4)
+  state.round += 1
+  drawEncounter(state, inv, [])
+  assert.equal(state.encounterDeck.length, 2)
 })
-test('10701b 伯蒂·马斯格雷夫：关键词/巡逻/法典已接线，但「伤害改派给他」无引擎原语', () => {
-  const entry = entryOf('10701b')
-  assert.equal(entry.flags.damageRedirectToSelf != null, true)
-  assert.equal(Object.keys(entry.enemyRule || {}).includes('damageRedirect'), false, 'enemyRule 无伤害改派读点')
-  assert.equal(ENGINE('enemies.js').includes('damageRedirectToSelf') + ENGINE('harm-threat.js').includes('damageRedirectToSelf'), 0, '引擎无伤害改派读点')
+test('10701b 伯蒂·马斯格雷夫：重整时替所在地其他居民敌人承受伤害', () => {
+  const state = fixture()
+  const bertie = enemy(state, { code: '10701b', traits: ['Resident'], engagedSeat: null })
+  const resident = enemy(state, { traits: ['Resident'], engagedSeat: null })
+  const visitor = enemy(state, { traits: ['Monster'], engagedSeat: null })
+  damageEnemy(state, resident, 2, 0, [])
+  damageEnemy(state, visitor, 1, 0, [])
+  assert.equal(bertie.damageTaken, 2)
+  assert.equal(resident.damageTaken, 0)
+  assert.equal(visitor.damageTaken, 1)
+  const closeResident = enemy(state, { traits: ['Resident'] })
+  const fight = legalMoves(state, 0).find(candidate => candidate.action === 'fight' && candidate.enemyId === closeResident.id)
+  assert.ok(fight)
+  move(state, fight)
+  settle(state)
+  assert.equal(state.enemies.find(card => card.id === closeResident.id).damageTaken, 0)
+  const readyBertie = state.enemies.find(card => card.id === bertie.id)
+  assert.equal(readyBertie.damageTaken, 3)
+  readyBertie.exhausted = true
+  const otherResident = state.enemies.find(card => card.id === resident.id)
+  damageEnemy(state, otherResident, 1, 0, [])
+  assert.equal(otherResident.damageTaken, 1)
 })
 
 for (const [code, token] of [
@@ -171,11 +197,20 @@ for (const [code, token] of [
     assert.equal((WELCOME + PRELUDE + FATE).includes(token) || entry.flags[token] != null, true, `读点 ${token}`)
   })
 }
-test('10691a 老磨坊：两行动发现 1 线索（条目仅声明数据，章节 behavior 无该行动读点）', () => {
-  const entry = entryOf('10691a')
-  assert.deepEqual(entry.flags.actionDiscoverClue, { amount: 1, actions: 2 })
-  assert.equal(DAWN3.includes('actionDiscoverClue') || WELCOME.includes('actionDiscoverClue') || PRELUDE.includes('actionDiscoverClue') || FATE.includes('actionDiscoverClue'), false, '章节 behavior 不读 actionDiscoverClue')
-  assert.equal(/actionDiscoverClue/.test(ENGINE('moves.js') + ENGINE('actions.js')), false, '引擎无该读点')
+test('10691a 老磨坊：花费恰好两个行动，发现地点上唯一的线索', () => {
+  const state = fixture()
+  const location = state.locations.find(place => place.id === state.investigators[0].location)
+  Object.assign(location, { code: '10691a', originalCode: '10691a', revealed: true, clues: 1 })
+  const action = () => legalMoves(state, 0).find(candidate => candidate.action === 'entityAbility'
+    && candidate.entityId === location.id)
+  state.investigators[0].actionsLeft = 1
+  assert.ok(!action() || action().reason)
+  state.investigators[0].actionsLeft = 2
+  move(state, action())
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, 0)
+  assert.equal(state.investigators[0].clues, 1)
+  assert.equal(state.locations.find(place => place.id === location.id).clues, 0)
 })
 test('10705b 旅舍（夜面）：首个遭遇涌动/三项检定/记住汽油（章节 definition/behavior 读点）', () => {
   const entry = entryOf('10705b')
@@ -191,8 +226,20 @@ test('10706b 十字路口（夜面）：破碎敌失去冷漠 + 躲避 3+ 记住
   assert.equal(FATE.includes('shattered'), true, '破碎机制读点')
 })
 
-test('10704 山谷（剧本参考卡）：标记表由内容层 chaos 实现，但没有单卡条目文件（一卡一文件缺口）', () => {
-  assert.equal(registeredEntry('10704'), null, '10704 无条目文件')
-  assert.equal(CHAOS3.includes('10704'), true, '内容层 chaos 提供标记表')
-  assert.equal(/cultist[\s\S]{0,240}parley/.test(CHAOS3), true, '谈判标记分支在内容层实现')
+test('10704 山谷：参考卡双面登记，序曲引擎值与两面标记规则相符', () => {
+  const entry = entryOf('10704')
+  assert.equal(entry.scope, 'scenario')
+  assert.equal(entry.flags.doubleSided, true)
+  for (const [difficulty, side, skull, lowHandTablet] of [
+    ['standard', 'easyStandard', -3, 0], ['hard', 'hardExpert', -4, -2],
+  ]) {
+    const state = { difficulty, scenarioFlags: { hemlockDay: 3 } }
+    const printed = entry.flags.tokenMeanings[side]
+    assert.equal(preludeChaosToken(state, 'skull').delta, skull)
+    assert.equal(preludeChaosToken(state, 'tablet', { handSize: 1 }).delta, lowHandTablet)
+    assert.equal(preludeChaosToken(state, 'cultist', { parley: true }).delta, 1)
+    assert.equal(preludeChaosToken(state, 'cultist', { parley: true }).autoSucceed,
+      Boolean(printed.cultist.parleyAutoSucceed))
+    assert.equal(preludeChaosToken(state, 'elderthing', { parley: true }).revealAnother, true)
+  }
 })

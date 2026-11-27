@@ -663,7 +663,7 @@ export const behavior = {
       api.info?.('「残酷拷问」进入你的威胁区域。')
       if (interviewed) {
         api.horror(inv.seat, 1)
-        api.drawEncounter?.(inv.seat)
+        api.drawEncounter?.(inv.seat, { surgeDraw: true })
         return { placed: true, surgeHandled: true }
       }
       return true
@@ -792,11 +792,18 @@ export const behavior = {
   phaseBegan(state, phase, api) {
     if (phase !== 'investigation') return
     const controlled = controlledCustodian(state)
-    if (!controlled) return
-    const flags = flagsFor(state)
-    if (flags.custodianRound === state.round) return
-    flags.custodianRound = state.round
-    const at = controlled.asset.location || controlled.inv.location
+    if (!controlled || controlled.inv.defeated || controlled.inv.resigned) return
+    if (state.scenarioFlags?.custodianRound === state.round) return
+    api.setScenarioFlag('custodianRound', state.round)
+    const { inv, asset } = controlled
+    const answer = api.choose({
+      kind: 'reaction', source: CARD_CODES.custodian, cardCode: CARD_CODES.custodian,
+      seat: inv.seat, canSkip: true,
+      prompt: '看管人：是否让同地点的每位调查员抽取 1 张卡牌？',
+      options: [{ id: 'draw', label: '每位同地点的调查员抽取 1 张卡牌' }, { id: 'skip', label: '不发动' }],
+    })
+    if (answer !== 'draw') return
+    const at = asset.location || inv.location
     for (const target of active(state).filter(entry => entry.location === at)) {
       api.drawCards(target.seat, 1)
     }

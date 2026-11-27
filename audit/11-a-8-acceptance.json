@@ -3,8 +3,8 @@
   "unit": "11-a-8",
   "profile": {
     "id": "tdc-campaign-e-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11660–11696）43 条目录记录。38 条通过五维验收；5 条废墟地点能力无读点暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11660–11696）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 38,
-    "unverified": 5,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 176
+    "testsPassed": 205
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
-      "sha256": "8372199d957e339189bf2f2963e66b93744b320a4fbd26797f741636c941eef8"
+      "sha256": "c0c8075d8ac8ee561ec89588615f26c41b9afeb4b4e7b12bfb6aa2c6886bd77d"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
@@ -34,6 +34,10 @@
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
       "sha256": "4755863cd789626919d96203a02190f93d879414067c20fc0bd5f44adf1fbbaf"
+    },
+    {
+      "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+      "sha256": "3676fc14b2dc02bc4a751068968a0118d10e0a558a598f604f86b62e430d3c69"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-scenario-integrity.test.mjs",
@@ -648,6 +652,10 @@
           "test": "11688 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
         },
         {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11688：受控时星之眷族获得猎手/猎物=控制者，[fast] 进合法动作且文本空白后消失"
+        },
+        {
           "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
           "test": "P7 原语：受控剧情资产改写星之眷族关键词/猎物，并可空白文本直到本轮结束（11688）"
         }
@@ -700,6 +708,14 @@
           "test": "11690 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
         },
         {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：无线索不出现加伤变体且 validateMove 拒绝"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：有线索出现加伤变体，结算扣 1 线索且伤害 +1"
+        },
+        {
           "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
           "test": "P7 原语：攻击期间支付线索 +1 伤害（11690/11691a 幕牌）"
         }
@@ -718,6 +734,14 @@
         {
           "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
           "test": "11691a 沉没之城逐卡接线：条目/章节行为/引擎读点真实可执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：无线索不出现加伤变体且 validateMove 拒绝"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11690/11691a [fast] 攻击线索加伤：有线索出现加伤变体，结算扣 1 线索且伤害 +1"
         },
         {
           "file": "games/arkhamhorror/tests/tdc-round2-primitives.test.mjs",
@@ -745,41 +769,65 @@
       "code": "11692",
       "name": "北区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「不能完全淹没」已接线（locationRule.floodBounds max 1 + 引擎 flood.js 读点）；印刷 [action] willpower(3) 查看克苏鲁牌库顶 3 张并弃 1 张无读点：theDoomOfArkhamPartII/behavior.js 的 actions() 只在最终封印议程下放印记，没有北区查看行动/触发器。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11692 北区（废墟）：意志检定成功后选择弃牌并重排克苏鲁牌库"
+        }
+      ]
     },
     {
       "code": "11693",
       "name": "商业区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "floodBounds 已接线；印刷 [reaction] 星之眷族进入 Downtown 时花 3 资源自动躲避无读点（章节无该反应/触发）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11693 商业区（废墟）：有星之眷族进入时可支付三资源自动躲避"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "11693 商业区：星之眷族进入后可支付三资源自动躲避，跳过则正常交战"
+        }
+      ]
     },
     {
       "code": "11694",
       "name": "东镇",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "floodBounds 已接线；印刷 [action] 弃一个盟支援降本地水位并抽 3 张无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11694 东镇（废墟）：弃掉盟友、降低水位、抽三张牌"
+        }
+      ]
     },
     {
       "code": "11695",
       "name": "米斯卡塔尼克大学",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "floodBounds 已接线；印刷 [action] 弃至多 3 张智识图标牌每张治 1 恐惧无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11695 米斯卡塔尼克大学（废墟）：弃两张智识牌，治愈另一席位及其盟友"
+        }
+      ]
     },
     {
       "code": "11696",
       "name": "河岸城",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷 [action] 敏捷/智识(3) 开排水降低本地或相邻水位无读点；本卡印刷无「不能完全淹没」，实现另以 floodBounds max 2 近似（披露）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard8.test.mjs",
+          "test": "11696 河岸城（废墟）：选择智识检定，成功降低相邻地点的水位"
+        }
+      ]
     }
   ]
 }

@@ -1,9 +1,10 @@
 // 验收 10-a 分片 5（FHV《铁杉谷盛宴》10501–10536）逐卡证据测试。
 // 每卡一条标题含卡号的真实执行用例：注册期校验 + 条目声明/章节数据/behavior 真实调用。
-// 失败卡的未实现点由 artifacts/acceptance/10-a-5/probe-defects.mjs 复现。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import { advanceAgenda, createGameState, enemyPhase,
+  relocateInvestigator, scenarioRuntime } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import * as wrDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/writtenInRock/definition.js'
@@ -33,6 +34,17 @@ const stateFor = (over = {}) => ({ investigators: [inv(0), inv(1)], locations: [
   scenarioFlags: {}, scenarioZones: {}, campaign: { records: {}, leadSeat: 0 }, acts: [], agendas: [], actIndex: 0,
   agendaIndex: 0, doom: 0, numInvestigators: 2, difficulty: 'standard', round: 1, currentSeat: 0, ...over })
 const flagsOf = code => registeredEntry(code)?.flags || {}
+function liveState(seed, seats = 1) {
+  const state = createGameState({ seed, playerInvestigator: '10001' },
+    Array.from({ length: seats }, (_, seat) => ({ seat, role: 'human' })))
+  state.pendingChoice = null
+  state.continuation = null
+  return state
+}
+const mapLocation = (id, connections, fields = {}) => ({
+  id, code: id, name: id, connections, revealed: true, shroud: 2, clues: 0, maxClues: 0,
+  traits: [], doom: 0, attachments: [], ...fields,
+})
 
 // 10501/10502：剧本参考卡（混乱标记）
 test('10-a5 10501 岩间密语（场景1）：骷髅 -列号、cultist 放废料、tablet 失败移废料', () => {
@@ -49,16 +61,34 @@ test('10-a5 10502 岩间密语（场景2）：困难面标记数值与场景1不
   assert.equal(wrC.writtenInRockChaosToken(hard, null, 'elderthing').delta, -5)
 })
 // 10503–10522 writtenInRock
-test('10-a5 10503 地下勘察：议程声明（毁灭 5 / 勘察行动 / 推进移毁灭 / 塌方背面）', () => {
-  assert.equal(flagsOf('10503').printedDoom, 5)
-  assert.equal(flagsOf('10503').surveyAction, true)
-  assert.equal(flagsOf('10503').movesDoomOnAdvance, true)
-  assert.equal(flagsOf('10503').back, 'cavedIn')
+test('10-a5 10503 地下勘察推进时仅将当前议程上的毁灭移到下一张', () => {
+  const state = liveState('10503')
+  state.agendas = [{ code: '10503', name: '地下勘察', stage: 1 },
+    { code: '10504', name: '危险之旅', stage: 2 }]
+  state.agendaIndex = 0
+  state.doom = 5
+  state.locations[0].doom = 2
+  advanceAgenda(state, [])
+  assert.equal(state.agendaIndex, 1)
+  assert.equal(state.doom, 5)
+  assert.equal(state.locations[0].doom, 0)
 })
-test('10-a5 10504 危险之旅：三条静态规则声明（保护剧情资产/双猎手/相邻视为相连）', () => {
-  assert.deepEqual(flagsOf('10504').staticRules, ['protectStoryAssetLocations', 'hunterTwice', 'adjacentWhileEnemyMoving'])
-  assert.equal(typeof wrB.behavior.canBeSlidOrSwapped, 'function')
-  assert.equal(typeof wrB.behavior.enemyConnections, 'function')
+test('10-a5 10504 危险之旅使普通敌人在同一敌人阶段进行两次猎手移动', () => {
+  const state = liveState('10504')
+  state.agendas = [{ code: '10504', name: '危险之旅', stage: 2 }]
+  state.agendaIndex = 0
+  state.locations = [
+    mapLocation('start', ['middle']),
+    mapLocation('middle', ['start', 'near']),
+    mapLocation('near', ['middle', 'far']),
+    mapLocation('far', ['near']),
+  ]
+  state.investigators[0].location = 'far'
+  const enemy = { id: '10504-enemy', name: '追击者', location: 'start', hunter: false,
+    traits: [], engagedSeat: null, exhausted: false, attachments: [] }
+  state.enemies = [enemy]
+  enemyPhase(state)
+  assert.equal(enemy.location, 'near')
 })
 test('10-a5 10505 深入矿井：目标 = 轮末全员在控制站，背面塌方', () => {
   assert.equal(flagsOf('10505').objective, 'allAtControlStation')
@@ -78,10 +108,26 @@ test('10-a5 10507 矿车：敌军阶段末强制移动、脱轨全员失败、�
   assert.deepEqual(flagsOf('10507').switchReaction.modes, ['cancel', 'again'])
   assert.equal(flagsOf('10507').switchReaction.groupLimitPerPhase, 2)
 })
-test('10-a5 10508 控制站：快速交换轨道地点（每局一次）+ 进入费声明', () => {
-  assert.equal(flagsOf('10508').fastSwapOncePerGame, true)
-  assert.equal(flagsOf('10508').enterCostCluesPerInvestigator, 2)
-  assert.equal(flagsOf('10508').printedCluesPerInvestigator, 2)
+test('10-a5 10508 未揭示控制站只收取相邻调查员的每人 2 个线索', () => {
+  const state = liveState('10508', 2)
+  const [mover, other] = state.investigators
+  mover.location = 'west'
+  other.location = 'remote'
+  mover.clues = 3
+  other.clues = 4
+  const station = { ...structuredClone(wrDef.LOCATIONS.controlStation), connections: ['west'] }
+  assert.equal(station.revealed, false, '洞穴布置时控制站未揭示')
+  state.locations = [mapLocation('west', ['controlStation']), station, mapLocation('remote', [])]
+  relocateInvestigator(state, mover.seat, station.id, [])
+  assert.equal(mover.location, 'west')
+  assert.deepEqual([mover.clues, other.clues], [3, 4])
+  mover.clues = 4
+  relocateInvestigator(state, mover.seat, station.id, [])
+  assert.equal(mover.location, station.id)
+  assert.deepEqual([mover.clues, other.clues], [0, 4])
+  mover.location = 'west'
+  relocateInvestigator(state, mover.seat, station.id, [])
+  assert.equal(mover.location, station.id, '已揭示的一面不再收取线索')
 })
 test('10-a5 10509 轨道出口：不可滑动/交换、胜利 1', () => {
   assert.equal(flagsOf('10509').cannotBeSlidOrSwapped, true)
@@ -143,10 +189,28 @@ for (const code of ['10520', '10521']) {
     assert.equal(typeof wrB.behavior.events[code === '10520' ? 'writtenInRockCaveIn' : 'writtenInRockWildRide'], 'function')
   })
 }
-test('10-a5 10522 棱柱碎片：使用 4 光辉 + 弃手替代反应声明', () => {
-  assert.equal(flagsOf('10522').prismaticShard, true)
-  assert.equal(flagsOf('10522').uses, 4)
-  assert.equal(flagsOf('10522').ignoreHandDiscardReaction, true)
+test('10-a5 10522 棱柱碎片支付 1 光辉并横置，替代遭遇效果的弃手牌', () => {
+  const state = liveState('10522')
+  const inv = state.investigators[0]
+  inv.hand = ['01016', '01017']
+  inv.deck = ['01019', '01020']
+  state.scenario = wrDef.scenario
+  state.storyAssets = [{ id: 'shard', code: '10522', name: '棱柱碎片',
+    location: inv.location, controllerSeat: null, exhausted: false }]
+  const move = { action: 'scenarioAction', rule: 'writtenInRockTakeShard' }
+  assert.equal(wrB.behavior.performAction(state, inv, move, scenarioRuntime(state, [])), true)
+  assert.equal(state.storyAssets.length, 0)
+  assert.equal(inv.assets[0].uses, 4)
+  const discard = (current, seat, move, events) => scenarioRuntime(current, events).discardRandom(seat, 2)
+  resolveTransaction(state, 0, { action: '10522-test-discard' }, discard)
+  const { id, options } = state.pendingChoice
+  const useShard = options.find(option => option.cardCode === '10522')
+  assert.ok(useShard)
+  resolveTransaction(state, 0, { action: 'choose', choiceId: id, optionId: useShard.id }, discard)
+  assert.deepEqual(state.investigators[0].hand, ['01016', '01017', '01020', '01019'])
+  const [shard] = state.investigators[0].assets
+  assert.equal(shard.uses, 3)
+  assert.equal(shard.exhausted, true)
 })
 // 10523–10536 hemlockHouse
 test('10-a5 10523 汉洛克庄园：骷髅=当前层数（最少 1），tablet 治愈最近敌人-地点', () => {
@@ -201,13 +265,22 @@ for (const code of ['10532', '10533', '10534', '10535']) {
   })
 }
 for (const code of ['10532b', '10533b', '10534b', '10535b']) {
-  test(`10-a5 ${code} 活的卧室：庞大/不能趁乱/揭示效果 + 声明 +2[每人]生命`, () => {
+  test(`10-a5 ${code} 活的卧室：翻到敌人面时增加每位调查员 2 点生命`, () => {
     const flags = flagsOf(code)
     assert.equal(flags.enemyLocation, true)
     assert.equal(flags.massive, true)
     assert.equal(flags.cannotMakeAttacksOfOpportunity, true)
-    assert.equal(flags.healthPerInvestigatorBonus, 2)
-    assert.ok(['doomOnIt', 'attacksHere', 'predationTest'].includes(flags.revealEffect))
+    const [id] = Object.entries(hhDef.ENEMY_LOCATION_FACES).find(([, face]) => face.code === code)
+    for (const count of [1, 2, 4]) {
+      const state = stateFor({
+        numInvestigators: count,
+        investigators: Array.from({ length: count }, (_, seat) => inv(seat)),
+        locations: [mapLocation(id, [], { code: flags.pairedLocationCode })],
+      })
+      const enemy = hhB.flipToEnemySide(state, id)
+      assert.ok(enemy)
+      assert.equal(enemy.health, 3 + 2 * count)
+    }
   })
 }
 test('10-a5 10536 盥洗室：快速把本地点 1 线索移到正下方地点（每回合一次）', () => {

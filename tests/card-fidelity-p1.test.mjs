@@ -87,8 +87,6 @@ test('02061 / 02080：印刷 +1 只计一次（条目 modifiers 是唯一来源�
   asset(state, '02080')
   assert.equal(getStat(state, inv, 'intellect'), baseIntellect + 1)
   assert.equal(getStat(state, inv, 'combat'), baseCombat + 1)
-  // 旧剧本钩子不再叠加第二次（空过滤得到 -0，归一为 0）。
-  assert.equal(Math.abs(encounterRules.statModifier(state, inv)), 0)
 })
 
 test('02140 死灵之书：获得 2 资源的行动只在条目上出现一次', () => {

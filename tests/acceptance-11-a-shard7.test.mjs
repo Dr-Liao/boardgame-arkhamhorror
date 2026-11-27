@@ -2,6 +2,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { fixture, legalMoves, move } from './core-fixture.mjs'
 
 import * as courtDef from '../content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/definition.js'
 import { behavior as court } from '../content/campaigns/theDrownedCity/scenarios/courtOfTheAncients/behavior.js'
@@ -72,8 +73,20 @@ test('验收 11651/11652/11653/11654/11655/11656/11657/11658/11659 黑曜石地�
   assert.match(fs.readFileSync(findEntry('11651'), 'utf8'), /cannotLeavePlay|cannotBeMoved/, '11651 不能移动/离场声明')
 })
 
-test('验收 11651/11652 缺陷复现：撤退行动无读点（11652 条目自述未接）', () => {
-  const text = obsidianText()
-  assert.equal(/resignAvailable|retreat/i.test(text), false, '黑曜石峡谷 behavior 无撤退/撤离行动读点')
-  assert.match(fs.readFileSync(findEntry('11652'), 'utf8'), /撤退未接/, '11652 条目自述撤退未接')
+test('11651 西墙与 11652 古代圆顶：调查员可从已揭示地点支付行动撤退', () => {
+  for (const id of ['westernWall', 'ancientDome']) {
+    const state = fixture('01003', 2)
+    state.scenario = structuredClone(obsidianDef.scenario)
+    const location = { ...structuredClone(obsidianDef.scenario.locations[id]), revealed: false, connections: [] }
+    state.locations.push(location)
+    state.investigators[0].location = id
+    const resign = () => legalMoves(state, 0).find(action => action.rule === 'obsidianResign')
+    assert.equal(resign(), undefined)
+    location.revealed = true
+    const action = resign()
+    assert.equal(action.actions, 1)
+    move(state, action)
+    assert.equal(state.investigators[0].resigned, true)
+    assert.equal(state.investigators[1].resigned, false)
+  }
 })

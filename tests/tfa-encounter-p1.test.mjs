@@ -450,7 +450,7 @@ test('01168 朦胧之雾：可叠加，每张 +2 帷幕', () => {
 test('04093 先祖恐惧：放进胜利区时带 1 点复仇', () => {
   const state = launchTfa()
   const inv = me(state)
-  const api = { info: () => {}, drawEncounter: () => {}, choose: () => 'victory' }
+  const api = { ...scenarioRuntime(state, []), drawEncounter: () => {}, choose: () => 'victory' }
   encounterRules.resolveEncounter(state, inv, { code: '04093', originalCode: '04093' }, api)
   const card = state.victoryDisplay.find(entry => entry.code === '04093')
   assert.ok(card)

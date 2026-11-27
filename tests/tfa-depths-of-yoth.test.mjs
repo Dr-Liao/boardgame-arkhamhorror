@@ -90,6 +90,7 @@ function putIntoPlay(state, id) {
 
 // 手搭一个足以跑行为钩子的剧本运行时（与引擎同名同签名）。
 function apiFor(state, options = {}) {
+  const runtime = scenarioRuntime(state, [])
   const calls = {
     spawned: [], drawn: [], finished: [], placed: [], removed: [], moved: [], defeated: [],
     damage: [], horror: [], trauma: [], tests: [], info: [], crossedOff: [], clues: [], attacked: [],
@@ -98,6 +99,23 @@ function apiFor(state, options = {}) {
   const outcomes = [...(options.outcomes || [])]
   const supplies = new Set(options.supplies || [])
   const api = {
+    setScenarioFlag: runtime.setScenarioFlag,
+    transferAsideToPursuit: runtime.transferAsideToPursuit,
+    addPursuitReminder: runtime.addPursuitReminder,
+    doomOn: runtime.doomOn,
+    enemyFight: enemy => enemy.fight,
+    spawnSetAsideEnemy: (code, location) => runtime.takeFromSetAside(code) ? api.spawn(code, location) : null,
+    spawnPursuingEnemy: (entry, location, engageSeat) => {
+      const enemy = api.spawn(entry.code, location)
+      state.scenarioZones.pursuit.splice(state.scenarioZones.pursuit.indexOf(entry), 1)
+      enemy.damageTaken = entry.damageTaken || 0
+      if (entry.resources) enemy.harbingerResources = entry.resources
+      if (engageSeat != null) {
+        enemy.engagedSeat = engageSeat
+        state.investigators[engageSeat].engaged.push(enemy.id)
+      }
+      return enemy
+    },
     calls,
     info: text => calls.info.push(text),
     random: () => (options.random ? options.random() : 0.37),
@@ -453,22 +471,6 @@ test('本章诡计：蛇族的愤怒没有蛇族在追击时涌动，否则拽�
   assert.equal(ire.calls.attacked.length, 1, '敏捷检定失败后敌人立刻攻击')
 })
 
-test('本章诡计：瓦卢西亚之子给每个蛇族 +1 攻击/躲避，轮末弃掉 1 张', () => {
-  const state = prepared(61, 2)
-  const inv = state.investigators[0]
-  yoth.behavior.resolveEncounter(state, inv, { code: '04299', originalCode: '04299' }, apiFor(state))
-  assert.equal(state.scenarioZones.childrenOfValusia.length, 1)
-  const serpent = { id: 's1', code: '04297', originalCode: '04297', traits: ['Serpent'], fight: 4, evade: 1 }
-  assert.equal(yoth.behavior.enemyStatModifier(state, serpent, 'fight'), 1)
-  assert.equal(yoth.behavior.enemyStatModifier(state, serpent, 'evade'), 1)
-  const spider = { id: 's2', code: '04298', originalCode: '04298', traits: ['Monster'], fight: 5, evade: 0 }
-  assert.equal(yoth.behavior.enemyStatModifier(state, spider, 'evade'), 1, '深渊吞噬者的躲避值是深度')
-  const api = apiFor(state)
-  yoth.behavior.roundEnded(state, api)
-  assert.equal(state.scenarioZones.childrenOfValusia.length, 0)
-  assert.ok(state.encounterDiscard.includes('04299'))
-})
-
 test('地点效果：帷幕随深度/复仇变化，幽嘶洞群按深度放线索', () => {
   const state = prepared(67, 2)
   state.scenarioFlags.depthLevel = 3
@@ -689,20 +691,24 @@ test('探索限制：所在地点还有线索时不能探索（04285 的行动�
   assert.equal(yoth.behavior.canExplore(state, inv), true)
 })
 
-test('04299 瓦卢西亚之子：每张副本各 +1 战斗/躲避，轮末弃 1 张', () => {
-  const state = stateFor(1)
-  const api = apiFor(state)
-  const snake = { id: 's1', code: '04297', originalCode: '04297', name: '蛇',
-    location: 'cityOfTheSerpents', traits: ['Serpent'], fight: 2, evade: 2, health: 3 }
-  state.enemies.push(snake)
+test('04299 瓦卢西亚之子：真实旁置实例各 +1 战斗/躲避，轮末弃 1 张', () => {
+  const state = launchYoth('tfa-04299')
+  state.encounterDeck = []
+  state.encounterDiscard = []
+  const snake = { code: '04297', traits: ['Serpent'] }
   const card = { code: '04299', originalCode: '04299' }
-  yoth.behavior.resolveEncounter(state, state.investigators[0], card, api)
+  const reveal = () => yoth.behavior.resolveEncounter(state, state.investigators[0], card, scenarioRuntime(state, []))
+  assert.deepEqual(reveal(), { placed: true })
   assert.equal(yoth.behavior.enemyStatModifier(state, snake, 'fight'), 1)
-  yoth.behavior.resolveEncounter(state, state.investigators[0], card, api)
-  assert.equal(yoth.behavior.enemyStatModifier(state, snake, 'fight'), 2, '两张副本 +2')
+  assert.deepEqual(reveal(), { placed: true })
   assert.equal(yoth.behavior.enemyStatModifier(state, snake, 'evade'), 2)
-  yoth.behavior.roundEnded(state, api)
-  assert.equal(yoth.behavior.enemyStatModifier(state, snake, 'fight'), 1, '轮末弃掉 1 张')
+  assert.equal(new Set(state.agendaAside.map(item => item.id)).size, 2)
+  assert.equal(state.encounterDiscard.length, 0)
+  state.encounterDeck = ['04085']
+  endRound(state)
+  assert.equal(yoth.behavior.enemyStatModifier(state, snake, 'fight'), 1)
+  assert.equal(state.agendaAside.length, 1)
+  assert.equal(state.encounterDiscard.filter(code => code === '04299').length, 1)
 })
 
 test('04296 伊格光环：其他蛇族获得警戒/反击，离开后还原', () => {

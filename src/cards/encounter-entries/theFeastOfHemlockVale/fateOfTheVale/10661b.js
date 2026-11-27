@@ -4,8 +4,7 @@
 //
 // 一张卡一个文件：条目只声明身份与规则数据（flags），行为接线在章节 behavior：
 //   · flags.oldMemory / trueSelfCode → behavior.returnToTrueSelf（真身回归时入场）
-//   · flags.groupClueCost → behavior.returnToTrueSelf 的线索代价读点
-//   · flags.oldMemory 同时是 abyss 抽牌的取消钩子声明（见 behavior 文件头 approximation）
+//   · 从深渊揭示或抽取前，章节读取共同线索费用，结算改派调查员或取消显现并移出游戏。
 export default {
   code: '10661b',
   scope: 'storyAsset',
@@ -17,6 +16,5 @@ export default {
       perInvestigator: 1,
     },
   },
-  note: 'approximation: 「取消显现效果并移出游戏」没有取消窗口读点；当前只把旧时记忆入场，并把深渊抽牌结果交给 behavior 的调用方（可自行取消）。',
   abilities: [],
 }

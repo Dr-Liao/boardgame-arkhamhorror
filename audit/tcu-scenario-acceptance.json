@@ -13,7 +13,7 @@
     "totalEncounterCards": 293,
     "pendingEncounterCards": 0,
     "gaps": 0,
-    "testCases": 449
+    "testCases": 450
   },
   "items": [
     {
@@ -373,7 +373,7 @@
       "fileHashes": {
         "definition.js": "5a18ebeea8f3e2d3db754a42dbc93521e9bac6eefb1cc3bb9acca52a947068cd",
         "layout.js": "81811714296dfcfeee2e0e2cbb35c59141e9a91f9f53099c3922e173e5e8ed68",
-        "behavior.js": "42c976d02507220b12cfe953fff929e027530bdf0325e3b785817ccdf266d6bf",
+        "behavior.js": "993903bcc60092402feb2014f29ab19d134a2235fbddc595a76fdb2cbed6b660",
         "index.js": "76b82a4da149e28bb8a4891d8f340b77c2f73c7ac4e5b88a62dc920c75eb45fe",
         "chaos.js": "57dc260cef2d2106f26eb78b8f9512504a205fd31aa8c1d3bfe590f0bd24e7fe"
       }
@@ -543,7 +543,7 @@
       "approximations": [],
       "testFile": "tests/tcu-greater-good.test.mjs",
       "testCases": {
-        "passed": 69,
+        "passed": 70,
         "failed": 0
       },
       "sources": [
@@ -563,7 +563,7 @@
       "fileHashes": {
         "definition.js": "08f35168ae4e86a9feb501dff4efced966c5ada3a2a44dd8d34be46a5b7284ba",
         "layout.js": "6e4c0c5a4311abd9fee4a38530cae1a24653f65efd8ae6e49c69385b8d2b40bf",
-        "behavior.js": "99586b19ec84af1f0783c6280821fbdcf68997476b09e76f387170fefbb29909",
+        "behavior.js": "266e076596083e342d4f6e8573a994ca598217a164ed7e074e6d31d2bf1bfff9",
         "index.js": "4fe9aa163b92c2a13ee317fbdf256f251107b8bc5bfa06459b65504e44a7b53f",
         "chaos.js": "080dc568f2735c15187fa0cea72031f1e3ea033ff0785ad1cbb5dc4352ac3eeb"
       }
@@ -776,7 +776,7 @@
       "fileHashes": {
         "definition.js": "e18ac1db45c8c2ff950c7e99838632acf2bb8aad53c430194917334b4eb01e1d",
         "layout.js": "a31b2ea9a8421a9f8d8890c02b5fe540adc682e04c659254f49292f7754df6fc",
-        "behavior.js": "4fbe625e639ffb57f97c92493721aabe8ed52c583abe662d0921426c09a64c2e",
+        "behavior.js": "57aa18d00d8953bbfab19846e0cadfa8d95467cdab7e335c2dd5553aea27ae53",
         "index.js": "8b743346b28ee6ee90744b3206df447243c32ce184a54497cd6e504535ae449f",
         "chaos.js": "e49d22eb76a04fbc89a05a653ed75ade1442fa4e25b9e198e82c30759a588770"
       }

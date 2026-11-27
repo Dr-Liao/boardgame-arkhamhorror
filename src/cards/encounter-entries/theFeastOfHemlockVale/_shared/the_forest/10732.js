@@ -22,6 +22,7 @@
 //     章节没有声明 mechanics.calendar 时回落到战役日志的 records.time（战役层 flow/interludes 同步写入，
 //     与 theThingInTheDepths 等章 behavior 读的同一份记录）。
 import { duringPeriod } from '../../../../../engine/matcher.js'
+import { markerLabelsOf } from '../../../_shared.js'
 
 const CODE = '10732'
 const NAME = '毒花'
@@ -60,6 +61,10 @@ export default {
   code: CODE,
   scope: 'enemy',
   implemented: true,
+  enemyRule: {
+    attackDamageBonus: (state, enemy) => periodOf(state, enemy)
+      ? markerLabelsOf(enemy).filter(marker => marker === MARKER).length : 0,
+  },
   flags: {
     encounterGroup: 'the_forest',
     quantity: 2,
@@ -79,8 +84,5 @@ export default {
     label: '一轮结束时：在毒花上放置 1 个资源，作为疯长（按昼夜成长）',
     resolve: ({ state, source, inv, api }) => growOvergrowth(state, source, inv, api),
   }],
-  note: '近似：疯长用通用资源标记 + addEnemyStatModifier 实现生命值（白日）/攻击值（黑夜）成长；'
-    + '「每个疯长 +1 伤害值」没有运行期读点（enemyStatMods 只覆盖 fight/evade/health，'
-    + 'enemyRule.attackDamageBonus 是静态值），留待 P8 的敌人伤害值修正原语；昼夜取日历原语，'
-    + '缺失时回落战役日志 records.time。印刷 2 张由 card-data.js#encounterGroupDeck 展开。',
+  note: '轮末疯长提高对应昼夜数值。发起攻击时，伤害值按身上当前疯长数计算。',
 }

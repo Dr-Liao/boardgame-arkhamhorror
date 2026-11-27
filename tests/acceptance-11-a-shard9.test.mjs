@@ -1,22 +1,13 @@
 // 11-a-9 验收（TDC 11697–11737）逐卡证据测试。
 // 每卡一条标题含卡号、真实执行的用例：注册期校验 + 条目规则声明 + 章节 behavior/chaos 调用。
-// 失败卡未实现点由 artifacts/acceptance/11-a-9/probe-defects.mjs 复现并写入报告。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
-import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
+import { fixture, legalMoves, move, settle, enemy } from './core-fixture.mjs'
+import { registeredEntry } from '../src/engine/ability.js'
 import * as doomB from '../content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/behavior.js'
 import * as doomD from '../content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/definition.js'
 import * as doomC from '../content/campaigns/theDrownedCity/scenarios/theDoomOfArkhamPartII/chaos.js'
 
-const rows = JSON.parse(await (await import('node:fs/promises')).readFile(
-  new URL('../artifacts/acceptance/11-a-9/scope-map.json', import.meta.url), 'utf8'))
-const ENTRIES = {}
-for (const row of rows) {
-  const mod = await import('../' + row.encounterEntry.replace(/\\/g, '/'))
-  ENTRIES[row.code] = mod.default
-  if (!registeredEntry(row.code)) registerCardAbilities([mod.default])
-}
 const flags = code => registeredEntry(code)?.flags || {}
 const rule = code => registeredEntry(code)?.enemyRule || {}
 
@@ -25,12 +16,30 @@ test('11-a-5 11697 圣玛丽医院（废墟）：不能完全淹没（floodBound
   const entry = registeredEntry('11697')
   assert.equal(entry.locationRule.floodBounds.max, 1)
   assert.equal(flags('11697').ruined, true)
+  assert.deepEqual(flags('11697').enemyEntryReaction, {
+    trait: 'Cthulhu', enemyCode: '11701', maxClues: 3, groupLimit: 'perGame', effect: 'damagePerClue',
+  })
   assert.equal(typeof doomB.swapToRuined, 'function')
 })
-test('11-a-5 11698 南区（废墟）：floodBounds max 2、废墟面', () => {
-  const entry = registeredEntry('11698')
-  assert.equal(entry.locationRule.floodBounds.max, 2)
-  assert.equal(flags('11698').ruined, true)
+test('11698 南区（废墟）：从自己的弃牌堆取回 道具 支援', () => {
+  const state = fixture('01001', 2)
+  const [inv, other] = state.investigators
+  const location = state.locations.find(site => site.id === inv.location)
+  location.code = location.originalCode = '11698'
+  location.revealed = true
+  inv.discard = ['01006', '01088']
+  other.discard = ['01006']
+  const take = () => legalMoves(state, 0).find(action => action.action === 'entityAbility')
+  const lock = enemy(state, { code: '03017', engagedSeat: 0 })
+  assert.equal(take(), undefined)
+  state.enemies = state.enemies.filter(candidate => candidate !== lock)
+  inv.engaged = []
+  move(state, take())
+  settle(state)
+  assert.deepEqual(state.investigators[0].hand, ['01006'])
+  assert.deepEqual(state.investigators[0].discard, ['01088'])
+  assert.deepEqual(state.investigators[1].discard, ['01006'])
+  assert.equal(take(), undefined)
 })
 test('11-a-5 11699 西侧屋顶：不能淹没/放印记，可从屋顶攻击连接地点敌人', () => {
   const entry = registeredEntry('11699')
@@ -89,7 +98,7 @@ test('11-a-5 11707 凶险狂风：随机弃手/额外巡逻/意志失败二选�
 test('11-a-5 11708 恐惧凝视：敏捷/失去资源/共同决定三选一', () => {
   assert.equal(typeof doomB.resolveCthulhuCard, 'function')
 })
-test('11-a-5 11709 拆毁：最近屋顶放废墟，2 个则全员阵亡并移除地点', () => {
+test('11-a-5 11709 拆毁：最近屋顶放废墟，达到两个则拆除该屋顶并结算当地角色', () => {
   assert.equal(registeredEntry('11709').code, '11709')
   assert.equal(typeof doomB.ruinedLocationCount, 'function')
 })
@@ -115,7 +124,7 @@ test('11-a-5 11715 希望消逝：封印 elder_sign，场景推进时弃掉并�
 // ---- 诡计 ----
 for (const [code, key] of [['11716', 'layWaste'], ['11717', 'eyesOfYchlecht'], ['11719', 'grossPlasticity'], ['11720', 'arkhamUnderAssault']]) {
   test(`11-a-5 ${code} 遭遇诡计：显现由章节 ${key} 结算`, () => {
-    assert.equal(typeof ENTRIES[code].encounterResolve, 'function')
+    assert.equal(typeof registeredEntry(code).encounterResolve, 'function')
     assert.equal(typeof doomB[key], 'function')
   })
 }
@@ -136,7 +145,7 @@ test('11-a-5 11720 阿卡姆遭袭：全员意志检定，有人失败抽克苏�
 test('11-a-5 11721 偷渡者工蜂：冷漠、巡逻无毁灭敌人；敌军阶段末给另一敌人放毁灭并弃卡', () => {
   assert.equal(rule('11721').patrolTarget != null, true)
   assert.equal(Number(flags('11721').quantity) >= 1, true)
-  assert.ok(ENTRIES['11721'].abilities.length >= 1)
+  assert.ok(registeredEntry('11721').abilities.length >= 1)
 })
 test('11-a-5 11722 感染！：威胁区每人限 1；回合末放毁灭；意志(3) 成功弃卡', () => {
   const entry = registeredEntry('11722')
@@ -145,60 +154,60 @@ test('11-a-5 11722 感染！：威胁区每人限 1；回合末放毁灭；意�
   assert.equal(typeof entry.encounterResolve, 'function')
 })
 test('11-a-5 11723 朝圣者侍僧：攻击后在其上放 1 毁灭', () => {
-  assert.ok(ENTRIES['11723'].abilities.length >= 1)
+  assert.ok(registeredEntry('11723').abilities.length >= 1)
   assert.equal(Number(flags('11723').health) > 0, true)
 })
 test('11-a-5 11724 朝圣者领袖：重整时其他异教徒 +2 战斗并获得猎手/无情', () => {
-  assert.ok(Array.isArray(ENTRIES['11724'].modifiers) && ENTRIES['11724'].modifiers.length >= 1)
+  assert.ok(Array.isArray(registeredEntry('11724').modifiers) && registeredEntry('11724').modifiers.length >= 1)
   assert.equal(flags('11724').aloof, true)
 })
 test('11-a-5 11725 怪异星之眷族：猎手/庞大/无情，攻/躲见 elder_thing 治愈 1', () => {
-  assert.ok(ENTRIES['11725'].abilities.length >= 1)
+  assert.ok(registeredEntry('11725').abilities.length >= 1)
   assert.equal(flags('11725').relentless, true)
 })
 test('11-a-5 11726 感染星之眷族：首次将败时治愈并重整；见 elder_thing 受 1 恐', () => {
-  assert.ok(ENTRIES['11726'].abilities.length >= 2)
+  assert.ok(registeredEntry('11726').abilities.length >= 2)
 })
 test('11-a-5 11727 珊瑚星之眷族：有伤害时获得警戒/反击；见 elder_thing 受 1 伤', () => {
   assert.deepEqual(rule('11727').whileDamagedKeywords, ['alert', 'retaliate'])
-  assert.ok(ENTRIES['11727'].abilities.length >= 1)
+  assert.ok(registeredEntry('11727').abilities.length >= 1)
 })
 test('11-a-5 11728 星之眷族观察者：调查其地点见 elder_thing → 交战并立刻攻击', () => {
-  assert.ok(ENTRIES['11728'].abilities.length >= 1)
+  assert.ok(registeredEntry('11728').abilities.length >= 1)
   assert.equal(flags('11728').aloof, true)
 })
 test('11-a-5 11729 深渊之眼：cultist/tablet 视为 elder_thing；意志(3) 成功弃卡', () => {
   assert.equal(registeredEntry('11729').treacheryRule.threatArea, true)
-  assert.ok(ENTRIES['11729'].abilities.length >= 2)
+  assert.ok(registeredEntry('11729').abilities.length >= 2)
 })
 test('11-a-5 11730 狡诈拟态：无[[怪物]]敌人则涌动，否则智力(3) 失败最近怪物攻击', () => {
-  const entry = ENTRIES['11730']
+  const entry = registeredEntry('11730')
   assert.equal(typeof entry.encounterResolve, 'function')
 })
 test('11-a-5 11731 古老迷雾：附属地点；四技能 -1；成功超 2 点弃卡', () => {
   assert.equal(flags('11731').locationAttachment, true)
-  assert.ok(Array.isArray(ENTRIES['11731'].modifiers) && ENTRIES['11731'].modifiers.length >= 4)
-  const entry = ENTRIES['11731']
+  assert.ok(Array.isArray(registeredEntry('11731').modifiers) && registeredEntry('11731').modifiers.length >= 4)
+  const entry = registeredEntry('11731')
   assert.ok(entry.modifiers.every(item => item.audience === 'here'))
 })
 test('11-a-5 11732 腐蚀浓雾：智力/战力(4) 失败受 1 伤，差 3+ 改全员直接伤害', () => {
   assert.equal(flags('11732').test.difficulty, 4)
-  assert.equal(typeof ENTRIES['11732'].encounterResolve, 'function')
+  assert.equal(typeof registeredEntry('11732').encounterResolve, 'function')
 })
 test('11-a-5 11733 伏特鳗：猎手；猎物线索最多；敌军阶段移动时完全淹没地点互相连接', () => {
   assert.equal(rule('11733').hunterTreatsFloodedConnected, true)
 })
 test('11-a-5 11734 梦游迁徙：无敌人则涌动；意志(3) 失败二选一', () => {
-  assert.equal(typeof ENTRIES['11734'].encounterResolve, 'function')
+  assert.equal(typeof registeredEntry('11734').encounterResolve, 'function')
 })
 test('11-a-5 11735 水下狩猎：敏捷(3)，完全淹没 +2 难度；失败受 1 伤并提高最近地点淹没', () => {
   assert.equal(flags('11735').test.difficulty, 3)
-  assert.equal(typeof ENTRIES['11735'].encounterResolve, 'function')
+  assert.equal(typeof registeredEntry('11735').encounterResolve, 'function')
 })
 test('11-a-5 11736 致命急流：未淹没则涌动；否则敏捷/战力(4) 两选一', () => {
-  assert.equal(typeof ENTRIES['11736'].encounterResolve, 'function')
+  assert.equal(typeof registeredEntry('11736').encounterResolve, 'function')
 })
 test('11-a-5 11737 水中之物：涌动；显现提高最近地点淹没', () => {
-  assert.equal(typeof ENTRIES['11737'].encounterResolve, 'function')
+  assert.equal(typeof registeredEntry('11737').encounterResolve, 'function')
   assert.equal(flags('11737').surge ?? true, true)
 })

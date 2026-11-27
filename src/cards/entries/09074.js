@@ -10,25 +10,18 @@
 //   · 「调查 + 加入[敏捷]」→ api.investigate 的 addSkill（actions.js#runInvestigate 同一读点）；
 //     「不会触发借机攻击」→ played 描述子 noOpportunityAttack + countsAs:'investigate'。
 //   · 「成功后自动躲避本地点敌人」→ onInvestigateSuccess 回调 + api.autoEvadeEnemy。
-//   · 「回合结束时返回手牌」→ 没有延迟效果读点时，用「结算后返回手牌」近似（条目 keepOnPlay
-//     阻止默认弃置，再由 resolve 显式放回手牌/弃牌堆），见 note 与原语请求。
-// approximation: 卡面写「你回合结束时」返回；引擎对事件卡没有延迟去向读点，因此本实现是
-//   「超过难度 3 点时结算后立即返回手牌」。见 primitive-requests/09074.json。
+//   · api.returnPlayedEventAtEndOfTurn 登记本实体回合结束时的返回。
 const CODE = '09074'
 
 export default {
   code: CODE,
-  keepOnPlay: true,
-  simplified: true,
-  note: 'approximation:「回合结束时返回手牌」实现为结算后立即返回手牌（事件卡延迟去向缺读点，primitive-requests/09074.json）。',
   abilities: [
     {
       kind: 'played',
       countsAs: 'investigate',
       noOpportunityAttack: true,
       label: '调查：加入[敏捷]；成功超过 1 点可自动躲避本地点敌人；超过 3 点返回手牌',
-      resolve: ({ inv, api }) => {
-        let returnToHand = false
+      resolve: ({ inv, api, context }) => {
         api.investigate(inv.seat, {
           addSkill: 'agility',
           onInvestigateSuccess: (result, { loc }) => {
@@ -38,7 +31,7 @@ export default {
             if (successBy >= 1) {
               const enemies = api.enemiesAt(loc?.id || inv.location)
               if (enemies.length) {
-                const picked = enemies.length === 1 ? enemies[0].id : api.choice({
+                const picked = api.choice({
                   kind: 'target', source: CODE, seat: inv.seat, canSkip: true,
                   prompt: '「破门而入」：自动躲避本地点的一个敌人？',
                   options: [{ id: 'skip', label: '不躲避' }, ...enemies.map(enemy => ({ id: enemy.id, label: enemy.name }))],
@@ -49,15 +42,9 @@ export default {
                 }
               }
             }
-            if (successBy >= 3) returnToHand = true
+            if (successBy >= 3) api.returnPlayedEventAtEndOfTurn(context)
           },
         })
-        if (returnToHand) {
-          api.putInHand(inv.seat, CODE)
-          api.info('🚪 「破门而入」：检定超过难度 3 点，返回你的手牌（近似：结算后立即返回）。')
-          return
-        }
-        api.putIntoDiscard(inv.seat, CODE)
       },
     },
   ],

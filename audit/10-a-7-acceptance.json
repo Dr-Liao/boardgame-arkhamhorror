@@ -3,7 +3,7 @@
   "unit": "10-a-7",
   "profile": {
     "id": "fhv-campaign-d-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10572–10605）43 条目录记录。32 条通过五维验收；11 条失败窗口未接线/运行时 API 错误暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10572–10605）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,23 +17,23 @@
   },
   "summary": {
     "total": 43,
-    "verified": 32,
-    "unverified": 11,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 150
+    "testsPassed": 161
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
-      "sha256": "e7d1710a007cbbe4489bc479e4205234e9be8a808600042b6be094a2155ca216"
+      "sha256": "5d4ddcc30baad56897168acf9f5fac826d5c1e993e3ec03093929012f2a832c6"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theLostSister.test.mjs",
-      "sha256": "6826addf1270b5c65fefc29f1c0510821f98813bc3578d9ce268f6a331068523"
+      "sha256": "2ce579289062b7bb3a5e552c7c246152f6921a88a4e7c997e39e8349cf3e5a2b"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theThingInTheDepths.test.mjs",
-      "sha256": "ce569f04ef0affdaea1556f1bea7ec99f441c591a25926058c4618b4cf3f1a21"
+      "sha256": "d3af3dbca6a7f1a32e3c16a3284a3d59d87780ddc6db01e52146c3f0a7085a34"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theTwistedHollow.test.mjs",
@@ -61,7 +61,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
-      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+      "sha256": "09746297943b9125717640adf59f5158ea8eaee91141902a2fae2f7a64dc2b0f"
     }
   ],
   "entries": [
@@ -105,9 +105,17 @@
       "code": "10575",
       "name": "阿克望",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "谈判「看过之后按任意顺序放回」实现为按原顺序放回（重排面板留给 P8）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10575 阿克望谈判可重新排列岩穴牌堆前三张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10575/10576/10577/10578/10579/10580/10581/10582 岩穴地点：条目声明与 behavior 分派读点"
+        }
+      ]
     },
     {
       "code": "10576",
@@ -125,17 +133,37 @@
       "code": "10577",
       "name": "隐蔽海湾",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「攻击失败后受 1 伤害」只落旗标，失败窗口未接 skillTestResult。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10577 只在相应的地点检定失败后受到卡面惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10575/10576/10577/10578/10579/10580/10581/10582 岩穴地点：条目声明与 behavior 分派读点"
+        }
+      ]
     },
     {
       "code": "10578",
       "name": "乱藻海滩",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「躲避失败失去 1 行动」旗标未接；且强制调用不存在的 api.revealChaosToken/drawChaosToken → 整段静默跳过。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10578 乱藻海滩离开前揭示混乱标记，命中符号且无道具时取消移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10578 只在相应的地点检定失败后受到卡面惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10575/10576/10577/10578/10579/10580/10581/10582 岩穴地点：条目声明与 behavior 分派读点"
+        }
+      ]
     },
     {
       "code": "10579",
@@ -153,17 +181,33 @@
       "code": "10580",
       "name": "地下水池",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「调查失败后受 1 恐惧」旗标未接。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10580 只在相应的地点检定失败后受到卡面惩罚"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10575/10576/10577/10578/10579/10580/10581/10582 岩穴地点：条目声明与 behavior 分派读点"
+        }
+      ]
     },
     {
       "code": "10581",
       "name": "露天洞穴",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷 [fast] 被实现为普通剧本行动（时机/费用不等价）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10581 露天洞穴快速异能消耗 0 行动，按重整敌人数设定难度并去掉黑暗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10575/10576/10577/10578/10579/10580/10581/10582 岩穴地点：条目声明与 behavior 分派读点"
+        }
+      ]
     },
     {
       "code": "10582",
@@ -185,7 +229,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
-          "test": "验收 10575/10577/10578/10580/10581/10583b/10585/10586/10587/10592/10600 缺陷复现：旗标无读点/近似不等价"
+          "test": "10583b 黑夜鲎类混种被实际近战攻击命中后伤害攻击者，包括致命打击"
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
@@ -197,9 +241,17 @@
       "code": "10583b",
       "name": "鳖类混种[night]",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「近战攻击成功后自伤」只落旗标（P8 接 skillTestResult）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10583b 黑夜鲎类混种被实际近战攻击命中后伤害攻击者，包括致命打击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10583a/10583b/10584a/10584b/10585/10586/10587/10600/10601/10602 双面混种与深沼之物：条目/窗口声明齐备"
+        }
+      ]
     },
     {
       "code": "10584a",
@@ -229,25 +281,53 @@
       "code": "10585",
       "name": "岩穴青苔",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附属到[[道具]]支援/文本空白」仅声明 flags，章节 behavior 未复写、引擎无敌人附属通道。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10585 岩穴青苔附属可选道具，空白宿主文本并随控制者移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10583a/10583b/10584a/10584b/10585/10586/10587/10600/10601/10602 双面混种与深沼之物：条目/窗口声明齐备"
+        }
+      ]
     },
     {
       "code": "10586",
       "name": "重属自然",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "昼夜判定依赖不存在的 api.isDarkLocationHere（scenarioRuntime 缺该方法）→ 永远走白日面。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10586 重属自然按所在地黑暗程度使用不同检定与失败伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-scenario-theLostSister.test.mjs",
+          "test": "P7 theLostSister 遭遇事件（10586 重属自然）：白日失败二选一、黑夜让敌人治愈"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10583a/10583b/10584a/10584b/10585/10586/10587/10600/10601/10602 双面混种与深沼之物：条目/窗口声明齐备"
+        }
+      ]
     },
     {
       "code": "10587",
       "name": "荧光增生",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "条目只有 flags，无 encounterResolve；显现附属目标选择与 [action] 弃卡留给 P8。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10587 荧光增生附属到最近的黑暗地点，敏捷检定成功丢弃并恢复黑暗"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10583a/10583b/10584a/10584b/10585/10586/10587/10600/10601/10602 双面混种与深沼之物：条目/窗口声明齐备"
+        }
+      ]
     },
     {
       "code": "10588",
@@ -301,9 +381,13 @@
       "code": "10592",
       "name": "绝世发现",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「[fast] 改巡逻」用「敌军阶段后走一步」近似（非快速行动）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10592 深沼之物快速改巡逻支付同地点的团队线索，本轮巡逻改走新地点"
+        }
+      ]
     },
     {
       "code": "10593a",
@@ -477,9 +561,17 @@
       "code": "10600",
       "name": "深沼之物",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「攻击后在其地点为沼地时治愈 2 点」未接线（引擎无该强制窗口）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "10600 深沼之物在沼地完成攻击后治愈 2 点伤害，其他地形无效果"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard7.test.mjs",
+          "test": "验收 10583a/10583b/10584a/10584b/10585/10586/10587/10600/10601/10602 双面混种与深沼之物：条目/窗口声明齐备"
+        }
+      ]
     },
     {
       "code": "10601",

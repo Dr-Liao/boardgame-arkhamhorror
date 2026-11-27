@@ -5,47 +5,11 @@
 //       将遭遇弃牌堆洗入遭遇牌库。调查员必须决定（选择一项），不能选择已经造访过的地点：
 //       南方奥瑞巴岛 / 北方禁闭之地 / 东方永恒之国的王国。
 //
-// 一卡一文件：区域选择写入 scenarioFlags.pendingRegion，区域设置由章节 behavior 结算。
-const REGIONS = [
-  { id: 'oriab', label: '南方的奥瑞巴岛' },
-  { id: 'forbiddenLands', label: '北方的禁闭之地' },
-  { id: 'timelessRealm', label: '东方的永恒之国' },
-]
-
-function purgeEncounterCode(state, api, code) {
-  for (const enemy of (state.enemies || []).slice()) {
-    if ((enemy.originalCode || enemy.code) === code) api.removeEnemyFromGame?.(enemy)
-  }
-  for (let index = 0; index < 40; index += 1) {
-    if (!api.discardEncounterCard?.(code, { includeDiscard: true })) break
-    api.takeEncounterDiscard?.(code)
-  }
-}
-
+// 背面按顺序列出可前往的区域，由章节 actReveal 统一移除指定卡牌、洗牌并处理选择。
 export default {
   code: '06124', scope: 'act', implemented: true,
   actRule: {
-    regionOptions: REGIONS.map(region => region.id),
+    regionOptions: ['oriab', 'forbiddenLands', 'timelessRealm'],
     removeFromGameCodes: ['06148'],
-    onReveal(state, act, api) {
-      purgeEncounterCode(state, api, '06148')
-      api.info?.('🏛️ 「去哪里？」：伊伯生物被移出游戏。')
-      api.shuffleDiscard?.()
-      const visited = state.scenarioFlags?.regionsVisited || []
-      const available = REGIONS.filter(region => !visited.includes(region.id))
-      if (!available.length) {
-        api.info?.('🏛️ 所有区域都已造访：进入结局 1。')
-        api.finish?.('resolution1')
-        return true
-      }
-      const answer = api.choose?.({
-        kind: 'story', source: '06124', seat: Number(state.campaign?.leadSeat ?? 0),
-        prompt: '「去哪里？」：选择下一个要前往的区域（不能是已造访区域）。',
-        options: available.map(region => ({ id: region.id, label: region.label })),
-      }) ?? available[0].id
-      api.setScenarioFlag?.('pendingRegion', String(answer))
-      api.info?.(`🧭 调查员决定前往：${available.find(region => region.id === String(answer))?.label || answer}。`)
-      return true
-    },
   },
 }

@@ -9,6 +9,7 @@ export default {
   code: '10630',
   scope: 'location',
   implemented: true,
+  locationRule: { noPlayerAttachments: true },
   flags: {
     farmhouse: true,
     cannotHavePlayerAttachments: true,
@@ -17,5 +18,5 @@ export default {
     fastMoveCostPerInvestigator: 1,
     clueActionGroupLimit: 'round'
   },
-  note: '农庄的 noLocationDefenses 写在 definition 的地点对象上（引擎 location-defenses.js 的真实读点）；快速移动与获得线索在 behavior.actions/performAction。'
+  note: '玩家卡牌附属由地点规则限制，陷阱和诱饵由地点防御规则限制。快速移动与获得线索由章节地点行动结算。'
 }

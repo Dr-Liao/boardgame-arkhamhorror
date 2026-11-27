@@ -181,7 +181,7 @@ export function syncShantyConnections(state, api = {}) {
 export function enemyConnections(state, enemy, location) {
   if (!enemy || !location || !hasTrait(enemy, 'DeepOne')) return []
   const shanty = locationOf(state, 'drownedShanty')
-  if (!shanty) return []
+  if (!shanty?.revealed || !flagsOf(codeOf(shanty)).deepOneMovingConnectsFlooded) return []
   const here = locationOf(state, location.id)
   if (!here) return []
   if (here.id === 'drownedShanty') {
@@ -769,7 +769,7 @@ export function actions(state, inv) {
   }
   // 破碎遗迹：未淹没时发现符文 V。
   if (flags.glyphAction?.letter) {
-    const flooded = waterLevel(state, {}, here.id) > 0
+    const flooded = flags.glyphAction.requiresNotFlooded && waterLevel(state, {}, here.id) > 0
     moves.push({
       action: 'scenarioAction', rule: 'twwLocationGlyph', locationId: here.id, actions: 1,
       label: `如果本地未淹没，发现符文 ${flags.glyphAction.letter}（${flags.glyphAction.meaning}）`,
@@ -777,7 +777,7 @@ export function actions(state, inv) {
     })
   }
   // 水下秘库：智力(层级) 成功则翻面结算符文 Z。
-  if (flags.vaultFlipAction === true && flagValue(state, 'twwVaultFlipped') !== true) {
+  if (flags.vaultFlipAction === true && !here.cannotFlipAgain && flagValue(state, 'twwVaultFlipped') !== true) {
     moves.push({
       action: 'scenarioAction', rule: 'twwUnderseaVault', locationId: here.id, actions: 1,
       label: `检定智力(${here.level ?? rowLevelOf(state, here.id) ?? 1})：成功则翻开水面秘库，发现符文 Z（城市）`,
@@ -861,7 +861,7 @@ function locationGlyphAction(state, inv, api) {
   const flags = flagsOf(codeOf(here))
   const glyph = flags.glyphAction
   if (!glyph?.letter) return false
-  if (waterLevel(state, api, here.id) > 0) return false
+  if (glyph.requiresNotFlooded && waterLevel(state, api, here.id) > 0) return false
   addGlyph(state, api, glyph.letter, glyph.meaning)
   info(api, `${inv.name} 在「${here.name}」发现符文 ${glyph.letter}（${glyph.meaning}）。`)
   return true
@@ -869,15 +869,18 @@ function locationGlyphAction(state, inv, api) {
 
 function vaultFlipAction(state, inv, api) {
   const here = locationOf(state, inv.location)
-  if (!here || flagValue(state, 'twwVaultFlipped') === true) return false
-  const flags = flagsOf(UNDERSEA_VAULT_CODE)
-  if (flags.vaultFlipAction !== true) return false
-  const glyph = flags.glyph || { letter: 'Z', meaning: '城市' }
+  if (!here || here.cannotFlipAgain || flagValue(state, 'twwVaultFlipped') === true) return false
+  const flags = flagsOf(codeOf(here))
+  const story = flagsOf(flags.storyCode)
+  if (flags.vaultFlipAction !== true || story.storyOf !== codeOf(here) || !story.glyph) return false
+  const glyph = story.glyph
   const level = here.level ?? rowLevelOf(state, here.id) ?? 1
   const succeed = () => {
+    api.cardFlip?.(codeOf(here))
     setFlag(state, 'twwVaultFlipped', true)
     addGlyph(state, api, glyph.letter, glyph.meaning)
     here.flipped = true
+    here.cannotFlipAgain = flags.cannotFlipAgain === true || story.cannotFlipAgain === true
     info(api, `${inv.name} 打开水下秘库，发现符文 ${glyph.letter}（${glyph.meaning}）；卡牌翻回地点面且不能再翻。`)
   }
   if (typeof api.test === 'function') {
@@ -892,15 +895,18 @@ function friezeFlipAction(state, inv, api) {
   if (!here) return false
   const frieze = attachedFriezeAt(state, here.id)
   if (!frieze) return false
-  const storyFlags = flagsOf('11531b')
-  const glyph = storyFlags.glyph || { letter: 'W', meaning: '寄生虫' }
+  const storyCode = flagsOf(codeOf(frieze)).storyCode
+  const storyFlags = flagsOf(storyCode)
+  if (storyFlags.storyOf !== codeOf(frieze) || !storyFlags.glyph) return false
+  const glyph = storyFlags.glyph
   const finish = () => {
+    api.cardFlip?.(codeOf(frieze))
     here.attachments = (here.attachments || []).filter(item => item !== frieze)
     addGlyph(state, api, glyph.letter, glyph.meaning)
-    if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory('11531b', { sourceId: frieze.id })
+    if (typeof api.addStoryToVictory === 'function') api.addStoryToVictory(storyCode, { sourceId: frieze.id })
     else {
       state.victoryDisplay ||= []
-      state.victoryDisplay.push({ id: frieze.id, code: '11531b', originalCode: '11531b', victory: 1 })
+      state.victoryDisplay.push({ id: frieze.id, code: storyCode, originalCode: storyCode, victory: storyFlags.victory })
     }
     info(api, `${inv.name} 翻面海底壁画，发现符文 ${glyph.letter}（${glyph.meaning}），本卡加入胜利区。`)
   }

@@ -12,7 +12,7 @@ export default {
   encounterResolve(state, inv, card, api) {
     const poisoned = api.isPoisoned(inv.seat)
     api.threat(inv.seat, '04099', { blankItemAssets: true, forcedRoundEndDiscard: true })
-    if (poisoned) api.drawEncounter(inv.seat)
+    if (poisoned) api.drawEncounter(inv.seat, { surgeDraw: true })
     return true
   },
 }

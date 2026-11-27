@@ -1,17 +1,15 @@
 // 08558 菲奥多西亚号甲板
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 幻景层与特殊规则由章节 behavior/遭遇结算读点消费；数值/线索取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
 export default {
-  code: '08558',
-  scope: 'location',
-  implemented: true,
-  flags: {
-    "mirageId": "deckOfTheTheodosia",
-    "tier": 1,
-    "forcedInvestigate": "harderShroudOrExtraAction"
+  code: '08558', scope: 'location', implemented: true,
+  flags: { mirageId: 'deckOfTheTheodosia', tier: 1 },
+  locationRule: {
+    beforeInvestigate(state, inv, location, api) {
+      const options = [{ id: 'shroud', label: '本次调查的帷幕 +2' }]
+      if (inv.actionsLeft > 0) options.push({ id: 'action', label: '额外花费 1 个行动' })
+      const choice = options.length === 1 ? 'shroud' : api.choice({ kind: 'effect', source: location.id, seat: inv.seat,
+        prompt: '选择调查甲板的附加条件。', options })
+      if (choice === 'action' && api.spendAdditionalAction(inv.seat)) return
+      return { shroudModifier: 2 }
+    },
   },
 }

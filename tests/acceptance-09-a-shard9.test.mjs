@@ -2,8 +2,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { enemy, fixture, move, settle } from './core-fixture.mjs'
+import { enemyEvadeValue, enemyFightValue, scenarioRuntime, spawnEnemy } from '../src/engine/engine.js'
+import { withEffectSource } from '../src/engine/effect-provenance.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 
 import { behavior as congress } from '../content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/behavior.js'
+import { behavior as dancingMad } from '../content/campaigns/theScarletKeys/scenarios/dancingMad/behavior.js'
 import * as congressDef from '../content/campaigns/theScarletKeys/scenarios/congressOfTheKeys/definition.js'
 import conspiracy from '../src/cards/encounter-entries/theScarletKeys/_shared/crimson_conspiracy/09717.js'
 import knives from '../src/cards/encounter-entries/theScarletKeys/_shared/shadow_of_a_doubt/09722.js'
@@ -65,20 +70,92 @@ test('验收 09726a/09726b/09727a/09727b/09730/09731 红衣结社与共享敌人
   assert.ok(engine.includes('tskKeyShifted') || engine.includes('keys.shift'), 'Shift 派发读点存在')
 })
 
-test('验收 09716a/09716b/09716c/09720/09729/09732 缺陷复现：三份独立实现/声明读点缺失', () => {
-  const texts = ['09716a', '09716b', '09716c'].map(code => fs.readFileSync(findEntry(code), 'utf8'))
-  for (const text of texts) {
-    assert.match(text, /tskExposed/, '09716a/b/c 各自手写揭露后能力')
-    assert.equal(/from '.*_shared.*'/.test(text), false, '09716a/b/c 未复用共享实现（各自独立文件）')
+for (const code of ['09716a', '09716b', '09716c']) {
+  test(`验收 ${code} 结社特工：共同入阴影流程只放 1 毁灭，揭露可弃掉真身`, () => {
+    const state = fixture()
+    const inv = state.investigators[0]
+    const api = scenarioRuntime(state, [])
+    const agent = spawnEnemy(state, code, inv.location, null)
+    assert.equal(agent.location, null)
+    assert.equal(agent.doom, 1)
+    const cards = api.mechanics.tsk.concealed.miniCards()
+    assert.equal(cards.filter(card => card.decoy).length, 2)
+    const actual = cards.find(card => card.code === code)
+    assert.equal(actual.decoy, false)
+
+    inv.location = actual.locationId
+    state.locations.find(location => location.id === inv.location).shroud = 0
+    move(state, { action: 'fightConcealed', miniId: actual.id, locationId: actual.locationId })
+    settle(state, choice => choice.options.find(option => option.label?.includes('结社特工揭露时'))?.id)
+    assert.equal(state.enemies.some(item => item.id === agent.id), false)
+    assert.ok(state.encounterDiscard.includes(code))
+  })
+}
+
+test('验收 09716a 疯星乱舞：旧式迷你卡揭露时呈现场上真身，可触发弃置反应且不会重新隐匿', () => {
+  const state = fixture()
+  state.scenario.id = 'dancingMad'
+  const inv = state.investigators[0]
+  const mini = scenarioRuntime(state, []).mechanics.tsk.concealed.place({
+    kind: 'CoterieAgentA', code: '09716a', locationId: inv.location,
+  })
+  const expose = draft => dancingMad.exposeMiniCard(draft, draft.investigators[0], mini.id, scenarioRuntime(draft, []))
+  resolveTransaction(state, 0, { action: 'revealDancingMadAgent' }, expose)
+  assert.ok(state.pendingChoice?.options.some(option => option.label?.includes('结社特工揭露时')))
+  while (state.pendingChoice) {
+    const choice = state.pendingChoice
+    const optionId = choice.options.find(option => option.label?.includes('结社特工揭露时'))?.id ?? choice.options[0].id
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId }, expose)
   }
-  const engine = engineText()
-  for (const key of ['handsKeyToInvestigatorOnDefeat', 'shiftsKeysOnFailedTestAtLocation', 'cannotBeDefeatedHealsAndFlees', 'spawnNearestKeyLocus', 'blocksOtherAttacksWhileReady']) {
-    assert.equal(engine.includes(key), false, `${key} 无引擎读点（仅条目声明）`)
+  assert.ok(state.encounterDiscard.includes('09716a'))
+  assert.equal(state.enemies.some(item => item.code === '09716a'), false)
+  assert.equal(scenarioRuntime(state, []).mechanics.tsk.concealed.miniCards().length, 0)
+})
+
+test('验收 09720 结社代表：重整时拒绝同地玩家卡揭露，仍允许普通揭露或横置后的玩家卡揭露', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const api = scenarioRuntime(state, [])
+  const envoy = enemy(state, { code: '09720' })
+  const concealed = api.mechanics.tsk.concealed
+  const uncover = card => withEffectSource(state, { kind: 'playerCard', code: '01022' },
+    () => concealed.expose(card.id, { seat: 0 }))
+  const one = concealed.place({ kind: 'decoy', decoy: true, locationId: inv.location })
+  assert.equal(uncover(one).cancelled, true)
+  assert.ok(concealed.byId(one.id))
+  assert.equal(concealed.expose(one.id, { seat: 0 }).decoy, true)
+
+  const two = concealed.place({ kind: 'decoy', decoy: true, locationId: inv.location })
+  envoy.exhausted = true
+  assert.equal(uncover(two).decoy, true)
+  assert.equal(concealed.byId(two.id), null)
+})
+
+test('验收 09729 身染猩红：附属时宿主攻击和躲避各 +1，移除附属后恢复', () => {
+  const state = fixture()
+  const inv = state.investigators[0]
+  const host = enemy(state, { fight: 3, evade: 2, traits: ['Coterie'] })
+  const api = scenarioRuntime(state, [])
+  const before = [enemyFightValue(state, host, inv), enemyEvadeValue(state, host, inv)]
+  api.drawEncounter(0, { code: '09729' })
+  assert.ok(host.attachments.some(card => card.code === '09729'))
+  assert.deepEqual([enemyFightValue(state, host, inv), enemyEvadeValue(state, host, inv)], before.map(value => value + 1))
+  api.discardAttachment(host.attachments[0])
+  assert.deepEqual([enemyFightValue(state, host, inv), enemyEvadeValue(state, host, inv)], before)
+})
+
+test('验收 09732 天启噩兆：选用反应时弃掉敌人并回收空洞，跳过反应时加入胜利区', () => {
+  for (const accept of [false, true]) {
+    const state = fixture()
+    const presage = enemy(state, { code: '09732', name: '天启噩兆', victory: 1, health: 1, fight: 0 })
+    scenarioRuntime(state, []).mechanics.tsk.hollow.hollow({ code: '01020', scope: 'investigator', seat: 0 })
+    move(state, { action: 'fight', enemyId: presage.id })
+    settle(state, choice => accept ? choice.options.find(option =>
+      option.label?.includes('选择至多 3 张空洞') || option.id === '01020')?.id : null)
+    assert.equal(state.victoryDisplay.some(card => (card.originalCode || card.code) === '09732'), !accept)
+    assert.equal(state.encounterDiscard.includes('09732'), accept)
+    assert.equal(state.investigators[0].hand.includes('01020'), accept)
   }
-  const notes = ['09720', '09729', '09732'].map(code => fs.readFileSync(findEntry(code), 'utf8'))
-  assert.match(notes[0], /primitive-requests/, '09720 仍缺揭露限制读点（note 声明 primitive request）')
-  assert.match(notes[1], /primitive-requests|读点/, '09729 仍缺攻击/躲避 +1 读点（note 披露）')
-  assert.match(notes[2], /primitive-requests\/09732/, '09732 仍缺击败去向覆盖读点（note 披露 primitive request）')
 })
 
 test('验收 09718/09719/09723/09724/09725/09728/09733/09734/09735/09736 共享遭遇：条目文件与执行入口齐备', () => {

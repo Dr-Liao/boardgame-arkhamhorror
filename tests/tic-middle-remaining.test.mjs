@@ -95,14 +95,13 @@ function endRound(s) {
 // 07164b / 07165b 魔鬼礁石的骇物
 // ---------------------------------------------------------------------------
 
-test('07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点', () => {
+test('07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值', () => {
   for (const code of ['07164b', '07165b']) {
     const entry = registeredEntry(code)
     assert.equal(entry.implemented, true, `${code} implemented`)
     assert.equal(entry.spawnAtStoryAsset, '07178')
     assert.deepEqual(entry.enemyRule.cannotEnterTraits, ['Cave'])
-    assert.equal(entry.modifiers.length, 1)
-    assert.equal(entry.modifiers[0].target, 'enemyHealth')
+    assert.deepEqual(entry.modifiers.map(modifier => modifier.target), code === '07164b' ? ['enemyHealth'] : [])
   }
   // 07165b 多一条「将要被击败时」的强制替代；07164b 没有。
   assert.deepEqual(registeredEntry('07164b').abilities, [])
@@ -147,15 +146,15 @@ test('07164b：被击败后正常进胜利区（印刷 Victory 1）', () => {
   assert.ok(s.victoryDisplay.some(card => codeOf(card) === '07164b'), '加入胜利区')
 })
 
-test('07165b：将要被击败时改为移除所有伤害、横置并本轮不能重整', () => {
-  const s = chapterFixture('devilReef', 1)
+test('07165b：双人局仍为 6 生命，受到致命伤害时清空伤害并横置且本轮不能重整', () => {
+  const s = chapterFixture('devilReef', 2)
   s.enemies = []
   const terror = spawnTerror(s, '07165b')
-  transaction(s, draft => {
-    const target = draft.enemies.find(enemy => enemy.id === terror.id)
-    target.damageTaken = 100
-    scenarioRuntime(draft, []).defeatEnemy(target, { seat: 0 })
-  })
+  assert.equal(terror.location, boatOf(s).location)
+  assert.equal(enemyHealth(s, terror), 6)
+  transaction(s, draft => scenarioRuntime(draft, []).damageEnemy(terror.id, 5, 0))
+  assert.equal(s.enemies.find(enemy => enemy.id === terror.id).damageTaken, 5)
+  transaction(s, draft => scenarioRuntime(draft, []).damageEnemy(terror.id, 1, 0))
   const after = s.enemies.find(enemy => enemy.id === terror.id)
   assert.ok(after, '没有被击败')
   assert.equal(after.damageTaken, 0, '移除所有伤害')
@@ -240,43 +239,31 @@ test('07185：每轮结束时只从场上弃掉 1 张同名副本，下一轮再
   assert.equal(s.encounterDiscard.filter(code => code === '07185').length, 2)
 })
 
-test('07185：攻击淹没地点的敌人时，本次检定额外揭示 1 个混乱标记（每次检定最多一次）', () => {
-  const attack = { aside: true, flood: 2, bag: ['-5', '-5', '-5'] }
-  const s = chapterFixture('devilReef', 1)
-  const api = scenarioRuntime(s, [])
-  if (attack.aside) api.putNextToAgenda('07185')
-  api.mechanics.water.set(s.investigators[0].location, attack.flood, { ignoreRestrictions: true })
-  s.chaosBag = [...attack.bag]
-  s.investigators[0].combat = 10
-  const target = enemy(s, { location: s.investigators[0].location, engagedSeat: 0, fight: 1, health: 40 })
-  move(s, { action: 'fight', enemyId: target.id })
-  settle(s)
-  assert.equal(s.lastTestResult.drawn.length, 2, '额外揭示 1 个（不是 2 个以上）')
-  assert.equal(s.lastTestResult.value, 10 - 10, '两个标记都计入本次检定')
-
-  // 对照 1：不在淹没地点攻击 → 只揭示 1 个。
-  const dry = chapterFixture('devilReef', 1)
-  const dryApi = scenarioRuntime(dry, [])
-  dryApi.putNextToAgenda('07185')
-  dryApi.mechanics.water.set(dry.investigators[0].location, 0, { ignoreRestrictions: true })
-  dry.chaosBag = ['-5', '-5', '-5']
-  dry.investigators[0].combat = 10
-  const dryTarget = enemy(dry, { location: dry.investigators[0].location, engagedSeat: 0, fight: 1, health: 40 })
-  move(dry, { action: 'fight', enemyId: dryTarget.id })
-  settle(dry)
-  assert.equal(dry.lastTestResult.drawn.length, 1, '干燥地点不额外揭示')
-  assert.equal(dry.lastTestResult.value, 10 - 5)
-
-  // 对照 2：没有「伏兵出水」在密谋旁 → 淹没地点也只揭示 1 个。
-  const bare = chapterFixture('devilReef', 1)
-  const bareApi = scenarioRuntime(bare, [])
-  bareApi.mechanics.water.set(bare.investigators[0].location, 2, { ignoreRestrictions: true })
-  bare.chaosBag = ['-5', '-5', '-5']
-  bare.investigators[0].combat = 10
-  const bareTarget = enemy(bare, { location: bare.investigators[0].location, engagedSeat: 0, fight: 1, health: 40 })
-  move(bare, { action: 'fight', enemyId: bareTarget.id })
-  settle(bare)
-  assert.equal(bare.lastTestResult.drawn.length, 1, '没有伏兵出水时不额外揭示')
+test('07185：攻击淹没地点的敌人额外揭示一次，躲避、渔船乘客和干燥地点除外', () => {
+  const scenarios = [
+    { name: '两张旁置也只额外揭示一次', action: 'fight', copies: 2, flood: 2, count: 2 },
+    { name: '躲避不受影响', action: 'evade', copies: 1, flood: 2, count: 1 },
+    { name: '未淹没地点不受影响', action: 'fight', copies: 1, flood: 0, count: 1 },
+    { name: '渔船乘客视为未淹没', action: 'fight', copies: 1, flood: 2, aboard: true, count: 1 },
+    { name: '没有旁置时不受影响', action: 'fight', copies: 0, flood: 2, count: 1 },
+  ]
+  for (const { name, action, copies, flood, aboard, count } of scenarios) {
+    const s = chapterFixture('devilReef')
+    const api = scenarioRuntime(s, [])
+    const boat = boatOf(s)
+    const inv = s.investigators[0]
+    if (!aboard) assert.equal(api.mechanics.vehicles.leave(inv.seat, boat.id), true)
+    api.mechanics.water.set(inv.location, flood, { ignoreRestrictions: true })
+    for (let copy = 0; copy < copies; copy++) api.putNextToAgenda('07185')
+    s.chaosBag = ['-5', '-5', '-5']
+    inv.combat = 10
+    inv.agility = 10
+    const target = enemy(s, { location: inv.location, engagedSeat: 0, fight: 1, evade: 1, health: 40 })
+    move(s, { action, enemyId: target.id })
+    settle(s)
+    assert.equal(s.lastTestResult.drawn.length, count, name)
+    assert.equal(s.lastTestResult.value, 10 - 5 * count, name)
+  }
 })
 
 // ---------------------------------------------------------------------------

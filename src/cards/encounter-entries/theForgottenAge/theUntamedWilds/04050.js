@@ -14,7 +14,7 @@
 import { ALL_CARDS } from '../../_shared.js'
 
 export default {
-  code: '04050', scope: 'location', flags: { expeditionCamp: true },
+  code: '04050', scope: 'location',
   locationRule: {
     actions({ state, inv, moves }) {
       moves.push({ action: 'scenarioAction', rule: 'resignCamp', label: '⛺ 撤退：荒野实在太危险了！' })
@@ -31,17 +31,16 @@ export default {
         api.info?.('检查补给：队伍中没有地图，这次行动没有效果。')
         return true
       }
-      const deck = state.explorationDeck || []
-      const top = deck.slice(-3).reverse()
+      const top = api.takeExplorationTop(3).reverse()
       if (!top.length) return true
-      const labelOf = code => ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code
+      const labelOf = code => state.scenario.locations?.[code]?.name || ALL_CARDS[code]?.nameZh || ALL_CARDS[code]?.name || code
       const bottom = api.choose({
         kind: 'deck', source: '04050', seat: inv.seat,
         prompt: '选择 1 张放在探索牌库底部（其余 2 张随后按你选择的顺序放回顶部）。',
         options: top.map((code, index) => ({ id: String(index), label: labelOf(code) })),
       })
-      const picked = top[Number(bottom)] || top[0]
-      const rest = top.filter(entry => entry !== picked)
+      const [picked] = top.splice(Number(bottom) || 0, 1)
+      const rest = top
       // 其余 2 张也要「按任意顺序」放回牌库顶：再问一次谁在最上面。
       const firstAnswer = rest.length === 2
         ? api.choose({
@@ -50,15 +49,9 @@ export default {
           options: rest.map((code, index) => ({ id: String(index), label: labelOf(code) })),
         })
         : '0'
-      const first = rest[Number(firstAnswer)] || rest[0]
-      const ordered = rest.length === 2 ? [first, rest.find(entry => entry !== first)] : rest
-      // 探索牌库数组的末尾是牌库顶（campaign-plugin.js 的 doExplore 用 pop 抽牌），
-      // 所以「放在牌库底」= 放到数组最前面；其余两张按选择顺序放到末尾（first 在最顶）。
-      state.explorationDeck = [
-        picked,
-        ...deck.slice(0, Math.max(0, deck.length - top.length)),
-        ...[...ordered].reverse(),
-      ]
+      if (Number(firstAnswer) === 0) rest.reverse()
+      api.addToExplorationDeck([picked], { bottom: true })
+      api.addToExplorationDeck(rest, { top: true })
       api.info?.('地图：一张牌放在探索牌库底部，其余两张按你选择的顺序回到顶部。')
       return true
     },

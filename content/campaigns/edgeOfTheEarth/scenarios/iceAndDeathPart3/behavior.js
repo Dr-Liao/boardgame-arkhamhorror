@@ -129,6 +129,10 @@ export function agendaWouldAdvance(state, api = {}) {
   state.doom = Math.max(0, Number(state.doom || 0) - removeDoom)
   const host = holders.reduce((best, enemy) => (enemy.beneath.length > best.beneath.length ? enemy : best), holders[0])
   for (let count = 0; count < spawnCount && host.beneath.length; count += 1) {
+    if (api.spawnRandomEnemyBeneath) {
+      api.spawnRandomEnemyBeneath(host)
+      continue
+    }
     const index = typeof api.random === 'function'
       ? Math.floor(api.random() * host.beneath.length)
       : 0
@@ -194,7 +198,7 @@ function manifestationsOfEvilBack(state, api = {}) {
   for (const inv of state.investigators || []) {
     let shuffled = 0
     for (let count = 0; count < 2; count += 1) {
-      const got = tekeliShuffleIn(state, inv.seat, 1)
+      const got = api.mechanics?.tekeli?.shuffleIn(inv.seat, 1) ?? tekeliShuffleIn(state, inv.seat, 1)
       if (got) shuffled += 1
     }
     const missing = 2 - shuffled
@@ -293,13 +297,17 @@ export function performAction(state, inv, move, api = {}) {
     api.info?.('线索不足：营地的调查员们需要共同花费 4 个线索才能撤退。')
     return false
   }
-  let left = 4
-  for (const other of group) {
-    const spend = Math.min(left, other.clues || 0)
-    other.clues -= spend
-    left -= spend
+  if (api.payGroupClues) api.payGroupClues(4, { atLocation: camp })
+  else {
+    let left = 4
+    for (const other of group) {
+      const spend = Math.min(left, other.clues || 0)
+      other.clues -= spend
+      left -= spend
+    }
   }
-  for (const other of group) other.resigned = true
+  if (api.resignInvestigator) api.resignInvestigator(inv.seat)
+  else inv.resigned = true
   api.info?.('⛺ 调查队从营地撤退。')
   return true
 }
@@ -318,7 +326,7 @@ export function afterTest(state, inv, result, api = {}) {
   if (tokens.includes('cultist')) {
     const spec = part3ChaosFailureSpec(state, 'cultist', failedBy)
     if (spec) {
-      const shuffled = tekeliShuffleIn(state, inv.seat, spec.count)
+      const shuffled = api.mechanics?.tekeli?.shuffleIn(inv.seat, spec.count) ?? tekeliShuffleIn(state, inv.seat, spec.count)
       const got = shuffled ? Number(shuffled.length ?? spec.count) : 0
       const missing = spec.count - got
       if (missing > 0) inv.horror = (inv.horror || 0) + missing
@@ -384,6 +392,13 @@ export const behavior = {
   // 引擎读点：moves.js#legalMoves / dispatch.js#executeAction。
   actions,
   performAction,
+  enemyConnections(state, enemy, location) {
+    if (!(enemy.traits || []).some(trait => String(trait).toLowerCase() === 'eidolon')) return []
+    const camp = state.scenarioFlags?.camp || campId(state)
+    const host = state.enemies.some(other => other.location === location?.id
+      && enemyRuleFor(codeOfCard(other))?.eidolonCampConnection)
+    return host && camp && camp !== location?.id ? [camp] : []
+  },
   resolveChaosToken,
   afterTest,
   enemyDefeated,

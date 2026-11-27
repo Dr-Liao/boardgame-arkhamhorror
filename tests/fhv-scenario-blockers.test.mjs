@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import '../content/registered.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { RESIDENT_ASSET_CODES, RESIDENT_ENEMY_CODES } from '../content/campaigns/theFeastOfHemlockVale/scenarios/fateOfTheVale/definition.js'
 import { createGameState, applyMove, legalMoves, validateMove } from '../src/engine/engine.js'
 
 function submit(state, seat, move) {
@@ -297,7 +299,8 @@ test('FHV 山谷的命运：谈判带走最后一名居民后进入第三结局'
   debug(state, 'advanceAct')
   debug(state, 'advanceAct', {}, choice => choice.source === 'fateInterlude' ? 'saveTheVale' : null)
   assert.equal(currentAct(state), '10658')
-  const residents = state.locations.flatMap(location => (location.beneath || []).map(() => location.id))
+  const isResident = code => RESIDENT_ASSET_CODES.includes(code) || RESIDENT_ENEMY_CODES.includes(code) || ALL_CARDS[code]?.traits?.includes('Resident')
+  const residents = state.locations.filter(location => location.beneath?.some(isResident)).map(location => location.id)
   assert.ok(residents.length > 0)
   const inv = state.investigators[0]
   inv.willpower = 8
@@ -307,12 +310,20 @@ test('FHV 山谷的命运：谈判带走最后一名居民后进入第三结局'
   assert.equal(offered(state, move => move.rule === 'fateAdvanceAct'), undefined)
   for (const id of residents) {
     debug(state, 'moveTo', { targetSeat: 0, locationId: id })
-    const remaining = () => state.locations.find(item => item.id === id).beneath.length
-    const count = remaining()
+    const remaining = () => state.locations.find(item => item.id === id).beneath.filter(isResident).length
+    if (!remaining()) continue
     debug(state, 'forceToken', { token: '+1' })
-    perform(state, move => move.rule === 'fateResidentParley')
-    assert.equal(remaining(), count - 1, JSON.stringify(state.log.slice(-8)))
+    perform(state, move => move.rule === 'fateResidentParley', choice =>
+      choice.options.some(option => option.id === 'willpower') ? 'willpower' : null)
+    assert.equal(remaining(), 0, JSON.stringify(state.log.slice(-8)))
+    const defeated = state.enemies.filter(enemy => enemy.location === id && enemy.traits?.includes('Resident')).map(enemy => enemy.id)
+    assert.ok(defeated.length > 0)
+    debug(state, 'defeat', { enemyIds: defeated })
   }
+  const remainingEnemies = state.enemies.filter(enemy => RESIDENT_ENEMY_CODES.includes(enemy.originalCode || enemy.code)).map(enemy => enemy.id)
+  if (remainingEnemies.length) debug(state, 'defeat', { enemyIds: remainingEnemies })
+  assert.ok(offered(state, move => move.rule === 'fateAdvanceAct'),
+    JSON.stringify({ clues: inv.clues, enemies: state.enemies.map(enemy => enemy.code), beneath: state.locations.flatMap(location => location.beneath || []) }))
   perform(state, move => move.rule === 'fateAdvanceAct')
   assert.equal(state.campaign.scenarioResults.at(-1).resolution, 'resolution3')
 })

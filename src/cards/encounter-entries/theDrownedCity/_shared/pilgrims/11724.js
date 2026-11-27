@@ -25,7 +25,7 @@ export default {
   name: '朝圣者领袖',
   scope: 'enemy',
   implemented: true,
-  enemyRule: { spawnAnyEmpty: true },
+  enemyRule: { spawnAnyEmpty: true, allowOccupiedSpawn: true },
   flags: {
     traits: ['Humanoid', 'Cultist'],
     quantity: 1,

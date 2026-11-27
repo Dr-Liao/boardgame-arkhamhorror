@@ -4,8 +4,8 @@
 //
 // 一张卡一个文件：条目只声明身份与规则数据（flags），行为接线在章节 behavior：
 //   · flags.abyssMythosReplacement → behavior.abyssMythosActive
-//   · flags.cosmicEmissaryGaze → behavior.gazeRule
-//   · flags.backTest → behavior.agendaReveal（议程 2 背面：战斗/敏捷 4，每失败 1 点 → 1 伤害）
+//   · flags.cosmicEmissaryGaze → behavior.timedEnemyView（房主服务器计时）
+//   · flags.backTest → behavior.agendaReveal（战斗或敏捷 4，每失败 1 点选择伤害或将顶牌洗入深渊）
 export default {
   code: '10653',
   scope: 'agenda',
@@ -19,6 +19,15 @@ export default {
       penalty: 'damageOrDeckTopToAbyss',
     },
   },
-  note: 'approximation: 同 10652（凝视计时只保留标记）。',
-  abilities: [],
+  abilities: [{
+    kind: 'forced',
+    trigger: 'encounterCardWouldDraw',
+    silent: true,
+    label: '改为从深渊底揭示并抽取一张遭遇卡',
+    criteria: ({ state, context }) => state.scenario.id === 'fateOfTheVale' && !context.replaced,
+    resolve: ({ context, api }) => {
+      context.replaced = true
+      api.scenario.resolveScenarioEvent('fateOfTheValeEncounterFromAbyss', { seat: context.seat })
+    },
+  }],
 }

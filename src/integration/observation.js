@@ -7,11 +7,12 @@ import { campaignView, replacementBlockers, upgradeRecord } from '../campaign/ca
 import { cardPoolContext } from '../deck/card-pool.js'
 import { actingSeats, allCardDefs, decisionSeat, embeddedCardDefs, enemyEvadeValue, enemyFightValue, enemyHealth, getMaxHealth, getMaxSanity, getStat, handSize, legalMoves, scriptActionHints, abilityUsage, validateMove } from '../engine/engine.js'
 import { contentRegistry } from '../../content/registered.js'
-import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, attachCardAttachments, publicCardInstance } from './presentation-state.js'
+import { projectTableState, locationEntryErrors, maskHiddenLocations, publicAttachments, attachLocationCards, attachCardAttachments, publicControlledAsset } from './presentation-state.js'
 import { campaignStory } from '../campaign/story.js'
 import { campaignPartsManifest } from '../campaign/campaign-modes.js'
 import { traitLabels } from '../cards/trait-labels.js'
 import { grantedTraitsOf } from '../engine/location-traits.js'
+import { timedCardViewRule } from '../engine/timed-card-view.js'
 import { choiceOptionsFor, choiceSeats } from '../engine/resolution.js'
 // Phase 6（战役插件化第二批）：战役专属状态的公开投影收进内容层
 // （探索牌库 / 古代遗物 / 领队 / 复仇 / 伊格之怒 / 两个剧本的公开标记）。
@@ -77,7 +78,7 @@ const PUBLIC_STATE_FIELDS_SLIM = Object.freeze(PUBLIC_STATE_FIELDS.filter(key =>
 const PUBLIC_INVESTIGATOR_FIELDS = [
   'seat', 'code', 'name', 'nameEn', 'klass', 'willpower', 'intellect', 'combat', 'agility',
   'baseHealth', 'baseSanity', 'health', 'sanity', 'maxHealth', 'maxSanity',
-  'damage', 'horror', 'resources', 'clues', 'actionsLeft', 'exploreOnlyActions', 'discard', 'assets', 'threat',
+  'damage', 'horror', 'resources', 'clues', 'markers', 'doom', 'actionsLeft', 'exploreOnlyActions', 'discard', 'assets', 'threat',
   // 05006 法术专用额外行动额度：额度是公开信息（决定 UI 是否显示「额外行动」入口）。
   'spellOnlyActions',
   'location', 'engaged', 'defeated', 'resigned', 'defeatCause', 'testBonus',
@@ -221,8 +222,10 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.scriptAttachments = { act: attachments.act, agenda: attachments.agenda }
   view.enemies = view.enemies.map((enemy, index) => {
     const { underlyingCard, ...publicEnemy } = enemy
+    const viewingRule = timedCardViewRule(state, observer ?? 0, enemy.id)
     return {
     ...publicEnemy,
+    ...(viewingRule ? { viewDurationMs: viewingRule.durationMs } : {}),
     // 蜂拥卡面朝下：观察投影只留 id 与来源，不给卡号。
     ...(Array.isArray(enemy.swarmCards) ? {
       swarmCards: enemy.swarmCards.filter(card => !card.defeated).map(card => ({ id: card.id, source: card.source || null })),
@@ -303,7 +306,7 @@ export function viewState(state, observerSeat = null, options = {}) {
   view.setAsideCards = publicSetAsideCards(state)
   // 第 125 轮（第 8 批）：「翻面/变体」表现由条目声明（03009 → 03009b，伤害 ≥5 时）。
   const projectAsset = (asset, inv) => {
-    const visible = publicCardInstance(asset)
+    const visible = publicControlledAsset(state, asset)
     if (asset.attachments?.some(attachment => registeredEntry(attachment.code)?.assetRule?.hostTrait)) visible.traits = effectiveTraits(state, inv, asset)
     // 展示槽位跟引擎同一口径：没有 slotsOverride 时用印刷槽位，
     // 这样卡面表缺 slots 时也不会把占着手槽的支援画进「其他资产」。
@@ -356,6 +359,7 @@ export function viewState(state, observerSeat = null, options = {}) {
   // 「放在密谋牌库旁」的卡（state.agendaAside）与剧情资产/胜利区一样公开在桌面上；
   // 卡面定义必须随视图下发，否则前端只能显示卡号，详情也加载不出规则文本。
   for (const card of state.agendaAside || []) if (card?.code) visibleCodes.add(card.code)
+  for (const card of state.sharedPlayCards || []) visibleCodes.add(card.code)
   const choice = state.pendingChoice
   const scopedChoiceCards = state._scenarioCardTable
     ? choiceOptionsFor(choice, observer).map(option => option.cardCode).filter(Boolean) : []
@@ -415,6 +419,7 @@ export function viewState(state, observerSeat = null, options = {}) {
       ;(view.cardsPatch ||= {})[code] = { ...base, allySlotsForNonUnique: nonUniqueSlots }
     }
   }
+  if (state.sharedPlayCards?.length) view.sharedPlayCards = state.sharedPlayCards.map(card => pick(card, ['id', 'code', 'ownerSeat']))
   view.encounterDeck = []
   view.encounterDeckSize = state.encounterDeck.length
   const encounterTop = state.encounterDeck.at(-1)

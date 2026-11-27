@@ -281,18 +281,22 @@ test('P7 theLostSister 黑暗地点：未揭示岩穴恒为黑暗，揭示后按
   assert.equal(behavior.isDarkLocation(state, pools), true, '地下水池仍是[[黑暗]]')
   assert.equal(revealedCaveCount(state), 1)
   // 露天洞穴：检定成功后失去[[黑暗]]，下一个调查阶段恢复。
+  reveal(state, 'openCave1')
   const openCave = state.locations.find(location => location.id === 'openCave1')
   assert.ok(openCave)
   const inv = state.investigators[0]
   inv.location = openCave.id
+  state.currentSeat = inv.seat
   let testCalls = 0
   const api = { info: () => {}, test: () => { testCalls += 1; return { success: true } } }
-  const move = behavior.actions(state, inv).find(action => action.rule === `lostSisterOpenCaveLight:${openCave.id}`)
+  const move = behavior.fastActions(state, inv).find(action => action.rule === `lostSisterOpenCaveLight:${openCave.id}`)
   assert.ok(move && !move.reason)
   assert.equal(behavior.performAction(state, inv, move, api), true)
   assert.equal(testCalls, 1)
   assert.equal(behavior.isDarkLocation(state, openCave), false, '熄暗直到下一调查阶段')
   behavior.roundEnded(state, api)
+  assert.equal(behavior.isDarkLocation(state, openCave), false, '轮末仍然熄暗')
+  behavior.phaseBegan(state, 'investigation', api)
   assert.equal(behavior.isDarkLocation(state, openCave), true, '下一调查阶段恢复黑暗')
   // 荧光增生附属后，附着地点同样不再黑暗。
   assert.equal(behavior.isDarkLocation(state, openCave), true)
@@ -662,7 +666,11 @@ test('P7 theLostSister 遭遇事件（10586 重属自然）：白日失败二选
   enemy.damageTaken = 2
   // 白日：失败 → 选择「最近的敌人攻击你」。
   const attackApi = { info: () => {}, test: () => ({ success: false }), choose: () => 'attack', attacks: 0 }
-  attackApi.enemyAttacks = () => { attackApi.attacks += 1 }
+  attackApi.attack = (attacker, target) => {
+    assert.equal(attacker, enemy)
+    assert.equal(target, inv)
+    attackApi.attacks += 1
+  }
   assert.equal(typeof entry10586.encounterResolve, 'function', '诡计显现经 encounterResolve 交给章节事件')
   assert.equal(events.lostSisterReclaimedByNature(state, { seat: 0, night: false }, attackApi), true)
   assert.equal(attackApi.attacks, 1)

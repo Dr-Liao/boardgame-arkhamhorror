@@ -14,7 +14,7 @@
 // 八循环 P2 扩展：`evidence`（达雷尔的证据）与 `hollow`（空洞卡上的计数）复用同一套具名计数器，
 // 不新增字段形状；counter id 全部走白名单（未知 id 拒绝）。
 // P7 TDC 11709：`ruin`（拆毁：最近 [[Rooftop]] 地点上的废墟标记，≥2 时击毙所有调查员）。
-export const CARD_COUNTER_IDS = Object.freeze(['bounty', 'evidence', 'hollow', 'ruin'])
+export const CARD_COUNTER_IDS = Object.freeze(['bounty', 'evidence', 'hollow', 'ruin', 'leyline'])
 
 export function assertCardCounterId(id) {
   if (!CARD_COUNTER_IDS.includes(id)) {

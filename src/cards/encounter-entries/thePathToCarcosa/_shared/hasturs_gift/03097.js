@@ -13,7 +13,7 @@ export default {
     const code = card?.originalCode || card?.code
     const possessed = state.enemies.filter(enemy => enemy.traits?.includes('Possessed'))
     if (!possessed.length) {
-      api.drawEncounter(inv.seat)
+      api.drawEncounter(inv.seat, { surgeDraw: true })
       return false
     }
     api.test(inv.seat, 'willpower', 3, result => {

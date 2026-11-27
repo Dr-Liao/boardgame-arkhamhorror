@@ -465,11 +465,19 @@ export const behavior = {
 
   beforeMove(state, inv, destination, api) {
     const rule = locationRuleOf(state, inv)
-    rule?.beforeMove?.(state, inv, destination, api)
+    return rule?.beforeMove?.(state, inv, destination, api)
   },
 
   // ---- 敌人 ----
-  spawnLocation(state, code, fallbackLoc) {
+  spawnLocation(state, code, fallbackLoc, seat, api, options) {
+    const enemyTraits = (ALL_CARDS[code]?.traits || []).map(value => value.toLowerCase())
+    if (options?.fromEncounterDraw) {
+      const redirect = state.locations.find(location => {
+        const trait = locationRuleFor(codeOf(location))?.spawnRedirectTrait
+        return location.revealed && trait && enemyTraits.includes(trait.toLowerCase())
+      })
+      if (redirect) return redirect.id
+    }
     const rule = enemySpawnRuleFor(code)
     if (!rule?.spawnChoices) return fallbackLoc
     const candidates = (state.locations || []).filter(location => rule.spawnChoices.includes(String(codeOf(location))))

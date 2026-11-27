@@ -1,7 +1,11 @@
+import { ignoreTestKeyword } from './location-effect-scope.js'
+import { beforeNamedDraw, selectNamedDrawOutcome } from './draw-predictions.js'
+import { hiddenParityBlocks } from './hidden-rules.js'
 import { availableResources } from './resource-bank.js'
+import { withDirectDamageHint } from '../integration/direct-damage.js'
 import { recordRoundAction } from './action-history.js'
 import { availablePlayResources } from './play-payment.js'
-import { quickPlayReduction } from './play-attempt.js'
+import { quickPlayReduction, reactionPlayCostIncrease } from './play-attempt.js'
 import { playTimingSource } from './play-timing.js'
 import { tokenCostAvailable } from './token-cost.js'
 import { afterUsesSpent } from './uses.js'
@@ -25,11 +29,15 @@ import { scenarioFastReactionSource } from './script-cards.js'
 import { enumerateTargets } from './targets.js'
 import { beginAsIf, endAsIf } from './as-if-location.js'
 import { teamCanActivate } from './team-abilities.js'
+import { cardRevealAudio } from './card-reveal-audio.js'
+import { flushCardOutcomeAudio, withCardOutcomeAudio } from './card-outcome-audio.js'
+import { isHiddenPlayerWeakness } from './hidden-rules.js'
 
 export function createEncounter(deps) {
   // 「生成 - <某类地点>」的条目级声明（位置由 enemies.js#spawnEnemy 解析，抽牌时不与抽牌者交战）。
   const printedSpawnLocation = entry => Boolean(entry?.spawnFarthestFromAll || entry?.spawnMostClues
-    || entry?.spawnRearmost || entry?.spawnAncientFirst || entry?.spawnAtStoryAsset)
+    || entry?.spawnRearmost || entry?.spawnAncientFirst || entry?.spawnAtStoryAsset
+    || typeof entry?.enemyRule?.spawnLocation === 'function')
   const {
     ALL_CARDS,
     ALL_ENEMIES,
@@ -108,7 +116,9 @@ function drawEncounter(state, inv, events, options = {}) {
   if (state.scenario?.mechanics?.noEncounterDeck && !options.scenarioDeckId) return
   if (options.code == null && aliveInvestigators(state).some(owner => descriptorSources(state, owner).some(row =>
     row.entry?.abilities?.some(descriptor => descriptor.trigger?.includes('encounterCardWouldDraw'))))) {
-    const context = { when: 'encounterCardWouldDraw', seat: inv.seat, location: inv.location }
+    state.encounterDrawSerial = (state.encounterDrawSerial || 0) + 1
+    const context = { when: 'encounterCardWouldDraw', seat: inv.seat, location: inv.location,
+      windowInstance: `encounter-draw:${state.encounterDrawSerial}` }
     reactionWindow(state, 'encounterCardWouldDraw', context, events, { allowNested: true })
     if (context.replaced) return
   }
@@ -129,6 +139,7 @@ function drawEncounter(state, inv, events, options = {}) {
     if (piles) piles.discard = []
     else state.encounterDiscard = []
   }
+  const predictions = beforeNamedDraw(state, inv, 'encounter', events, reactionWindow)
   const code = options.code ?? deck().pop()
   // P7 TDC 11632-11634：印刷「如果本诡计从遭遇弃牌堆被抽取……」。抽牌来源作为结算上下文透传：
   // 牌库顶抽取 = 'deck'；api.drawEncounter(seat,{code,from}) 可显式声明 'discard'/'search'。
@@ -139,6 +150,9 @@ function drawEncounter(state, inv, events, options = {}) {
   if (phaseDrawRule?.firstSurge === true) phaseDrawRule.firstSurge = false
   const encounterLookRule = registeredEntry(code)?.encounterLookRule
   const encounter = ALL_ENEMIES[code] || ALL_TREACHERIES[code] || (encounterLookRule ? ALL_CARDS[code] : null)
+  const definition = cardDef(code)
+  const hidden = Boolean(encounter?.hidden || definition?.hidden || isHiddenPlayerWeakness(code)
+    || registeredEntry(code)?.hiddenEnemyInHand)
   if (ALL_ENEMIES[code]) recordRoundAction(state, inv, 'enemyDraws', null, registeredEntry)
   // 2026-10-25 本循环修复 05183：drawExtra/抽牌管线支持给「本次抽到的卡」附加选项：
   //   · options.peril：强制本次遭遇视为险境（peril），影响投入/队友协助等窗口；
@@ -156,13 +170,23 @@ function drawEncounter(state, inv, events, options = {}) {
       ...(options.cannotCancel === true ? { cannotCancel: true } : {}),
     })
   }
+  const predicted = predictions.length && selectNamedDrawOutcome(state, inv, cardDef(code), predictions, { canCancel: !cancellationLocked })
+  if (predicted?.action === 'cancel') {
+    discard().push(code)
+    const name = hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
+    info(state, events, `${name}的效果被取消并弃掉。`)
+    return
+  }
   const redrawContext = { when: 'encounterDrawn', seat: inv.seat, location: inv.location, cardCode: code,
-    weakness: isWeaknessCode(code), peril: perilOverride ?? !!encounter?.peril, cancelled: false,
+    weakness: isWeaknessCode(code), peril: perilOverride ?? !!encounter?.peril,
+    cancelled: !cancellationLocked && options.mayCancel?.({ code, inv }) === true,
     cannotCancel: cancellationLocked,
-    prompt: `${inv.name} 抽到「${encounter?.name || code}」` }
-  for (const owner of aliveInvestigators(state).filter(owner => owner.location === inv.location)) {
-    triggerReaction(state, owner.seat, 'encounterDrawn', events, redrawContext)
-    if (redrawContext.cancelled) break
+    prompt: hidden ? `${inv.name} 抽到一张隐私遭遇卡` : `${inv.name} 抽到「${encounter?.name || code}」` }
+  if (!redrawContext.cancelled) {
+    for (const owner of aliveInvestigators(state).filter(owner => owner.location === inv.location)) {
+      triggerReaction(state, owner.seat, 'encounterDrawn', events, redrawContext)
+      if (redrawContext.cancelled) break
+    }
   }
   if (!redrawContext.cancelled) reactionWindow(state, 'encounterDrawn', redrawContext, events)
   if (redrawContext.cancelled && redrawContext.cannotCancel) {
@@ -175,24 +199,30 @@ function drawEncounter(state, inv, events, options = {}) {
       deck().push(code)
       setDeck(shuffle(deck(), () => randomValue(state)))
     } else discard().push(code)
-    const cancelledName = encounter?.hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
+    const cancelledName = hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
     if (redrawContext.redraw) {
       info(state, events, `${cancelledName}被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}，${inv.name} 重新抽取遭遇卡。`)
       const replacementOptions = { ...options }
       delete replacementOptions.code
+      delete replacementOptions.mayCancel
       return drawEncounter(state, inv, events, replacementOptions)
     }
     info(state, events, `${cancelledName}的显现效果被取消并${redrawContext.shuffleBack ? '混洗回遭遇牌库' : '弃置'}。`)
     return
   }
   const resolvingInv = redrawContext.redirectSeat == null ? inv : state.investigators[redrawContext.redirectSeat]
-  let resolution
-  const finishDraw=()=>{
+  const location = state.locations.find(item => item.id === resolvingInv.location)
+  const locationSurge = location?.revealed && registeredEntry(location.originalCode || location.code)
+    ?.locationRule?.encounterGainsSurge?.(state, resolvingInv, location, code, scenarioRuntime(state, events))
+  const finishDraw=(resolution)=>{
     delete resolvingInv.handlingEncounter
-    const surge=forceSurge||encounter?.surge||resolution?.gainSurge||scenarioBehavior(state).encounterGainsSurge?.(state,code,resolvingInv)
-    if(surge&&!options.suppressSurge&&!resolution?.surgeHandled&&!resolvingInv.defeated&&!resolvingInv.resigned){
-      info(state,events,`🌀 「${encounter?.name||code}」涌动：再抽取一张遭遇牌。`)
-      const child={...options};delete child.suppressSurge;delete child.code
+    const surge=forceSurge||redrawContext.gainSurge||encounter?.surge||resolution?.gainSurge||locationSurge||scenarioBehavior(state).encounterGainsSurge?.(state,code,resolvingInv)
+    if (surge && !options.suppressSurge && !resolution?.surgeHandled && !resolvingInv.defeated && !resolvingInv.resigned
+      && !ignoreTestKeyword(state, resolvingInv, '涌动', { id: code, name: encounter?.name || code }, requestChoice)) {
+      const name = hidden ? '一张隐私遭遇卡' : `「${encounter?.name || code}」`
+      info(state,events,`🌀 ${name}涌动：再抽取一张遭遇牌。`)
+      const child={...options};delete child.suppressSurge;delete child.code;delete child.from;delete child.mayCancel
+      child.surgeDraw = !hidden
       if (options.grantSurge === true) { delete child.grantSurge; delete child.peril }
       if (options.skillPenalty) { delete child.skillPenalty; delete child.enemyAttacks; delete child.peril; delete child.cannotCancel }
       drawEncounter(state,resolvingInv,events,child)
@@ -203,17 +233,33 @@ function drawEncounter(state, inv, events, options = {}) {
     resolvingInv.handlingEncounter = { code, bonus: (redrawContext.redirectBonus || 0) - (options.skillPenalty || 0) }
   }
   scenarioBehavior(state).encounterDrawn?.(state, resolvingInv, code, scenarioRuntime(state, events))
-  if (encounter?.hidden) {
+  const surgeDraw = options.surgeDraw === true ? { surgeDraw: true } : {}
+  if (hidden) {
     info(state, events, `${resolvingInv.name} 翻开了一张隐私遭遇卡。`, {
       kind: 'automatic', phase: state.phase, round: state.round, text: `${resolvingInv.name} 遭遇一张隐私牌`,
-      effect: 'encounter', seat: resolvingInv.seat, location: resolvingInv.location,
+      effect: 'encounter', seat: resolvingInv.seat, location: resolvingInv.location, ...surgeDraw,
     })
   } else {
+    const revealAudio = cardRevealAudio(definition, {
+      weakness: redrawContext.weakness,
+      tekeli: registeredEntry(code)?.flags?.tekelili,
+      fallbackType: ALL_ENEMIES[code] ? 'enemy' : ALL_TREACHERIES[code] ? 'treachery' : undefined,
+    })
     info(state, events, `${resolvingInv.name} 翻开遭遇卡「${encounter?.name || code}」。`, {
       kind: 'automatic', phase: state.phase, round: state.round, text: `${resolvingInv.name} 遭遇「${encounter?.name || code}」`,
-      code: encounter?.originalCode || code, name: encounter?.name, effect: 'encounter', seat: resolvingInv.seat, location: resolvingInv.location,
+      code: encounter?.originalCode || definition?.originalCode || code, name: encounter?.name || definition?.nameZh || definition?.name,
+      effect: 'encounter', seat: resolvingInv.seat, location: resolvingInv.location, ...surgeDraw,
+      ...(revealAudio ? { revealAudio, ...(redrawContext.weakness ? { weaknessAudio: true } : {}) } : {}),
     })
   }
+  const resolve = () => resolveDrawnEncounter(state, resolvingInv, events, {
+    code, encounter, encounterLookRule, options, drawSource, discard, forceSurge, finishDraw,
+  })
+  return ALL_TREACHERIES[code] ? resolve() : withCardOutcomeAudio(state, events, !hidden, resolve)
+}
+
+function resolveDrawnEncounter(state, resolvingInv, events, { code, encounter, encounterLookRule, options, drawSource, discard, forceSurge, finishDraw }) {
+  let resolution
   // 「恢复元气」等需要知道本回合是否抽到过诡计。
   if (ALL_TREACHERIES[code]) resolvingInv.drewTreacheryRound = state.round
   if (ALL_CARDS[code]?.type === 'location' && !ALL_ENEMIES[code] && !ALL_TREACHERIES[code]
@@ -247,12 +293,14 @@ function drawEncounter(state, inv, events, options = {}) {
         prompt: '选择敌人的生成地点。', options: candidates.map(location => ({ id: location.id, label: location.name })) })
     } else if (def.spawnAnyEmpty || enemyRuleFlags(code).spawnAnyEmpty) {
       // 梦境之门（06015a/b）不参与「任意无人地点」候选：敌人不能进入/生成在那里。
-      const empty = state.locations.filter((l) => !l.dreamGate && !state.enemies.some((e) => e.location === l.id)
+      const eligible = state.locations.filter(location => !location.dreamGate)
+      const empty = eligible.filter((l) => !state.enemies.some((e) => e.location === l.id)
         && !aliveInvestigators(state).some(i => i.location === l.id))
-      let picked = empty.length ? chooseAmong(state, {
+      const candidates = empty.length || !enemyRuleFlags(code).allowOccupiedSpawn ? empty : eligible
+      let picked = candidates.length ? chooseAmong(state, {
         kind: 'spawn', source: { type: 'enemy', code }, seat: leadDecisionSeat(state),
-        prompt: `选择「${def.name}」的生成地点（任意无人地点）。`,
-        options: empty.map((l) => ({ id: l.id, label: l.name })),
+        prompt: `选择「${def.name}」的生成地点${empty.length ? '（任意无人地点）' : ''}。`,
+        options: candidates.map((l) => ({ id: l.id, label: l.name })),
       }) : null
       const act = state.acts?.[state.actIndex]
       const actCode = String(act?.originalCode || act?.code || '')
@@ -275,7 +323,8 @@ function drawEncounter(state, inv, events, options = {}) {
     } else {
       engage = resolvingInv.seat
     }
-    const spawnOptions = { ...registeredEntry(code)?.enemyRule?.revelationSpawnOptions?.(state, resolvingInv, loc, scenarioRuntime(state, events)),
+    const spawnOptions = { fromEncounterDraw: true,
+      ...registeredEntry(code)?.enemyRule?.revelationSpawnOptions?.(state, resolvingInv, loc, scenarioRuntime(state, events)),
       ...(options.scenarioDeckId ? { discardToScenarioDeck: options.scenarioDeckId } : {}) }
     const enemy = spawnEnemy(state, code, loc, engage, false, false, resolvingInv.seat, spawnOptions)
     if (enemy) info(state, events, `👹 ${resolvingInv.name} 遭遇了「${enemy.name}」！它出现在「${locName(state, enemy.location)}」${enemy.engagedSeat != null ? '并与之交战' : ''}。`)
@@ -309,7 +358,8 @@ function drawEncounter(state, inv, events, options = {}) {
     state.removedFromGame ||= []
     state.removedFromGame.push(code)
   } else throw new Error(`未知遭遇卡：${code}`)
-  finishDraw()
+  flushCardOutcomeAudio(state)
+  finishDraw(resolution)
 }
 
 // 快速反应窗口：同地点持有对应反应事件的调查员可显式打出（如闪躲、守护结界）。
@@ -384,16 +434,16 @@ function reactionWindow(state, when, context, events, opts = {}) {
           if (reaction.symbols && !reaction.symbols.includes(context.token)) return false
           if (reaction.requiresDifficultyAboveBase
             && !(Number(context.difficulty) > Number(context.baseValue ?? 0))) return false
-          if (cannotPlayTypes(inv).has(cardDef(copyCode || code)?.type)) return false
+          const def = cardDef(copyCode || code)
+          if (cannotPlayTypes(inv, state).has(def?.type)) return false
           // 隐私弱点（03084d「你不能打出事件」）同样禁止快速事件；普通出牌在 moves.js 已挡，
           // 快速事件只走本窗口，这里与执行器 assets.js#playReactionCard 共用同一读点。
-          if (playTypeBlocked(state, inv, cardDef(copyCode || code)?.type)) return false
-          if (scenarioBehavior(state).canPlayCard?.(state, inv, cardDef(copyCode || code)) === false) return false
+          if (playTypeBlocked(state, inv, def?.type) || hiddenParityBlocks(state, inv, def, 'play')) return false
+          if (scenarioBehavior(state).canPlayCard?.(state, inv, def) === false) return false
           // 2026-10-27「如同手牌」通道：折扣由原语统一给出（直觉牌库 -2 等），候选可用性与实付同源。
-          const def = cardDef(copyCode || code)
           const baseCost = playCost(state, inv, def)
           const cost = item.entry ? playChannels.discountedCost(baseCost, item.entry) : baseCost
-          if (availablePlayResources(state, inv, def) < cost - quickPlayReduction(state, inv, def)) return false
+          if (availablePlayResources(state, inv, def) < cost + reactionPlayCostIncrease(quick.descriptor, state, inv, context) - quickPlayReduction(state, inv, def)) return false
           // 04111 坚韧不拔等：criteria 写成函数/数组的新通道（旧的对象形字段展开保持原样）。
           if (quick.criteria
             && (Array.isArray(quick.criteria) || typeof quick.criteria === 'function')
@@ -421,11 +471,16 @@ function reactionWindow(state, when, context, events, opts = {}) {
         const taken = playChannels.takeToHand(state, inv, chosen.entry, events)
         if (!taken.ok) break
         taken.apply?.()
+        let played
         try {
-          playReactionCard(state, inv, taken.handIndex, context, events,
+          played = playReactionCard(state, inv, taken.handIndex, context, events,
             { discount: taken.discount, fromChannel: chosen.entry })
         } finally {
           taken.restore?.()
+        }
+        if (played === false && chosen.entry.channel === 'sharedSetAside') {
+          playChannels.putBack(state, inv, chosen.entry, taken.handIndex)
+          break
         }
         taken.finish?.()
         continue
@@ -544,7 +599,8 @@ function triggerReaction(state, seat, when, events, context = {}, options={}) {
         const effect = { ...r.effect }
         if (context.enemy && effect.type === 'dealDamage' && !effect.target) effect.target = 'id:' + context.enemy.id
         if (context.enemy && effect.type === 'defeatNonEliteEnemy') effect.target = 'id:' + context.enemy.id
-        resolveEffect(state, seat, effect, makeRuntime(state, events))
+        withDirectDamageHint(state, { code: asset?.code || inv.code, assetId: asset?.id, sourceSeat: seat },
+          () => resolveEffect(state, seat, effect, makeRuntime(state, events)))
       }
     } finally {
       if (reactionState.testBonus) context.testBonus = (context.testBonus || 0) + reactionState.testBonus
@@ -557,7 +613,13 @@ function triggerReaction(state, seat, when, events, context = {}, options={}) {
     }
   }
   // 能力层：旧式 reactions 之后，同一个 when 也作为窗口开放给声明式描述子。
-  if(!options.skipAbilityWindow)openAbilityWindow(state, when, context, events)
+  if (options.skipAbilityWindow) return
+  const triggersQuickEvent = ['skillTestSuccess', 'locationRevealed', 'enemyEngaged'].includes(when)
+    && aliveInvestigators(state).some(owner => owner.hand.some(code => quickEventView(code)?.trigger.includes(when)))
+  if (triggersQuickEvent) reactionWindow(state, when, {
+    when, seat, location: state.investigators[seat]?.location, ...context,
+  }, events, { allowNested: true })
+  else openAbilityWindow(state, when, context, events)
 }
 
 // 玩家窗口里的 0 行动快速卡候选。候选直接复用 legalMoves（手牌与「如同手牌」通道都在同一份列表里），
@@ -649,7 +711,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
     // legalMoves 只枚举场上支援的主动能力；这里用与 openAbilityWindow 同一份 descriptorSources/
     // descriptorUsable 读点，按当前 timingWindow 过滤 kind:'free' 的能力。
     if (!cannotTriggerFreeAbility(state, inv)) {
-      for (const row of descriptorSources(state, inv)) {
+      for (const row of descriptorSources(state, inv, { includeDiscard: timing === 'test.beforeCommit' })) {
         const descriptors = row.entry?.abilities || []
         for (const [index, descriptor] of descriptors.entries()) {
           if (descriptor.kind !== 'free' || descriptor.fromHand) continue
@@ -670,7 +732,7 @@ function playerWindow(state, timing, events, restrictedSeat = null, opts = {}) {
             id: `free-descriptor:${row.code}:${index}${targetId == null ? '' : `:${targetId}`}${row.entry.scope && row.entry.scope !== 'card' && row.entry.scope !== 'investigator' ? `:${row.source.id}` : ''}`,
             label: `${cardName(row.code)}：${descriptor.label}`,
             freeCode: row.code, freeIndex: index, targetId,
-            ...(row.entry.scope && row.entry.scope !== 'card' && row.entry.scope !== 'investigator' ? { freeSourceId: row.source.id } : {}),
+            ...(row.source.discardedCard || row.entry.scope && row.entry.scope !== 'card' && row.entry.scope !== 'investigator' ? { freeSourceId: row.source.id } : {}),
           })
         }
       }

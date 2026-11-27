@@ -25,9 +25,9 @@
 //     `api.scenario.preventEnemyReady(source, 1)`（写 enemy.preventReady = { from, rounds: 1 }，
 //     读点是补给阶段的重整判定）。
 //   · 「猎手 / 庞大 / 反击」由关卡遭遇定义按印刷文本提供，条目里不重复声明。
-//   · 07164b 与 07165b 印刷前四行完全相同；本文件是 07165b 的击败替代版本。
+//   · 生命值使用印刷的 6；每位调查员 +3 生命值只适用于 07164b。
 //
-// 共用模板位置：07199b / 07084 的 enemyWouldBeDefeated 写法；生命值加成见 07292b。
+// 共用模板位置：07199b / 07084 的 enemyWouldBeDefeated 写法；07165b 的击败替代保留同一个敌人实例。
 //
 // implemented：条目自身印刷规则均有读点与测试（tests/tic-middle-remaining.test.mjs）。
 //   ⚠️ 生成调用方（魔鬼礁石议程 1b：07164/07165 的 agendaRule.onReveal）当前不在本 Wave 写盘范围；
@@ -39,7 +39,6 @@ export default {
   implemented: true,
   spawnAtStoryAsset: '07178',
   enemyRule: { cannotEnterTraits: ['Cave'] },
-  modifiers: [{ target: 'enemyHealth', amount: ({ state }) => 3 * state.numInvestigators }],
   abilities: [{
     kind: 'forced',
     trigger: 'enemyWouldBeDefeated',

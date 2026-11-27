@@ -7,7 +7,7 @@
 //
 // 规则事实源与近似逐条见文件末尾 scenarioApproximations；引擎缺口见 scenarioGaps。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { enemyRuleFor, entryFlags } from '../../../../../src/cards/card-rules.js'
+import { enemyRuleFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import {
   BAZAAR_LOCATION_CODES, CODES, INITIAL_LOCATIONS, KEY_ID, LOCATION_IDS, LOCATION_RULES,
   SET_ASIDE_ENEMY_CODES, SET_ASIDE_LOCATION_CODES, START_LOCATION,
@@ -15,7 +15,7 @@ import {
 import { bazaarDiagramFor, isSideAdjacent } from './layout.js'
 import {
   cluesUnveiled, cultCluesTotal, cultistEnemies, dealingsChaosAfterTest, dealingsChaosToken,
-  investigatorCluesTotal, isCultist, isFinalStage, nearestCultist,
+  investigatorCluesTotal, isCultist, isFinalStage, nearestCultist, nearestCultists,
 } from './chaos.js'
 
 const CHAPTER_ID = 'dealingsInTheDark'
@@ -97,7 +97,7 @@ function concealEnemy(state, api, enemy, { decoys = null } = {}) {
   if (!concealed || !enemy?.location) return []
   const kind = miniKindOf(codeOf(enemy))
   const cards = [{ kind, code: codeOf(enemy), decoy: false }]
-  const decoyCount = decoys == null ? numInvestigators(state) : Math.max(0, Number(decoys))
+  const decoyCount = decoys == null ? 1 : Math.max(0, Number(decoys))
   for (let index = 0; index < decoyCount; index += 1) cards.push({ kind, decoy: true })
   const here = locationOf(state, enemy.location)
   const slots = [enemy.location, ...(here?.connections || []).filter(id => locationOf(state, id))]
@@ -151,21 +151,9 @@ function exposeAt(state, api, seat, locationId, selectedMiniId = null) {
   })
   const chosen = candidates.find(card => card.id === id) || candidates[0]
   const result = concealed.expose(chosen.id, { seat })
+  if (!result || result.cancelled) return { exposed: false }
   api?.info?.(`🔎 ${state.investigators[seat]?.name || '调查员'} 揭露了「${locationOf(state, locationId)?.name || locationId}」的一张迷你卡。`)
-  if (result.decoy) {
-    const rule = ruleAt(state, locationId)
-    if (rule?.decoyExposedClueToCultist) {
-      const cultist = cultistEnemies(state).find(enemy => enemy.location === locationId) || null
-      const location = locationOf(state, locationId)
-      if (cultist && location && (location.clues || 0) > 0) {
-        api?.moveClueToEnemy?.(cultist, { from: 'location' })
-        api?.info?.(`🩸 「拥挤商铺」：揭露诱饵后把 1 个线索移到「${cultist.name}」。`)
-      } else {
-        api?.info?.('「拥挤商铺」：本地点没有持有线索的[[异教徒]]敌人，线索不移走。')
-      }
-    }
-    return { ...result, exposed: true, locationId }
-  }
+  if (result.decoy || result.enemyId) return { ...result, exposed: true, locationId }
   const asideEnemy = (state.setAsideEnemies || []).find(enemy => codeOf(enemy) === codeOfMiniKind(result.kind))
   if (asideEnemy) {
     api?.restoreEnemyFromAside?.(asideEnemy.id, locationId)
@@ -275,10 +263,8 @@ export function shiftTwistedAntiprism(state, api, { by = 'investigator', seat = 
   }
   const shouldFlip = face === CODES.keyStable || by === 'investigator'
   const keys = keyApi(api)
+  if (keys?.all?.().some(key => key.id === KEY_ID)) keys.shift(KEY_ID, { force: true, by, seat: shifterSeat })
   if (shouldFlip) {
-    if (keys) {
-      try { keys.shift(KEY_ID, { force: true }) } catch { /* 未初始化时只翻剧本标记 */ }
-    }
     flagsOf(state).twistedAntiprismFace = face === CODES.keyStable ? CODES.keyUnstable : CODES.keyStable
     api?.info?.(`🔄 扭曲反棱镜翻至${face === CODES.keyStable ? '动荡' : '稳定'}面。`)
   } else {
@@ -750,12 +736,6 @@ function sceneActions(state, inv) {
       ...(used ? { reason: '本场游戏已经成功过一次（每场游戏仅限一次成功）' } : {}),
     })
   }
-  if (rule.investigateCharmRelicPlay) {
-    moves.push({
-      action: 'scenarioAction', actionKind: 'investigate', rule: 'dealingsJewelersRoadInvestigate',
-      label: rule.label, locationId: location.id,
-    })
-  }
   return moves
 }
 
@@ -816,30 +796,6 @@ function performSceneAction(state, inv, move, api) {
       api?.gainClues?.(inv.seat, 1)
       api?.info?.(`🎓 伊斯坦布尔大学：${inv.name} 取得 1 个「彰显的线索」（剩余 ${cluesUnveiled(state)}）。`)
     }, 0, { label: '伊斯坦布尔大学研究', code: CODES.istanbulUniversity })
-    return true
-  }
-  if (rule === 'dealingsJewelersRoadInvestigate') {
-    const shroud = Number(location.shroud) || 0
-    api?.test?.(inv.seat, 'intellect', shroud, result => {
-      if (!result.success) return
-      const successBy = Math.max(0, Number(result.value) - shroud)
-      const candidates = (inv.hand || []).filter(code => {
-        const traits = ALL_CARDS[code]?.traits || []
-        if (!traits.some(trait => ['Charm', 'Relic'].includes(trait))) return false
-        return (ALL_CARDS[code]?.cost ?? 0) <= successBy
-      })
-      if (!candidates.length) {
-        api?.info?.('珠宝匠之路：没有可用成功点数免费打出的[[守护]]/[[遗物]]支援。')
-        return
-      }
-      const code = String(choose(api, {
-        kind: 'card', source: CODES.bazaarJewelersRoad, seat: inv.seat,
-        prompt: `成功 ${successBy} 点：可以免费打出其中一张[[守护]]/[[遗物]]支援（不发现线索）。`,
-        options: candidates.map(value => ({ id: value, label: ALL_CARDS[value]?.nameZh || ALL_CARDS[value]?.name || value })),
-      }))
-      if (!candidates.includes(code)) return
-      api?.playCardFromHandFree?.(inv.seat, code) || api?.info?.(`珠宝匠之路：按成功点数免费打出「${ALL_CARDS[code]?.nameZh || code}」。`)
-    }, 0, { label: '珠宝之路投资', code: CODES.bazaarJewelersRoad })
     return true
   }
   if (rule === 'dealingsGalataExpose') {
@@ -1071,8 +1027,19 @@ export const behavior = {
   // ---- 混乱标记：动态数值 ----
   resolveChaosToken(state, inv, token, api) {
     const fx = dealingsChaosToken(state, inv, token)
-    if (fx?.cultistDoomSwap) {
-      api?.info?.(`💀 [异教徒]：可用 1 个毁灭把修正改为 ${fx.cultistDoomSwap.changedTo}（本章近似：不提供改值选择）。`)
+    if (fx?.cultistDoomSwap && api?.choose && inv) {
+      const candidates = nearestCultists(state, inv.location)
+      if (!candidates.length) return fx
+      const selected = api.choose({ kind: 'effect', source: '09566', seat: inv.seat,
+        prompt: `放置 1 个毁灭，将此标记修正改为 ${fx.cultistDoomSwap.changedTo}？`,
+        options: [{ id: 'skip', label: '不放置毁灭' },
+          ...candidates.map(enemy => ({ id: enemy.id, label: `在「${enemy.name}」上放置 1 个毁灭` }))],
+      })
+      const enemy = candidates.find(candidate => candidate.id === selected)
+      if (enemy) {
+        api.doomOn(enemy, fx.cultistDoomSwap.doom)
+        return { ...fx, delta: fx.cultistDoomSwap.changedTo }
+      }
     }
     return fx
   },
@@ -1160,39 +1127,26 @@ export const behavior = {
     const rule = ruleAt(state, destination?.id)
     if (!rule?.entryOnlyFrom) return null
     const from = locationOf(state, inv.location)
-    if (from && codeOf(from) === CODES.galata) return null
-    return `「${destination.name}」只能从「${locationOf(state, rule.entryOnlyFrom)?.name || rule.entryOnlyFrom}」进入。`
-  },
-
-  movementError(state, inv, destination) {
-    const rule = ruleAt(state, destination?.id)
-    if (!rule?.entryOnlyFrom) return null
-    const from = locationOf(state, inv.location)
-    if (from && codeOf(from) === CODES.galata) return null
-    return `「${destination.name}」只能从「${locationOf(state, rule.entryOnlyFrom)?.name || rule.entryOnlyFrom}」进入。`
+    if (!from || codeOf(from) !== CODES.galata) {
+      return `「${destination.name}」只能从「${locationOf(state, rule.entryOnlyFrom)?.name || rule.entryOnlyFrom}」进入。`
+    }
+    return rule.entryDiscardCards && !locationRuleFor(codeOf(destination))?.canPayEntryIconCost?.(inv) ? '没有能支付额外进入费用的三枚同类技能图标' : null
   },
 
   beforeMove(state, inv, destination, api) {
     const rule = ruleAt(state, destination?.id)
     if (!rule?.entryDiscardCards) return true
     const from = locationOf(state, inv.location)
-    if (!from || codeOf(from) !== CODES.galata) return true
-    if (!(inv.hand || []).length) {
-      api?.info?.(`「${destination.name}」：手牌为空，无法支付额外费用。`)
-      return false
-    }
-    api?.discardRandom?.(inv.seat, rule.entryDiscardCards)
-    api?.info?.(`🚢 进入「${destination.name}」的额外费用：弃 1 张手牌（近似：卡面要求合计 3 个相同技能图标）。`)
-    return true
+    if (!from || codeOf(from) !== CODES.galata) return false
+    return locationRuleFor(codeOf(destination))?.payEntryIconCost?.(inv, api) === true
   },
-
   locationEntered(state, inv, location, api) {
     if (!location) return
     rooftopReaction(state, inv, location, api)
   },
 
-  enemyMoved(state, enemy, _previous, api) {
-    reResolveKeywordAtRooftop(state, enemy, api)
+  enemyMoved(state, enemy, _previous, api, movement) {
+    if (['hunter', 'patrol'].includes(movement?.cause)) reResolveKeywordAtRooftop(state, enemy, api)
   },
 
   // 邪恶野心家（09586a/b/c）：敌军阶段结束时若仍处于重整状态，在其上放 1 个毁灭。
@@ -1219,14 +1173,15 @@ export const behavior = {
       kind: 'story', source: `${CODES.bazaarBusyWalkway}-leave`, seat: inv.seat,
       prompt: `「${previous.name}」：检定失败，选择失去 1 个行动或取消本次移动。`,
       options: [
-        { id: 'loseAction', label: '失去 1 个行动' },
+        ...((inv.actionsLeft || 0) > 0 ? [{ id: 'loseAction', label: '失去 1 个行动' }] : []),
         { id: 'cancelMove', label: '取消本次移动（留在原地）' },
       ],
     })
-    if (answer === 'loseAction' && (inv.actionsLeft || 0) > 0) api?.loseActions?.(inv.seat, 1)
+    if (answer === 'loseAction') api?.loseActions?.(inv.seat, 1)
     api?.info?.(answer === 'loseAction'
       ? `🚧 「${previous.name}」：${inv.name} 失去 1 个行动。`
       : `🚧 「${previous.name}」：${inv.name} 的移动被取消。`)
+    return answer === 'loseAction'
   },
 
   // ---- 地点行动 ----

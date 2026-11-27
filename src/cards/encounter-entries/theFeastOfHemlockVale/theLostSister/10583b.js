@@ -20,6 +20,5 @@ export default {
     elite: true,
     abomination: true,
     setAside: true,
-  },
-  note: '近似：「近战攻击成功后的自伤」窗口不在本章 behavior 读点里，本批只落旗标（P8 接 skillTestResult）。',
+  }
 }

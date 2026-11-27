@@ -14,14 +14,8 @@ export default {
   agendaRule: {
     onReveal(state, agenda, api) {
       for (const inv of state.investigators.filter(item => !item.defeated && !item.resigned)) {
-        if (!isPoisonedInvestigator(inv)) {
-          const list = state.campaign.investigators
-          const entry = Array.isArray(list) ? list[inv.seat] : list?.[inv.seat]
-          if (entry) {
-            entry.removedCards ||= []
-            entry.deck?.push?.('04102')
-          }
-          // 卡面只写「加入牌库」；不能同时放进威胁区域。
+        if (!isPoisonedInvestigator(inv) && state.campaign.investigators?.[inv.seat]) {
+          api.campaignCard('04102', inv.seat, 'poison')
         }
         api.defeat(inv, null)
       }

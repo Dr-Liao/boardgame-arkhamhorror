@@ -211,8 +211,8 @@ test('P7 iceAndDeathPart2 逐卡覆盖：lostInTheNight 组 21 张全部注册�
   }
   for (const code of STORY_CODES) assert.ok(registeredEntry(code).flags.storyEffect, `${code} 缺剧情效果`)
   for (const code of POSSESSED_ENEMY_CODES) {
-    assert.ok(registeredEntry(code).enemyScript.negotiation, `${code} 缺谈判配置`)
-    assert.ok(registeredEntry(code).abilities.some(ability => ability.actionKind === 'parley'))
+    assert.ok(registeredEntry(code).abilities.some(ability => ability.actionKind === 'parley'
+      && typeof ability.resolve === 'function'), `${code} 缺可执行的谈判`)
   }
   assert.equal(registeredEntry('08526').actRule.freeAction.rule, 'drawUnderLocation')
 })

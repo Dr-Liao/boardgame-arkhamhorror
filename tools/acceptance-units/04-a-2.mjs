@@ -1,25 +1,9 @@
 // 验收单元 04-a-2：失落时代分片 2（Shattered Aeons + The Boundary Beyond + The City of Archives）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-04-a-失落时代战役卡-分片-2.md / .json（2026-11-24）。
+// 逐卡结论与证据见 audit/tfa-shard2-acceptance.json。
 const codes = ['04161', '04162', '04163', '04164', '04165', '04166', '04167', '04168', '04169', '04170', '04171', '04172', '04173', '04174', '04175', '04176', '04177', '04178', '04179', '04180', '04181', '04182', '04183', '04184', '04185', '04186', '04187', '04188', '04189', '04190', '04191', '04237', '04238', '04239', '04240', '04241', '04242', '04243', '04244', '04245', '04246', '04247', '04248', '04249', '04250', '04251', '04252', '04253', '04254', '04255', '04256', '04257', '04258', '04259', '04260', '04261', '04262', '04263', '04264', '04314', '04315', '04316', '04317', '04318', '04319', '04320', '04321', '04322', '04323', '04324', '04325', '04325b', '04326', '04326b', '04327', '04328', '04329', '04330', '04331', '04332', '04333', '04334', '04335', '04336', '04337', '04338', '04339', '04340', '04341', '04342', '04343', '04344', '04345', '04346', '04347']
 const codeSet = new Set(codes)
 
-const failed = [
-  ['04165', 'primitives', 'R1 直写运行时状态：`state.scenarioFlags ||= {}`（存量基线），未走 api.scenarioFlag。'],
-  ['04175', 'primitives', 'R1 直写运行时状态：`inv.discard.splice` / `inv.deck.push`（存量基线）。'],
-  ['04178', 'primitives', 'R1 直写运行时状态：`inv.discard.push(...inv.hand)` / `inv.hand = []`（存量基线）。'],
-  ['04316', 'primitives', 'R1 直写运行时状态：`nexus.doom`、`state.victoryDisplay`、`state.encounterDeck`（存量基线）。'],
-  ['04318', 'primitives', 'R1 直写运行时状态：`state.explorationDeck`、`state.scenarioFlags.pocketInDeck`（存量基线）。'],
-  ['04319', 'primitives', 'R1 直写运行时状态：`state.explorationDeck`、`state.encounterDiscard`、`state.relicOfAges`（存量基线）。'],
-  ['04345', 'primitives', 'R1 直写运行时状态：`state.explorationDeck`、`state.scenarioFlags.chamberOfTimeInDeck`（存量基线）。'],
-  ['04346', 'primitives', 'R1 直写运行时状态：`state.relicOfAges`、`yig.damageTaken = 0`（存量基线）。'],
-  ['04189', 'implementation', '声明 `treacheryRule.threatArea` 在失落时代无读点，且本卡是「险境/显现二选一」而非威胁区卡；实际结算在 behavior.resolveEncounter（已覆盖）。'],
-  ['04190', 'implementation', '声明 `treacheryRule.threatArea` 在失落时代无读点，本卡是「显现-检定」；另有 R5 观察项 revelationTestStubs。'],
-  ['04261', 'implementation', '声明 `treacheryRule.threatArea` 无读点（威胁区入场由 behavior 的 api.threat 完成）；threat.noDrawAction 与 surge 有读点，仅该字段无效。'],
-  ['04174', 'interaction', '卡面 [reaction]「击败/躲避蛇族后发现 1 线索」被 temploMayorReaction 自动结算，未用 api.choose 询问玩家是否触发（缺放弃入口），且未披露近似。'],
-  ['04179', 'interaction', '卡面 [reaction]「抽到巫术卡后发现 1 线索」被 chapultepecHillHexReaction 自动结算，未询问玩家，未披露近似。'],
-  ['04256', 'interaction', '卡面 [reaction]「调查阶段开始时控制看管人则同地点每位调查员抽 1」被 phaseBegan 自动结算，未询问玩家，未披露近似。'],
-]
 
 export default {
   id: '04-a-2',
@@ -28,10 +12,10 @@ export default {
   verifiedFn: 'tfaShard2CardVerified',
   profile: {
     id: 'tfa-shattered-aeons-boundary-beyond-city-of-archives-2026-11',
-    scope: '失落时代 04 段 Shattered Aeons（sha，36 条）+ The Boundary Beyond（tbb，31 条）+ The City of Archives（tcoa，28 条）共 95 条目录记录，锁定审计时未验收清单。81 条通过五维验收；14 条因存量 R1 直写、声明即未接线或可选反应自动结算暂不切换。',
-    basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard2.test.mjs 与 tfa-*.test.mjs 的真实用例标题。近似与缺口逐条披露，未声称等价。',
+    scope: '失落时代 04 段 Shattered Aeons（sha，36 条）+ The Boundary Beyond（tbb，31 条）+ The City of Archives（tcoa，28 条）共 95 条目录记录，锁定审计时未验收清单。逐卡结论、证据文件与用例标题见验收账本。',
+    basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为 tests/acceptance-04-a-shard2.test.mjs 与 tfa-*.test.mjs 的真实用例标题。本次复验覆盖原报告中全部 14 张失败卡。',
     houseRules: [
-      '保留项目既有的自动奖励反应与协作请求规则',
+      '卡面可选反应由应答者决定，保留既有的协作请求规则',
       '结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收',
       '存档与重放沿用引擎统一事务模型',
     ],
@@ -43,7 +27,7 @@ export default {
   select: card => codeSet.has(card.code),
   exclude: [],
   expectedCount: 95,
-  failed: failed.map(([code, dimension, reason]) => ({ code, dimension, reason })),
+  failed: [],
   testFiles: [
     'games/arkhamhorror/tests/acceptance-04-a-shard2.test.mjs',
     'games/arkhamhorror/tests/tfa-shattered-aeons.test.mjs',

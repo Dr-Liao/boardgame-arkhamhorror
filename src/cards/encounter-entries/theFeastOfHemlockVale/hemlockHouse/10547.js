@@ -22,6 +22,7 @@ export default {
     fight: 3,
     evade: 2,
     health: 5,
+    healthPerInvestigator: true,
     damage: 1,
     horror: 2,
     victory: 1,

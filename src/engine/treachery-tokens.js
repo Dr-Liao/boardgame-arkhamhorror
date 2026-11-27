@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 import { isCardAvailable } from '../deck/availability.js'
 import { availableResources } from './resource-bank.js'
@@ -7,9 +8,10 @@ import { availableResources } from './resource-bank.js'
 
 import { investigatorRule, resolveDeclarativeTreacheryTest } from '../cards/card-rules.js'
 import { registeredEntry } from './ability.js'
-import { clearForcedRevelation, forcedRevelationOf, popRevelation, pushRevelation } from './resolution-scope.js'
+import { clearForcedRevelation, forcedRevelationOf, popRevelation, pushRevelation, revelationGainedSurge } from './resolution-scope.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { afterThreatEntered } from './threat-entry.js'
+import { withCardOutcomeAudio } from './card-outcome-audio.js'
 
 export function createTreacheryTokens(deps) {
   const {
@@ -70,7 +72,10 @@ export function createTreacheryTokens(deps) {
     // 2026-10-25 第五轮修复 05049：「正在结算显现效果」的统一读点（进程内作用域，不写 state）。
     pushRevelation(t.code, scenarioDeckId, t.originalCode)
     try {
-      return resolveTreacheryBody(state, inv, t, events, { from })
+      const result = resolveTreacheryBody(state, inv, t, events, { from })
+      return revelationGainedSurge()
+        ? { ...(typeof result === 'object' && result ? result : {}), gainSurge: true, ...(result === true ? { placed: true } : {}) }
+        : result
     } finally {
       if (previousTreachery === undefined) delete state._treacheryResolving
       else state._treacheryResolving = previousTreachery
@@ -111,8 +116,19 @@ export function createTreacheryTokens(deps) {
       info(state, events, `⛔ 「${t.name}」的效果被忽略。`)
       return
     }
-    if (t.entryRevelation === true) {
-      const entry = registeredEntry(t.originalCode || t.code), api = scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code })
+    return withCardOutcomeAudio(state, events, true, () => resolveTreacheryEffectBody(state, inv, t, events, {
+      from, forcedPeril,
+    }))
+  }
+
+  function resolveTreacheryEffectBody(state, inv, t, events, { from, forcedPeril }) {
+    const code = t.originalCode || t.code
+    const entry = registeredEntry(code)
+    // A global reprint can use a chapter-independent entry even if its source
+    // definition was first registered through a chapter's encounter dispatcher.
+    if (t.entryRevelation === true || (t.encounterReprintOf && t.effect?.kind === 'campaignRule'
+      && (entry?.encounterResolve || entry?.treacheryRule?.test))) {
+      const api = scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code })
       // 第 5 参是遭遇结算上下文：部分条目（01168 朦胧之雾、04076/04088/04093、03091/03094、03262 等）
       // 声明 `encounterResolve(state, inv, card, api, { location })` 以读取「调查员所在地点」。
       // 之前只传 4 参，这些条目一被真实遭遇抽到就抛「Cannot destructure property 'location' of 'undefined'」。
@@ -125,7 +141,7 @@ export function createTreacheryTokens(deps) {
       })
       if (entry?.treacheryRule?.test) return resolveDeclarativeTreacheryTest(state, inv, t, api, null, { forcedPeril })
     }
-    if (t.effect?.kind === 'campaignRule') return scenarioBehavior(state).resolveEncounter(state, inv, t, scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code }))
+    if (t.effect?.kind === 'campaignRule') return scenarioBehavior(state).resolveEncounter(state, inv, t, scenarioRuntime(state, events, { type: 'encounter', label: '诡计检定', code: t.originalCode || t.code }), { encounteredFrom: from })
     if (t.rulesPending) throw new Error(`遭遇效果尚未迁移：${t.originalCode || t.code}`)
     if (t.threat) {
       const threat = newCardInstance(state, t.code)
@@ -142,7 +158,7 @@ export function createTreacheryTokens(deps) {
     }
     if (registeredEntry(t.code)?.surgeIfNoClues && inv.clues === 0) {
       info(state, events, `🌀 「${t.name}」获得涌动：再抽取一张遭遇牌。`)
-      drawEncounter(state, inv, events)
+      drawEncounter(state, inv, events, { surgeDraw: true })
       return
     }
     if (t.test) {
@@ -234,7 +250,7 @@ export function createTreacheryTokens(deps) {
           prompt: `乌默尔多斯之怒：选择弃牌或承受伤害／恐惧（剩余 ${failedBy - i} 次）。`, options })
         if (answer === 'harm') applyHarm(state, inv, 1, 1, events)
         else {
-          const code = inv.hand.splice(Number(answer), 1)[0]; discardPlayerCards(state, inv, code)
+          const code = spliceHand(inv, Number(answer), 1)[0]; discardPlayerCards(state, inv, code)
           log(`${inv.name} 弃掉了「${cardName(code)}」。`)
           afterHandDiscard(state, inv, code, events, reactionWindow, cardName)
         }

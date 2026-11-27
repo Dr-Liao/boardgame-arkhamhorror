@@ -8,12 +8,12 @@
 //   06348 / 06349 / 06350（三条阿特拉克之腿：隐藏值战斗修正 + 不能借机攻击 + 躲避替代）
 //   06352（黑暗中的织网者：附属最近古神敌人、+1 伤害/恐惧、摆脱行动）
 //
-// 口径与 tests/tde-scenario-weaverOfTheCosmos.test.mjs 一致：真实条目/真实章节 behavior + 同语义 api 替身。
-// 不改既有 tests/src/content；登记进 suites 由主进程完成。
+// 章节行为、单卡条目和幕 1 的真实支付动作分别覆盖对应规则。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import '../src/engine/engine.js'
+import * as engine from '../src/engine/engine.js'
+import { settlePendingChoices } from './tde-p95-fixture.mjs'
 import { behavior } from '../content/campaigns/theDreamEaters/scenarios/weaverOfTheCosmos/behavior.js'
 import {
   scenario as definition, WEB, RING, EXPANSION, LEGS, LEGS_HOME, ATLACH_NACHA, SPINNER, ACT_CODES,
@@ -203,28 +203,45 @@ test('06-a9 06335 曲折道路：毁灭阈值 +2[每调查员]，背面洗回遭
 // ---------------------------------------------------------------------------
 // 06337 穿过桥梁：幕 1 目标（全员最下方 + 团队 3/人线索）与背面展开大网
 // ---------------------------------------------------------------------------
-test('06-a9 06337 穿过桥梁：全员最下方+团队线索推进；背面展开大网并生成四条腿', () => {
-  const state = setupState(2)
-  const bottom = WEB[3]
-  for (const inv of state.investigators) {
-    inv.location = bottom
-    inv.clues = 3
+test('06-a9 06337 穿过桥梁：全员在最下方并共同支付线索后，翻幕展开大网并生成四条腿', () => {
+  const state = engine.createGameState({ seed: 'acceptance-06-a-shard9', playerInvestigator: '01001' }, [{ seat: 0 }, { seat: 1 }])
+  settlePendingChoices(engine, state)
+  engine.startScenario(state, 0, [], 'weaverOfTheCosmos')
+  for (const [index, id] of WEB.entries()) {
+    const adjacent = [WEB[index - 1], WEB[index + 1]].filter(Boolean)
+    assert.deepEqual(loc(state, id).connections.filter(target => WEB.includes(target)).sort(), adjacent.sort())
   }
-  const api = createApi(state)
-  behavior.checkObjectives(state, api)
-  assert.equal(state.advanced, 1, '条件满足：推进幕 1')
-
-  const state2 = setupState(2)
-  const api2 = createApi(state2)
-  behavior.actLeftPlay(state2, state2.acts[ACT_CODES.indexOf('06337')], api2)
-  const expansionIds = EXPANSION.filter(id => loc(state2, id))
-  assert.equal(expansionIds.length, 7, '背面把 7 张巨网展开入场')
+  const findAdvance = () => engine.legalMoves(state, 0).find(move => move.action === 'advanceAct')
+  state.investigators[0].location = WEB[3]
+  state.investigators[0].clues = 6
+  state.investigators[1].location = WEB[2]
+  assert.equal(findAdvance(), undefined, '队友没有到达最下方地点')
+  state.investigators[1].location = WEB[3]
+  state.investigators[0].clues = 4
+  state.investigators[1].clues = 1
+  assert.equal(findAdvance(), undefined, '队伍线索不足')
+  state.investigators[1].clues = 2
+  engine.checkAct(state, [])
+  assert.equal(state.actIndex, 0, '队伍满足条件后可自行决定何时支付')
+  const move = findAdvance()
+  assert.ok(move)
+  engine.applyMove(state, 0, move)
+  for (const [seat, amount] of [[0, 4], [1, 2]]) {
+    const choice = state.pendingChoice
+    assert.equal(choice?.kind, 'payment', '进入共同支付分摊窗口')
+    assert.equal(choice.seat, seat)
+    assert.ok(choice.options.some(option => option.id === String(amount)))
+    engine.applyMove(state, seat, { action: 'choose', choiceId: choice.id, optionId: String(amount) })
+  }
+  assert.deepEqual(state.investigators.map(inv => inv.clues), [0, 0])
+  assert.equal(state.actIndex, 1)
+  assert.equal(EXPANSION.filter(id => loc(state, id)).length, 7)
   for (const [code, homeId] of Object.entries(LEGS_HOME)) {
-    assert.ok(state2.enemies.some(enemy => enemy.code === code && enemy.location === homeId),
+    assert.ok(state.enemies.some(enemy => enemy.code === code && enemy.location === homeId),
       `${code} 之腿生成在 ${homeId}`)
   }
-  assert.equal(state2.scenarioFlags.atlachCenter?.assembled, true, '阿特拉克·纳克亚中央实体装配')
-  assert.equal(state2.encounterDeck.filter(code => code === SPINNER).length, 2, '2 张黑暗中的织网者洗入遭遇牌库')
+  assert.equal(state.scenarioFlags.atlachCenter?.assembled, true)
+  assert.equal(state.encounterDeck.filter(code => code === SPINNER).length, 2)
 })
 
 // ---------------------------------------------------------------------------

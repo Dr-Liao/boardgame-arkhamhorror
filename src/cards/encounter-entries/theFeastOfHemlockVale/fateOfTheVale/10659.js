@@ -21,6 +21,6 @@ export default {
     fireTreacheryCode: '10743',
     back: 'resolution4',
   },
-  note: '近似：「花费 X/人 线索放 X 引线」在 behavior.placeKindling 里按 1/人 线索 = 1 引线逐次结算（一次行动不解析 X）；花费 5 资源/弃道具换额外引线的选项未接线。',
+  note: '章节在一次行动内结算所选线索数量以及放置额外引线的可选费用。',
   abilities: [],
 }

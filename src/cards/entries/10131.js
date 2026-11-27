@@ -30,8 +30,6 @@ function curseTokenIndexes(state) {
 export default {
   code: CODE,
   name: 'Dawn Star',
-  simplified: true,
-  note: 'approximation: 多个敌人时只询问一次目标，全部「每 1 个[诅咒]标记 1 点伤害」都分配给同一个敌人；印刷允许伤害分别指向同地点的任意敌人。',
   abilities: [
     {
       kind: 'played',
@@ -47,19 +45,17 @@ export default {
           return
         }
         api.info(`🌟 「黎明之星」：忽略本次检定 ${indexes.length} 个[诅咒]标记的修正值。`)
-        const targets = (state.enemies || []).filter(enemy => enemy.location === inv.location && !enemy.defeated)
-        if (!targets.length) {
-          api.info('🌟 「黎明之星」：所在地点没有敌人，不造成伤害。')
-          return
+        for (let point = 0; point < indexes.length; point += 1) {
+          const targets = api.enemiesAt(inv.location).filter(enemy => api.canDamageEnemy(enemy, inv.seat, CODE))
+          if (!targets.length) break
+          const enemyId = targets.length === 1 ? targets[0].id : api.choice({
+            kind: 'enemy', source: CODE, seat: inv.seat,
+            prompt: '「黎明之星」：选择承受这 1 点伤害的敌人。',
+            options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),
+          })
+          const enemy = targets.find(item => item.id === enemyId)
+          if (enemy) api.damageEnemy(enemy, 1, inv.seat)
         }
-        const enemyId = targets.length === 1 ? targets[0].id : api.choice({
-          kind: 'enemy', source: CODE, seat: inv.seat,
-          prompt: '「黎明之星」：选择要造成伤害的敌人。',
-          options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })),
-        })
-        const enemy = targets.find(item => item.id === enemyId) || targets[0]
-        api.damageEnemy(enemy, indexes.length, inv.seat)
-        api.info(`🌟 「黎明之星」：对「${enemy.name}」造成 ${indexes.length} 点伤害。`)
       },
     },
   ],

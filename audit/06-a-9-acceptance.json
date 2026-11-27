@@ -3,7 +3,7 @@
   "unit": "06-a-9",
   "profile": {
     "id": "tde-weaver-of-the-cosmos-2026-11",
-    "scope": "食梦者 06 段 Weaver of the Cosmos（woc，06323–06354）32 条目录记录。25 条通过五维验收；7 条因冗余/未接线死声明或 actRule 被行为卡号分支绕过暂不切换。",
+    "scope": "食梦者 06 段 Weaver of the Cosmos（woc，06323–06354）32 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 32,
-    "verified": 25,
-    "unverified": 7,
+    "verified": 32,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 379
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
-      "sha256": "71473b5aedbddc874b3d37755ceae16bec2cf6e156f71be9a9d21573eeaef6e2"
+      "sha256": "1d6dc6a4ac823e448c0cbc97c8cdfa90d30e732eed813a97e4b127464f1f6358"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
-      "sha256": "59979ee2b83b99b3eaa759b82784795d9f82912fd3047848195c4215e50fee87"
+      "sha256": "3aced234e0e955fb1cf94d2d54f305bb0612174da2604348db132eb11f073a15"
     },
     {
       "file": "games/arkhamhorror/tests/tde-player-m2-4.test.mjs",
@@ -205,49 +205,101 @@
       "code": "06334",
       "name": "蛛网桥梁",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "legacy doomPerInvestigator/doomPerInvestigatorAmount 在 TDE 运行时无消费方（本章只读 flags.doomThresholdPerInvestigator，behavior.afterChaosBagSetup）；同一规则两条声明路径。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06334 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "议程推进：06334/35 把遭遇弃牌堆洗回；06336 推进 → 结局 2"
+        }
+      ]
     },
     {
       "code": "06335",
       "name": "曲折道路",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 06334：legacy doom 字段无 TDE 运行时读点（读点是 flags.doomThresholdPerInvestigator）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06335 曲折道路：毁灭阈值 +2[每调查员]，背面洗回遭遇弃牌堆"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06335 已验收 · agenda 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06336",
       "name": "现实交织",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 06334：legacy doom 字段无 TDE 运行时读点（读点是 flags.doomThresholdPerInvestigator）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06336 已验收 · agenda 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "议程推进：06334/35 把遭遇弃牌堆洗回；06336 推进 → 结局 2"
+        }
+      ]
     },
     {
       "code": "06337",
       "name": "穿过桥梁",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actRule.verticalChain / objective / advance.* 均无运行时读点：behavior.checkObjectives/actLeftPlay 按 ACT_CODES 卡号硬编码（其它 TDE 章节会读 objective.kind）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06337 穿过桥梁：全员在最下方并共同支付线索后，翻幕展开大网并生成四条腿"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "06337 幕 1：全员在最下方且线索足够时，队伍可以决定何时支付线索推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06337 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06338",
       "name": "编织宇宙",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actRule.objective（legsInVictory）与 actRule.advance（flipAtlachNacha）无运行时读点：behavior 按 ACT_CODES 卡号分支，仅 actions/mythosSpin 被读。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06338 编织宇宙：花 1 线索伤[[古神]]、神话旋转四腿、胜利区四腿推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06338 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06339",
       "name": "阴谋破灭",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actRule.objective（enemyDefeatedFlag）与 actRule.advance（finish）无运行时读点：behavior 按 ACT_CODES 卡号分支，仅 actions/mythosSpin 被读。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard9.test.mjs",
+          "test": "06-a9 06339 阴谋破灭：阿特拉克·纳克亚被击败时推进，背面结算结局"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06339 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06340",
@@ -473,9 +525,21 @@
       "code": "06353",
       "name": "陷入网中",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "treacheryRule.threatArea 是死声明：TDE 内容层/引擎无 .threatArea 读取，威胁区入位由 encounterResolve→api.threat 完成（与分片 5 的 06191/06192/06193 同一系统性问题）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06353 已验收 · treachery 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "moveError：陷入网中（06353）每轮只允许 1 次移动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-weaverOfTheCosmos.test.mjs",
+          "test": "诡计条目：06353 进威胁区 + 敏捷修正；06354 场上无蜘蛛时从牌库生成一张"
+        }
+      ]
     },
     {
       "code": "06354",

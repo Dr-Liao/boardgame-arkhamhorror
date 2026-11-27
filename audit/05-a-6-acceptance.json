@@ -3,7 +3,7 @@
   "unit": "05-a-6",
   "profile": {
     "id": "tcu-union-disillusion-2026-11",
-    "scope": "万象无终 05 段 Union and Disillusion（uad，05229–05272）48 条目录记录。42 条通过五维验收；6 条因重印未登记/双实现、R1 与触发条件越界暂不切换。",
+    "scope": "万象无终 05 段 Union and Disillusion（uad，05229–05272）48 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,23 +17,23 @@
   },
   "summary": {
     "total": 48,
-    "verified": 42,
-    "unverified": 6,
+    "verified": 48,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 134
+    "testsPassed": 136
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
-      "sha256": "4ed52967508680914be3fa9bfa400a2b8053ae51fdb003aebbe462e974737d5a"
+      "sha256": "cb87381202e862d68d7c501d019fc76b3b14989e37190f18732105c806c0cb2d"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-union-disillusion.test.mjs",
-      "sha256": "b9fda7c050a9ab42d1f055ee9bbcfbbb2a5e871d5d72b4bec7e1249e0bd1861f"
+      "sha256": "f3ccec98544e0af9f35f938976910eef250c4ea812edae798a9e6d8d1eff6e9e"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+      "sha256": "85c6b1dc87868ef22313c167a02a4cd2ba50013809527855b7c089e23dd09ff5"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-scenario-hooks.test.mjs",
@@ -153,17 +153,37 @@
       "code": "05236",
       "name": "指路鬼魂",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态：`source.removedFromGame = true` 直接写支援实例字段，未走 ctx.api；`audit-card-entry-compliance.mjs` 的 R1 正则只从 state 根/context 解构起污点，漏检 resolve 参数 `source`，因此账本 R2/R1 未报（本条目在本轮审计中独立发现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05236 指路鬼魂 +1 智慧；非直接恐惧必须先分给它，因恐惧离场时移出游戏"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05236 沉静：其他己方支援也可先分恐惧，但必须排在调查员卡之前"
+        }
+      ]
     },
     {
       "code": "05237",
       "name": "幸运或是注定",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "触发条件比卡面宽：卡面「when doom would be placed on any scenario card」，引擎 doomPlaced 窗口对「任意卡上的毁灭」都会打开（含玩家支援，如 05235 用 api.placeDoomOnCard 在自己身上放毁灭），条目 criteria 只检查 context.card.doom > 0，未排除玩家卡；实测范围内可响应玩家支援上的毁灭（错值/越界触发）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05237 幸运或是注定 密谋毁灭也能取消（addDoom 的 doomPlaced 窗口）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05237 幸运或是注定 毁灭放到卡上时反应取消 1 点并放逐自身；每场游戏最多 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
+          "test": "TCU 05237 幸运或是注定：玩家支援获得毁灭时不提供反应，遭遇敌人可以触发"
+        }
+      ]
     },
     {
       "code": "05238",
@@ -601,9 +621,13 @@
       "code": "05266",
       "name": "夜鹰",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R2 跨循环重印双实现：05266 Whippoorwill 与 02090(dwl)/12166(core_2026) 同名同文（印刷文本逐字一致），cards-data 未标 duplicateOfCode/duplicatedBy，`_reprint-aliases.js` 也无别名；05266 在 unionAndDisillusion 目录另写一份 enemySpawnRule/enemyStatRule（02090 的条目只声明 flags.nightgaunt，光环在 Dunwich 章节行为另实现），同一张印刷卡存在两份实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05266 夜鹰：生成在首位调查员所在地点；同地点的调查员全技能 -1（多张叠加）"
+        }
+      ]
     },
     {
       "code": "05267",
@@ -621,25 +645,37 @@
       "code": "05268",
       "name": "渴望死亡",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R2 跨循环重印双实现：05268 Eager for Death 与 02091(dwl)/12167(core_2026) 同名同文，cards-data 未标重印关系、无别名；02091 已用同一条声明式 treacheryRule.test（skill willpower / difficulty 2+damage / fail takeHorror 2）实现，05268 又复制了一份等价条目。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05268 渴望死亡：意志(2+已受伤)失败受 2 恐惧（声明式 treacheryRule.test）"
+        }
+      ]
     },
     {
       "code": "05269",
       "name": "灵魂之歌",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R2 跨循环重印双实现 + 同句规则重复手写：05269 Psychopomp's Song 与 02221(bota) 同名同文（Surge. Peril. / Revelation - Add ... to any investigator's threat area / Forced - 额外 2 伤害并弃卡），cards-data 未标重印、无别名；02221 已有等价 harmInterceptor + encounterResolve 实现（encounterResolveCampaigns: [\"dunwich\"]），05269 再手写一份，且「加入任意调查员威胁区」模板已是第 3+ 份。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05269 灵魂之歌：显现进入任意调查员威胁区；受伤时额外 2 伤并弃卡"
+        }
+      ]
     },
     {
       "code": "05270",
       "name": "死期临近",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "同句规则重复手写：「Revelation - Add X to any investigator's threat area」+ 威胁区伤害/恐惧拦截模板在 02221、05269、05270 已出现三份（05270 的 encounterResolve 与 05269 逐字复制，仅 harmInterceptor.trigger 不同），按迁移规范 §4.3 应上收为共享条目/工厂；fix-plan P2-3 已登记未做。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard6.test.mjs",
+          "test": "05270 死期临近：显现进入任意调查员威胁区；受恐时额外 2 恐并弃卡"
+        }
+      ]
     },
     {
       "code": "05271",

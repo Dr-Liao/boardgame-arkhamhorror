@@ -98,10 +98,11 @@ test('攻击演出里的伤害不会重复产生 harm cue（攻击已有 attack 
   const state = fixture('01001', 2)
   const inv = me(state)
   const events = []
-  // 剧本「无敌人实体攻击」走 presentAttack：第 10 参 presentationOrigin 会标记为攻击伤害。
-  applyHarm(state, inv, 1, 0, events, false, null, false, null,
-    { code: 'ghoulMinion', name: '食尸鬼', seat: inv.seat, location: inv.location })
-  assert.equal(events.some(event => (event.presentation || event).kind === 'harm'), false)
+  scenarioRuntime(state, events).presentAttack({ code: 'ghoulMinion', name: '食尸鬼', seat: inv.seat,
+    location: inv.location, damage: 1, text: '食尸鬼攻击。' }, attack => attack.damage(inv.seat, 1))
+  const kinds = events.map(event => (event.presentation || event).kind)
+  assert.ok(kinds.includes('enemyHarm'))
+  assert.ok(!kinds.includes('harm'))
 })
 
 test('威胁区行动检定的来源名由服务端按卡号解析（时间线显示在摆脱哪张卡）', () => {

@@ -2,7 +2,7 @@
 // Detailed evidence: audit/06-a-4-acceptance.json. Not a promise of all-combination equivalence.
 export const TDE_SHARD4_ACCEPTANCE_PROFILE = {
   "id": "tde-search-for-kadath-b-2026-11",
-  "scope": "食梦者 06 段 The Search for Kadath（sfk，06133–06154）33 条目录记录。15 条通过五维验收；5 条功能缺口、13 条死声明/元数据待裁决暂不切换。",
+  "scope": "食梦者 06 段 The Search for Kadath（sfk，06133–06154）33 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TDE_SHARD4_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TDE_SHARD4_ACCEPTANCE_SHA256 = 'adda192aad1e54b62a5a61a9c4d1f8a72854f49ea571c4e4bb1acf5aa0a0598b'
-const verified = new Set(["06133","06134","06135","06136","06137","06138","06139","06140","06141","06142","06143","06146","06147","06151","06152"])
+export const TDE_SHARD4_ACCEPTANCE_SHA256 = 'eb91547083400e5a320ea39cf29b33015e2559dc8e50c4b5d14604b74a5bb469'
+const verified = new Set(["06133","06133b","06134","06134b","06135","06135b","06136","06136b","06137","06137b","06138","06138b","06139","06139b","06140","06140b","06141","06141b","06142","06142b","06143","06143b","06144","06145","06146","06147","06148","06149","06150","06151","06152","06153","06154"])
 export const tdeShard4CardVerified = code => verified.has(code)

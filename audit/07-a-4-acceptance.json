@@ -3,7 +3,7 @@
   "unit": "07-a-4",
   "profile": {
     "id": "tic-devil-reef-2026-11",
-    "scope": "印斯茅斯暗潮 07 段 Devil Reef（def，07152–07188）43 条目录记录。41 条通过五维验收；07165b 数值过度实现、07185 触发条件过宽暂不切换。",
+    "scope": "印斯茅斯暗潮 07 段 Devil Reef（def，07152–07188）43 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 43,
-    "verified": 41,
-    "unverified": 2,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 317
   },
@@ -29,7 +29,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-      "sha256": "a050b7d56ddf46230278f6d30b5a21a7811898857976f0eb7c0ce9954f5693de"
+      "sha256": "dd1374f20f16558dec9eaedbe6ce082992d8c4bdb81b252089cda0a988506957"
     },
     {
       "file": "games/arkhamhorror/tests/tic-fishing-vessel.test.mjs",
@@ -49,7 +49,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",
@@ -261,7 +261,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值"
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
@@ -289,7 +289,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值"
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
@@ -321,7 +321,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "test": "07164b/07165b：声明了渔船生成点、[[洞穴]]禁入与 +3[每调查员]生命值读点"
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值"
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
@@ -329,7 +329,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
-          "test": "07165b：将要被击败时改为移除所有伤害、横置并本轮不能重整"
+          "test": "07165b：双人局仍为 6 生命，受到致命伤害时清空伤害并横置且本轮不能重整"
         },
         {
           "file": "games/arkhamhorror/tests/tic-scenario-devilReef.test.mjs",
@@ -341,9 +341,25 @@
       "code": "07165b",
       "name": "魔鬼礁石的骇物",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "过度实现：条目声明 `modifiers: [{ target: 'enemyHealth', amount: 3 × 人数 }]`（+3[每调查员]生命值），但 07165b 印刷卡文（中/英）没有这一句——+3 生命值只印在 07164b 上；07165b 的第 4 行是「将要被击败时改为移除所有伤害并横置」。实测 2 人局从渔船地点生成 07165b 后 enemyHealth=12（印刷生命 6，多出 6），战斗难度显著偏离卡面。仓库测试 tests/tic-middle-remaining.test.mjs:98-106 还把该修正同时断言给 07165b，属测试与实现一起写错；同文件 :113-123 只对 07164b 验证 6+3×N，未覆盖 07165b 的正确生命值。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：不能进入[[洞穴]]地点，普通地点不受限制"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07164b/07165b：均从渔船生成并禁止进入洞穴；只有 07164b 增加生命值"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07165 大海的秘密（版本II）：背面把 07165b 生成在渔船所在地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07165b：双人局仍为 6 生命，受到致命伤害时清空伤害并横置且本轮不能重整"
+        }
+      ]
     },
     {
       "code": "07166",
@@ -821,9 +837,21 @@
       "code": "07185",
       "name": "伏兵出水",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "PARTIAL：「在你攻击淹没地点的敌人时，揭示混乱标记时再揭示一个」的读点 src/engine/tests.js:44-56（floodedAttackExtraTokenRule）只检查 enemyId + 目标敌人所在地点是否淹没 + 密谋牌库旁是否有 07185，没有校验 actionKind/攻击，因此**躲避**淹没地点的敌人时也会额外揭示混乱标记。实测同一敌人的 attack/evade 两种 options 都返回 true（卡面仅攻击）；tests/tic-middle-remaining.test.mjs:243 只测了攻击分支。本项目 docs/campaign/theInnsmouthConspiracy/acceptance.md:159 已把「07185 仅攻击触发」列为待长期回归的非 HIGH 问题。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07185：攻击淹没地点的敌人额外揭示一次，躲避、渔船乘客和干燥地点除外"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07185：显现把本体放到密谋牌库旁，且不进入遭遇弃牌堆；两句强制读点已接线"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tic-middle-remaining.test.mjs",
+          "test": "07185：每轮结束时只从场上弃掉 1 张同名副本，下一轮再弃下一张"
+        }
+      ]
     },
     {
       "code": "07186",

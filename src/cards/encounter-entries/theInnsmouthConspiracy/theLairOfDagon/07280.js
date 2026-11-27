@@ -34,7 +34,8 @@
 //   src/cards/encounter-entries/theInnsmouthConspiracy/theLairOfDagon/07280.js
 //
 // 引擎读点：
-//   · 正面「嫌犯 +1[每调查员]生命 / 失去冷漠 / 不能谈判」= 条目 `modifiers` 的场景行：
+//   · 正面由 dagonOathFront() 共享。
+//     「嫌犯 +1[每调查员]生命 / 失去冷漠 / 不能谈判」= 条目 `modifiers` 的场景行：
 //     modifiers.js#entityModifierTotal（enemyHealth，幕/议程 scene 行）与 #entityRuleActive
 //     （loses:aloof / cannot:parley，SCENE_ENTITY_RULES 允许 scene 行），条件用 hasTrait 收窄。
 //   · [fast] 能力 = 幕实体上的 free 描述子：parley.js#parleyMovesFor(activeStageEntities)
@@ -56,7 +57,7 @@
 //
 // implemented: true
 
-import { ALL_CARDS, hasTrait, originalOf } from '../../_shared.js'
+import { dagonOathFront, hasTrait, originalOf } from '../../_shared.js'
 
 const GRAND_ENTRYWAY = '07283'
 const TIDAL_TUNNEL_NAME = 'Tidal Tunnel'
@@ -64,18 +65,8 @@ const TIDAL_TUNNEL_NAME_ZH = '潮水通道'
 const SYZYGY = '07101' // 朔望
 const TIDAL_ALIGNMENT = '07100' // 星潮合相
 
-// 「每个[[嫌犯]]敌人」：实体必须在场且带 Suspect 特性（印刷特性或运行期授予都算）。
-const suspect = { when: ({ state, entity }) => (state.enemies || []).includes(entity) && hasTrait(entity, 'Suspect') }
-
-const isObstacle = attachment => hasTrait(ALL_CARDS[originalOf(attachment)], 'Obstacle')
-
 const locationByCode = (state, code) =>
   state.locations.find(location => String(originalOf(location)) === code) || null
-
-const obstacleAttachmentsAt = (state, locationId) => {
-  const location = state.locations.find(candidate => candidate.id === locationId)
-  return (location?.attachments || []).filter(isObstacle)
-}
 
 // act1BackMap.rawMatrix（8 行 x 6 列「2x2 格」展示矩阵；每个地点占 2x2 格）：
 //   tidalTunnel1 左上(1,0)  tidalTunnel2 左上(3,0)
@@ -142,11 +133,7 @@ function shuffleSetAsideAlignmentIntoEncounterDeck(state, api) {
 
 export default {
   code: '07280', scope: 'act', implemented: true,
-  modifiers: [
-    { target: 'enemyHealth', amount: ({ state }) => state.numInvestigators, condition: suspect },
-    { target: 'loses:aloof', condition: suspect },
-    { target: 'cannot:parley', condition: suspect },
-  ],
+  ...dagonOathFront(),
   actRule: {
     objective(state) {
       const grand = locationByCode(state, GRAND_ENTRYWAY)
@@ -167,15 +154,4 @@ export default {
       api.info?.('「第一誓约」背面：旧地点离场、潮水通道入场、全场涨水，朔望与星潮合相洗回遭遇牌库。')
     },
   },
-  abilities: [{
-    kind: 'free', actionKind: 'activate', range: 'anywhere',
-    label: '花费蓝色、红色、白色或黄色钥匙：弃掉你所在地点的每张[[屏障]]卡牌',
-    additionalKeyCost: { colors: ['blue', 'red', 'white', 'yellow'], scope: 'self' },
-    criteria: ({ state, inv }) => obstacleAttachmentsAt(state, inv.location).length > 0,
-    resolve: ({ state, inv, api }) => {
-      const obstacles = obstacleAttachmentsAt(state, inv.location)
-      for (const attachment of obstacles) api.scenario.detachEncounterAttachment(attachment)
-      if (obstacles.length) api.info?.(`🪨 弃掉所在地点的 ${obstacles.length} 张[[屏障]]。`)
-    },
-  }],
 }

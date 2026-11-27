@@ -2,7 +2,7 @@
 // Detailed evidence: audit/07-a-5-acceptance.json. Not a promise of all-combination equivalence.
 export const TIC_SHARD5_ACCEPTANCE_PROFILE = {
   "id": "tic-horror-in-high-gear-2026-11",
-  "scope": "印斯茅斯暗潮 07 段 Horror in High Gear（hhg，07189–07219）42 条目录记录。41 条通过五维验收；07189 附魔护甲伤害分配被写死为护甲所有者暂不切换。",
+  "scope": "印斯茅斯暗潮 07 段 Horror in High Gear（hhg，07189–07219）42 条目录记录。全部通过五维验收。",
   "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
   "houseRules": [
     "保留项目既有的自动奖励反应与协作请求规则",
@@ -14,6 +14,6 @@ export const TIC_SHARD5_ACCEPTANCE_PROFILE = {
     "参考资源/ArkhamHorror-main/backend/arkham-api/library/Arkham"
   ]
 }
-export const TIC_SHARD5_ACCEPTANCE_SHA256 = 'e5a7e3e64888b3e1efa25591ddab7dbedc4d4e44e5044f722acbf363c5303622'
-const verified = new Set(["07190","07191","07192","07193","07194","07195","07196","07197","07198","07199","07199b","07200","07201","07202","07203","07204a","07204b","07204c","07205a","07205b","07206a","07206b","07207a","07207b","07208a","07208b","07208c","07209a","07209b","07210","07211a","07211b","07212a","07212b","07213","07214","07215","07216","07217","07218","07219"])
+export const TIC_SHARD5_ACCEPTANCE_SHA256 = '39417dd8e4c5c6d4faf05ffac75ff95b34b0241f3368837251e5987ede975d3c'
+const verified = new Set(["07189","07190","07191","07192","07193","07194","07195","07196","07197","07198","07199","07199b","07200","07201","07202","07203","07204a","07204b","07204c","07205a","07205b","07206a","07206b","07207a","07207b","07208a","07208b","07208c","07209a","07209b","07210","07211a","07211b","07212a","07212b","07213","07214","07215","07216","07217","07218","07219"])
 export const ticShard5CardVerified = code => verified.has(code)

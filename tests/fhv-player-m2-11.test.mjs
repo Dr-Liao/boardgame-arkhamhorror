@@ -4,7 +4,6 @@
 // 近似实现（缺引擎读点）在条目 note 里披露，并在
 // `artifacts/migration/fhv/primitive-requests/<code>.json` 登记：
 //   · 10123 模式 1（地点附属 → 手牌）缺写入口；
-//   · 10126 失败重试用 api.retryTest 重跑检定但不重放原检定的 resolve 效果。
 //
 // 约定：
 //   · 事件/支援能力走真实 legalMoves / move 管线；需要直接发起伤害/检定（不走 action 入口）时用
@@ -344,7 +343,7 @@ test('P6 10126 宗教信物 检定结束后把诅咒转为祝福；失败后可�
   assert.equal(retried, true, '检定失败后询问是否再次尝试')
   assert.equal(fresh(state, token.id).exhausted, true, '横置宗教信物')
   assert.equal(blessings(state), 1, '1 个诅咒标记 → 1 个祝福标记')
-  assert.match(String(state.lastTestResult.source?.label), /重试/, '重试的检定成为最近一次检定结果')
+  assert.deepEqual(state.lastTestResult.drawn, ['-5'], '重试的检定使用新标记并成为最近一次结果')
 })
 
 // ── 10127 黑马 ──────────────────────────────────────────────────────────────

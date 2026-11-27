@@ -59,10 +59,7 @@ P7 结束时 TIC 只是目录级注册（`catalog-only` 战役 + `development` �
   capture、harper events、holding cells、parallel acts、act/agenda deck ops、act clue objective
   的 Lead 裁决桥、07280/07281 act1BackMap 坐标）。其中 `07280/07281` 的潮水通道与达贡巢穴落位
   新增回归测试，直接由 `chapter-data.json#act1BackMap.rawMatrix` 推导并断言坐标。
-- 仅剩 1 条 **重构类**维护项（`w5-07280-oath-shared-rules`：三张达贡幕共用正面模板工厂）在 P8 开发期
-  登记为总审计 `maintenance`，不改变任何卡牌行为，也不阻止发布。该请求队列文件位于开发机本地的
-  `artifacts/migration/tic/p7/primitive-requests/`（未入库），同步后缺失；本机二次收口（§9）复算的
-  `maintenance` 因此为空，重构候选本身仍未完成（见 §7 第 1 条）。
+- 07-a 复验关闭了 `w5-07280-oath-shared-rules`。三张达贡幕共用 `dagonOathFront()`，实局验证了嫌犯修正与支付钥匙清除本地屏障。
 - 既有合规门禁：`cards:check` / `cards:encounter-check` / `audit:entries`（R1/R2/R3）通过；
   `node tools/audit-abilities.mjs --check`（engineCodes=0 / effectsEntries=0 / escapeCards=0）通过。
 
@@ -166,17 +163,13 @@ node tools/replay-fixtures.mjs --check          # 13/13
 
 ## 7. 已披露限制与维护项
 
-1. `w5-07280-oath-shared-rules`：三张达贡幕的正面模板仍是三份手写声明（同句规则只写一次口径的
-   重构候选），行为测试覆盖，不阻塞发布。P8 开发期它在 request 队列里登记为 `maintenance`；该队列
-   目录是开发机本地未入库产物，同步后缺失，本机复算的总审计 `maintenance` 为空 —— 属于证据输入
-   丢失，不是重构已完成，后续做模板工厂时仍需一并处理。
-2. `content/scenario-guides.js` 的 TIC 设置说明为 P8 补写；完整指南正文仍以
+1. `content/scenario-guides.js` 的 TIC 设置说明为 P8 补写；完整指南正文仍以
    `web/scenario-guides/<id>.json`（54 关生成校验）为准。
-3. `web/campaign-presentation.js` 暂无 TIC 专属主题/战役插画，走 COMMON 回退（不产生 404）；
+2. `web/campaign-presentation.js` 暂无 TIC 专属主题/战役插画，走 COMMON 回退（不产生 404）；
    `web/scenario-music.js` 已补 8 章播放列表（复用既有曲库，不新增音频）。
-4. 浏览器推进证据中段章节使用调试跳关（上文已披露）；联机证据覆盖页面重载后的会话恢复，
+3. 浏览器推进证据中段章节使用调试跳关（上文已披露）；联机证据覆盖页面重载后的会话恢复，
    未覆盖中转服务整体重启（该场景在仓库内无法低成本复现）。
-5. `tests/fixtures/replay/golden-replays.json` 等跨循环基线未改写；本机二次收口只重新生成 TIC/TCU/TDE
+4. `tests/fixtures/replay/golden-replays.json` 等跨循环基线未改写；本机二次收口只重新生成 TIC/TCU/TDE
    与旧循环验收账本，并重采 `audit/baseline.json`。
 
 ## 8. 最终账本

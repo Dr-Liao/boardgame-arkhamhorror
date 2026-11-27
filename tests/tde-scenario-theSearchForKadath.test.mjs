@@ -13,10 +13,11 @@ import { readdirSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
-import '../src/engine/engine.js'
+import { createGameState, damageEnemy, performTest, scenarioRuntime, spawnEnemy, startScenario } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredCodes } from '../src/engine/ability.js'
 import { normalizeVeiledScenario } from '../src/engine/veiled.js'
-import { swarmCountOf } from '../src/engine/swarm.js'
+import { returnSwarmCard, swarmCountOf } from '../src/engine/swarm.js'
 import * as chapter from '../content/campaigns/theDreamEaters/scenarios/theSearchForKadath/index.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import {
@@ -541,34 +542,77 @@ test('06154 奇妙平原：本地无线索时弃掉并涌动，有线索时附�
   assert.equal(behavior.locationShroudModifier(state, state.locations[0], state.investigators[0]), -2)
 })
 
-test('06153 麦格鸟之歌：附属地点，离开后受 1 恐惧 + 1 毁灭并弃掉附属', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  addLocation(state, 'ulthar')
-  state.investigators[0].location = 'ulthar'
-  const location = state.locations[0]
-  location.attachments = [{ id: 'att1', code: '06153' }]
-  api.detachLocationAttachment = (locationId, attachmentId) => {
-    const target = discoveredLocation(state, locationId)
-    const index = (target.attachments || []).findIndex(item => item.id === attachmentId)
-    return index >= 0 ? target.attachments.splice(index, 1)[0] : null
-  }
-  behavior.locationLeft(state, state.investigators[0], location, api)
-  assert.deepEqual(api.calls.horror, [{ seat: 0, amount: 1 }])
-  assert.deepEqual(api.calls.doom, [1])
-  assert.equal(location.attachments.length, 0)
+test('06153 麦格鸟之歌：离开实际附属地点后受 1 恐惧、放 1 毁灭并弃掉本实体', () => {
+  const state = createGameState({ seed: '06153-leave', playerInvestigator: '01002' }, [{ seat: 0 }])
+  state.campaign.records.theCatsCollectedTheirTributeFromTheZoogs = true
+  startScenario(state, 0, [], 'theSearchForKadath')
+  state.pendingChoice = null
+  state.continuation = null
+  const inv = state.investigators[0]
+  inv.assets = []
+  inv.hand = []
+  const location = state.locations.find(item => item.id === inv.location)
+  const api = scenarioRuntime(state, [])
+  assert.ok(entryOf('06153').encounterResolve(state, inv, { code: '06153' }, api))
+  assert.ok(location.attachments.some(card => card.code === '06153'))
+  behavior.locationLeft(state, inv, location, api)
+  assert.equal(inv.horror, 1)
+  assert.equal(state.doom, 1)
+  assert.ok(!location.attachments.some(card => card.code === '06153'))
+  assert.ok(state.encounterDiscard.includes('06153'))
 })
 
-test('06145 乌撒之猫：首次被击败改为加 3 张蜂拥卡并记录打破乌撒的法则', () => {
-  const state = makeState()
-  const api = makeApi(state)
-  const enemy = { id: 'cat1', code: '06145', originalCode: '06145', health: 1, damageTaken: 3, location: 'ulthar' }
-  const handled = entryOf('06145').enemyScript.onDefeated(state, enemy, api)
-  assert.equal(handled, true)
-  assert.equal(enemy.swarmCards, 3)
-  assert.equal(enemy.damageTaken, 0)
-  assert.deepEqual(state.campaign.records.hasBrokenTheLawOfUlthar, ['调查员1'])
-  assert.equal(state.scenarioFlags.catsOfUltharFirstDefeat, true)
+function kadathCats(seed) {
+  const state = createGameState({ seed, playerInvestigator: '01002' }, [{ seat: 0 }])
+  state.campaign.records.theCatsCollectedTheirTributeFromTheZoogs = true
+  startScenario(state, 0, [], 'theSearchForKadath')
+  state.pendingChoice = null
+  state.continuation = null
+  const inv = state.investigators[0]
+  inv.hand = []
+  const cat = spawnEnemy(state, '06145', inv.location, 0, true)
+  assert.ok(cat)
+  return { state, cat }
+}
+
+test('06145 乌撒之猫：首次击败头领或蜂拥均增加 3 张，只有头领取消离场', () => {
+  for (const defeatHost of [true, false]) {
+    const { state, cat } = kadathCats(defeatHost ? '06145-host' : '06145-swarm')
+    const members = state.enemies.filter(enemy => enemy.hostId === cat.id)
+    assert.equal(members.length, 2)
+    if (defeatHost) for (const member of members) returnSwarmCard(state, member)
+    const target = defeatHost ? cat : members[0]
+    damageEnemy(state, target, target.health, 0, [], { code: '01002', type: 'investigator' })
+    assert.ok(state.enemies.includes(cat))
+    assert.equal(state.enemies.includes(target), defeatHost)
+    assert.equal(swarmCountOf(cat), defeatHost ? 3 : 4)
+    assert.deepEqual(state.campaign.records.hasBrokenTheLawOfUlthar, [state.investigators[0].name])
+    assert.equal(state.scenarioFlags.catsOfUltharFirstDefeat, true)
+    const next = state.enemies.find(enemy => enemy.hostId === cat.id)
+    damageEnemy(state, next, next.health, 0, [], { code: '01002', type: 'investigator' })
+    assert.equal(swarmCountOf(cat), defeatHost ? 2 : 3)
+  }
+})
+
+test('06145 乌撒之猫：实战躲避多揭示 1 个标记，攻击只揭示基础数量', () => {
+  const { state, cat } = kadathCats('06145-extra-evade-token')
+  for (const actionKind of ['fight', 'evade']) {
+    state.debugNextTokens = ['0', '0']
+    let drawn
+    const execute = (draft, seat, move, events) => performTest(draft, seat, 'agility', 0, {
+      source: { label: actionKind === 'evade' ? '躲避' : '攻击', enemyId: cat.id, code: cat.code },
+      testTarget: { kind: 'enemy', id: cat.id, actionKind },
+      events,
+      resolve: result => { drawn = result.drawn },
+    })
+    resolveTransaction(state, 0, { action: actionKind }, execute)
+    while (state.pendingChoice) {
+      const { seat, options } = state.pendingChoice
+      const optionId = options.find(option => ['done', 'skip'].includes(option.id))?.id || options[0].id
+      resolveTransaction(state, seat, { action: 'choose', optionId }, execute)
+    }
+    assert.deepEqual(drawn, actionKind === 'evade' ? ['0', '0'] : ['0'])
+  }
 })
 
 test('06147 夜色怪群：头领被击败时改为横置（接管击败）', () => {

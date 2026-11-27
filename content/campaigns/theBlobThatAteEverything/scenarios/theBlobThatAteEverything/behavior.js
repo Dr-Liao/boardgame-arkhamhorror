@@ -20,6 +20,7 @@
 //   resolution → 结局 1/2 记录 + 奖励资产 + 额外经验
 //   canGainResources / turnEnded → 干枯农田
 //   cluesGained → 粘稠街道
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
@@ -1175,7 +1176,7 @@ export function enemyPhaseStart(state, api = {}) {
         info(api, '🧪 米·戈绑架者攻击化学家。')
         if (typeof api?.damageAsset === 'function') {
           const owner = activeInvestigatorList(state).find(inv => (inv.assets || []).some(asset => asset.code === CHEMIST_CODE))
-          if (owner) api.damageAsset(owner.seat, chemist.id, 1)
+          if (owner) api.damageAsset(owner.seat, chemist.id, 1, { presentation: { code, sourceEnemyId: enemy.id } })
         }
       } else if (chemist?.location) safeCall(api, 'moveEnemyToward', enemy, chemist.location)
     }
@@ -1330,7 +1331,7 @@ export function applyTokenEffect(state, inv, effect = {}, api = {}) {
     if (count > 0) {
       const hand = [...(state.investigators[inv.seat].hand || [])]
       const chosen = hand.slice(0, count)
-      state.investigators[inv.seat].hand = hand.slice(count)
+      spliceHand(state.investigators[inv.seat], 0, count)
       devourCards(state, api, chosen, '混乱标记 [elder_thing]')
       if (typeof api?.addTestValue === 'function') api.addTestValue(count)
     }

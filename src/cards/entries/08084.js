@@ -31,7 +31,7 @@ export default {
     { kind: 'played', label: '追踪：朝目标敌人移动 2 次，或在最短路径的无人地点发现线索',
       resolve: ({ inv, state, api }) => {
         const targets = state.enemies.filter(enemy => enemy.location &&
-          enemy.location !== inv.location && !enemy.defeated && !enemy.elite)
+          enemy.location !== inv.location && !enemy.defeated)
         if (!targets.length) { api.info('没有可选的其他地点敌人。'); return }
         const targetId = targets.length === 1 ? targets[0].id : api.choice({ kind: 'target', source: '08084', seat: inv.seat,
           prompt: '选择要追踪的敌人。', options: targets.map(enemy => ({ id: enemy.id, label: enemy.name })) })

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { fixture as coreFixture, asset, enemy, settle as coreSettle } from '../tests/core-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction, choiceError } from '../src/engine/resolution.js'
-import { executeDescriptor, performTest, reactionWindow, enemyAttack, getStat, drawEncounter, legalMoves, validateMove, applyMove, applyDamage, slotUsage, effectiveTraits } from '../src/engine/engine.js'
+import { executeDescriptor, performTest, reactionWindow, enemyAttack, getStat, drawEncounter, legalMoves, validateMove, applyMove, applyDamage, applyHarm, slotUsage, effectiveTraits } from '../src/engine/engine.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 function fixture(...args) { const s=coreFixture(...args); s.humanSeats=s.investigators.map(inv=>inv.seat); s.abilityLimits={}; if(s.scenarioFlags.mechanics?.beneath) s.scenarioFlags.mechanics.beneath={}; return s }
 const codes = ['07017','07018','07019','07020','07021','07022','07023','07024','07111','07112','07113','07152','07153','07155','07191','07192','07220','07221','07222','07263','07264','07301','07302','07303','07109','07154','07190','07108','07110','07189','07223','07261','07262','07304']
@@ -131,9 +131,37 @@ test('P6 07108 Riot Whistle grants exactly one real engage action after ordinary
 test('P6 07110 Sacred Covenant immediately returns chosen bless and ignores that modifier',()=>{
  const s=fixture('07001');asset(s,'07110');s.chaosBag=['bless','0'];s.rngState=0;run(s,d=>performTest(d,0,'willpower',0,{}),c=>desc(c)||(c.source==='returnRevealed'?c.options.find(o=>o.id!=='done')?.id:null));assert.equal(owned(s,'07110').exhausted,true);assert.ok(s.chaosBag.includes('bless'));assert.equal(s.lastTestResult.value,s.lastTestResult.baseValue)
 })
-test('P6 07189 Enchanted Armor transfers control, tests owner, and reassigns only new harm on failure',()=>{
- const s=fixture('07001',2);s.investigators[1].location=s.investigators[0].location;play(s,'07189',c=>c.options.some(o=>o.id==='1')?'1':null);assert.equal(owned(s,'07189'),undefined);const a=s.investigators[1].assets.find(a=>a.code==='07189');assert.ok(a);assert.equal(a.ownerSeat,0);s.chaosBag=['autofail'];
- run(s,d=>applyDamage(d,d.investigators[1],1,[]),c=>c.kind==='assign-damage'&&c.options.some(o=>o.id===a.id)?a.id:null);assert.equal(s.investigators[1].assets.some(x=>x.id===a.id),false);assert.equal(s.investigators[0].damage,1);assert.equal(s.investigators[1].damage,0);assert.ok(s.investigators[0].discard.includes('07189'));assert.equal(s.investigators[1].discard.includes('07189'),false)
+test('P6 07189 附魔护甲由所有者检定，失败后由原承受者重新分配新标记', () => {
+  const s = fixture('07001', 2)
+  const [owner, controller] = s.investigators
+  controller.location = owner.location
+  play(s, '07189', c => c.options.some(o => o.id === '1') ? '1' : null)
+  assert.equal(owned(s, '07189'), undefined)
+  const armor = s.investigators[1].assets.find(card => card.code === '07189')
+  assert.ok(armor)
+  assert.equal(armor.ownerSeat, 0)
+  armor.damage = 2
+  armor.horror = 1
+  const alternate = asset(s, '01018', {}, 1)
+  s.chaosBag = ['autofail']
+  const choices = []
+  run(s, d => applyHarm(d, d.investigators[1], 1, 1, []), c => {
+    if (c.kind !== 'assign-damage' && c.kind !== 'assign-horror') return null
+    choices.push([c.kind, c.seat, c.options.some(o => o.id === armor.id)])
+    if (c.options.some(o => o.id === armor.id)) return armor.id
+    return c.kind === 'assign-horror' && c.options.some(o => o.id === alternate.id) ? alternate.id : 'self'
+  })
+  assert.ok(choices.some(([kind, seat, original]) => kind === 'assign-damage' && seat === 1 && original))
+  assert.ok(choices.some(([kind, seat, original]) => kind === 'assign-horror' && seat === 1 && !original))
+  const [finalOwner, finalController] = s.investigators
+  assert.equal(s.lastTestResult.seat, 0)
+  assert.equal(s.lastTestResult.difficulty, 5)
+  assert.deepEqual([finalOwner.damage, finalOwner.horror], [0, 0])
+  assert.deepEqual([finalController.damage, finalController.horror], [1, 0])
+  assert.equal(finalController.assets.find(card => card.id === alternate.id).horror, 1)
+  assert.equal(finalController.assets.some(card => card.id === armor.id), false)
+  assert.ok(finalOwner.discard.includes('07189'))
+  assert.equal(finalController.discard.includes('07189'), false)
 })
 test('P6 07223 Guided by the Unseen searches performer top three and commits only after secret payment',()=>{
  const s=fixture('07002');const a=asset(s,'07223');s.investigators[0].deck=['01030','01090','01088'];

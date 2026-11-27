@@ -640,24 +640,6 @@ export function actions(state, inv) {
     moves.push({ action: 'scenarioAction', rule: 'depthsFloodedPathMove', actions: 0,
       label: '在泛滥道路放置 1 个伤害标记（渗坑）：移动至一个连接地点' })
   }
-  // 幕 2 正面 [fast]：与鳄龟混种所在地点相邻的地点，共同花费 1[per_investigator] 线索，
-  // 本轮剩余时间内把鳄龟混种的巡逻地点改成该地点。
-  const hybrid = enemyByCode(state, CHELYDRAN_HYBRID_CODE)
-  if (cardCodeOf(currentAct(state)) === ACT_CODES[1] && hybrid && hybrid.location) {
-    const adjacent = (locationById(state, hybrid.location)?.connections || []).includes(location.id)
-    if (adjacent) {
-      const required = investigatorCount(state)
-      if (hybridPatrolOverride(state)) {
-        moves.push({ action: 'scenarioAction', rule: 'depthsChangeHybridPatrol', actions: 0, reason: '本轮已经改过巡逻地点' })
-      } else if ((Number(inv.clues) || 0) < required) {
-        moves.push({ action: 'scenarioAction', rule: 'depthsChangeHybridPatrol', actions: 0,
-          reason: `需要 ${required} 个线索（1[per_investigator]）` })
-      } else {
-        moves.push({ action: 'scenarioAction', rule: 'depthsChangeHybridPatrol', actions: 0,
-          label: `共同花费 ${required} 个线索：本轮把鳄龟混种的巡逻地点改为「${location.name}」` })
-      }
-    }
-  }
   if (code === '10597a') {
     const sinkholes = Number(location.damage) || 0
     const enemies = enemiesAt(state, location.id)
@@ -731,6 +713,19 @@ export function performAction(state, inv, move, api = {}) {
   return false
 }
 
+export function fastActions(state, inv) {
+  const hybrid = enemyByCode(state, CHELYDRAN_HYBRID_CODE)
+  const location = locationById(state, inv?.location)
+  if (!location || cardCodeOf(currentAct(state)) !== ACT_CODES[1] || !hybrid
+    || !(locationById(state, hybrid.location)?.connections || []).includes(location.id)) return []
+  const required = investigatorCount(state)
+  const clues = activeInvestigators(state).filter(other => other.location === location.id)
+    .reduce((total, other) => total + (other.clues || 0), 0)
+  if (clues < required) return []
+  return [{ action: 'scenarioAction', rule: 'depthsChangeHybridPatrol', actions: 0,
+    label: `共同花费 ${required} 个线索：本轮把鳄龟混种的巡逻地点改为「${location.name}」` }]
+}
+
 function hybridPatrolOverride(state) {
   const override = flagsFor(state).depthsHybridPatrol
   return override && Number(override.round) === Number(state.round) ? override : null
@@ -739,13 +734,21 @@ function hybridPatrolOverride(state) {
 function changeHybridPatrol(state, inv, api) {
   const hybrid = enemyByCode(state, CHELYDRAN_HYBRID_CODE)
   const location = locationById(state, inv.location)
-  if (!hybrid || !location || hybridPatrolOverride(state)) return false
+  if (!hybrid || !location || cardCodeOf(currentAct(state)) !== ACT_CODES[1]) return false
   if (!(locationById(state, hybrid.location)?.connections || []).includes(location.id)) return false
   const required = investigatorCount(state)
-  if ((Number(inv.clues) || 0) < required) return false
+  const payers = activeInvestigators(state).filter(other => other.location === location.id
+    && api.canSpendClues?.(other.seat) !== false)
+  if (payers.reduce((total, other) => total + (other.clues || 0), 0) < required) return false
   if (typeof api.payGroupClues === 'function') api.payGroupClues(required, { atLocation: location.id, seat: inv.seat })
-  else if (typeof api.spendClues === 'function') api.spendClues(inv.seat, required)
-  else inv.clues = Math.max(0, (Number(inv.clues) || 0) - required)
+  else {
+    let remaining = required
+    for (const payer of payers) {
+      const amount = Math.min(payer.clues || 0, remaining)
+      payer.clues -= amount
+      remaining -= amount
+    }
+  }
   setFlag(state, 'depthsHybridPatrol', { location: location.id, round: Number(state.round) })
   info(api, `本轮鳄龟混种的巡逻地点改为「${location.name}」。`)
   return true
@@ -807,35 +810,23 @@ function removeFromSetAside(state, code) {
 /** 鳄龟混种：其地点有重整的[[异形]]敌人、或它与调查员交战时不能移动（引擎 immobile 读点）。 */
 export function refreshHybridImmovable(state, enemy = null) {
   const hybrids = enemy ? [enemy] : (state.enemies || []).filter(item => cardCodeOf(item) === CHELYDRAN_HYBRID_CODE)
-  const override = hybridPatrolOverride(state)
   let changed = 0
   for (const hybrid of hybrids) {
     if (!hybrid || hybrid.defeated) continue
     const readyAbomination = (state.enemies || []).some(other => other !== hybrid && other && !other.defeated
       && other.location === hybrid.location && !other.exhausted && hasTrait(other, 'Abomination'))
     const engaged = hybrid.engagedSeat != null
-    // 本轮被幕 2 快速能力改过巡逻地点：压制引擎的默认巡逻移动，改由 enemyPhaseAfterHunters 走一步。
-    const next = Boolean(readyAbomination || engaged || override)
+    const next = Boolean(readyAbomination || engaged)
     if (Boolean(hybrid.immobile) !== next) changed += 1
     hybrid.immobile = next
   }
   return changed
 }
 
-/** 猎手/巡逻移动之后：结算本轮「改巡逻地点」的近似一步移动。 */
-export function enemyPhaseAfterHunters(state, api = {}) {
+export function patrolTarget(state, enemy, printed) {
+  if (cardCodeOf(enemy) !== CHELYDRAN_HYBRID_CODE) return printed
   const override = hybridPatrolOverride(state)
-  const hybrid = enemyByCode(state, CHELYDRAN_HYBRID_CODE)
-  if (override && hybrid && !hybrid.exhausted && hybrid.engagedSeat == null) {
-    const destination = pathStepToward(state, hybrid.location, override.location)
-    if (destination) {
-      if (typeof api.moveEnemy === 'function') api.moveEnemy(hybrid, destination)
-      else hybrid.location = destination
-    }
-    delete flagsFor(state).depthsHybridPatrol
-    info(api, `鳄龟混种按本轮改后的巡逻地点移动一步到「${locationName(state, hybrid.location)}」。`)
-  }
-  refreshHybridImmovable(state)
+  return override ? { kind: 'named', locationId: override.location } : printed
 }
 
 function pathStepToward(state, fromId, toId) {
@@ -882,6 +873,13 @@ export function enemySpawned(state, enemy, api = {}) {
     info(api, `「${enemy.name}」的冷漠${enemy.aloof ? '生效（黑夜）' : '不生效（白天）'}。`)
   }
   if (code === CHELYDRAN_HYBRID_CODE) refreshHybridImmovable(state, enemy)
+}
+
+export function enemyAttackResolved(state, enemy, inv, api = {}) {
+  const amount = flagsOf(cardCodeOf(enemy)).healAfterAttackingAtBog
+  if (amount && hasTrait(locationById(state, enemy.location), BOG_TRAIT) && !api.enemyTextBlanked?.(enemy)) {
+    api.healEnemy?.(enemy, amount)
+  }
 }
 
 export function enemyMoved(state, enemy, previous) {
@@ -1437,10 +1435,11 @@ export const behavior = {
   locationEntered,
   afterInvestigate,
   enemySpawned,
+  enemyAttackResolved,
   enemyMoved,
   enemyEngaged,
   enemyPhaseStart,
-  enemyPhaseAfterHunters,
+  patrolTarget,
   enemyPhaseEnd,
   enemyStatModifier,
   enemyConnections,
@@ -1457,6 +1456,7 @@ export const behavior = {
   applyTokenEffect,
   afterTest,
   actions,
+  fastActions,
   performAction,
   events,
   resolution,

@@ -11,6 +11,7 @@ export default {
   implemented: true,
   flags: {
     "westernWoods": true,
+    "enemyConnectedFromOtherLocations": true,
     "printedShroud": 1,
     "printedClues": 1,
     "cluesPerInvestigator": true,
@@ -21,6 +22,6 @@ export default {
     ],
     "onReveal": "willpowerHighestFightPursuit"
   },
-  note: "近似：「敌人移动时视为连接」由 behavior.enemyConnections 未实现；引擎没有「移动中敌人的连接」读点，已披露为未接线子句。",
+  note: "月光空地揭示后，章节在敌人移动时提供额外连接。",
   abilities: [],
 }

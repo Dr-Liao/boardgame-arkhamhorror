@@ -7,7 +7,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { zoneApi } from './tcu-zone-api.mjs'
 // 引擎装配点注册全部单卡条目（本章诡计 05268–05272 的规则已回条目）。
-import '../src/engine/engine.js'
+import { getStat } from '../src/engine/engine.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import * as uad from '../content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/index.js'
 import {
@@ -104,6 +104,7 @@ function apiFor(state, overrides = {}) {
   const calls = []
   let counter = 0
   const api = {
+    drawEncounter: () => {},
     calls,
     info: text => calls.push(['info', text]),
     random: overrides.random || (() => 0.25),
@@ -653,11 +654,11 @@ test('夜鹰：所在地点调查员全部技能 -1、多张叠加；幽灵乌�
   const state = placedState(2, RECORD_COVEN)
   const inv = state.investigators[0]
   enemy(state, '05266', inv.location)
-  assert.equal(uad.behavior.statModifier(state, inv, 'willpower'), -1)
-  assert.equal(uad.behavior.statModifier(state, inv, 'intellect'), -1)
+  assert.equal(getStat(state, inv, 'willpower'), (inv.willpower || 0) - 1)
+  assert.equal(getStat(state, inv, 'intellect'), (inv.intellect || 0) - 1)
   // 卡面：每张夜鹰各自 -1，多张叠加（旧实现用 some 只算 -1）。
   enemy(state, '05266', inv.location)
-  assert.equal(uad.behavior.statModifier(state, inv, 'willpower'), -2, '两张夜鹰叠加 -2')
+  assert.equal(getStat(state, inv, 'willpower'), (inv.willpower || 0) - 2, '两张夜鹰叠加 -2')
   const raven = enemy(state, '05267', inv.location)
   const api = apiFor(state, { choose: () => 'modify' })
   uad.behavior.enemyEngaged(state, raven, inv, api)

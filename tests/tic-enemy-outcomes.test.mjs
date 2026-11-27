@@ -10,7 +10,6 @@ import {createMechanicsApi} from '../src/engine/api-mechanics.js'
 import {validateMechanicState} from '../src/engine/mechanic-state.js'
 import {resolveTransaction,choiceError} from '../src/engine/resolution.js'
 import {contentRegistry,registerContentBundle} from '../content/registered.js'
-import {ALL_CARDS} from '../src/cards/cards-data.js'
 // Parent integrates this factory into encounter-entries/_shared.js first.
 import {defeatedSuspectAgendaAbility} from '../src/cards/encounter-entries/_shared.js'
 
@@ -82,11 +81,6 @@ registerCardAbilities([
    if(restored)api.attack(restored,state.investigators[inv.seat])
   });return false
  }},
- {code:'testEarlyJail',scope:'location',abilities:[{kind:'forced',trigger:'enemyDefeated',
-  criteria:({inv,source,context})=>context.accepted===true&&context.sourceSeat===inv.seat&&inv.location===source.id
-   &&!Object.hasOwn(ALL_CARDS[context.enemy.originalCode||context.enemy.code]||{},'victory'),
-  resolve:({source,context,api})=>api.enemyOutcomes.destination(context,
-   {kind:'scenarioDeck',id:'leads',shuffle:true},{sourceId:source.id})}]},
  {code:'testEarlySuspectAgenda',scope:'agenda',abilities:[defeatedSuspectAgendaAbility({
   isKidnapper:(state,enemy)=>enemy.id===state.scenarioFlags.testKidnapperId,
   recordValue:()=> 'RobertFriendly',
@@ -197,8 +191,8 @@ test('Priest would-evade replacement keeps successful test but emits no ordinary
  live=s.enemies.find(x=>x.id===e.id)
  assert.equal(live.exhausted,true);assert.equal(live.engagedSeat,null);assert.equal(s.investigators[0].resources,resources+100)
 })
-test('Jail actorHere redirects remote non-Victory defeat to true Leads, retaining ordinary defeat afters',()=>{
- const s=fixture();Object.assign(s.locations[0],{code:'testEarlyJail',originalCode:'testEarlyJail'});createMechanicsApi(s).scenarioDecks.initialize('leads',[],{shuffle:false})
+test('07074 Jail redirects an ordinary remote defeat by an investigator here to Leads and keeps defeat afters',()=>{
+ const s=fixture();Object.assign(s.locations[0],{code:'07074',originalCode:'07074'});createMechanicsApi(s).scenarioDecks.initialize('leads',[],{shuffle:false})
  asset(s,'testEarlyOutcomeObserver');const resources=s.investigators[0].resources
  const e=enemy(s,{code:'ghoulMinion',originalCode:'01160',location:'remote',engagedSeat:null,health:1})
  run(s,d=>runtime(d).damageEnemy(e.id,1,0))
@@ -208,15 +202,22 @@ test('Jail actorHere redirects remote non-Victory defeat to true Leads, retainin
  assert.equal(createMechanicsApi(s).scenarioDecks.size('leads'),0)
  assert.equal(s.enemies.filter(x=>x.code==='ghoulMinion').length,1,'returned physical card must be drawable through its bound encounter code')
 })
-test('Jail excludes printed Victory0 and an actor outside Jail, not just positive Victory scores',()=>{
- for(const reason of ['victory0','outside']){
-  const s=fixture();Object.assign(s.locations[0],{code:'testEarlyJail',originalCode:'testEarlyJail'});createMechanicsApi(s).scenarioDecks.initialize('leads',[],{shuffle:false})
-  if(reason==='outside')s.investigators[0].location='remote'
-  const e=enemy(s,{code:reason==='victory0'?'07076':'ghoulMinion',originalCode:reason==='victory0'?'07076':'01160',location:'here',engagedSeat:null,health:1,victory:0})
+test('07074 Jail preserves printed Victory 0 and positive Victory, and requires the revealed location and its investigator',()=>{
+ for (const [code,originalCode,victory,here,revealed,goesToVictory] of [
+  ['07076','07076',0,true,true,true],
+  ['ghoulPriest','01116',2,true,true,true],
+  ['ghoulMinion','01160',0,false,true,false],
+  ['ghoulMinion','01160',0,true,false,false],
+ ]) {
+  const s=fixture()
+  Object.assign(s.locations[0],{code:'07074',originalCode:'07074',revealed})
+  createMechanicsApi(s).scenarioDecks.initialize('leads',[],{shuffle:false})
+  if(!here)s.investigators[0].location='remote'
+  const e=enemy(s,{code,originalCode,location:'here',engagedSeat:null,health:1,victory})
   run(s,d=>runtime(d).damageEnemy(e.id,1,0))
   assert.deepEqual(createMechanicsApi(s).scenarioDecks.cards('leads'),[])
-  if(reason==='victory0')assert.equal(s.victoryDisplay.filter(v=>v.id===e.id).length,1)
-  else assert.equal(s.encounterDiscard.includes('ghoulMinion'),true)
+  assert.equal(s.victoryDisplay.some(card=>card.id===e.id),goesToVictory)
+  assert.equal(s.encounterDiscard.includes(code),!goesToVictory)
  }
 })
 function suspectBoard(kind='ordinary'){

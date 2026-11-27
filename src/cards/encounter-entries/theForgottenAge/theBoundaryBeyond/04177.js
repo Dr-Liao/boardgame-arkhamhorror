@@ -6,10 +6,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { teamOnce, discoverAt } from '../../_shared.js'
-
-// 「团队每轮一次」是否已用完：与 _shared.teamOnce 的 tag 口径一致（scope 'round'）。
-const roundUsed = (state, key) => Boolean(state.scenarioFlags?.teamOnce?.[`${key}:${state.round}:r`])
+import { teamOnce, teamOnceUsed } from '../../_shared.js'
 
 export default {
   code: '04177', scope: 'location',
@@ -17,11 +14,11 @@ export default {
     ancientAction: {
       label: '🌑 在一个敌人上放置 1 个毁灭：发现本地点的 2 个线索（团队每轮一次）',
       available(state) {
-        if (roundUsed(state, '04177clue')) return false
+        if (teamOnceUsed(state, '04177clue', 'round')) return false
         return state.enemies.some(enemy => !enemy.defeated)
       },
       perform(state, inv, api, location) {
-        if (!teamOnce(state, '04177clue', 'round')) { api.info?.('本轮的团队次数已用完。'); return false }
+        if (teamOnceUsed(state, '04177clue', 'round')) return false
         const candidates = state.enemies.filter(enemy => !enemy.defeated)
         if (!candidates.length) return false
         const chosenId = candidates.length === 1 ? candidates[0].id : api.choose({
@@ -30,7 +27,8 @@ export default {
         })
         const enemy = candidates.find(item => item.id === chosenId)
         if (!enemy || !api.doomOn?.(enemy, 1)) return false
-        discoverAt(state, api, inv, location, 2)
+        teamOnce(state, api, '04177clue', 'round')
+        api.discoverClue(inv.seat, 2, location.id)
         return true
       },
     },

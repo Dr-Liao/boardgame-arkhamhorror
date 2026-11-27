@@ -5,7 +5,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { ALL_CARDS } from '../../_shared.js'
+import { ALL_CARDS, spliceHand } from '../../_shared.js'
 
 export default {
   code: '03338', scope: 'treachery', implemented: true, encounterResolveCampaigns: ['carcosa'],
@@ -34,7 +34,7 @@ export default {
       // scenarioRuntime 没有 discardFromHand / choice：手牌直接进弃牌堆，支援走 discardAsset(id)。
       if (picked.kind === 'hand') {
         const handIndex = inv.hand.indexOf(picked.code)
-        if (handIndex >= 0) inv.hand.splice(handIndex, 1)
+        if (handIndex >= 0) spliceHand(inv, handIndex, 1)
         inv.discard.push(picked.code)
       } else if (!api.discardAsset(inv.seat, picked.asset.id)) break
       total += picked.cost

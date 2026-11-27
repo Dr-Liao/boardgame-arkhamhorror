@@ -6,17 +6,19 @@
 //
 // 依据 Haskell Treachery/Cards/.../IndescribableApparition.hs：
 //   · 进威胁区 → encounterResolve 调 api.threat；
-//   · 每项技能 -1 → treacheryRule.skillModifierWhileEnemyAtYourLocation 数据，
-//     本章 behavior.statModifier 在转发共享层后遍历威胁区结算（不写调查员实例字段）；
+//   · 威胁区的常驻修正会在不可名状之物与受影响调查员同地点时生效；
 //   · [action][action] 弃掉 → threatAction（noTest + actions: 2），共享层 performEncounterAction 结算。
+import { originalOf } from '../../_shared.js'
+
 export default {
   code: '06191',
   scope: 'treachery',
   implemented: true,
-  treacheryRule: {
-    threatArea: true,
-    skillModifierWhileEnemyAtYourLocation: { enemyCode: '06169b', amount: -1 },
-  },
+  modifiers: [{
+    target: 'skill:*',
+    amount: ({ state, inv }) => state.enemies.some(enemy => !enemy.defeated
+      && originalOf(enemy) === '06169b' && enemy.location === inv.location) ? -1 : 0,
+  }],
   threatAction: {
     rule: 'tshDiscardIndescribableApparition',
     label: '[action][action]：弃掉「难以描述的鬼魅」',

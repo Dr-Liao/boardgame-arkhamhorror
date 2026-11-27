@@ -10,7 +10,7 @@
   "docs": "docs/arkham-content-migration.md",
   "scope": {
     "path": "artifacts/migration/tde/scope.json",
-    "sha256": "e36a32eda133d320ea18b2f9bc79722c384af96574726b343697431774df54fb"
+    "sha256": "2a8c441790dc1e0ff1931a64c0a58fe68c9a2753875233d51dcf5621320d1e8d"
   },
   "baseline": {
     "path": "audit/baseline.json",
@@ -317,7 +317,7 @@
       ],
       "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
       "testCases": {
-        "passed": 30,
+        "passed": 31,
         "failed": 0
       },
       "launchable": true,
@@ -697,7 +697,7 @@
       },
       "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
       "testCases": {
-        "passed": 30,
+        "passed": 31,
         "failed": 0
       },
       "checks": {
@@ -1381,7 +1381,7 @@
   "sources": [
     {
       "path": "content/registered.js",
-      "sha256": "494cf961b677db1788e34b6f7b73061a0a28b69c131b8dfd4537abc4c7609c79"
+      "sha256": "8eb2bcf2e753aec716974676d6c7758a323a8cdb6f6a45480c4794b613594b9f"
     },
     {
       "path": "content/registry.js",
@@ -1457,11 +1457,11 @@
     },
     {
       "path": "src/cards/cards-data.js",
-      "sha256": "57eaf609fdf73493ecf2a655d030adaf9d505ad898dcbf26c995a6b0a7da0fb6"
+      "sha256": "02fc72506df2078ca7c21a98988d331c9ac766cd34f18adae8faabdaa0734737"
     },
     {
       "path": "src/cards/tde-player-acceptance.js",
-      "sha256": "4b6256a29a409049ed7d95781d080ac342dd174a0cbfeb93dc18f75441dc248f"
+      "sha256": "ad15007991bacbf9ab9aa34e6c8d622540932189738f090024cd18ee78ad151f"
     },
     {
       "path": "src/cards/tde-campaign-acceptance.js",
@@ -1537,7 +1537,7 @@
         "pendingEncounterCards": 0,
         "gaps": 0,
         "approximations": 0,
-        "testCases": 201,
+        "testCases": 202,
         "storyText": "translated",
         "literalCardBehavior": true,
         "browserAcceptance": true,
@@ -1712,7 +1712,7 @@
           "approximations": [],
           "testFile": "tests/tde-scenario-theSearchForKadath.test.mjs",
           "testCases": {
-            "passed": 30,
+            "passed": 31,
             "failed": 0
           }
         },
@@ -1971,7 +1971,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd"
+        "sha256": "55539a55e4ace0ca92ebeb519763ef4878af3ed4e42121df098a6612203ac4e1"
       },
       "sourceLock": {
         "path": "audit/tde-scenario-source-lock.json",
@@ -2476,23 +2476,23 @@
   "evidence": {
     "files": {
       "artifacts/migration/tde/mechanism-scan.json": "19acbba9595c9d01a0051d48a7348a5fd0993001e3ab929ee7557f57ac701a56",
-      "artifacts/migration/tde/primitive-catalog.json": "f10fcb0bab7b291d6aa0b188409e40db217a63ee405675af487b07657ffe524d",
-      "artifacts/migration/tde/primitive-plan.json": "649bebcde44403ad69eecf9ecbaaa01f2eafe6024239e2f47b2246feeaada3db",
-      "artifacts/migration/tde/scope.json": "e36a32eda133d320ea18b2f9bc79722c384af96574726b343697431774df54fb",
+      "artifacts/migration/tde/primitive-catalog.json": "d0926d2b455601b5e7fad269131a9688a6c59bc035313e240407c600e60aa940",
+      "artifacts/migration/tde/primitive-plan.json": "496bb6fb1a3e6f4f47c6a40af80f8b8e2cf19b1035311a9bfabad06271f59f32",
+      "artifacts/migration/tde/scope.json": "2a8c441790dc1e0ff1931a64c0a58fe68c9a2753875233d51dcf5621320d1e8d",
       "audit/tde-all-card-acceptance.json": "31b93a2d5f6b0ab0b8fe150f166cc2dc1aa1648c89e5521ef6ba654fe75a5059",
       "audit/tde-browser-acceptance.json": "c7d19532a1dc2f87f0e7a4525f65cfdd0e80e39db4d82f1172e7e2b02c113a72",
       "audit/tde-investigators.json": "7cd6e5b88be736233e7e9d2a8a17b8f77314ef20ad583cfdb68b502dff6bde4e",
       "audit/tde-parallel-acceptance.json": "4da9e2fb1dde99c3fa71e69db59c769f695b89583e1e9dee0454631b114ed344",
-      "audit/tde-player-acceptance.json": "617025a987385bd351579c5cf3a38dffc9cfad5074cd1547fb20512a22a4cc5e",
+      "audit/tde-player-acceptance.json": "1c0e4f401d706892ea8873fc0e2c6dc24d641bc51a36ccad587cc42df91a8500",
       "audit/tde-primitive-requests.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-      "audit/tde-rules.json": "511d88272b146827d60bbf8c4699fffcc486f9487476a4f1997e86d355d8de47",
-      "audit/tde-scenario-acceptance.json": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd",
+      "audit/tde-rules.json": "9b21bdcb5ef52cea377f6e6be3ad71b2e1b1868f381488a3c5b2af755921f460",
+      "audit/tde-scenario-acceptance.json": "55539a55e4ace0ca92ebeb519763ef4878af3ed4e42121df098a6612203ac4e1",
       "audit/tde-scenario-gap-triage.json": "8c0b602227cd438541e9a8049f98bd914fea4ea09cf6c821377533e84c04aa9a",
       "audit/tde-scenario-source-lock.json": "7dbfb8ff22befdee20d6a0b8a36768a0d690922ca96b0439cebef0bd1a817c27",
       "audit/tde-story-acceptance.json": "23a7ccef2f730184df97db535b85c3b13b4a9ba869e9b5e1d05613ddbf5c3841",
       "content/campaigns/theDreamEaters/story-text.js": "ad30a1da065b51b01ff388a5f0e2ff88852e24068004f04834fc438814bac9f7",
       "src/cards/tde-campaign-acceptance.js": "f2b897f5d03eb23e97a99f69d5481a59fdc7e5cd5c8eac568384b7b02b8312c2",
-      "src/cards/tde-player-acceptance.js": "4b6256a29a409049ed7d95781d080ac342dd174a0cbfeb93dc18f75441dc248f"
+      "src/cards/tde-player-acceptance.js": "ad15007991bacbf9ab9aa34e6c8d622540932189738f090024cd18ee78ad151f"
     },
     "browser": {
       "path": "audit/tde-browser-acceptance.json",
@@ -2518,7 +2518,7 @@
         "pendingEncounterCards": 0,
         "gaps": 0,
         "approximations": 0,
-        "testCases": 201,
+        "testCases": 202,
         "storyText": "translated",
         "literalCardBehavior": true,
         "browserAcceptance": true,
@@ -2795,8 +2795,8 @@
       "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
     ],
     "status": 0,
-    "tests": 683,
-    "passed": 683,
+    "tests": 684,
+    "passed": 684,
     "failed": 0,
     "perFile": {
       "tde-all-card-ledger.test.mjs": {
@@ -2860,7 +2860,7 @@
         "failed": 0
       },
       "tde-scenario-theSearchForKadath.test.mjs": {
-        "passed": 30,
+        "passed": 31,
         "failed": 0
       },
       "tde-scenario-wakingNightmare.test.mjs": {
@@ -2884,7 +2884,7 @@
   "gate": {
     "scopeLedger": {
       "path": "artifacts/migration/tde/scope.json",
-      "sha256": "e36a32eda133d320ea18b2f9bc79722c384af96574726b343697431774df54fb",
+      "sha256": "2a8c441790dc1e0ff1931a64c0a58fe68c9a2753875233d51dcf5621320d1e8d",
       "milestone": "M0",
       "gatePass": true,
       "registration": {
@@ -3104,8 +3104,8 @@
         "tests/tde-scenario-weaverOfTheCosmos.test.mjs"
       ],
       "fileCount": 19,
-      "tests": 683,
-      "passed": 683,
+      "tests": 684,
+      "passed": 684,
       "failed": 0,
       "missingFiles": [],
       "ok": true,
@@ -3157,7 +3157,7 @@
       ],
       "ledger": {
         "path": "audit/tde-scenario-acceptance.json",
-        "sha256": "41380cd1ff8cdd804e1a458467f4743cfd3f51db4c9f8ce8e9c755c0626aacfd",
+        "sha256": "55539a55e4ace0ca92ebeb519763ef4878af3ed4e42121df098a6612203ac4e1",
         "status": "verified"
       },
       "sourceLock": {

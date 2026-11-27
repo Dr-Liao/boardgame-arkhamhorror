@@ -83,6 +83,7 @@ export default {
   'game.slot.arcane': '法术',
   'game.slot.accessory': '饰品',
   'game.slot.body': '身体',
+  'game.slot.head': '头部',
   'game.slot.tarot': '塔罗',
 
   // 动作名（动作栏 / 卡牌操作 / 地点行动共用）
@@ -228,6 +229,7 @@ export default {
   // 卡牌详情弹窗 chrome（renderCardDetailModal）
   'game.detail.aria': '卡牌详情',
   'game.detail.closeAria': '关闭卡牌详情',
+  'game.detail.timedView': '连续查看超过 {seconds} 秒会使你的调查员陷入疯狂。',
   'game.detail.targetAction': '对该目标行动',
   'game.detail.playAttached': '打出',
 
@@ -238,6 +240,9 @@ export default {
 
   // 待决选择与技能检定（renderPendingChoice）
   'game.choice.pending': '待决选择',
+  'game.zone.sharedPlay': '公共场外卡牌',
+  'game.zone.playSharedCard': '打出{name}',
+  'game.choice.cardNameSearch': '搜索卡牌名称',
   'game.choice.resolving': '结算卡牌效果',
   'game.choice.waitingTeammate': '等待队友操作',
   'game.choice.targetAria': '{choice}：选择目标',

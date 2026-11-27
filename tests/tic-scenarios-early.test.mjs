@@ -225,15 +225,15 @@ test('P7 07081 insufficient three-resource parley rejects before action or clue 
  assert.notEqual(validateMove(s,0,{action:'entityAbility',entityId:e.id,abilityIndex:0}),null)
  assert.equal(JSON.stringify(s),before)
 })
-test('P7 07075 actual peek discards non-Victory top to true encounter discard and retains printed Victory0',()=>{
- for(const code of ['dissonantVoices','07076']) {
+test('P7 07075 actual peek discards a non-Victory card and retains both Victory 0 and Victory 1',()=>{
+ for(const [code,hasVictory] of [['dissonantVoices',false],['07076',true],['07074',true]]) {
   const s=fixture('07075',2),a=createMechanicsApi(s);s.locations[0].clues=0;s.encounterDiscard=[]
   a.scenarioDecks.initialize('leads',[code],{shuffle:false})
   const actions=s.investigators[0].actionsLeft;move(s,ability(s,'07075'));assert.ok(s.pendingChoice)
   const saved=JSON.parse(JSON.stringify(s));settle(s);settle(saved)
   assert.equal(s.investigators[0].actionsLeft,actions-2)
-  assert.equal(a.scenarioDecks.size('leads'),code==='07076'?1:0)
-  assert.deepEqual(s.encounterDiscard,code==='07076'?[]:[code])
+  assert.deepEqual(a.scenarioDecks.cards('leads'),hasVictory? [code]:[])
+  assert.deepEqual(s.encounterDiscard,hasVictory? []:[code])
   saved.currentSeat=1;assert.equal(ability(saved,'07075'),undefined,'group once/game survives JSON and other player')
   assert.deepEqual(saved.scenarioFlags.mechanics,s.scenarioFlags.mechanics)
  }

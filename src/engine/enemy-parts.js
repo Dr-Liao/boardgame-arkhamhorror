@@ -1,3 +1,5 @@
+import { enemyIsMassive } from './enemy-keyword-movement.js'
+
 export const enemyIsPart = enemy => typeof enemy?.partOf === 'string'
 export const enemyIsBody = enemy => enemy?.hasParts === true
 
@@ -12,7 +14,7 @@ export function enemyBody(state, enemy) {
 export function enemyInEngagement(state, enemy, investigator) {
   const body = enemyBody(state, enemy)
   if (enemyIsPart(enemy) && body?.massive && body.exhausted) return false
-  return !!body && (body.engagedSeat === investigator.seat || (body.massive && body.location === investigator.location))
+  return !!body && (body.engagedSeat === investigator.seat || ((enemyIsMassive(state, body) || body.attachedToAssetId) && body.location === investigator.location))
 }
 
 export function enemyCombatTargets(state, enemy) {

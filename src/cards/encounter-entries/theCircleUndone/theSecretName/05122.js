@@ -4,28 +4,9 @@
 //
 // 参考 TheFamiliar.hs：那赫卜用 set-aside/场外取（IncludeOutOfPlayEnemy），布朗·詹金用
 // findUniqueCard（可来自任意区域：牌库/弃牌堆/set aside）。反应由 behavior.enemyDefeated 结算。
-import { ALL_CARDS, originalOf } from '../../_shared.js'
+import { originalOf } from '../../_shared.js'
 
-const findInEncounter = (api, predicate) => {
-  const discard = api.encounterDiscardCards?.() || []
-  for (let index = discard.length - 1; index >= 0; index--) {
-    if (!predicate(discard[index])) continue
-    api.takeEncounterDiscard?.(discard[index])
-    return discard[index]
-  }
-  const deck = api.encounterDeckCards?.() || []
-  for (let index = deck.length - 1; index >= 0; index--) {
-    if (!predicate(deck[index])) continue
-    api.takeEncounterDeckCard?.(deck[index])
-    return deck[index]
-  }
-  return null
-}
-const findAnywhere = (api, code) => {
-  const wanted = String(code)
-  if (api.takeFromSetAside?.(wanted)) return wanted
-  return findInEncounter(api, candidate => String(candidate) === wanted)
-}
+const takeOutOfPlay = (api, code) => api.takeFromSetAside(code) || api.takeEncounterCard(code, { discardFirst: true })
 const inPlay = (state, code) => state.enemies.find(enemy => String(originalOf(enemy)) === code) || null
 
 export default {
@@ -43,8 +24,7 @@ export default {
         if (nahab) api.moveEnemy?.(nahab, target?.id || nahab.location)
         else {
           // 「生成放在一边的那赫卜」；若她已被击败进遭遇弃牌堆，也从场外取出重新放置。
-          const found = findAnywhere(api, '05149')
-          if (found && target?.id) nahab = api.spawn?.(found, target.id) || null
+          if (target?.id && takeOutOfPlay(api, '05149')) nahab = api.spawn?.('05149', target.id) || null
         }
         if (nahab && target) api.info?.(`🌑 那赫卜生成在「${target.name}」。`)
       }
@@ -60,8 +40,7 @@ export default {
       if (jenkin) api.moveEnemy?.(jenkin, nahabLocation)
       else {
         // 「找出布朗·詹金（即便不在场）」：牌库/弃牌堆/set aside 中找，找到才生成。
-        const found = findAnywhere(api, '05148')
-        if (found && nahabLocation) api.spawn?.(found, nahabLocation)
+        if (nahabLocation && takeOutOfPlay(api, '05148')) api.spawn?.('05148', nahabLocation)
       }
       return true
     },

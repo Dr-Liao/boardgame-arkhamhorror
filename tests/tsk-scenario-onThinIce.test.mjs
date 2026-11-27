@@ -26,7 +26,7 @@ import {
   clueValueOf, scenario,
 } from '../content/campaigns/theScarletKeys/scenarios/onThinIce/definition.js'
 import {
-  behavior, chapterState, chapterSummary, concealedAmountOf, concealedSpots, eraseHighestHollows, evenPlacements,
+  ACTION_RULES, behavior, chapterState, chapterSummary, concealedAmountOf, concealedSpots, eraseHighestHollows, evenPlacements,
   exposeAt, exposeBlockedReason, hollowAllyOrItemPerInvestigator, hollowCountOf, hollowFromDeckTop, hollowFromHand,
   markTime, openOuterWilderness, recallHollow, relocateToNearestWilderness, resolveKeyShift, resolveRawDeal,
   resolveTrueFormConcealed, restoreProgress, snapshotProgress, wildernessStepToward,
@@ -493,7 +493,7 @@ test('P7 onThinIce 地点连接：印刷符号自动连线，揭示后换成正�
   assert.equal(state.locations.length, count, '界外荒地只入场一次')
 })
 
-test('P7 onThinIce 荒野追踪：进入山间溪流与揭示猎人小屋都要检定', () => {
+test('P7 onThinIce 09623 猎人小屋：揭示后检定，失败受 1 点伤害', () => {
   const state = setup(stateFor(1))
   const api = apiFor(state)
   const inv = state.investigators[0]
@@ -516,7 +516,29 @@ test('P7 onThinIce 荒野追踪：进入山间溪流与揭示猎人小屋都要�
   assert.equal(inv.damage, 2, '猎人小屋说服失败再受 1 点伤害')
 })
 
-test('P7 onThinIce 饥饿的灰熊：生成到最近的荒地、移动跳过非荒地', () => {
+test('P7 onThinIce 09624 废弃金矿：无不利符号时获得 4 资源并多放 1 枯竭，有符号时不再获得', () => {
+  const state = setup(stateFor(1))
+  const api = apiFor(state)
+  const inv = state.investigators[0]
+  openOuterWilderness(state, api)
+  inv.location = 'condemnedGoldMine'
+  revealLocationStub(state, inv.location, api)
+  const mine = locationOf(state, inv.location)
+  const command = behavior.actions(state, inv).find(item => item.rule === ACTION_RULES.mineGamble)
+  assert.ok(command)
+  const resources = inv.resources
+  state.chaosBag = ['0', '+1']
+  assert.equal(behavior.performAction(state, inv, command, api), true)
+  assert.equal(inv.resources, resources + 4)
+  assert.equal(mine.depletion, 1)
+  state.chaosBag = ['skull', 'tablet']
+  assert.equal(behavior.performAction(state, inv, command, api), true)
+  assert.equal(inv.resources, resources + 4)
+  assert.equal(mine.depletion, 1)
+  assert.match(state.infos.at(-1), /揭示了 (skull|tablet)、(skull|tablet)/)
+})
+
+test('P7 onThinIce 09631 饥饿的灰熊：生成到最近的荒地，猎手移动跳过非荒地', () => {
   const state = setup(stateFor(2))
   const api = apiFor(state)
   const grizzly = {
@@ -544,7 +566,7 @@ test('P7 onThinIce 饥饿的灰熊：生成到最近的荒地、移动跳过非�
 // ---------------------------------------------------------------------------
 // 3. 虚空奇美拉：隐匿 4 / 分裂形态 / 揭露限制
 // ---------------------------------------------------------------------------
-test('P7 onThinIce 虚空奇美拉：隐匿 4 = 真身 + 四张具名诱饵，平均分到荒地', () => {
+test('P7 onThinIce 09626 虚空奇美拉：隐匿 4，真身和四张具名诱饵平均分到荒地', () => {
   const state = setup(stateFor(2))
   assert.equal(concealedAmountOf(RAW_CODES.voidChimeraTrueForm), 4)
   assert.equal(concealedAmountOf(RAW_CODES.voidChimeraFellbeak), 0)
@@ -567,7 +589,7 @@ test('P7 onThinIce 虚空奇美拉：隐匿 4 = 真身 + 四张具名诱饵，�
   assert.deepEqual(evenPlacements(cards, ['x', 'y', 'z']).map(entry => entry.count), [2, 1, 1])
 })
 
-test('P7 onThinIce 虚空奇美拉：揭露诱饵生成对应分裂形态，真身揭露记录位置', () => {
+test('P7 onThinIce 09626/09629 虚空奇美拉：具名诱饵生成尤嗜鲜血，其在场时阻止揭露真身', () => {
   const state = setup(stateFor(1))
   const api = apiFor(state)
   const inv = state.investigators[0]
@@ -747,7 +769,7 @@ test('P7 onThinIce 空洞化：手牌 / 牌库顶 / 支援三条路径与索恩�
   assert.ok(again.reason, '同一轮不能再抽')
 })
 
-test('P7 onThinIce 空洞与凶狠猎犬：有空洞时获得警戒与反击', () => {
+test('P7 onThinIce 09630 凶狠猎犬：有空洞时获得警戒与反击', () => {
   const state = setup(stateFor(1))
   const api = apiFor(state)
   const hound = { id: 'hound', code: RAW_CODES.voidChimeraFellhound,
@@ -924,7 +946,7 @@ test('P7 onThinIce JSON 往返：原语状态容器与章节状态都能存取',
 // ---------------------------------------------------------------------------
 // 8. 巡逻 / 猎人小屋 / 尤嗜鲜血
 // ---------------------------------------------------------------------------
-test('P7 onThinIce 巡逻与猎人小屋：敌人阶段移动、怪物进入小屋受伤', () => {
+test('P7 onThinIce 09623/09627 猎人小屋与凶残巨喙：巨喙巡逻，怪物进小屋受伤', () => {
   const state = setup(stateFor(2))
   const api = apiFor(state)
   const fellbeak = { id: 'fellbeak', code: RAW_CODES.voidChimeraFellbeak,
@@ -952,7 +974,7 @@ test('P7 onThinIce 巡逻与猎人小屋：敌人阶段移动、怪物进入小�
   assert.equal(monster.damageTaken, 1, '同一实例只结算一次')
 })
 
-test('P7 onThinIce 尤嗜鲜血：攻击后查看牌库顶并作为空洞治愈自身', () => {
+test('P7 onThinIce 09629 尤嗜鲜血：攻击后把牌库顶设为空洞并按费用治愈自身', () => {
   const state = setup(stateFor(1))
   const api = apiFor(state)
   const inv = state.investigators[0]

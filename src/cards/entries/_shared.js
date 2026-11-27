@@ -25,6 +25,77 @@ export const SKILL_NAMES_ZH = Object.freeze({
   willpower: '意志', intellect: '智识', combat: '战斗', agility: '敏捷',
 })
 
+
+export function chooseDeckToInspect(state, inv, api, source, prompt) {
+  const zones = state.investigators.filter(owner => !owner.defeated && !owner.resigned && owner.deck?.length && !api.eoteBlockedByDeckTopLock(owner.seat))
+    .map(owner => ({ id: `seat:${owner.seat}`, seat: owner.seat, label: `${owner.name} 的牌库`, cards: owner.deck }))
+  const encounter = api.encounterDeckCards()
+  if (encounter.length) zones.push({ id: 'encounter', seat: null, label: '遭遇牌库', cards: encounter })
+  if (!zones.length) return null
+  if (zones.length === 1) return zones[0]
+  const answer = api.choice({
+    kind: 'deck', source, seat: inv.seat, prompt,
+    options: zones.map(({ id, label }) => ({ id, label })),
+  })
+  return zones.find(zone => zone.id === answer) || zones[0]
+}
+
+export function takeInspectedDeckCard(api, zone, end) {
+  if (zone.seat == null) return end === 'bottom'
+    ? api.takeEncounterDeckBottom() : api.takeEncounterDeckCard(zone.cards.at(-1))
+  return end === 'bottom' ? api.takeDeckBottom(zone.seat) : api.takeDeckCard(zone.seat, zone.cards.at(-1))
+}
+
+export function placeInspectedDeckCard(api, zone, code, destination) {
+  if (destination === 'discard') {
+    if (zone.seat == null) return api.discardEncounterCards(code, { log: false })
+    return api.putInDiscard(zone.seat, code)
+  }
+  if (destination === 'hand') return api.putInHand(zone.seat, code)
+  if (zone.seat == null) return api.putOnEncounterDeck(code, { bottom: destination === 'bottom' })
+  return destination === 'bottom' ? api.putOnDeckBottom(zone.seat, code) : api.putOnTopOfDeck(zone.seat, code)
+}
+
+export function connectedLocationsWithin(locations, origin, maxSteps) {
+  const byId = new Map(locations.filter(location => location.inPlay !== false).map(location => [location.id, location]))
+  if (!byId.has(origin)) return []
+  const distance = new Map([[origin, 0]])
+  const queue = [byId.get(origin)]
+  for (const location of queue) {
+    const steps = distance.get(location.id)
+    if (steps >= maxSteps) break
+    for (const id of location.connections || []) {
+      if (distance.has(id) || !byId.has(id)) continue
+      distance.set(id, steps + 1)
+      queue.push(byId.get(id))
+    }
+  }
+  return queue.slice(1)
+}
+
+export function addChosenCommitmentIcon(state, inv, api, source) {
+  const own = (state.skillTest?.committed || []).filter(item => item.seat === inv.seat && !item.cancelled && !item.withdrawn)
+  if (!own.length) return null
+  const picked = own.length === 1 ? 0 : Number(api.choice({
+    kind: 'card', source, seat: inv.seat, prompt: '选择本次检定中你投入的一张卡牌。',
+    options: own.map((item, index) => ({ id: String(index), cardCode: item.code, label: api.cardName(item.code) })),
+  }))
+  const commitment = own[picked] || own[0]
+  const icons = Object.entries(api.cardIcons(commitment.code)).filter(([, count]) => count > 0).map(([icon]) => icon)
+  if (!icons.length) return null
+  const iconLabel = icon => SKILL_NAMES_ZH[icon] || (icon === 'wild' ? '万能' : icon)
+  const icon = icons.length === 1 ? icons[0] : api.choice({
+    kind: 'skill', source, seat: inv.seat, prompt: '选择该卡牌已有的一个技能图标，为它增加 1 个该图标。',
+    options: icons.map(id => ({ id, label: iconLabel(id) })),
+  })
+  if (!icons.includes(icon) || !api.addCommittedExtraIcons(icon, { commitment })) return null
+  const matched = icon === 'wild' || [].concat(state.skillTest.skill || []).includes(icon)
+  if (matched) api.addPendingTestBonus(1)
+  api.info(`🪬 「恐怖图腾」让「${api.cardName(commitment.code)}」再获得 1 个${iconLabel(icon)}图标`
+    + `${matched ? '（本次检定 +1）' : '（不匹配本次检定技能，数值不变）'}。`)
+  return commitment
+}
+
 export const CHAOS_SYMBOLS = ['skull', 'cultist', 'tablet', 'elderthing', 'autofail']
 
 // 「攻击。」事件的目标过滤：未与调查员交战的冷漠敌人不能被攻击——必须先主动交战，或使用

@@ -3,8 +3,8 @@
   "unit": "11-a-9",
   "profile": {
     "id": "tdc-campaign-f-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11697–11737）43 条目录记录。40 条通过五维验收；3 条地点能力/克苏鲁牌库分支缺失暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11697–11737）43 条目录记录。43 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 40,
-    "unverified": 3,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 180
+    "testsPassed": 182
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
-      "sha256": "339693885048a6cc85f3be34a8328603823d822eac1a6ba7ac14bbe38b7b984d"
+      "sha256": "e86fd22cd3383913bba2be70d8c2657714aa11daf8298fd5a5337f002311bccb"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartI.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
-      "sha256": "ac59dc0317e93c7702f5edaca105c378ce49f10a941d92c0fb47b77fd10f68fa"
+      "sha256": "3676fc14b2dc02bc4a751068968a0118d10e0a558a598f604f86b62e430d3c69"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-sepulchreOfTheSleeper.test.mjs",
@@ -69,17 +69,29 @@
       "code": "11697",
       "name": "圣玛丽医院",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[reaction] 克苏鲁进入圣玛丽医院后：在本地点放置至多 3 个你的线索；每放置 1 个对一名敌人造成 1 点伤害（每场游戏团队限一次）」；条目只声明 `locationRule.floodBounds`，`theDoomOfArkhamPartII/behavior.js` 无 11697/医院反应引用，也没有「敌人进入地点」的地点反应钩子 → 整条反应不可用。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11697 圣玛丽医院（废墟）：不能完全淹没（floodBounds max 1）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "11697 圣玛丽医院：克苏鲁进入可移入线索并逐点选择伤害目标，全队每场一次"
+        }
+      ]
     },
     {
       "code": "11698",
       "name": "南区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「[action] 选择你弃牌堆中的一张[[道具]]支援，将其加入手牌（每场游戏团队限一次）」；条目只声明 `floodBounds`，`actions()` 不产出该行动、behavior 也无 11698 引用 → 整条动作不可用。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11698 南区（废墟）：从自己的弃牌堆取回 道具 支援"
+        }
+      ]
     },
     {
       "code": "11699",
@@ -317,9 +329,21 @@
       "code": "11709",
       "name": "拆毁",
       "type": "story",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「在最近的屋顶放 1 个废墟标记；若该地点已有 2+ 废墟，每位调查员阵亡并弃掉该地点每名敌人，然后移除该地点与本卡；否则把本卡与克苏鲁弃牌堆一起洗回克苏鲁牌库」；`resolveCthulhuCard` 的 switch 只覆盖 11705/06/07/08/11/12/13/14，11709 落到 `default → resolved` 后直接弃回弃牌堆，所有子句不结算（条目 note 声称在 resolveCthulhuCard 结算，实际无分支——与 11651/11652 同类「账本记实现、实际未接线」）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11709 克苏鲁牌库行动卡：由章节 resolveCthulhuCard/phaseBegan 按卡号结算"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard9.test.mjs",
+          "test": "11-a-5 11709 拆毁：最近屋顶放废墟，达到两个则拆除该屋顶并结算当地角色"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
+          "test": "P7 theDoomOfArkhamPartII 11705/11709/11715：无情冲锋攻击、拆毁废墟计数器、希望消逝封印读点"
+        }
+      ]
     },
     {
       "code": "11710",

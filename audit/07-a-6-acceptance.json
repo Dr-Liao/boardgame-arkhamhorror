@@ -20,7 +20,7 @@
     "verified": 42,
     "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 483
+    "testsPassed": 485
   },
   "testFiles": [
     {
@@ -33,11 +33,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-light-in-the-fog.test.mjs",
-      "sha256": "b8afb1a10f98d90b15742fa03def68a23e4c4ca0d5b04c9ff8ecbe7cad0cd2b8"
+      "sha256": "64129ed0aeeb189bbaafc86b8f2b6355ced74158c63b1fdddaf0b9cf9cd748d6"
     },
     {
       "file": "games/arkhamhorror/tests/tic-late-b-cards.test.mjs",
-      "sha256": "1337a2f1cf3b0837f4ad9c2382ab108a6549acfd31b91f59a588db5f1b4b88f9"
+      "sha256": "8e1a6aa3b2eafa4e15101268f7ca36d234c8aacb710ba2309d846f9b92f2c090"
     },
     {
       "file": "games/arkhamhorror/tests/tic-scenarios-late.test.mjs",
@@ -69,11 +69,11 @@
     },
     {
       "file": "games/arkhamhorror/tests/tic-alight-cards.test.mjs",
-      "sha256": "f373f0691f9589e52cc583fc930a226fec404b3dca569e56eba7b7518ff8f403"
+      "sha256": "6c4090eba71d1475dda146c2f8b5d5a61580859bbc104abcfb54741d7dde363e"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-guardian-seeker.test.mjs",
-      "sha256": "b4ecaedb1a2445d494b757be42e5133ef92a1091249e32565e2ad8b135756fd1"
+      "sha256": "006bd1ec1a851155d767d5d7b65250955a3104de1e1e27736e32a23fe01d348a"
     },
     {
       "file": "games/arkhamhorror/tests/tic-player-rogue-mystic.test.mjs",

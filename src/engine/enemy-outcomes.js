@@ -27,8 +27,9 @@ export function createEnemyOutcomeApi(state, deps) {
     },
     destination(context, destination, { sourceId = null } = {}) {
       if (!acceptedDefeat(context) || context.destinationCommitted
-        || !destination || !['enemyZone', 'scenarioDeck'].includes(destination.kind)
+        || !destination || !['enemyZone', 'scenarioDeck', 'encounterDiscard'].includes(destination.kind)
         || !plainZone(destination.id)) return false
+      if (destination.kind === 'encounterDiscard' && destination.replaceVictory !== true) return false
       const candidate = { ...destination, sourceId }
       if (!context.destinations.some(item => JSON.stringify(item) === JSON.stringify(candidate))) context.destinations.push(candidate)
       return true
@@ -51,13 +52,16 @@ export function createEnemyOutcomeApi(state, deps) {
       // both Victory placement and ordinary discard, so query before calling it.
       // The dependency is mandatory and must use the same pure predicate as
       // addVictory, including printed Victory0, vengeance and uniqueCultist.
-      if (deps.wouldAddToVictory(context.enemy)) return false
-      const candidates = context.destinations
+      const hasVictory = deps.wouldAddToVictory(context.enemy)
+      const candidates = hasVictory ? context.destinations.filter(item => item.kind === 'encounterDiscard') : context.destinations
+      if (!candidates.length) return false
       const index = candidates.length === 1 ? 0 : deps.chooseDestination(context, candidates)
       const target = candidates[index]
       if (!target) throw new Error('Invalid defeat destination selection')
       if (target.kind === 'enemyZone') {
         if (!deps.zones.storeDeparted(context.enemy, target.id, target)) throw new Error('Enemy destination would duplicate entity')
+      } else if (target.kind === 'encounterDiscard') {
+        state.encounterDiscard.push(deps.encounterCodeFor?.(context.enemy) || context.enemy.code)
       } else {
         // Existing encounter piles may use bound rule aliases such as
         // ghoulMinion. Preserve a drawable code; originalCode is metadata.

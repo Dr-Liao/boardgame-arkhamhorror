@@ -3,7 +3,7 @@
   "unit": "06-a-5",
   "profile": {
     "id": "tde-thousand-shapes-2026-11",
-    "scope": "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。35 条通过五维验收；6 条因整条子句未实现或死声明暂不切换。",
+    "scope": "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 41,
-    "verified": 35,
-    "unverified": 6,
+    "verified": 41,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 520
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
-      "sha256": "54ef732cad6cc55f7b7a1d3db952bef17137b1e7a779806c13053ea591426618"
+      "sha256": "638717f0054dde8598f75a7f233659c3962ddeb0d14afb3b47619baab638fa5e"
     },
     {
       "file": "games/arkhamhorror/tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
-      "sha256": "8eb8c20b7ddd6891118485f9ba5d6a64a4161829a870be489366ecb2b9a54e61"
+      "sha256": "1d33f94fd197705f157cfdf9a2ba244a7d7ab652c1e44e9b323eb99334909972"
     },
     {
       "file": "games/arkhamhorror/tests/tde-investigators.test.mjs",
@@ -325,9 +325,17 @@
       "code": "06172",
       "name": "搜寻不可名状之物",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actRule.objectiveRule='unnamableObjective' 全仓无读点（dead declaration）；目标实际由 06182 无名坟墓轮末强制结算。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06172 搜寻不可名状之物：chapterFlow=intoTheDepths 由章节 behavior 分派执行"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06172 已验收 · act 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06173",
@@ -349,9 +357,17 @@
       "code": "06174",
       "name": "坟地",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「抽取到的每个[[食尸鬼]]敌人改为生成在坟地」未实现：locationRule.spawnRedirectTrait 全仓无读点，behavior.spawnLocation 不读它。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06174 已验收 · location 卡文与关卡定义"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-scenario-aThousandShapesOfHorror.test.mjs",
+          "test": "万千骇形：坟地条目（06174）生成改道数据与团队线索记住事实"
+        }
+      ]
     },
     {
       "code": "06175",
@@ -565,9 +581,17 @@
       "code": "06188",
       "name": "神秘阶梯",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "locationRule.moveOrResignCost 全仓无读点（dead declaration）；费用由相邻 moveError/beforeMove/beforeResign 实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06188 神秘阶梯：移动/撤退费用可用一张双图标或两张同图标牌支付"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06188 已验收 · location 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06189",
@@ -605,25 +629,49 @@
       "code": "06191",
       "name": "难以描述的鬼魅",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「不可名状之物位于你所在地点时每项技能 -1」未实现：treacheryRule.skillModifierWhileEnemyAtYourLocation 全仓无读点；另 treacheryRule.threatArea 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06191 难以描述的鬼魅：只在不可名状之物同地点时降低全部技能，并提供 2 行动摆脱"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06191 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06192",
       "name": "发光的眼睛",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「轮末威胁区每张卡 1 恐惧（最多 3）并弃掉本卡」未实现：treacheryRule.roundEndHorrorPerThreatCard 全仓无读点；另 treacheryRule.threatArea 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06192 发光的眼睛：轮末计入威胁区本卡及交战敌人，至多 3 恐惧后弃掉本卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06192 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06193",
       "name": "欺骗性记忆",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "treacheryRule.threatArea 为无读点冗余声明（威胁区入位由 encounterResolve→api.threat + threatEntered 窗口完成）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
+          "test": "06-a5 06193 欺骗性记忆：进威胁区；另一张卡进入后强制弃 1 张手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tde-campaign-card-acceptance.test.mjs",
+          "test": "TDE 06193 已验收 · treachery 卡文与关卡定义"
+        }
+      ]
     },
     {
       "code": "06194",

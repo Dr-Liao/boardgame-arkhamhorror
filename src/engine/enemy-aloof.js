@@ -1,3 +1,4 @@
+import { contentRegistry } from '../../content/registered.js'
 import { registeredEntry } from './ability.js'
 import { entityRuleActive } from './modifiers.js'
 import { enemyKeywordOverride } from './enemy-keyword-movement.js'
@@ -16,10 +17,13 @@ import { enemyKeywordOverride } from './enemy-keyword-movement.js'
 //     07124–07127 写在议程上，由 entityRuleActive 读 scene 行）。
 // 文本被涂白的敌人按既有口径整段失效（印刷条件与印刷冷漠一起消失）。
 export function enemyIsAloof(state, enemy, { isBlanked = () => false, entryOf = registeredEntry } = {}) {
+  if (enemy?.attachedToAssetId) return false
   if (!(enemyKeywordOverride(state, enemy, 'aloof') ?? enemy?.aloof)) return false
   if (isBlanked(state, enemy)) return false
   if (entityRuleActive(state, enemy, 'loses:aloof')) return false
   const rule = entryOf(enemy.originalCode || enemy.code)?.enemyRule
+  if (rule?.losesAloofAtClearedMirage
+    && contentRegistry.getBehavior(state.scenario?.id)?.isClearedOfMirages?.(state, enemy.location)) return false
   if (typeof rule?.losesAloofWhen !== 'function') return true
   try {
     return rule.losesAloofWhen(state, enemy) !== true

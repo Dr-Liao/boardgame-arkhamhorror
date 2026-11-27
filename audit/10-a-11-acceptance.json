@@ -3,7 +3,7 @@
   "unit": "10-a-11",
   "profile": {
     "id": "fhv-campaign-g-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10707a–10743）43 条目录记录。32 条通过五维验收；11 条子句仅落 flags/无窗口读点暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10707a–10743）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 43,
-    "verified": 32,
-    "unverified": 11,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 242
+    "testsPassed": 254
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
-      "sha256": "b8fac0f742770dba99a9957fb700cf510edf73d5ab4c498d6f9dd3dc52c73a40"
+      "sha256": "9278b6386da8d02a46b429dcb8897a5f87332b55d7d0eb17f19f139be6f53731"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
-      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
+      "sha256": "dfb255b8ae281ada3ea106818023d2e9bb5c1b2b0139226319b7b830d994e860"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-theLongestNight.test.mjs",
-      "sha256": "53f28f361cf34fa264065875b2f0052e40c5b270158638f3094d234e343bb00c"
+      "sha256": "ef5631d66d9d59cd7cf3d4c7aa6e7299a140bcf062a2a2047b124fe1a5699e1f"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-campaign-flow.test.mjs",
@@ -69,7 +69,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-blockers.test.mjs",
-      "sha256": "65287e9f6d6460090afbb9798c8263fa7f86cf0aa261c6243282f0b77661792a"
+      "sha256": "09746297943b9125717640adf59f5158ea8eaee91141902a2fae2f7a64dc2b0f"
     }
   ],
   "entries": [
@@ -293,9 +293,17 @@
       "code": "10719",
       "name": "蔓生隧道",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「离开时额外 1 行动」用离开后扣行动近似，行动不足不阻止移动（缺移动前置读点）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10719 蔓生隧道：有线索时必须先支付离开的额外行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10716/10717/10718/10719/10720 洞穴地点：地点规则/窗口读点齐备"
+        }
+      ]
     },
     {
       "code": "10720",
@@ -313,9 +321,17 @@
       "code": "10721",
       "name": "水晶寄生虫",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "黑夜「+1 伤害值」缺实体修正目标，仅 flags.night 声明未接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10721 水晶寄生虫：黑夜每两点已受伤害使本次攻击多造成一点伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10722",
@@ -345,9 +361,17 @@
       "code": "10724",
       "name": "瘴气之影",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「弃 1 张或更多手牌后」按 handCardDiscarded 逐张触发（同批弃多张会多次攻击），非等价。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10724 瘴气之影：同批弃掉多张手牌只攻击一次，下一批可以再次攻击"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10725",
@@ -377,9 +401,21 @@
       "code": "10727",
       "name": "真菌感染",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "宿主文本框空白仅覆盖可选能力枚举；「[action] 战斗(3) 摆脱」无行动枚举入口（仅 flags.escapeAction）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10727 真菌感染：检定失败时调查员受伤，宿主仍然空白"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10727 真菌感染：附属使道具文本空白，调查员可检定战斗弃掉附属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10728",
@@ -433,9 +469,17 @@
       "code": "10732",
       "name": "毒花",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每个疯长 +1 伤害值」无运行期读点，留待 P8。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10732 毒花：轮末累计疯长，攻击伤害按疯长数提高"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10733",
@@ -453,9 +497,17 @@
       "code": "10734",
       "name": "螺旋牡鹿",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「本地与连接地点每位调查员每项技能 -2」无敌人光环技能修正读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10734 螺旋牡鹿：神话阶段在本地及连接地点的调查员技能值减二"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10735",
@@ -473,9 +525,17 @@
       "code": "10736",
       "name": "荆棘之墙",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "白日/黑夜进入移动强制仅落 flags.dayMoveInto/nightMoveInOut，未接移动窗口。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10736 荆棘之墙：白日进入受二伤并弃掉，黑夜进出各受一伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10737",
@@ -505,25 +565,53 @@
       "code": "10739",
       "name": "尸苔",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "白日「不能移动」需按昼夜刷新 enemy.immobile，仅 flags.dayCannotMove。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10739 尸苔：日间无法移动、没有警戒，夜间可以移动并具备警戒"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10740",
       "name": "迷神孢子",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「每轮第一次抽牌受 1 恐惧」与「[action] 摆脱，可受 1 恐惧自动成功」无威胁区窗口/行动入口，仅 flags。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10740 迷神孢子：同地点队友可替威胁区所有者清除"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10740 迷神孢子：每轮仅首批抽牌受直接恐惧，可支付直接恐惧自动通过智力检定"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10741",
       "name": "骤然突变",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附属敌人被击败时弃牌直到弃掉敌人并在此生成」时点无读点，仅 flags.onAttachedDefeated。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10741 骤然突变：宿主被击败，跳过诡计并生成遇到的第一张敌人"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     },
     {
       "code": "10742",
@@ -541,9 +629,17 @@
       "code": "10743",
       "name": "“着火了！”",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「轮末本地每张有生命值的卡牌受 1 点直接伤害」无地点附属轮末窗口，仅落 flags；另有 P0-3 注册风险。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "10743 着火了：轮末仅伤及附属地点有生命值的每张卡牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard11.test.mjs",
+          "test": "验收 10721/10722/10723/10724/10725/10726/10727/10728/10729/10730/10731/10732/10733/10734/10735/10736/10737/10738/10739/10740/10741/10742/10743 遭遇组：条目执行入口与既有原语接线"
+        }
+      ]
     }
   ]
 }

@@ -3,8 +3,8 @@
   "unit": "11-a-10",
   "profile": {
     "id": "tdc-campaign-g-2026-11",
-    "scope": "沉没之城 11 段 tdcc 战役卡（11738–11766）37 条目录记录。36 条通过五维验收；11751 猎物规则无读点暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcc 战役卡（11738–11766）37 条目录记录。37 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,23 +17,23 @@
   },
   "summary": {
     "total": 37,
-    "verified": 36,
-    "unverified": 1,
+    "verified": 37,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 187
+    "testsPassed": 190
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
-      "sha256": "69751ead97844d2d155ed50807382d9894749bddabfefcda249271d0b696f5f2"
+      "sha256": "e90ebbf71df82f50299bbcb1bfe5ed62522dae11e4aa0d628d97f23b25e18f2b"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-scenario-theDoomOfArkhamPartII.test.mjs",
-      "sha256": "ac59dc0317e93c7702f5edaca105c378ce49f10a941d92c0fb47b77fd10f68fa"
+      "sha256": "3676fc14b2dc02bc4a751068968a0118d10e0a558a598f604f86b62e430d3c69"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
-      "sha256": "ea62175d890f5e3b5746e13e1c8c4186b39724995d81e06aede3bf126618ac87"
+      "sha256": "02f8b0fa009ed20e6c9927b708aed09bc68c2676b5831b100953825a2af88236"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-p7-shared-assets.test.mjs",
@@ -273,9 +273,21 @@
       "code": "11751",
       "name": "持久构造体",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「猎物 - 最近的控制[[神器]]支援的调查员」无读点：条目 flags.prey=\"artifactController\"，但 TDC card-data 的 preyRules 不含该值（不产出 enemy.prey）、章节 definition 未覆盖、engine enemies/enemy-query 无该猎物读点（全仓 grep 0；仅条目自身声明）。其余两句（猎手、被击败拉回胜利区其他构造体）已接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11751 持久构造体：先按最短距离找猎手目标，距离并列时优先神器持有者"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard10.test.mjs",
+          "test": "11751 持久构造体：击败前取回其他副本并横置生成"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-p7-shared-encounters.test.mjs",
+          "test": "11751 持久构造体：击败时把胜利区每名其他持久构造体在你所在地点横置生成"
+        }
+      ]
     },
     {
       "code": "11752",

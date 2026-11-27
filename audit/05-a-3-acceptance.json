@@ -3,7 +3,7 @@
   "unit": "05-a-3",
   "profile": {
     "id": "tcu-secret-name-2026-11",
-    "scope": "万象无终 05 段 The Secret Name（tsn，05109–05150）42 条目录记录。39 条通过五维验收；3 条因同句检索规则重复手写暂不切换。",
+    "scope": "万象无终 05 段 The Secret Name（tsn，05109–05150）42 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,8 +17,8 @@
   },
   "summary": {
     "total": 42,
-    "verified": 39,
-    "unverified": 3,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 115
   },
@@ -29,7 +29,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
-      "sha256": "734ee9169d2e99b3d5a00ee2e6f80e40e960ece700c8df9c5d46057b4b76f5b7"
+      "sha256": "b59d4109c818b438126d669608fa7b2f282fe63293030a8512c23bd01b2dc8fb"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-2.test.mjs",
@@ -229,17 +229,25 @@
       "code": "05121",
       "name": "隐士•IX",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "条目内 findInEncounter（遭遇弃牌堆→遭遇牌库顶逐张匹配后经 take* 原语取出）与 05122 的同名函数逐字重复，「查找遭遇牌库+弃牌堆」同句已第 3+ 次手写；引擎已登记 api.takeEncounterCard 可覆盖该句（05126/05143/05144 即使用它）。行为本身正确（新补证测试通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05121 隐士·IX：背面按詹金是否在场找出鼠群/詹金，3–4 人局追加巫宅鼠群"
+        }
+      ]
     },
     {
       "code": "05122",
       "name": "魔宠",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "findInEncounter / findAnywhere 本地实现与 05121 重复（同句「search the encounter deck and discard pile for X」第 3+ 次手写），应复用 api.takeEncounterCard 或抽共享原语。行为本身正确（新补证测试通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard3.test.mjs",
+          "test": "验收 05122 魔宠：背面按幕放置那赫卜、洗入 2 张鬼影骤现并把詹金放到那赫卜处"
+        }
+      ]
     },
     {
       "code": "05123",
@@ -317,9 +325,13 @@
       "code": "05129",
       "name": "屋主的住处",
       "type": "location",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "①条目 findInEncounter 与 05121/05122 同句重复手写（本卡为「先牌库后弃牌堆」变体，语义相同）；②本卡印刷的强制与闹鬼是同一句（查找鼠群生成在发霉的走道并混洗遭遇牌库），却分别实现在条目 locationRule.onReveal 与 behavior.hauntedScript('landlordsQuartersRats') 两处。行为本身正确（既有章节测试通过）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-secret-name.test.mjs",
+          "test": "05129 屋主的住处：揭示后找出鼠群生成在发霉的走道"
+        }
+      ]
     },
     {
       "code": "05130",

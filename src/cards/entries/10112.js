@@ -13,7 +13,7 @@
 //   · 「不会触发趁乱攻击」= played.noOpportunityAttack（dispatch.js 的 playNoAoO 读点）。
 //   · 目标集合「你所在地点 + 每个连接地点」= state.locations 的 connections（只取在场地点；
 //     「连接」不区分移动限制，与印刷 connected location 同口径）。
-//   · 每个敌人二选一 = api.choice（id: evade / damage / skip）；躲避走 api.autoEvadeEnemy
+//   · 每个敌人二选一 = api.choice（id: evade / damage）；躲避走 api.autoEvadeEnemy
 //     （横置并脱离交战，enemies.js#autoEvadeEnemy），伤害走 api.damageEnemy。
 //     非[[精英]]限定只作用于「自动躲避」这一项；精英仍可选择造成伤害。
 const CODE = '10112'
@@ -52,10 +52,10 @@ export default {
           const canEvade = !enemy.elite && api.canAutoEvade(enemy, inv.seat)
           const options = []
           if (canEvade) options.push({ id: 'evade', label: `自动躲避「${enemy.name}」（非精英）` })
-          options.push({ id: 'damage', label: `对「${enemy.name}」造成 1 点伤害` })
-          options.push({ id: 'skip', label: '不处理这个敌人' })
+          if (api.canDamageEnemy(enemy, inv.seat, CODE)) options.push({ id: 'damage', label: `对「${enemy.name}」造成 1 点伤害` })
+          if (!options.length) continue
           const where = enemy.location === inv.location ? '所在地点' : '连接地点'
-          const pick = api.choice({
+          const pick = options.length === 1 ? options[0].id : api.choice({
             kind: 'target', source: CODE, seat: inv.seat,
             prompt: `「围魏救赵」：「${enemy.name}」（${where}）选择一项。`,
             options,
@@ -63,7 +63,7 @@ export default {
           if (pick === 'evade' && canEvade) {
             if (api.autoEvadeEnemy(enemy)) api.info(`💨 「围魏救赵」：自动躲避「${enemy.name}」。`)
           } else if (pick === 'damage') {
-            api.damageEnemy(enemy, 1, inv.seat)
+            api.damageEnemy(enemy, 1, inv.seat, CODE)
             api.info(`💥 「围魏救赵」：对「${enemy.name}」造成 1 点伤害。`)
           }
         }

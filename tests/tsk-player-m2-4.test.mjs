@@ -15,7 +15,7 @@ import { fixture, move, asset, enemy, settle, decisionSeat, legalMoves, validate
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import {
-  applyHarm, drawCards, executeDescriptor, getStat, performTest, playCardFromDiscardForced, reactionWindow,
+  applyHarm, drawCards, executeDescriptor, getStat, healDamageFrom, healHorrorFrom, performTest, playCardFromDiscardForced, reactionWindow,
   slotUsage, playCost,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
@@ -222,30 +222,35 @@ test('P6 09104 道路尽头：最终密谋在场时打出，抽 1、+1 资源、
 // 09105 直击弱点
 // ---------------------------------------------------------------------------
 
-test('P6 09105 直击弱点：难度 0 的攻击检定自动成功并弃掉非精英敌人', () => {
-  const state = fixture('01001')
-  state.investigators[0].assets = []
-  const target = enemy(state, { fight: 1, health: 10, engagedSeat: 0 })
-  state.skillTest = { seat: 0, skill: 'combat', difficulty: 0, stage: 'ST.4', committed: [], drawn: [],
-    actionKind: 'fight', target: { kind: 'enemy', id: target.id } }
-  resolvePlayed(state, '09105')
-  assert.equal(state.skillTest.autoSuccess, true, '本次检定自动成功')
-  assert.equal(state.enemies.some(item => item.id === target.id), false, '非精英敌人被弃掉')
+test('P6 09105 直击弱点：真实难度 0 攻击自动成功，弃置非精英或使精英恰好受到 3 伤害', () => {
+  for (const elite of [false, true]) {
+    const state = fixture('01001')
+    const target = enemy(state, { fight: 0, health: 20, elite, engagedSeat: 0 })
+    state.investigators[0].hand = ['09105']
+    state.chaosBag = ['autofail']
+    move(state, { action: 'fight', enemyId: target.id })
+    settle(state, choice => choice.options.find(option => option.cardCode === '09105')?.id)
+    assert.equal(state.lastTestResult.success, true)
+    assert.equal(state.lastTestResult.drawn.includes('autofail'), false)
+    const after = state.enemies.find(item => item.id === target.id)
+    if (!elite) assert.equal(after, undefined)
+    else {
+      assert.equal(after.exhausted, true)
+      assert.equal(after.damageTaken, 3)
+    }
+  }
 })
 
-test('P6 09105 直击弱点：精英改为自动躲避并造成 3 点伤害；难度不为 0 时不可用', () => {
+test('P6 09105 直击弱点：难度不为 0 时不能打出', () => {
   const state = fixture('01001')
-  state.investigators[0].assets = []
-  const elite = enemy(state, { fight: 1, health: 20, elite: true, engagedSeat: 0 })
-  state.skillTest = { seat: 0, skill: 'combat', difficulty: 0, stage: 'ST.4', committed: [], drawn: [],
-    actionKind: 'fight', target: { kind: 'enemy', id: elite.id } }
-  resolvePlayed(state, '09105')
-  const after = state.enemies.find(item => item.id === elite.id)
-  assert.equal(after.exhausted, true, '精英被自动躲避')
-  assert.equal(after.damageTaken, 3, '精英受到 3 点伤害')
-  const descriptor = registeredEntry('09105').abilities.find(item => item.kind === 'played')
-  state.skillTest.difficulty = 2
-  assert.equal(descriptor.criteria[0]({ state, inv: state.investigators[0] }), false, '难度不为 0 时 criteria 不成立')
+  const target = enemy(state, { fight: 2, health: 20, engagedSeat: 0 })
+  state.investigators[0].hand = ['09105']
+  move(state, { action: 'fight', enemyId: target.id })
+  settle(state, choice => {
+    assert.equal(choice.options.some(option => option.cardCode === '09105' && option.label.startsWith('直击弱点')), false)
+    return null
+  })
+  assert.ok(state.investigators[0].hand.includes('09105'))
 })
 
 // ---------------------------------------------------------------------------
@@ -263,7 +268,7 @@ test('P6 09106 整装待发：显现选择两项技能，所有调查员所选 +
   assert.equal(inv.discard.includes('09106'), true)
   assert.equal(getStat(state, inv, 'willpower'), before.willpower + 1, '所选意志 +1')
   assert.equal(getStat(state, inv, 'combat'), before.combat - 1, '未选战斗 -1')
-  assert.ok((state.effects || []).some(effect => effect.sourceCode === '09106' && effect.duration === 'endOfPhase'))
+  assert.ok((state.effects || []).some(effect => effect.sourceCode === '09106' && effect.duration === 'endOfInvestigation'))
 })
 
 test('P6 09106 整装待发：从牌库抽到时自动结算显现（真实 cardDrawn 窗口）', () => {
@@ -347,14 +352,15 @@ test('P6 09108 拨云见日：难度 0 的调查检定自动成功，两个地�
 // 09109 抉择时刻
 // ---------------------------------------------------------------------------
 
-test('P6 09109 抉择时刻：所选调查员失去 1 行动并抽 3 张', () => {
+test('P6 09109 抉择时刻：所选调查员抽 3 张，下回合失去 1 行动', () => {
   const state = fixture('01001')
   state.investigators[0].assets = []
   state.investigators[0].hand = []
   const before = state.investigators[0].actionsLeft
   revealFromHand(state, '09109', pickOption(/失去 1 个行动/))
   const inv = state.investigators[0]
-  assert.equal(inv.actionsLeft, before - 1, '失去 1 个行动')
+  assert.equal(inv.actionsLeft, before, '当前回合保留行动')
+  assert.equal(inv.bonusActionsOnNextTurn, -1, '下一回合少一个行动')
   assert.equal(inv.hand.length, 3, '抽 3 张牌（09109 自身结算后进弃牌堆）')
   assert.equal(inv.discard.includes('09109'), true)
 })
@@ -375,20 +381,32 @@ test('P6 09109 抉择时刻：立即进行一次行动后随机弃 1 张手牌',
 // 09110 救生索
 // ---------------------------------------------------------------------------
 
-test('P6 09110 救生索：获得 1 个额外行动并放逐；每回合只能打出 1 张', () => {
-  const state = fixture('01001')
-  state.phase = 'investigation'
-  state.currentSeat = 0
-  state.investigators[0].assets = []
-  state.investigators[0].hand = []
-  const before = state.investigators[0].actionsLeft
-  const descriptor = registeredEntry('09110').abilities.find(item => item.kind === 'played')
-  assert.equal(descriptor.exileAfterPlay, true, '打出后放逐')
-  const conditions = registeredEntry('09110').playCondition
-  assert.equal(conditions.every(item => item.when({ state, inv: state.investigators[0] })), true, '自己回合可打出')
-  resolvePlayed(state, '09110')
-  assert.equal(state.investigators[0].actionsLeft, before + 1, '获得 1 个额外行动（X 近似为 1）')
-  assert.equal(conditions.every(item => item.when({ state, inv: state.investigators[0] })), false, '同一回合不能再打出')
+test('P6 09110 救生索：可在另一调查员即将结束回合时，按本回合两次失败增加行动并放逐', () => {
+  const state = fixture('01001', 2)
+  const startTurn = state.turnSerial
+  state.humanSeats = [0, 1]
+  state.investigators[1].hand = ['09110', '09110']
+  state.chaosBag = ['autofail']
+  for (let count = 0; count < 2; count++) {
+    runTest(state, draft => performTest(draft, 0, 'willpower', 3, {}))
+    assert.equal(state.lastTestResult.success, false)
+  }
+  assert.equal(state.investigators[0].failedTestsThisTurn?.count, 2)
+  state.investigators[0].actionsLeft = 0
+  move(state, { action: 'endTurn' })
+  settle(state, choice => choice.kind === 'reaction'
+    ? choice.options.find(option => option.cardCode === '09110')?.id : null)
+  assert.equal(state.investigators[0].actionsLeft, 2)
+  assert.equal(state.turnSerial, startTurn)
+  assert.equal(state.investigators[0].turnEnded, false)
+  assert.deepEqual(state.investigators[1].hand, ['09110'])
+  assert.ok(state.exiled.includes('09110'))
+  move(state, { action: 'endTurn' })
+  settle(state, choice => {
+    assert.equal(choice.options.some(option => option.cardCode === '09110'), false)
+    return null
+  })
+  assert.deepEqual(state.investigators[1].hand, ['09110'])
 })
 
 // ---------------------------------------------------------------------------
@@ -440,7 +458,7 @@ test('P6 09113 棒球棒：+2 战斗 +1 伤害；骷髅时选择额外 +1 伤害
   const target = enemy(state, { fight: 1, health: 30, engagedSeat: 0 })
   state.chaosBag = ['skull']
   move(state, { action: 'ability', assetId: bat.id, abilityIndex: 0, targetId: target.id })
-  resolveChoices(state, pickOption(/额外 \+1 伤害/))
+  resolveChoices(state, pending => pending.options.find(option => option.id === 'discard')?.id)
   const inv = state.investigators[0]
   assert.equal(state.enemies.find(item => item.id === target.id).damageTaken, 3, '基础 1 + 卡面 1 + 额外 1')
   assert.equal(inv.assets.some(item => item.id === bat.id), false, '棒球棒被弃掉')
@@ -503,7 +521,8 @@ test('P6 09115 随心而动：三堆选一堆，每位调查员抽取该堆自�
   const inv = state.investigators[0]
   assert.ok(inv.hand.includes('01041'), '抽到第 1 堆的牌（牌库顶）')
   assert.equal(inv.deck.length, 1, '其余牌离开牌库')
-  assert.ok(state.exiled.includes('01031') && state.exiled.includes('01025'), '其余两堆的非弱点牌移出游戏')
+  assert.ok(state.removedFromGame.includes('01031') && state.removedFromGame.includes('01025'), '其余两堆的非弱点牌移出游戏')
+  assert.ok(!state.exiled.includes('01031') && !state.exiled.includes('01025'))
 })
 
 // ---------------------------------------------------------------------------
@@ -586,7 +605,9 @@ test('P6 09118 命运无常：移除 1 毁灭，每位调查员受到 1 直接�
   assert.equal(state.doom, 0, '当前密谋 -1 毁灭')
   assert.equal(inv.damage, 1, '受到 1 点直接伤害')
   assert.equal(inv.horror, 1, '受到 1 点直接恐惧')
-  assert.ok(state.exiled.includes('09118'), '命运无常移出游戏')
+  assert.ok(state.removedFromGame.includes('09118'), '命运无常移出游戏')
+  assert.ok(!state.exiled.includes('09118'))
+  assert.ok(!inv.discard.includes('09118'))
 })
 
 // ---------------------------------------------------------------------------
@@ -601,7 +622,9 @@ test('P6 09119 超自然发射器：已解锁形态可切换，轨道射击具�
   const gun = asset(state, '09119')
   const target = enemy(state, { fight: 1, health: 20, engagedSeat: 0 })
   state.chaosBag = ['0']
-  move(state, { action: 'ability', assetId: gun.id, abilityIndex: 1 })
+  const change = legalMoves(state, 0).find(command => command.assetId === gun.id && command.label.includes('改变形态'))
+  assert.ok(change, '形态切换是可用的免费能力')
+  move(state, change)
   resolveChoices(state, pickOption(/轨道射击/))
   assert.ok((state.effects || []).some(effect => effect.label === 'shotcaster:form:Railshooter'), '当前形态记为轨道射击')
   move(state, { action: 'ability', assetId: gun.id, abilityIndex: 0 })
@@ -627,11 +650,34 @@ test('P6 09119 超自然发射器：以太连接（勾选）入场时额外 +2 �
   assert.equal(registeredEntry('09119').customizationOptions.length, 7, '七个定制选项全部声明')
 })
 
+test('P6 09119 超自然发射器：物质操控成功后免费打出支援，不额外花费行动或资源', () => {
+  const state = fixture('01001')
+  state.campaign.tsk = { version: 1, customizations: { version: 1, bySeat: { 0: { '09119': [4, 4] } } } }
+  const gun = asset(state, '09119')
+  const inv = state.investigators[0]
+  inv.hand = ['01020']
+  const actions = inv.actionsLeft
+  const funds = inv.resources
+  state.chaosBag = ['+3']
+  const change = legalMoves(state, 0).find(command => command.assetId === gun.id && command.label.includes('改变形态'))
+  move(state, change)
+  resolveChoices(state, pickOption(/物质操控/))
+  const manifest = legalMoves(state, 0).find(command => command.assetId === gun.id && command.label.includes('具象'))
+  move(state, manifest)
+  resolveChoices(state, pickOption(/^意志$/))
+  const updated = state.investigators[0]
+  assert.equal(state.lastTestResult.difficulty, ALL_CARDS['01020'].cost)
+  assert.equal(updated.actionsLeft, actions - 1)
+  assert.equal(updated.resources, funds)
+  assert.ok(updated.assets.some(card => card.code === '01020'))
+  assert.equal(updated.assets.find(card => card.id === gun.id).uses, 3)
+})
+
 // ---------------------------------------------------------------------------
 // 09120 工具带
 // ---------------------------------------------------------------------------
 
-test('P6 09120 工具带：附属的[[工具]]支援不占用槽位', () => {
+test('P6 09120 工具带：附属工具的文本为空且不占槽，解附属后恢复', () => {
   const state = fixture('01001')
   state.investigators[0].assets = []
   const belt = asset(state, '09120')
@@ -642,6 +688,13 @@ test('P6 09120 工具带：附属的[[工具]]支援不占用槽位', () => {
   const inv = state.investigators[0]
   assert.equal(inv.assets.find(item => item.id === tool.id).attachedToAsset, belt.id, '工具附属到工具带')
   assert.equal(slotUsage(inv).hand || 0, 0, '附属的工具不占槽位')
+  assert.ok(!legalMoves(state, 0).some(command => command.assetId === tool.id))
+  inv.assets.find(item => item.id === belt.id).exhausted = false
+  move(state, { action: 'ability', assetId: belt.id, abilityIndex: 0 })
+  settle(state, choice => choice.options.find(option => option.id === 'detach')?.id)
+  const detached = state.investigators[0]
+  assert.equal(detached.assets.find(item => item.id === tool.id).attachedToAsset, undefined)
+  assert.equal(slotUsage(detached).hand, 1)
 })
 
 // ---------------------------------------------------------------------------
@@ -700,13 +753,22 @@ test('P6 09122 手电筒：非调查/躲避检定不提供反应', () => {
 test('P6 09123 灵魂封圣：检定期间花费 1 贡品，本次检定 +2 技能值', () => {
   const state = fixture('01001')
   state.investigators[0].assets = []
-  const relic = asset(state, '09123', { uses: 1, usesType: 'offerings' })
+  const relic = asset(state, '09123')
+  const currentUses = () => state.investigators[0].assets.find(item => item.id === relic.id).uses
+  state.investigators[0].damage = 1
+  state.investigators[0].horror = 1
+  runTest(state, draft => {
+    healDamageFrom(draft, draft.investigators[0], 2, [], { healerSeat: 0 })
+    healHorrorFrom(draft, draft.investigators[0], 3, [], { healerSeat: 0 })
+  })
+  assert.equal(state.investigators[0].damage, 0)
+  assert.equal(state.investigators[0].horror, 0)
+  assert.equal(currentUses(), 3, '伤害超量 1，恐惧超量 2')
   state.chaosBag = ['0']
   const base = getStat(state, state.investigators[0], 'willpower')
   runTest(state, draft => { performTest(draft, 0, 'willpower', 1) }, pickOption(/灵魂封圣/))
-  const inv = state.investigators[0]
-  assert.equal(state.lastTestResult?.value, base + 2, '本次检定 +2 技能值')
-  assert.equal(inv.assets.find(item => item.id === relic.id).uses, 0, '花费 1 贡品')
+  assert.equal(state.lastTestResult?.value, base + 4)
+  assert.equal(currentUses(), 1, '同一检定仅能花费两次')
 })
 
 // ---------------------------------------------------------------------------
@@ -771,40 +833,42 @@ test('P6 09125 量子悖论：弱点留在手中，回合结束时揭示并受�
   assert.equal(state.investigators[0].horror, 1, '回合结束受到 1 点恐惧')
 })
 
-test('P6 09125 量子悖论：手牌 ≥5 时可打出并额外弃 4 张', () => {
+test('P6 09125 量子悖论：额外弃掉 4 张其他手牌作为打出费用', () => {
   const state = fixture('01001')
-  state.investigators[0].assets = []
-  state.investigators[0].hand = ['01088', '01025', '01031', '01041']
-  state.investigators[0].resources = 3
-  const conditions = registeredEntry('09125').playCondition
-  state.investigators[0].hand = ['09125', '01088', '01025', '01031', '01041']
-  assert.equal(conditions.every(item => item.when({ state, inv: state.investigators[0] })), true, '手牌 5 张时可打出')
-  assert.equal(registeredEntry('09125').playableWeakness, true, '弱点可打出的唯一许可')
-  state.investigators[0].hand = ['01088', '01025', '01031', '01041']
-  playForced(state, '09125')
+  const command = { action: 'play', cardId: '09125' }
+  state.investigators[0].hand = ['09125', '01088', '01025', '01031']
+  assert.notEqual(validateMove(state, 0, command), null)
+  state.investigators[0].hand.push('01041')
+  move(state, command)
+  settle(state)
   const inv = state.investigators[0]
-  assert.equal(inv.hand.length, 0, '额外弃掉 4 张其它手牌')
-  assert.ok(inv.discard.includes('09125'), '量子悖论进入弃牌堆')
-  assert.equal(inv.discard.filter(code => code !== '09125').length, 4, '额外弃掉 4 张')
+  assert.deepEqual(inv.hand, [])
+  assert.deepEqual(inv.discard.slice().sort(), ['01025', '01031', '01041', '01088', '09125'].sort())
 })
 
 // ---------------------------------------------------------------------------
 // 09126 该付账了
 // ---------------------------------------------------------------------------
 
-test('P6 09126 该付账了：用额外行动把 10 费降到 0 后打出', () => {
-  const state = fixture('01001')
-  state.investigators[0].assets = []
-  state.investigators[0].hand = []
-  state.investigators[0].resources = 0
-  state.investigators[0].actionsLeft = 3
-  const modifier = registeredEntry('09126').playCostModifier({ state, inv: state.investigators[0], card: ALL_CARDS['09126'] })
-  assert.equal(modifier, -10, '2 个额外行动 = -10 费')
-  assert.equal(playCost(state, state.investigators[0], ALL_CARDS['09126']), 0, '实际费用为 0')
-  playForced(state, '09126')
-  const inv = state.investigators[0]
-  assert.equal(inv.actionsLeft, 0, '打出花 1 行动，另花 2 个额外行动')
-  assert.ok(inv.discard.includes('09126'), '该付账了被弃掉')
+test('P6 09126 该付账了：打出前可选择支付零个、一个或两个额外行动', () => {
+  for (const count of [0, 1, 2]) {
+    const state = fixture('01001')
+    state.investigators[0].hand = ['09126']
+    state.investigators[0].resources = 10
+    state.investigators[0].actionsLeft = 3
+    move(state, { action: 'play', cardId: '09126' })
+    let offered = false
+    settle(state, choice => {
+      if (choice.kind !== 'payment') return null
+      assert.deepEqual(choice.options.map(option => String(option.id)), ['0', '1', '2'])
+      offered = true
+      return String(count)
+    })
+    assert.ok(offered)
+    assert.equal(state.investigators[0].actionsLeft, 2 - count)
+    assert.equal(state.investigators[0].resources, 5 * count)
+    assert.ok(state.investigators[0].discard.includes('09126'))
+  }
 })
 
 test('P6 09126 该付账了：回合结束时若在手牌，揭示并受到 1 点伤害', () => {
@@ -834,10 +898,10 @@ test('P6 09127 恐怖异灵：弱点在本地点生成并交战，空法术槽�
   assert.equal(horror.location, 'a')
   assert.equal(horror.engagedSeat, 0, '与抽到它的调查员交战')
   assert.equal(horror.hunter, true, '猎手关键词')
-  state.skillTest = { seat: 0, skill: 'combat', difficulty: 2, stage: 'ST.1', committed: [], drawn: [],
-    actionKind: 'fight', target: { kind: 'enemy', id: horror.id } }
-  runTest(state, draft => { reactWindowProbe(draft, { when: 'testBegins', seat: 0, location: 'a' }) })
-  assert.equal(state.skillTest.extraChaosChoices, 1, '1 个空法术槽额外揭示 1 个标记')
+  state.chaosBag = ['0', '0', '0']
+  move(state, { action: 'fight', enemyId: horror.id })
+  settle(state)
+  assert.equal(state.lastTestResult.drawn.length, 3, '两个空法术槽分别追加一枚参加检定的标记')
 })
 
 test('P6 09127 恐怖异灵：没有空法术槽时不额外揭示', () => {
@@ -848,11 +912,12 @@ test('P6 09127 恐怖异灵：没有空法术槽时不额外揭示', () => {
   state.investigators[0].deck = ['09127']
   runTest(state, draft => { drawCards(draft, draft.investigators[0], 1, []) })
   const horror = state.enemies.find(item => item.code === '09127')
-  asset(state, '01061') // 探知术：占用法术槽
-  state.skillTest = { seat: 0, skill: 'combat', difficulty: 2, stage: 'ST.1', committed: [], drawn: [],
-    actionKind: 'fight', target: { kind: 'enemy', id: horror.id } }
-  runTest(state, draft => { reactWindowProbe(draft, { when: 'testBegins', seat: 0, location: 'a' }) })
-  assert.equal(state.skillTest.extraChaosChoices || 0, 0, '法术槽已占用，不额外揭示')
+  asset(state, '01061')
+  asset(state, '01060')
+  state.chaosBag = ['0', '0', '0']
+  move(state, { action: 'fight', enemyId: horror.id })
+  settle(state)
+  assert.equal(state.lastTestResult.drawn.length, 1, '两个法术槽都已占用，不额外揭示')
 })
 
 // ---------------------------------------------------------------------------

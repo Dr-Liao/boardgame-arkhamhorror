@@ -5,6 +5,7 @@ import puzzleBoxEntry from '../src/cards/encounter-entries/theCircleUndone/forTh
 // 幕/议程背面、机关盒 + 四把钥匙（scenarioKeys 近似）、混乱标记、敌人规则、
 // 诡计、结局记录与 campaignCard、存档往返（JSON.stringify + deepEqual）。
 import test from 'node:test'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import assert from 'node:assert/strict'
 import * as fgg from '../content/campaigns/theCircleUndone/scenarios/forTheGreaterGood/index.js'
 import {
@@ -101,6 +102,7 @@ function apiFor(state, overrides = {}) {
   const calls = []
   let counter = 0
   const api = {
+    takeEncounterCard: scenarioRuntime(state, []).takeEncounterCard,
     calls,
     info: text => calls.push(['info', text]),
     random: overrides.random || (() => 0.25),
@@ -807,6 +809,21 @@ test('诡计 05223 发号施令：从弃牌堆顶抽 2 张异教徒敌人到线�
   const spawned = state.enemies.filter(entry => ['05095', '05219', '05222'].includes(entry.code))
   assert.equal(spawned.length, 2)
   assert.ok(spawned.every(entry => entry.location === 'lounge'), '有敌人的图书馆不可选，改选休息室')
+})
+
+test('05223 发号施令：无空地点或生成失败时，按卡面获得一次涌动', () => {
+  for (const empty of [false, true]) {
+    const state = placedState(1, ['lodgeGatesMembers', 'lounge'])
+    state.investigators[0].location = 'lodgeGatesMembers'
+    if (!empty) enemy(state, '05090', 'lounge')
+    state.encounterDiscard = ['05095', '05219']
+    const attempts = []
+    const api = apiFor(state, { spawn: (code, location) => { attempts.push([code, location]); return null } })
+    const result = fgg.behavior.resolveEncounter(state, state.investigators[0], { code: '05223' }, api)
+    assert.deepEqual(result, { placed: false, gainSurge: true })
+    assert.deepEqual(attempts, empty ? [['05219', 'lounge'], ['05095', 'lounge']] : [])
+    if (!empty) assert.deepEqual(state.encounterDiscard, ['05095', '05219'])
+  }
 })
 
 test('诡计 05224 除籍：最近的异教徒敌人移动、交战、攻击并把钥匙放到它身上', () => {

@@ -109,9 +109,9 @@ export function dealingsChaosAfterTest(state, inv, result) {
 }
 
 /** 最近的[[异教徒]]敌人（按地点距离；无法计算时退回第一个在场的异教徒）。 */
-export function nearestCultist(state, fromLocationId) {
+export function nearestCultists(state, fromLocationId) {
   const candidates = cultistEnemies(state)
-  if (!candidates.length) return null
+  if (!candidates.length) return []
   const distance = (from, to) => {
     if (!from || !to) return Number.POSITIVE_INFINITY
     const queue = [[from, 0]]
@@ -128,14 +128,11 @@ export function nearestCultist(state, fromLocationId) {
     }
     return Number.POSITIVE_INFINITY
   }
-  let best = candidates[0]
-  let bestDistance = Number.POSITIVE_INFINITY
-  for (const enemy of candidates) {
-    const value = distance(fromLocationId, enemy.location)
-    if (value < bestDistance) {
-      best = enemy
-      bestDistance = value
-    }
-  }
-  return best
+  const distances = candidates.map(enemy => distance(fromLocationId, enemy.location))
+  const bestDistance = Math.min(...distances)
+  return candidates.filter((enemy, index) => distances[index] === bestDistance)
+}
+
+export function nearestCultist(state, fromLocationId) {
+  return nearestCultists(state, fromLocationId)[0] || null
 }

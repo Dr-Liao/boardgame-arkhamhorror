@@ -13,6 +13,7 @@ import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import { chapterStory } from '../../story-access.js'
 import { HEART_OF_MADNESS_TOKEN_MEANINGS } from './chaos.js'
+import { RINGS, SPOKES, scenario as partOne } from '../theHeartOfMadnessPart1/definition.js'
 
 const cardOf = code => {
   const card = ALL_CARDS[String(code)]
@@ -73,11 +74,13 @@ export const RAMP_CODES = Object.freeze(['08682', '08683', '08684', '08685'])
 
 const locations = {
   theGateOfYquaa: location('theGateOfYquaa', '08649', {
-    gate: true, transferred: true, connections: [],
+    gate: true, transferred: true, connections: [...partOne.locations.theGateOfYquaa.connections],
   }),
   ...Object.fromEntries(SLOT_CODES.map((code, index) => {
     const slot = `facility${index + 1}`
-    return [slot, location(slot, code, { slot: index + 1, mistPylon: PYLON_SLOT_CODES.includes(code) })]
+    return [slot, location(slot, code, {
+      slot: index + 1, mistPylon: PYLON_SLOT_CODES.includes(code), connections: [...partOne.locations[slot].connections],
+    })]
   })),
   titanicRamp1: location('titanicRamp1', '08682', { ramp: 1, setAside: true, connections: [] }),
   titanicRamp2: location('titanicRamp2', '08683', { ramp: 2, setAside: true, connections: [] }),
@@ -161,6 +164,8 @@ export const scenario = {
   facilitySlots: Object.freeze(Object.keys(locations).filter(id => /^facility\d+$/.test(id))),
   facilitySlotCodes: SLOT_CODES,
   pylonSlotCodes: PYLON_SLOT_CODES,
+  rings: RINGS,
+  spokes: SPOKES,
   innerRingSlots: INNER_RING_SLOTS,
   setAsideLocations: SET_ASIDE_LOCATIONS,
   setAsideAliases: SET_ASIDE_ALIASES,

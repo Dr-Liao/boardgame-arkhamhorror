@@ -3,7 +3,7 @@
 // 约定同 TDE/Part3 章节：behavior 只做章节分派与本章机制；逐卡规则在单卡条目里。
 // 本文件同时服务引擎 scenarioBehavior 分派与单测（测试直接调用这些函数）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, enemyScriptFor } from '../../../../../src/cards/card-rules.js'
 import { initializeTekeliDeck, tekeliShuffleIn } from '../../../../../src/engine/eote-tekeli.js'
 import {
   campLocationId, recordRevealedLocation, revealedLocations, setCampLocation,
@@ -16,6 +16,9 @@ import {
 import { part1ChaosFailureSpec, part1ChaosTokenValue, shelterValueOf } from './chaos.js'
 
 const codeOf = card => card?.originalCode || card?.code || card
+const readyEnemyBlocks = (state, locationId, restriction) => (state.enemies || []).some(enemy =>
+  enemy.location === locationId && !enemy.exhausted && !enemy.defeated
+  && enemyScriptFor(codeOf(enemy))?.whileReady?.[restriction] === true)
 const activeInvestigators = state => (state.investigators || []).filter(inv => !inv.defeated && !inv.resigned)
 const recordsOf = state => {
   state.campaign ||= {}
@@ -249,7 +252,7 @@ export function resolveIntoTheWhiteBack(state, api = {}) {
 export function resolveRunningOutOfTimeBack(state, api = {}) {
   // 「包括已退场的」：已经 defeated/resigned 的调查员也要洗入（牌库仍在）。
   for (const inv of state.investigators || []) {
-    try { tekeliShuffleIn(state, inv.seat, 1) } catch { /* 未初始化时忽略 */ }
+    api.mechanics?.tekeli?.shuffleIn(inv.seat, 1) ?? tekeliShuffleIn(state, inv.seat, 1)
   }
   const target = highestShelterLocation(state, location => (location.clues || 0) === 0)
     || locationOf(state, START_LOCATION)
@@ -296,10 +299,7 @@ export function actions(state, inv) {
   const here = locationOf(state, inv?.location)
   if (!here || active.length === 0) return []
   if (!active.every(other => other.location === here.id) || (here.clues || 0) > 0) return []
-  // 星之恐怖处于重整状态时不能在其地点撤退。
-  const blocked = (state.enemies || []).some(enemy => codeOf(enemy) === RAW.terrorOfTheStars
-    && !enemy.exhausted && enemy.location === here.id)
-  if (blocked) return []
+  if (readyEnemyBlocks(state, here.id, 'blocksResignAtLocation')) return []
   return [{
     action: 'scenarioAction', rule: 'campResign', actions: 1,
     label: '⛺ 寻找扎营点：所有调查员同处无线索地点，撤退',
@@ -314,9 +314,7 @@ export function performAction(state, inv, move, api = {}) {
     api.info?.('无法撤退：必须所有未被击败的调查员在同一地点，且该地点没有线索。')
     return false
   }
-  const blocked = (state.enemies || []).some(enemy => codeOf(enemy) === RAW.terrorOfTheStars
-    && !enemy.exhausted && enemy.location === here.id)
-  if (blocked) {
+  if (readyEnemyBlocks(state, here.id, 'blocksResignAtLocation')) {
     api.info?.('无法撤退：星之恐怖处于重整状态，封锁了此地的撤退。')
     return false
   }
@@ -331,9 +329,7 @@ export function performAction(state, inv, move, api = {}) {
 /** 星之恐怖处于重整状态时：不能发现其所在地点的线索。 */
 export function canDiscoverClues(state, inv, location) {
   const locationId = typeof location === 'string' ? location : location?.id
-  const terror = (state.enemies || []).find(enemy => codeOf(enemy) === RAW.terrorOfTheStars
-    && !enemy.exhausted && enemy.location === locationId)
-  return !terror
+  return !readyEnemyBlocks(state, locationId, 'blocksCluesAtLocation')
 }
 
 export function investigationError(state, inv, location) {
@@ -343,22 +339,8 @@ export function investigationError(state, inv, location) {
 
 /** 敌人数值修正：星之恐怖 +3 生命值/调查员（印刷 per_investigator）。 */
 export function enemyStatModifier(state, enemy, stat) {
-  const code = codeOf(enemy)
-  if (code === RAW.terrorOfTheStars && stat === 'health') return 3 * numInvestigators(state)
-  return 0
-}
-
-/** 敌人被击败：疾行谬物 → 把忒咳哩-哩牌库顶 1 张洗入击败者牌库（不能则它攻击你）。 */
-export function enemyDefeated(state, enemy, api = {}) {
-  if (codeOf(enemy) !== RAW.skitteringNonsense) return false
-  const seat = Number(enemy.defeatedBy ?? state.campaign?.leadSeat ?? 0)
-  const shuffled = tekeliShuffleIn(state, seat, 1)
-  if (!shuffled) {
-    const owner = state.investigators?.[seat]
-    if (owner) owner.horror = (owner.horror || 0) + 1
-    api.info?.('疾行谬物：忒咳哩-哩牌库已空，它攻击了你（1 点恐惧）。')
-  }
-  return true
+  if (stat !== 'health') return 0
+  return (enemyScriptFor(codeOf(enemy))?.healthPerInvestigator || 0) * numInvestigators(state)
 }
 
 /** 检定失败：执行 [cultist]/[tablet] 后果。 */
@@ -370,7 +352,7 @@ export function afterTest(state, inv, result, api = {}) {
   if (tokens.includes('cultist')) {
     const spec = part1ChaosFailureSpec(state, 'cultist', failedBy)
     if (spec) {
-      const shuffled = tekeliShuffleIn(state, inv.seat, spec.count)
+      const shuffled = api.mechanics?.tekeli?.shuffleIn(inv.seat, spec.count) ?? tekeliShuffleIn(state, inv.seat, spec.count)
       const missing = spec.count - (shuffled ? Number(shuffled.length ?? spec.count) : 0)
       if (missing > 0) inv.horror = (inv.horror || 0) + missing
       applied.push({ token: 'cultist', count: spec.count, shuffled })
@@ -500,7 +482,6 @@ export const behavior = {
   canDiscoverClues,
   investigationError,
   enemyStatModifier,
-  enemyDefeated,
   afterTest,
   resolveChaosToken,
 }

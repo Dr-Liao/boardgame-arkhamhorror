@@ -6,7 +6,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 
-import { takeFromSetAsideInEntry, spawnHarbingerAtDoomInEntry } from '../../../_shared.js'
+import { spawnHarbingerAtDoomInEntry } from '../../../_shared.js'
 
 export default {
   code: '04055', scope: 'agenda',
@@ -17,13 +17,13 @@ export default {
   agendaRuleByScenario: {
     turnBackTime: {
       onReveal(state, agenda, api) {
-        takeFromSetAsideInEntry(state, '04062')
+        api.takeFromSetAside('04062')
         const candidates = [...state.locations].sort((left, right) => (right.doom || 0) - (left.doom || 0))
         const target = candidates[0]?.id
         if (!target) return
         const enemy = api.spawn('04062', target)
         if (!enemy) return
-        enemy.damageTaken = Number(state.scenarioFlags?.harbingerDamage || 0)
+        api.setEnemyDamageTaken(enemy, state.scenarioFlags?.harbingerDamage)
         api.setEnemyResources?.(enemy, 0)
         api.info?.(`🐍 瓦卢西亚的预示者在「${enemy.location}」苏醒。`)
       },

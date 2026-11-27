@@ -23,6 +23,7 @@ import {
 } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
+import { campsiteDeck } from '../content/campaigns/theDrownedCity/scenarios/theApiary/campsite.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { assertScenarioManifest } from '../content/schema.js'
 import * as chapter from '../content/campaigns/theDrownedCity/scenarios/theApiary/index.js'
@@ -429,8 +430,10 @@ test('P7 theApiary 中央腔室：初始面朝酸性体腔，顺时针 → 攫�
 test('P7 theApiary 幕 1 背面·西向幕间：入口翻危险出口、异教徒叠到营地下、玛莉亚与穷途异魔入场', async () => {
   const { state, api } = await fresh(2, WEST)
   revealAll(state, api)
-  // 把 3 名朝圣者敌人放进遭遇牌库，模拟「搜索所有区域」。
-  state.encounterDeck = ['11723', '11723', '11724', '11739']
+  // 将两名原本放到一边的朝圣者移入遭遇牌库，验证跨区域收集。
+  state.scenarioZones.setAside.splice(state.scenarioZones.setAside.indexOf('11723'), 1)
+  state.scenarioZones.setAside.splice(state.scenarioZones.setAside.indexOf('11724'), 1)
+  state.encounterDeck = ['11723', '11724', '11739']
   state.investigators[0].location = 'lostCampsite'
   const beforeClues = locationOf(state, 'acidicCoelom').clues
   assert.equal(behavior.actReveal(state, state.acts[0], api), true)
@@ -438,7 +441,8 @@ test('P7 theApiary 幕 1 背面·西向幕间：入口翻危险出口、异教�
   const entrance = locationOf(state, START_LOCATION)
   assert.equal(entrance.code, '11559b', '养育场入口翻到危险出口面')
   assert.equal(entrance.face, 'dangerousExit')
-  assert.equal(cultistCardsUnderAct(state).length >= 3, true, '朝圣者敌人叠到迷失营地下')
+  assert.deepEqual([...campsiteDeck(state)].sort(), ['11723', '11723', '11723', '11724'], '朝圣者敌人叠到迷失营地下')
+  assert.deepEqual(cultistCardsUnderAct(state), [], '营地下方卡牌不计为幕下积分')
   assert.equal(state.encounterDeck.includes('11723'), false)
   assert.ok(controlledGrislyMask(state) === false)
   const maria = state.investigators.flatMap(inv => inv.assets || []).find(asset => asset.code === MARIA_RIVERA_CODE)
@@ -1351,7 +1355,7 @@ test('P7 theApiary 11559b 危险出口：[[偷渡者]]敌人生成到入口；[a
   entrance.originalCode = '11559b'
   // 偷渡者敌人落点改为入口；非偷渡者不改。
   assert.equal(behavior.spawnLocation(state, '11574', 'somewhere', 0, api), START_LOCATION)
-  assert.equal(behavior.spawnLocation(state, '11751', 'somewhere', 0, api), null)
+  assert.equal(behavior.spawnLocation(state, '11751', 'somewhere', 0, api), 'somewhere')
   // [action]：共同花费 2 线索，把入口的[[异教徒]]敌人放到场景下方。
   const inv = state.investigators[0]
   inv.location = START_LOCATION
@@ -1370,6 +1374,19 @@ test('P7 theApiary 11559b 危险出口：[[偷渡者]]敌人生成到入口；[a
   assert.equal(behavior.performAction(state, inv, move, api), true)
   assert.deepEqual(state.scenarioFlags.apiaryCultistsUnder, ['11723', MARIA_RIVERA_CODE])
   assert.equal(inv.assets.some(asset => asset.code === MARIA_RIVERA_CODE), false)
+})
+
+test('P7 theApiary 11567 读取旧存档时把营地牌和后来计分的卡分开', async () => {
+  const { state, api } = await fresh(2, WEST)
+  state.campaign.phase = 'scenario'
+  state.scenarioFlags.apiaryInterlude = 'lostPilgrims'
+  state.scenarioFlags.apiaryCultistsUnder = ['11723', '11724', '11723', MARIA_RIVERA_CODE]
+  state.log = ['幕间：失落的朝圣者（叠在迷失营地下的异教徒 2 张）。']
+  assert.equal(behavior.needsSaveRepair(state), true)
+  behavior.repairSavedState(state, api)
+  assert.deepEqual([...campsiteDeck(state)].sort(), ['11723', '11724'])
+  assert.deepEqual(cultistCardsUnderAct(state), ['11723', MARIA_RIVERA_CODE])
+  assert.equal(behavior.needsSaveRepair(state), false)
 })
 
 // ---------------------------------------------------------------------------

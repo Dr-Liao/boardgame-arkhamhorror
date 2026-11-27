@@ -7,6 +7,7 @@
 //   · 阴影/空洞统一走 P2 原语：`src/engine/tsk-concealed.js`、`tsk-hollow.js`；
 //     网格邻接走 `src/engine/grid-map.js`（placeGridLocation / connectGrid / gridPosition）；
 //     异界牌库走 `state.scenarioFlags.mechanics.scenarioDecks`（scenario-decks.js 的读点）。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
   assetRuleFor, encounterResolveFor, enemyRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor,
@@ -125,7 +126,7 @@ function hollowCardFromSeat(state, api, seat, code, source) {
     api.moveCard({ code, from: 'hand', to: 'setAside', ownerSeat: seat })
   } else {
     const index = (inv.hand || []).lastIndexOf(code)
-    if (index >= 0) inv.hand.splice(index, 1)
+    if (index >= 0) spliceHand(inv, index, 1)
     state.setAside ||= []
     state.setAside.push({ code, ownerSeat: seat })
   }
@@ -460,6 +461,7 @@ export function exposeMiniInShadows(state, inv, miniCardId, api, targetLocation 
   if (!canExpose(state, observer, card)) return null
   const spot = miniSpotOf(state, card) || cellOf(state, observer.location)
   const result = exposeMini(state, api, miniCardId, inv?.seat ?? null)
+  if (!result || result.cancelled) return null
   if (!result) return null
   const flags = flagsOf(state)
   delete flags.spots[miniCardId]
@@ -1151,50 +1153,26 @@ export const behavior = {
     return redGlovedManReaction(state, inv, enemy, api)
   },
 
-  // ---- 进入未揭示地点的额外费用（议程 1–3 正面）----
-  // 费用预检：本地调查员的线索合计必须够 1[每人]。
+  // 进入未揭示异世界地点前，从出发地点的调查员收取线索。
   moveError(state, inv, destination) {
-    if (!destination || destination.revealed !== false) return null
-    if (!isOtherworldLocationId(destination.id)) return null
+    if (!destination || destination.revealed !== false || !isOtherworldLocationId(destination.id)) return null
     const cost = investigatorCount(state)
-    const group = aliveInvestigators(state).filter(other => other.location === inv.location)
-    const available = group.reduce((sum, other) => sum + num(other.clues), 0)
+    const available = aliveInvestigators(state).filter(other => other.location === inv.location)
+      .reduce((sum, other) => sum + num(other.clues), 0)
     if (available < cost) return `进入未揭示的地点需要本地调查员共同花费 ${cost} 个线索（当前 ${available}）`
     return null
   },
 
-  // 引擎在 revealLocation 之后才调用 locationEntered：用 lastLocationRevealed 判定「本次进入才揭示」，
-  // 再把费用记成待付（真正扣款在 locationLeft 里，因为那里还能拿到出发地点）。
-  locationEntered(state, inv, location, api) {
-    if (!location || !isOtherworldLocationId(location.id)) return null
-    const last = state.lastLocationRevealed
-    if (!last || String(last.id) !== String(location.id) || last.round !== state.round) return null
+  beforeMove(state, inv, destination, api) {
+    if (!destination || destination.revealed !== false || !isOtherworldLocationId(destination.id)) return
+    const cost = investigatorCount(state)
+    const available = aliveInvestigators(state).filter(other => other.location === inv.location
+      && api.canSpendClues(other.seat)).reduce((sum, other) => sum + num(other.clues), 0)
+    if (available < cost) return false
+    const result = api.payGroupClues(cost, { atLocation: inv.location, recordContributions: true })
     const flags = flagsOf(state)
-    flags.pendingEntryCost = { locationId: location.id, cost: investigatorCount(state), round: state.round }
-    return flags.pendingEntryCost
-  },
-
-  locationLeft(state, inv, prevLocation, api) {
-    const flags = flagsOf(state)
-    const pending = flags.pendingEntryCost
-    if (!pending) return null
-    flags.pendingEntryCost = null
-    const group = [inv, ...aliveInvestigators(state).filter(other => other.location === prevLocation?.id && other.seat !== inv.seat)]
-    let left = pending.cost
-    const paid = []
-    for (const member of group) {
-      if (left <= 0) break
-      const pay = Math.min(left, num(member.clues))
-      if (pay <= 0) continue
-      if (typeof api?.spendClues === 'function') api.spendClues(member.seat, pay)
-      else member.clues = num(member.clues) - pay
-      left -= pay
-      paid.push({ seat: member.seat, clues: pay })
-    }
     flags.entryCharges = [...(flags.entryCharges || []).slice(-19),
-      { locationId: pending.locationId, paid, round: state.round }]
-    api?.info?.(`📜 进入未揭示地点的额外费用：本地调查员共同花费 ${pending.cost - left} 个线索。`)
-    return { paid, remaining: left }
+      { locationId: destination.id, paid: result?.contributions || [], round: state.round }]
   },
 
   // ---- 幕 ----
@@ -1442,7 +1420,7 @@ function applyAgendaBackOption(state, api, id, source) {
 }
 
 function agendaDrivenInsane(state, api) {
-  const resigned = (state.investigators || []).filter(inv => inv.resigned)
+  const resigned = (state.investigators || []).find(inv => inv.resigned)
   for (const inv of state.investigators || []) {
     if (inv.resigned || inv.defeated) continue
     if (typeof api?.driveInsane === 'function') api.driveInsane(inv.seat)
@@ -1452,11 +1430,17 @@ function agendaDrivenInsane(state, api) {
     }
     api?.info?.(`💀 ${inv.name} 发疯：所有关于其存在的记忆都从现实中被清除。`)
   }
-  if (resigned.length) {
-    const key = resolutionFromVictory(state)
-    api?.info?.(`🏳️ 有调查员已撤退：立即推进到幕 3 背面（${key}）。`)
-    if (typeof api?.finish === 'function') api.finish(key)
-    return key
+  if (resigned) {
+    const choice = api?.choice?.({
+      kind: 'story', source: RAW_CODES.agenda3, seat: resigned.seat,
+      prompt: '你已撤退，是否立即推进到幕 3 的背面？',
+      options: [{ id: 'advance', label: '推进到幕 3 背面' }, { id: 'skip', label: '不推进' }],
+    })
+    if (choice === 'advance') {
+      const actIndex = (state.acts || []).findIndex(act => codeOf(act) === RAW_CODES.act3)
+      if (api.setActIndex?.(actIndex) && typeof api.advanceAct === 'function') return api.advanceAct()
+      return ACT_BACK_HANDLERS[RAW_CODES.act3](state, api)
+    }
   }
   api?.finish?.('noResolution')
   return 'noResolution'

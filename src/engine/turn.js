@@ -1,9 +1,10 @@
+import { returnSharedPlayCards } from './shared-play.js'
 import { resetTskTurnTracking } from './tsk-investigator-support.js'
 import { hunterRouteCandidates } from './enemy-routes.js'
-import { enemyHasAttackKeyword, enemyIsImmobile, enemyKeywordOverride, recordEnemyPhaseAttack, resolvePatrol, trackEnemyPhaseAttacks } from './enemy-keyword-movement.js'
+import { enemyHasAttackKeyword, enemyIsImmobile, enemyIsMassive, enemyKeywordOverride, recordEnemyPhaseAttack, resolvePatrol, trackEnemyPhaseAttacks } from './enemy-keyword-movement.js'
 import { storyAssetEnemyGainsKeyword, storyAssetEnemyLosesKeyword } from './story-asset-rules.js'
 import { enemyIsPart } from './enemy-parts.js'
-import { enemyCanEnterLocation } from './enemy-entry.js'
+import { enemyCanEnterLocation, enemyOnlyPreyAllows } from './enemy-entry.js'
 import { mechanicState } from './mechanic-state.js'
 import { putInHand } from './hand-entry.js'
 // 批次 3（12052 / 60465）：轮末把装备返回手牌 / 洗回牌库时复用牌库区写入与洗牌原语。
@@ -52,7 +53,7 @@ export function redirectMythosEncounterDraw(state, context, seat, options = {}) 
 
 export function grantActionOnNextTurn(state, seat, amount = 1) {
   const inv = state.investigators[seat]
-  if (!inv || inv.defeated || inv.resigned || !Number.isSafeInteger(amount) || amount < 1) return false
+  if (!inv || inv.defeated || inv.resigned || !Number.isSafeInteger(amount) || amount === 0) return false
   inv.bonusActionsOnNextTurn = (inv.bonusActionsOnNextTurn || 0) + amount
   return true
 }
@@ -299,14 +300,23 @@ function clearExpiredTextBlanks(state) {
   sweep(state.storyAssets)
 }
 
+function currentAgendaRule(state) {
+  const agenda = state.agendas?.[state.agendaIndex]
+  return registeredEntry(agenda?.originalCode || agenda?.code)?.agendaRule
+}
+
 function enemyHasHunter(state, enemy) {
   const overridden = enemyKeywordOverride(state, enemy, 'hunter')
   if (overridden != null) return overridden
   // P7 TDC 11688 黏土恐怖：「每名[[星之眷族]]敌人……获得猎手」由受控剧情资产声明。
   if (storyAssetEnemyGainsKeyword(state, enemy, 'hunter')) return true
-  if (enemy?.hunter) return true
+  const enemyRule = registeredEntry(enemy?.originalCode || enemy?.code)?.enemyRule
+  if (enemyRule?.hunterWhenNoBeneath) return !(enemy.beneath || []).length
+  const conditional = enemyRule?.keywordWhile?.(state, enemy, 'hunter')
+  if ((conditional ?? enemy?.hunter) || currentAgendaRule(state)?.enemiesGainHunter === true) return true
   const act = state.acts?.[state.actIndex]
-  return registeredEntry(act?.originalCode || act?.code)?.actRule?.enemiesGainHunter === true
+  const rule = registeredEntry(act?.originalCode || act?.code)?.actRule
+  return rule?.enemiesGainHunter === true || rule?.enemiesGainHunterCodes?.includes(enemy.originalCode || enemy.code)
 }
 
 // 07338 潜水服：「你忽略当前密谋的强制能力」= 该调查员控制的资产声明 `assetRule.ignoreAgendaForced`。
@@ -316,14 +326,15 @@ function ignoresAgendaForced(state, inv) {
     registeredEntry(card.code)?.assetRule?.ignoreAgendaForced === true)
 }
 
-function resolveEnemyPhaseOf(state, enemy, events = []) {
+function resolveEnemyPhaseOf(state, enemy, events = [], { exhaust = true } = {}) {
   if (!enemy || !state.enemies.includes(enemy)) return { moved: false, attacked: false }
   const previous = enemy.location
   if (enemyHasHunter(state, enemy) && !enemy.exhausted && enemy.engagedSeat == null && !enemyIsImmobile(state, enemy)
     && !enemyTextBlanked(state, enemy)) {
     const overridden = scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))
     if (!overridden && !aliveInvestigators(state).some(inv => inv.location === enemy.location
-      && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat))) {
+      && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat)
+      && enemyOnlyPreyAllows(state, enemy, inv, enemyTextBlanked))) {
       const target = hunterStep(state, enemy)
       if (target && !dreamGateEntryError(null, state.locations.find(location => location.id === target))) relocateEnemy(state, enemy, target, events, {cause:'hunter',phaseInstance:state.phaseInstance,routeSelected:true})
     }
@@ -331,6 +342,7 @@ function resolveEnemyPhaseOf(state, enemy, events = []) {
   patrolMove(state, enemy, events)
   autoEngageAll(state, events)
   let attacked = false
+  let attackResolved = false
   for (const member of swarmGroup(state, enemy)) if (!member.exhausted && member.skipAttackRound !== state.round) {
     for (const inv of aliveInvestigators(state).filter(inv => enemiesEngagedWith(state, inv).includes(member)
       || enemyAttacksAsIfEngaged(state, member, inv))) {
@@ -338,12 +350,12 @@ function resolveEnemyPhaseOf(state, enemy, events = []) {
       if (inv.infighting?.round === state.round && inv.infighting.phase === 'enemy' && !member.elite) continue
       if (member.attackProtection?.[inv.seat] === state.round) continue
       attacked = true
-      enemyAttack(state, member, inv, events)
-      if (!member.massive) break
+      attackResolved = enemyAttack(state, member, inv, events) === true || attackResolved
+      if (!enemyIsMassive(state, member)) break
     }
   }
-  if (attacked) for (const member of swarmGroup(state, enemy)) member.exhausted = true
-  return { moved: previous !== enemy.location, attacked }
+  if (exhaust && attacked) for (const member of swarmGroup(state, enemy)) member.exhausted = true
+  return { moved: previous !== enemy.location, attacked, attackResolved }
 }
 
 function enemyPhase(state) {
@@ -363,11 +375,16 @@ function resolveEnemyPhase(state, attempted) {
   reactionWindow(state, 'enemyPhaseBegins', { when: 'enemyPhaseBegins', prompt: '敌人阶段开始' }, events)
 
   // 1) 猎手移动
-  if(state.scenario?.eventWindowInstances)resolveHunterMoves(state,events)
+  const extraHunterResolutions = currentAgendaRule(state)?.extraHunterResolutions ?? 0
+  if(state.scenario?.eventWindowInstances || extraHunterResolutions > 0) {
+    resolveHunterMoves(state, events, { extraHunterResolutions })
+  }
   else for (const enemy of state.enemies.slice()) {
     if (enemyIsPart(enemy) || enemy.hostId || !enemyHasHunter(state, enemy) || enemyTextBlanked(state, enemy) || enemy.engagedSeat != null || enemy.exhausted || enemyIsImmobile(state, enemy)) continue
     if (scenarioBehavior(state).hunterMove?.(state, enemy, scenarioRuntime(state, events))) continue
-    if (aliveInvestigators(state).some((inv) => inv.location === enemy.location && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat))) continue
+    if (aliveInvestigators(state).some(inv => inv.location === enemy.location
+      && (enemy.prey !== 'bearer' || inv.seat === enemy.bearerSeat)
+      && enemyOnlyPreyAllows(state, enemy, inv, enemyTextBlanked))) continue
     const target = hunterStep(state, enemy)
     if (target && dreamGateEntryError(null, state.locations.find(location => location.id === target))) continue
     if (target && target !== enemy.location) {
@@ -448,7 +465,7 @@ function resolveEnemyPhaseAttacks(state, events, repeat = null) {
       }
       enemyAttack(state, enemy, inv, events)
       attacked.add(enemy.id)
-      if (!enemy.massive && !enemy.hostId && !enemy.swarmCards?.length) enemy.exhausted = true
+      if (!enemyIsMassive(state, enemy) && !enemy.hostId && !enemy.swarmCards?.length) enemy.exhausted = true
       checkDefeated(state, inv.seat, events)
       if (state.status !== 'playing') return false
     }
@@ -461,7 +478,9 @@ function patrolMove(state, enemy, events) {
   if (enemyIsPart(enemy)) return false
   // P7 TDC 11688：「每名[[星之眷族]]敌人失去印刷的巡逻」。
   if (storyAssetEnemyLosesKeyword(state, enemy, 'patrol')) return false
-  const target = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.patrolTarget
+  const printedTarget = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.patrolTarget
+  const targetOverride = scenarioBehavior(state).patrolTarget?.(state, enemy, printedTarget)
+  const target = targetOverride === undefined ? printedTarget : targetOverride
   if (!target) return false
   const moved = resolvePatrol(state, enemy, target, { blanked: item => enemyTextBlanked(state, item),
     choice: spec => requestChoice(state, spec), move: (item, to, options) => relocateEnemy(state, item, to, events, options) })
@@ -493,7 +512,8 @@ function hunterRoute(state,enemy,targetIds,prompt) {
 
 function resolveHunterMove(state,enemy,events=[],options={}) {
   if(!enemy||!state.enemies.includes(enemy)||enemyIsPart(enemy)||enemy.hostId||!enemyHasHunter(state,enemy)||enemy.exhausted||enemy.engagedSeat!=null||enemyIsImmobile(state,enemy)||enemyTextBlanked(state,enemy))return {moved:false}
-  if(aliveInvestigators(state).some(inv=>inv.location===enemy.location&&(enemy.prey!=='bearer'||inv.seat===enemy.bearerSeat)&&!ruleIgnored(state,inv,'hunter')))return {moved:false}
+  if(aliveInvestigators(state).some(inv=>inv.location===enemy.location&&(enemy.prey!=='bearer'||inv.seat===enemy.bearerSeat)&&!ruleIgnored(state,inv,'hunter')
+    && enemyOnlyPreyAllows(state, enemy, inv, enemyTextBlanked)))return {moved:false}
   const target=hunterStep(state,enemy,{...options,barrierRouting:true})
   if(!target||dreamGateEntryError(null,state.locations.find(loc=>loc.id===target)))return {moved:false}
   return relocateEnemy(state,enemy,target,events,{cause:'hunter',phaseInstance:state.phaseInstance,routeSelected:true})||{moved:false}
@@ -507,7 +527,12 @@ function resolveHunterMoves(state,events=[],options={}) {
   if(!pending.includes(id))throw new Error('Invalid Hunter order')
   pending.splice(pending.indexOf(id),1)
   const enemy=state.enemies.find(e=>e.id===id)
-  if(enemy)results.push(resolveHunterMove(state,enemy,events,options))
+  if (enemy) {
+    const resolutions = 1 + (options.extraHunterResolutions ?? 0)
+    for (let step = 0; step < resolutions; step++) {
+      results.push(resolveHunterMove(state, enemy, events, options))
+    }
+  }
  }
  return {moved:results.some(r=>r.moved),results}
 }
@@ -557,7 +582,10 @@ function hunterStep(state, enemy, options = {}) {
   let targets = options.targets || aliveInvestigators(state).filter(i => enemy.prey !== 'bearer' || i.seat === enemy.bearerSeat)
   // 梦境之门（06015a/b）+ FAQ v2.1（2023-08）：「在梦境之门时，卢克·罗宾逊不能被选为
   // 敌人移动的目标」。猎手不把门里的人计入最近目标，敌人照常朝其余调查员移动。
-  targets = targets.filter(inv => !atDreamGate(state, inv))
+  targets = targets.filter(inv => !atDreamGate(state, inv) && enemyOnlyPreyAllows(state, enemy, inv, enemyTextBlanked))
+  const trait = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.preyOnlyAtLocationTrait
+  if (trait && !enemyTextBlanked(state, enemy)) targets = targets.filter(inv => state.locations
+    .find(location => location.id === inv.location)?.traits?.some(value => value.toLowerCase() === trait))
   // Phase 2（C1）：ignore:hunter —— 声明「敌人不把你当作猎手目标」的调查员不参与猎物计算。
   if (!options.targets) targets = targets.filter(i => !ruleIgnored(state, i, 'hunter'))
   if (!targets.length) return null
@@ -576,7 +604,7 @@ function hunterStep(state, enemy, options = {}) {
       if (preferred) targets = [preferred]
     }
   }
-  const rank = PREY_RANK[enemy.prey]
+  const rank = !enemyTextBlanked(state, enemy) && PREY_RANK[enemy.prey]
   if (rank && targets.length) {
     const best = Math.min(...targets.map(i => rank(state, i)))
     targets = targets.filter(i => rank(state, i) === best)
@@ -655,7 +683,7 @@ function runThreatEndTurn(state, inv, events, timing = 'turn') {
 
 function phaseBeginningWindow(state, events) {
   if(state.scenario?.eventWindowInstances) state.phaseInstance=(state.phaseInstance||0)+1
-  for (const enemy of state.enemies) if (enemy.massive && enemy.engagedSeat != null && !enemyTextBlanked(state, enemy)) disengageEnemy(state, enemy)
+  for (const enemy of state.enemies) if (enemyIsMassive(state, enemy) && enemy.engagedSeat != null) disengageEnemy(state, enemy)
   // 剧本可以在每个阶段开始时结算持续/强制效果（04256 的「调查阶段开始」等）。
   scenarioBehavior(state).phaseBegan?.(state, state.phase, scenarioRuntime(state, events))
   for (const inv of aliveInvestigators(state)) triggerReaction(state, inv.seat, 'phaseBegins', events, {})
@@ -670,8 +698,12 @@ function turnBeginningWindow(state, events) {
     clearRestrictedAction(inv, 'fight')
     inv.actionsTakenThisTurn = 0
     if (inv.bonusActionsOnNextTurn) {
-      inv.actionsLeft += inv.bonusActionsOnNextTurn
+      inv.actionsLeft = Math.max(0, inv.actionsLeft + inv.bonusActionsOnNextTurn)
       delete inv.bonusActionsOnNextTurn
+    }
+    if (inv.actionLossNextTurn) {
+      inv.actionsLeft = Math.max(0, inv.actionsLeft - inv.actionLossNextTurn)
+      delete inv.actionLossNextTurn
     }
     if (inv.bonusActionsThisRound) {
       if (inv.bonusActionsThisRound.round === state.round) inv.actionsLeft += inv.bonusActionsThisRound.amount
@@ -716,6 +748,7 @@ function turnBeginningWindow(state, events) {
 }
 
 function beginInvestigationPhase(state, events, repeated = false) {
+  returnSharedPlayCards(state)
   for (const effect of expireEffects(state, 'endOfPhase')) {
     if (effect.label) info(state, events, `⌛ 「${effect.label}」到期（阶段结束）。`)
   }
@@ -727,7 +760,7 @@ function beginInvestigationPhase(state, events, repeated = false) {
     inv.exploreOnlyActions = Math.max(0, exploreOnlyActionBonus(inv) - loss)
     // 第 5 步 P6：「下个回合期间可以额外行动一次」（序章故事调查员的旧印）。
     if (inv.extraActionNextTurn) {
-      inv.actionsLeft += 1
+      inv.actionsLeft += Number(inv.extraActionNextTurn) || 1
       delete inv.extraActionNextTurn
     }
     clearSpellCredit(inv)
@@ -750,7 +783,8 @@ function beginInvestigationPhase(state, events, repeated = false) {
     reactionWindow(state, 'investigationPhaseStarting', { when: 'investigationPhaseStarting', phase: 'investigation' }, events)
   }
   phaseBeginningWindow(state, events)
-  if (aliveInvestigators(state).some(inv => investigatorRule(inv.code)?.investigationStart)) {
+  if (hasWindowListener(state, 'investigationPhaseStarts')
+    || aliveInvestigators(state).some(inv => investigatorRule(inv.code)?.investigationStart)) {
     reactionWindow(state, 'investigationPhaseStarts', { when: 'investigationPhaseStarts', phase: 'investigation' }, events)
   }
   // 第 5 步 P6：「强制 - 在调查阶段开始时：揭示你直觉牌库顶 1 张卡牌」。

@@ -37,24 +37,12 @@ function shuffleWith(list, helper, state) {
   return copy
 }
 
-function shuffleDeck(state, api) {
-  const rng = typeof api?.random === 'function' ? api.random : () => 0
-  const copy = [...(state.explorationDeck || [])]
-  for (let index = copy.length - 1; index > 0; index--) {
-    const target = Math.floor(rng() * (index + 1))
-    ;[copy[index], copy[target]] = [copy[target], copy[index]]
-  }
-  state.explorationDeck = copy
-  return copy
-}
-
 // 第 115 轮：幕/密谋条目通过这个 hooks 对象调用本章实现，保证同一份「放在一边 / 进胜利区」逻辑。
 function chapterHooks(state, api) {
   return {
     removeSetAside: code => removeSetAside(state, code),
     removeSetAsideLocation: id => removeSetAsideLocation(state, id),
     addActToVictory: act => addActToVictory(state, act),
-    shuffleDeck: () => shuffleDeck(state, api),
   }
 }
 

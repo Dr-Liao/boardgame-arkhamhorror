@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { applyMove, createGameState, legalMoves, placeLocation, revealLocation, startScenario } from '../src/engine/engine.js'
+import { viewState } from '../src/integration/observation.js'
 
 const output = fileURLToPath(new URL('../../../artifacts/arkham-polish/', import.meta.url))
 
@@ -87,3 +89,65 @@ test('上限用掉的能力在卡面、动作面板与详情里都显示「已�
   await expect(locationDetail.locator('.ah-location-detail-actions .ah-action.is-used')).toHaveCount(1)
   expect(errors).toEqual([])
 })
+
+for (const [width, height] of [[1440, 950], [390, 844]]) {
+  test(`04070 河流峡谷用过后在 ${width}px 牌桌和地点详情显示已用`, async ({ page }, testInfo) => {
+    const state = createGameState({ campaignId: 'theForgottenAge', campaignHub: true, seed: 'canyon-usage' },
+      [{ seat: 0, role: 'human' }])
+    const settleChoices = () => {
+      for (let guard = 0; state.pendingChoice; guard++) {
+        expect(guard).toBeLessThan(300)
+        const pending = state.pendingChoice
+        const optionId = pending.options.find(option => ['done', 'skip'].includes(option.id))?.id ?? pending.options[0].id
+        applyMove(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId })
+      }
+    }
+    startScenario(state, 0, [])
+    settleChoices()
+    placeLocation(state, 'riverCanyon', [])
+    revealLocation(state, 'riverCanyon', [], 0)
+    const inv = state.investigators[0]
+    inv.location = 'riverCanyon'
+    inv.damage = 2
+    state.phase = 'investigation'
+    state.currentSeat = 0
+    inv.actionsLeft = 3
+    const move = legalMoves(state, 0).find(candidate => candidate.rule === 'healRiverCanyon')
+    expect(move).toBeTruthy()
+    applyMove(state, 0, move)
+    settleChoices()
+    expect(state.investigators[0].damage).toBe(1)
+    const view = viewState(state, 0, { includeStatic: true })
+    expect(view.usedActions).toEqual([expect.objectContaining({ label: expect.stringContaining('治愈河流峡谷') })])
+    view.revision = 1
+    view.uiState = 'inScenario'
+
+    await page.setViewportSize({ width, height })
+    let session
+    await page.route('**/api/start', async route => {
+      const response = await route.fetch({ postData: JSON.stringify({ modId: 'arkhamhorror', settings: {
+        legacyAutoStart: true, playerCount: 1, playerInvestigator: '01001', seed: 'canyon-usage',
+      } }) })
+      const payload = await response.json()
+      session = payload.session
+      session.state = view
+      await route.fulfill({ response, json: payload })
+    }, { times: 1 })
+    await page.route('**/api/session?*', route => route.fulfill({ json: { ok: true, session } }))
+
+    await page.goto('/index.html')
+    await page.locator('.bg-card').filter({ hasText: '诡镇奇谈' }).click()
+    await page.getByRole('button', { name: '开始新游戏' }).click()
+    await expect(page.locator('.ah-table')).toHaveAttribute('data-revision', '1')
+    await page.locator('.ah-loc[data-location-id="riverCanyon"]').first().click()
+    const usedAction = page.locator('.ah-actions [data-ability-used="true"]').filter({ hasText: '治愈河流峡谷' })
+    await expect(usedAction).toBeVisible()
+    await expect(usedAction).toBeDisabled()
+    await page.getByRole('button', { name: '查看地点详情' }).click()
+    const detailAction = page.getByRole('dialog', { name: '卡牌详情' })
+      .locator('.ah-location-detail-actions [data-ability-used="true"]').filter({ hasText: '治愈河流峡谷' })
+    await expect(detailAction).toBeVisible()
+    await expect(detailAction).toBeDisabled()
+    await page.screenshot({ path: testInfo.outputPath(`04070-used-${width}.png`), animations: 'disabled' })
+  })
+}

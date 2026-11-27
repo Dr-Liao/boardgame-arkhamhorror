@@ -15,7 +15,8 @@ export default {
     afterTest(state, location, inv, result, api) {
       if (!result?.success) return
       if (String(result.source?.label || '') !== '调查') return
-      if (Number(result.successBy) > 1) return
+      const margin = result.successBy ?? (result.value - result.difficulty)
+      if (!Number.isFinite(margin) || margin > 1) return
       api.horror?.(inv.seat, 1)
       api.info?.('🏛️ 萨尔纳斯：成功调查且至多超过难度 1 点，受到 1 点恐惧。')
     },

@@ -1,3 +1,5 @@
+import { ignoreLocationTrigger } from './location-effect-scope.js'
+import { cardEffectSource } from './effect-provenance.js'
 import { availableResources } from './resource-bank.js'
 import { locationActionResourceCost } from './location-action-cost.js'
 import { availablePlayResources } from './play-payment.js'
@@ -22,6 +24,8 @@ import { enumerateTargets } from './targets.js'
 
 export function createAbilityExecution(deps) {
   const {
+    abilityApi,
+    markLimitUsed,
     capabilityBlocked,
     abilityTargets,
     aliveInvestigators,
@@ -80,7 +84,18 @@ export function createAbilityExecution(deps) {
 
 // 第 2 步 P2.7：非玩家实体（地点 / 敌人 / 剧情资产）上的通用行动（谈判）。
 // 与玩家卡能力共用 executeDescriptor 的费用/上限/日志管线；能力由条目声明，引擎不认卡号。
-function doEntityAbility(state, seat, move, events) {
+function prepayEntityAbility(state, seat, move, events) {
+  const source = actionEntityById(state, move.entityId)
+  const descriptor = source && entityActionDescriptors(source)[move.abilityIndex]
+  if (!descriptor?.prepay) return undefined
+  const inv = state.investigators[seat]
+  const paid = descriptor.prepay({ state, inv, seat, source, descriptor, api: abilityApi(state, events) })
+  if (paid === false) return false
+  markLimitUsed(state, inv, descriptor, null, state.timingWindow, source)
+  return { value: paid }
+}
+
+function doEntityAbility(state, seat, move, events, prepaid) {
   const inv = state.investigators[seat]
   if (!inv) return false
   const entity = actionEntityById(state, move.entityId)
@@ -92,10 +107,11 @@ function doEntityAbility(state, seat, move, events) {
     info(state, events, `⛔ ${error}`)
     return false
   }
-  if (!descriptorUsable(state, inv, entity, descriptor, { windowId: state.timingWindow, mode: 'action' })) return false
+  if (prepaid === undefined && !descriptorUsable(state, inv, entity, descriptor, { windowId: state.timingWindow, mode: 'action' })) return false
   executeDescriptor(state, { inv, source: entity, descriptor,
-    context: { targetId: move.targetId, optionIndex: move.optionIndex },
-    events, windowId: state.timingWindow, legacyAbilityLog: true })
+    context: { targetId: move.targetId, optionIndex: move.optionIndex,
+      ...(prepaid === undefined ? {} : { prepaid: prepaid.value }) },
+    events, windowId: state.timingWindow, legacyAbilityLog: true, limitAlreadyMarked: prepaid !== undefined })
   return true
 }
 
@@ -153,17 +169,18 @@ function doAbility(state, seat, assetId, abilityIndex, targetId, optionIndex, ev
   }
   // 「一目十行」等：以个人线索作为能力费用。
   if (cost.clues) {
-    if ((inv.clues || 0) < cost.clues) return
-    inv.clues -= cost.clues
-    syncClues(state)
+    if ((inv.clues || 0) < cost.clues || !deps.canSpendClues(state, inv)) return
+    deps.spendClues(state, inv, cost.clues, events, cardEffectSource(state, asset, null, inv, { cardDef }))
   }
   if (cost.discardHand) {
     if (discardableHandCards(inv, cost.discardHandIcon, cost.discardHandType).length < cost.discardHand) return
     discardChosenCards(state, inv, cost.discardHand, events, asset.code, cost.discardHandIcon)
   }
   if (cost.horror) applyHorror(state, inv, cost.horror, events)
-  if (cost.damageSelf) applyDamage(state, inv, cost.damageSelf, events, true)
+  const harmPresentation = { code: asset.code, assetId: asset.id, sourceSeat: seat }
+  if (cost.damageSelf) applyDamage(state, inv, cost.damageSelf, events, true, harmPresentation)
   if (cost.assetDamage && asset) {
+    deps.presentCardDamage?.(state, inv, asset, cost.assetDamage, events, { ...harmPresentation, audio: 'cardDamage' })
     asset.damage = (asset.damage || 0) + cost.assetDamage
     const assetDef = cardDef(asset.code)
     if (assetDef?.health > 0 && asset.damage >= assetDef.health) {
@@ -251,6 +268,8 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
           if (!source && !descriptor.fromHand) continue
           if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
           if (descriptor.fromHand && fromHandIndex == null) continue
+          if (descriptor.fromHand && context.when === 'cardDrawn' && context.handIndex != null && context.cardCode === code
+            && (inv.seat !== context.seat || fromHandIndex !== context.handIndex)) continue
           executeDescriptor(state, { inv, source, descriptor, context, events, windowId, fromHandIndex, effect, silent: descriptor.silent === true })
           if (state.pendingChoice) return context
         }
@@ -290,6 +309,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
             const markKey = `entityWindow:${instanceKey}:${descriptor.id}:${source?.id ?? descriptor.code}`
             if (state.abilityLimits?.[markKey]) continue
             if (!descriptorUsable(state, inv, source, descriptor, { windowId, context })) continue
+            if (entry.scope === 'location' && ignoreLocationTrigger(state, source.id, requestChoice, descriptor.label)) continue
             state.abilityLimits ||= {}
             state.abilityLimits[markKey] = { used: 1, round: state.round, phase: state.phase, turn: state.turnSerial ?? 0 }
             executeDescriptor(state, { inv, source, descriptor, context, events, windowId, silent: descriptor.silent === true })
@@ -302,10 +322,18 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
     for (const inv of opts.privateSeat == null ? aliveInvestigators(state) : participants) {
       if (context?.cancelled) break
       const candidates = []
-      for (const { source, code, fromHandIndex, entry, effect, controlled, fromChannel } of descriptorSources(state, inv, { includeDiscard: opts.quickEventWindow === true })) {
+      const localSources = descriptorSources(state, inv, { includeDiscard: opts.quickEventWindow === true })
+      const teamSources = aliveInvestigators(state).filter(owner => owner !== inv && owner.location === inv.location)
+        .flatMap(owner => owner.assets.flatMap(source => {
+          const entry = registeredEntry(source.code)
+          return entry?.abilities.some(descriptor => descriptor.allowTeamActivation && descriptor.trigger.includes(windowId))
+            ? [{ source, code: source.code, entry, controlled: true, teamSource: true }] : []
+        }))
+      for (const { source, code, fromHandIndex, entry, effect, controlled, fromChannel, teamSource } of [...localSources, ...teamSources]) {
         // 非玩家实体的反应在下面的专用块里统一询问一次；受控剧情支援按玩家卡来源询问。
         if (NON_PLAYER_SCOPES.includes(entry.scope) && !controlled) continue
         for (const descriptor of descriptorsInEntry(entry, windowId, 'reaction')) {
+          if (teamSource && !descriptor.allowTeamActivation) continue
           // Phase 5（5b-6）：从旧式 reactions 搬来的反应由 triggerReaction 用旧式询问结算，
           // 这里跳过，避免同一张卡在两个提示里各出现一次。
           if (descriptor.legacyReaction) continue
@@ -366,7 +394,7 @@ function openAbilityWindow(state, windowId, context, events, opts = {}) {
       }
       // The discarded card has already left the hand, so the ordinary hand source
       // enumeration cannot offer its own "after you discard this card" reaction.
-      if (windowId === 'handCardDiscarded' && context?.cardCode && inv.seat === context.seat
+      if (['handCardDiscarded', 'deckCardDiscarded'].includes(windowId) && context?.cardCode && inv.seat === context.seat
         && inv.discard.includes(context.cardCode)) {
         const discardedEntry = registeredEntry(context.cardCode)
         const discardedSource = { code: context.cardCode, discardedCard: true }
@@ -589,7 +617,7 @@ function effectError(state, inv, effect, locationId = inv.location) {
 function doFreeDescriptor(state, seat, code, index, targetId, events, sourceId = null) {
   const inv = state.investigators[seat]
   if (!inv) return false
-  for (const row of descriptorSources(state, inv)) {
+  for (const row of descriptorSources(state, inv, { includeDiscard: state.timingWindow === 'test.beforeCommit' })) {
     if (row.code !== code) continue
     // 手牌行的 source 是 null。免费能力必须作用在场上的那张卡，不能借手里的同名卡结算。
     if (!row.source || sourceId != null && row.source.id !== sourceId) continue
@@ -649,6 +677,6 @@ function repeatAssetAbility(state, context, options, events) {
   }))
 }
 
-  return { doAbility, doEntityAbility, doFreeDescriptor, openAbilityWindow, effectError,
+  return { doAbility, doEntityAbility, prepayEntityAbility, doFreeDescriptor, openAbilityWindow, effectError,
     canRepeatAssetAbility, repeatAssetAbility }
 }

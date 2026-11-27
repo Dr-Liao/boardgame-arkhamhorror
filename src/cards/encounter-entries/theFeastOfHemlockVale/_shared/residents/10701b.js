@@ -49,7 +49,13 @@ export default {
   code: CODE,
   scope: 'enemy',
   implemented: true,
-  enemyRule: { patrolTarget: { kind: 'resident', assetCode: '10693' } },
+  enemyRule: {
+    patrolTarget: { kind: 'resident', assetCode: '10693' },
+    redirectDamageToSelf(_state, source, target) {
+      return source.id !== target.id && source.location === target.location
+        && !source.defeated && !source.exhausted && target.traits?.includes('Resident')
+    },
+  },
   flags: {
     resident: RESIDENT,
     assetCode: '10701',
@@ -66,7 +72,5 @@ export default {
     criteria: [({ context }) => String(context?.enemy?.originalCode || context?.enemy?.code || '') === CODE],
     resolve: ({ state, context, api }) => readCodex(state, context?.seat ?? state?.campaign?.leadSeat ?? 0, api),
   }],
-  note: '巡逻（蕾切尔嬷嬷的地点）走 enemyRule.patrolTarget{kind:"resident", assetCode:"10693"}（normalizePatrolTarget 的 '
-    + 'resident 类型，引擎真实读点）。未接线：「伤害改派给伯蒂」没有引擎的伤害改派原语，只以 flags.damageRedirectToSelf '
-    + '声明由章节在伤害分配前读，未做等价结算。',
+  note: '伯蒂巡逻到蕾切尔嬷嬷的地点。重整时替本地点其他居民敌人承受伤害。',
 }

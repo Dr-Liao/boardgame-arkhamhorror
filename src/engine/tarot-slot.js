@@ -12,6 +12,7 @@
 //
 // 「超槽」由引擎的 canEquip 统一判定（槽位容量 + slotBonus）；本文件不重复实现装备规则。
 
+import { spliceHand } from './hand-icons.js'
 import { slotBonus } from './modifiers.js'
 
 export const TAROT_SLOT = 'tarot'
@@ -57,7 +58,7 @@ export function enterOpeningHandCards(state, inv, { lookup, createAsset, info, e
   for (const code of codes) {
     const index = inv.hand.indexOf(code)
     if (index < 0) continue
-    inv.hand.splice(index, 1)
+    spliceHand(inv, index, 1)
     inv.assets ||= []
     inv.assets.push(createAsset(state, inv, code))
   }

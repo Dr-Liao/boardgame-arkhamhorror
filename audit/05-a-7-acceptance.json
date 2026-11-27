@@ -3,7 +3,7 @@
   "unit": "05-a-7",
   "profile": {
     "id": "tcu-clutches-of-chaos-2026-11",
-    "scope": "万象无终 05 段 In the Clutches of Chaos（icc，05273–05312）42 条目录记录。33 条通过五维验收；2 条 R1、7 条 [fast] 时机近似未披露暂不切换。",
+    "scope": "万象无终 05 段 In the Clutches of Chaos（icc，05273–05312）42 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,19 +17,19 @@
   },
   "summary": {
     "total": 42,
-    "verified": 33,
-    "unverified": 9,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 190
+    "testsPassed": 192
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
-      "sha256": "d358d831b14a8f3f7fa08992765e5fe307dc02159eb6bf5d18ed05d27b70fb1d"
+      "sha256": "23df14cf0f7fd964fa812db16fe42355b1b9b1f697d1f275d41da3a310273196"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
-      "sha256": "5654e200824a19d1c7efd67ba342b9acffa09e2c3875ff67718440ead9fa2d41"
+      "sha256": "b25f2ac7527fdf059d68a875f3c4db68783858e5f1153d6fab95ef902eb9c81c"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-p1-regressions.test.mjs",
@@ -41,7 +41,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-3.test.mjs",
-      "sha256": "96600f3e7e76725560f719638d8003ae11edea57a56ac0245cad3478c168b1f6"
+      "sha256": "85c6b1dc87868ef22313c167a02a4cd2ba50013809527855b7c089e23dd09ff5"
     },
     {
       "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
@@ -89,9 +89,25 @@
       "code": "05275",
       "name": "恐怖揭露",
       "type": "event",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态：played 结算里写 `state.investigators[inv.seat].defeatCause = 'card'`（src/cards/entries/05275.js:57）。这是引擎「保留预设 defeatCause」的内部字段，条目应通过 api 表达（如 lethalSelfDamage 的 cause 选项/专用 api），不应直写 inv 实例。审计工具漏检索引式写入（docs/campaign/theCircleUndone/full-scan.md:241 已记录该盲区），因此 `npm run audit:entries` 显示 TCU R1=0，但按 ACCEPTANCE-ORDER 维度 2 该卡不得 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05275 恐怖揭露 修复：把线索放到地点不改变地点 maxClues"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05275 恐怖揭露 发现 3 线索后自我击败并受 1 点精神创伤"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05275 恐怖揭露 可把线索交给另一位调查员"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05275 恐怖揭露 最后一名存活调查员：结算中断也不补肉体创伤，只结算 1 点精神创伤"
+        }
+      ]
     },
     {
       "code": "05276",
@@ -145,9 +161,29 @@
       "code": "05279",
       "name": "黛雅娜·艾丝帕伦斯",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "R1 直写运行时状态：free 能力 resolve 里写 `source.attachments ||= []`（src/cards/entries/05279.js:49），source 是场上支援实例；条目应只读状态、附着走 `api.moveCard({to:'attached'})`（后续 api 调用已做，该行是多余直写）。同样属审计工具漏检的 `source.*` 盲区（full-scan.md:241）。按维度 2 不得 verified。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05279 黛雅娜·艾丝帕伦斯 反应窗口从附属打出 05033（Spell 事件）并支付附加费、结算后仍附属"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05279 黛雅娜·艾丝帕伦斯 宿主已横置或没有秘密时打不出附属事件"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05279 黛雅娜·艾丝帕伦斯 把手牌中的法术事件附属到自身"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tcu-player-m2-4.test.mjs",
+          "test": "TCU 05279 黛雅娜·艾丝帕伦斯 附属事件可如同手牌打出（横置+1秘密，打出后仍附属）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/play-channels.test.mjs",
+          "test": "宿主附属（05279）里的快速事件（否决存在）进入快速事件候选，并支付宿主附加费"
+        }
+      ]
     },
     {
       "code": "05280",
@@ -285,9 +321,17 @@
       "code": "05286a",
       "name": "黑暗知识(版本一)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 印刷 `[fast]`（英文 text：\"[fast] Remove 3 breaches from this act…\"）的时序被近似为「0 行动的 scenarioAction」：`behavior.actions` 推入 `actions: 0` 的普通场景行动（content/…/inTheClutchesOfChaos/behavior.js:827-832），没有走引擎已登记的 `behavior.fastActions` [fast] 窗口读点（src/engine/encounter.js:680-682、gap-actions.js），因此不能在任意玩家窗口发动；章节 `migrationHistory` 未披露该近似。另 cards-data 中文 textZh 把本卡写作 `[free]`（与英文 `[fast]` 不一致，属翻译数据缺陷）。因为中文卡面写 [free]、英文写 [fast]，实现与哪一个口径等价无法单方定论，按规程记 pending（按未通过计），待主进程裁决口径后修复。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05286a 黑暗知识(一)：全队 3×人数线索必须立即花费推进；背面生成安妮特并把幕裂口带到下一幕"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05286b 安妮特·梅森：生成在绞刑者山丘、每线索生命-2；其地点放裂口后每位调查员受伤或恐惧"
+        }
+      ]
     },
     {
       "code": "05286b",
@@ -317,9 +361,17 @@
       "code": "05288a",
       "name": "黑暗知识(版本二)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 与 05286a 同文同数据：印刷 [fast] / 中文 textZh [free] 不一致，行为以 0 行动 scenarioAction 近似，未走 `behavior.fastActions` [fast] 窗口；口径待裁决。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05288a 黑暗知识(二)：全队线索目标与背面生成卡尔于银暮秘社终焉之地"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05288b 卡尔·桑福德：每线索生命-2；幕裂口被移除后把 1 个裂口放到其所在地点"
+        }
+      ]
     },
     {
       "code": "05288b",
@@ -397,17 +449,25 @@
       "code": "05294",
       "name": "南区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 地点条目以 `actions: 0, fast: true` 声明 [fast] 行动（src/cards/encounter-entries/theCircleUndone/inTheClutchesOfChaos/05294.js），但 locationRule.actions 产出的行动只进普通 scenarioAction 列表，`fast:true` 标志没有被引擎消费；引擎唯一 [fast] 窗口读点是 behavior.fastActions（encounter.js:680-682）。英文 text 为 [fast]，中文 textZh 为 [free]，口径不一致且迁移记录未披露——记 pending。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tcu-clutches-chaos.test.mjs",
+          "test": "05294 南区（弃牌版）：就地结算力量诡计的显现；无牌可弃时行动不可用"
+        }
+      ]
     },
     {
       "code": "05295",
       "name": "南区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 同 05294：英文 [fast] / 中文 [free] 不一致，地点 [fast] 行动只以 0 行动 scenarioAction 近似，未接 `behavior.fastActions` 窗口。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05295 南区（弃手牌版）：每弃 1 张手牌把 1 个裂口移到当前幕"
+        }
+      ]
     },
     {
       "code": "05296",
@@ -473,9 +533,13 @@
       "code": "05301",
       "name": "商人区",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 同 05294：`[fast] Spend 2 resources…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05301 商人区（付资源版）：支付 2 资源把 1 个裂口移到当前幕"
+        }
+      ]
     },
     {
       "code": "05302",
@@ -493,17 +557,25 @@
       "code": "05303",
       "name": "银暮秘社",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 同 05294：`[fast] Take 1 horror…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05303 银暮秘社（受诅咒的歌）：受到 1 点恐惧把 1 个裂口移到当前幕"
+        }
+      ]
     },
     {
       "code": "05304",
       "name": "绞刑者山丘",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[pending] 同 05294：`[fast] Take 1 damage…` 以 0 行动 scenarioAction 近似，中文 textZh 写作 [free]，未走 [fast] 窗口读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-05-a-shard7.test.mjs",
+          "test": "05304 绞刑者山丘（宇宙之秘）：受到 1 点伤害把 1 个裂口移到当前幕"
+        }
+      ]
     },
     {
       "code": "05305",

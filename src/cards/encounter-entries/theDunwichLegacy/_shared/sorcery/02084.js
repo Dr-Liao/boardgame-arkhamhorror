@@ -21,7 +21,7 @@ export default {
         api.damage(inv.seat, 10)
       }
     }
-    api.drawEncounter(inv.seat)
+    api.drawEncounter(inv.seat, { surgeDraw: true })
     return { placed: !exists, surgeHandled: true }
   },
 }

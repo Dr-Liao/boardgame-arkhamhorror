@@ -7,6 +7,7 @@
 //
 // 序章没有胜利：幕 1a 只统计「被消除者留在幕上的线索」；议程 1a 只在调查员被击败时结算 1b，
 // 写完命运记录后翻回 1a 且不移除毁灭；全员被击败/撤退 → 结局 noResolution（无经验）。
+import { replaceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
   actRuleFor, agendaRuleFor, encounterResolveFor, locationRuleFor,
@@ -212,7 +213,7 @@ function prepareStoryInvestigatorSetup(state, api) {
     // 卡背：游戏开始时获得 N 资源（而不是 5）。
     inv.resources = setup.resources
     // 无牌组：卡背固定起手牌直接放进手牌（引擎的 P2.6 原语会跳过抓牌/换牌）。
-    inv.hand = [...setup.startingHand]
+    replaceHand(inv, [...setup.startingHand])
     // 起始游戏区域的标记数覆盖（手枪 2 弹药 / 手电筒 2 补给）。
     for (const asset of inv.assets || []) {
       const use = STARTING_PLAY_AREA_USES[asset.code || asset.originalCode]

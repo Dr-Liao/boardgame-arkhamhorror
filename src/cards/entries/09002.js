@@ -3,7 +3,6 @@
 //
 // 读点：commit 描述子（投入检定后进入弃牌堆由引擎统一处理）；
 //   成功/失败结果窗口 skillTestSuccess / skillTestFail 携带 state.skillTest（含 committed 列表）。
-//   局限：引擎的 commit 数据体暂不表达能力限制「只能投入他人检定」，本条目以注释登记；
 //   行为由成功/失败窗口按 committed 卡号判定（见 tests/tsk-investigator-09001.test.mjs）。
 export default {
   code: '09002',
@@ -11,7 +10,7 @@ export default {
     {
       kind: 'commit',
       label: '《如你所愿》：只能投入到其他调查员执行的检定',
-      skill: {},
+      skill: { otherTestOnly: true },
     },
     {
       kind: 'forced',

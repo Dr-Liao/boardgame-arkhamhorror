@@ -10,6 +10,7 @@
 //   · 冒险参考卡资源记 scenarioFlags.referenceResources；界面地图用静态 layout 坐标。
 // 卡面规则写在各单卡条目的 actRule / agendaRule / locationRule.onEnter 数据里；
 // 本文件只读 actRuleFor / agendaRuleFor 与引擎直读的 locationRule 分派，不含按卡号的规则分支。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { actRuleFor, agendaRuleFor } from '../../../../../src/cards/card-rules.js'
@@ -599,7 +600,7 @@ function discardOneFromHand(state, inv, api, source) {
     index = Number(answer)
     if (!Number.isInteger(index) || index < 0 || index >= inv.hand.length) index = 0
   }
-  const [code] = inv.hand.splice(index, 1)
+  const [code] = spliceHand(inv, index, 1)
   ;(inv.discard ||= []).push(code)
   return code
 }

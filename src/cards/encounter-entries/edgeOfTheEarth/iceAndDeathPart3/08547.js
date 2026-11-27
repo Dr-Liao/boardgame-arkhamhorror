@@ -9,6 +9,6 @@ export default {
   code: '08547',
   scope: 'enemy',
   implemented: true,
-  enemyRule: { hunterWhenNoBeneath: true, removeBeneathOnDefeat: true },
+  enemyRule: { hunterWhenNoBeneath: true, removeBeneathOnDefeat: true, eidolonCampConnection: true },
   flags: { eidolon: true, elite: true, beneathHolder: true, seepingNightmare: true },
 }

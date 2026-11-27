@@ -1,5 +1,5 @@
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
-import { actRuleFor, agendaRuleFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
+import { actRuleFor, agendaRuleFor, enemyScriptFor, entryFlags, locationRuleFor } from '../../../../../src/cards/card-rules.js'
 import { encounterRules } from '../../encounter-rules.js'
 import { tfaChaosToken, tfaChaosAfterTest } from '../../tfa-chaos.js'
 import { syncSymbolConnections } from '../../card-data.js'
@@ -125,14 +125,6 @@ function poisonSetAsideCount(state) {
 }
 
 // 从「放在一边」拿一张中毒弱点放进威胁区域（Haskell：getSetAsidePoisoned）。
-function poisonFromSetAside(state, seat, api) {
-  const setAside = state.scenarioZones?.setAside
-  const index = (setAside || []).indexOf(POISONED_WEAKNESS)
-  if (index >= 0) setAside.splice(index, 1)
-  api.poison?.(seat)
-  return index >= 0
-}
-
 // 石柱标记：卡面要求「在昆扬之口上放置 1 资源，作为石柱标记」。
 // 引擎的地图徽章直接渲染 loc.resources，所以把标记放到地点卡上（玩家可见），
 // scenarioFlags.pillars 只作为目标进度 0..6 的镜像计数（P2：地点指示物）。
@@ -149,24 +141,7 @@ function placePillar(state, api) {
     serpent.exhausted = true
     serpent.preventReady = { from: state.round, rounds: 1 }
   }
-  // 蛇怪：强制 - 石柱标记被放置在昆扬之口后，将一张蛇怪洗入遭遇牌库（每轮最多一次）。
-  // 只有场上有蛇怪、且牌盒里还有副本（弃牌堆/放在一边）时才洗回，不会凭空多出第 3 张。
-  if (state.enemies.some(enemy => original(enemy) === BASILISK)
-    && state.scenarioFlags.basiliskRound !== state.round) {
-    const fromDiscard = (state.encounterDiscard || []).indexOf(BASILISK)
-    const fromSetAside = (state.scenarioZones?.setAside || []).indexOf(BASILISK)
-    const source = fromDiscard >= 0 ? state.encounterDiscard : fromSetAside >= 0 ? state.scenarioZones.setAside : null
-    const index = fromDiscard >= 0 ? fromDiscard : fromSetAside
-    if (source) {
-      state.scenarioFlags.basiliskRound = state.round
-      source.splice(index, 1)
-      state.encounterDeck.push(BASILISK)
-      state.encounterDeck = shuffleWith([...(state.encounterDeck || [])], () => api.random?.() ?? 0)
-      api.info?.('🐍 蛇怪：将一张蛇怪洗入遭遇牌库（每轮最多一次）。')
-    } else {
-      api.info?.('🐍 蛇怪：牌盒里没有可洗回的副本（两张都在场上或牌库里）。')
-    }
-  }
+  enemyScriptFor(BASILISK)?.onPillarPlaced?.(state, api)
   return total
 }
 
@@ -275,10 +250,6 @@ export const behavior = {
     if (typeof rule?.beforeExplore === 'function' && rule.beforeExplore(state, inv, api, location) === false) {
       return false
     }
-    // 引擎的 doExplore 在 beforeExplore 之后才从探索牌库抽卡；用这个标记让「落入陷阱」
-    // 知道自己是“从探索牌库抽出”的（此时不能选择洗回探索牌库）。
-    state.scenarioFlags ||= {}
-    state.scenarioFlags.exploreDrawPending = true
     return true
   },
 
@@ -294,7 +265,6 @@ export const behavior = {
     const api = context?.runtime
     const location = here(state, inv)
     const rule = locationRuleFor(original(location))
-    if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
     // 第 116 轮：04072 万蛇据点的中毒伤害在地点条目（探索成功也要结算）。
     rule?.afterExplore?.({ state, inv, api, context, location })
     if (context?.kind === 'location') {
@@ -373,56 +343,9 @@ export const behavior = {
   },
 
   // 本章专门的遭遇结算（先串联共享遭遇组规则）。
-  resolveEncounter(state, inv, t, api) {
+  resolveEncounter(state, inv, t, api, context) {
     const code = original(t)
-    // 第 117 轮：这三张卡的身份由条目标志声明（上下两章共用，本章文案/数值仍在本文件）。
     const flags = entryFlags(code) || {}
-    if (flags.pitfall) {
-      const fromExploration = Boolean(state.scenarioFlags?.exploreDrawPending)
-      if (state.scenarioFlags) delete state.scenarioFlags.exploreDrawPending
-      const pitfallTest = () => api.test(inv.seat, 'agility', 3, result => {
-        if (result.success) return
-        const failedBy = Math.max(0, 3 - (result.value ?? 0))
-        for (let index = 0; index < failedBy; index++) api.damage(inv.seat, 1)
-      })
-      if (fromExploration) {
-        api.info?.('落入陷阱从探索牌库抽出，必须检定敏捷(3)。')
-        pitfallTest()
-        return false
-      }
-      const answer = aiChoice(api, {
-        kind: 'harm', source: '04215', seat: inv.seat, peril: true,
-        prompt: '落入陷阱：检定敏捷(3)跳过裂隙，或把本卡洗入探索牌库。',
-        options: [
-          { id: 'test', label: '检定敏捷(3)：每失败 1 点受到 1 点伤害' },
-          { id: 'shuffle', label: '把落入陷阱洗入探索牌库' },
-        ],
-      })
-      if (answer === 'shuffle') {
-        state.explorationDeck ||= []
-        state.explorationDeck.push('04215')
-        state.explorationDeck = shuffleWith([...state.explorationDeck], () => api.random?.() ?? 0)
-        api.info?.('落入陷阱被洗回探索牌库。')
-        return { placed: true }
-      }
-      pitfallTest()
-      return false
-    }
-    if (flags.spores) {
-      const location = here(state, inv)
-      if (!location) {
-        api.horror(inv.seat, 1)
-        return false
-      }
-      location.attachments ||= []
-      const sporesHere = location.attachments.filter(item => original(item) === '04216').length
-      location.attachments.push({
-        id: `poisonous-spores:${state.round}:${location.id}:${sporesHere}`,
-        code: '04216', originalCode: '04216',
-      })
-      api.info?.(`有毒孢子附属到「${location.name}」；本轮结束时结算。`)
-      return true
-    }
     if (flags.ants) {
       api.test(inv.seat, 'agility', 4, result => {
         if (result.success) return
@@ -454,7 +377,7 @@ export const behavior = {
       })
       return false
     }
-    return encounterRules.resolveEncounter(state, inv, t, api)
+    return encounterRules.resolveEncounter(state, inv, t, api, context)
   },
 
   actions(state, inv) {
@@ -570,24 +493,6 @@ export const behavior = {
 
   roundEnded(state, api) {
     encounterRules.roundEnded?.(state, api)
-    // 有毒孢子：每张孢子各自结算一次（同一地点多张会各触发一遍），轮末弃掉。
-    for (const location of state.locations) {
-      const spores = (location.attachments || []).filter(item => original(item) === '04216')
-      if (!spores.length) continue
-      for (const spore of spores) {
-        for (const inv of active(state).filter(entry => entry.location === location.id)) {
-          if (isPoisoned(inv)) {
-            api.horror(inv.seat, 2)
-            continue
-          }
-          poisonFromSetAside(state, inv.seat, api)
-        }
-        const index = location.attachments.indexOf(spore)
-        if (index >= 0) location.attachments.splice(index, 1)
-        state.encounterDiscard.push('04216')
-      }
-      api.info?.(`有毒孢子：结算「${location.name}」上的 ${spores.length} 张孢子并弃掉。`)
-    }
   },
 
   turnEnded(state, inv, api) {

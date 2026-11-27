@@ -8,7 +8,7 @@
 //
 // 幕 04047「埃兹特里的女猎手」：按「线索」或「击败」推进第三幕。
 
-import { originalOf, addPermanentChaosTokens, mixIntoEntry } from '../../_shared.js'
+import { originalOf } from '../../_shared.js'
 
 export default {
   code: '04047', scope: 'act',
@@ -16,27 +16,19 @@ export default {
     onReveal(state, act, api) {
       const byClues = state.scenarioFlags.actTwoAdvancedWith !== 'defeat'
       const ichtaca = state.enemies.find(enemy => originalOf(enemy) === '04052')
-      const thirdAct = code => structuredClone(state.scenario.acts.find(card => originalOf(card) === code))
       if (byClues) {
-        if (ichtaca) {
-          const index = state.enemies.indexOf(ichtaca)
-          if (index >= 0) state.enemies.splice(index, 1)
-          state.victoryDisplay.push({ id: ichtaca.id, code: '04052', originalCode: '04052', victory: 1 })
-        }
-        state.campaign.records.ichtacaHasConfidenceInYou = true
-        state.campaign.records.theInvestigatorsHaveEarnedIchtacasTrust = true
-        addPermanentChaosTokens(state, 'cultist', 1)
-        state.scenarioFlags.ichtacaLeadsTheWay = true
-        state.acts = [state.acts[0], state.acts[1], thirdAct('04048')]
-        state.scenarioFlags.actThree = 'search'
+        if (ichtaca) api.addEnemyToVictory(ichtaca)
+        api.setCampaignRecord('ichtacaHasConfidenceInYou', true)
+        api.setCampaignRecord('theInvestigatorsHaveEarnedIchtacasTrust', true)
+        api.changeChaosBag('cultist', 1, { permanent: true })
+        api.setScenarioFlag('ichtacaLeadsTheWay')
+        api.setActDeckCards(2, ['04048'], { silent: true })
+        api.setScenarioFlag('actThree', 'search')
       } else {
-        if (ichtaca) {
-          const index = state.enemies.indexOf(ichtaca)
-          if (index >= 0) state.enemies.splice(index, 1)
-        }
-        state.campaign.records.theInvestigatorsFoughtWithIchtaca = true
-        state.campaign.records.ichtacaIsWaryOfTheInvestigators = true
-        addPermanentChaosTokens(state, 'tablet', 1)
+        if (ichtaca) api.removeEnemyFromGame(ichtaca)
+        api.setCampaignRecord('theInvestigatorsFoughtWithIchtaca', true)
+        api.setCampaignRecord('ichtacaIsWaryOfTheInvestigators', true)
+        api.changeChaosBag('tablet', 1, { permanent: true })
         const volunteers = state.investigators.filter(inv => !inv.defeated && !inv.resigned)
         const target = volunteers.length === 1 ? volunteers[0] : api.choose({
           kind: 'investigator', source: '04047', seat: state.campaign.leadSeat,
@@ -44,29 +36,30 @@ export default {
           options: volunteers.map(inv => ({ id: String(inv.seat), label: inv.name })),
         })
         const seat = Number(target)
-        const owner = state.investigators[Number.isInteger(seat) ? seat : volunteers[0].seat]
-        if (owner) api.giveAsset(owner.seat, '04051')
-        state.acts = [state.acts[0], state.acts[1], thirdAct('04049')]
-        state.scenarioFlags.actThree = 'guarded'
+        const owner = volunteers.find(inv => inv === target || inv.seat === seat)
+        if (owner) {
+          api.takeFromSetAside('04051')
+          api.giveAsset(owner.seat, '04051')
+        }
+        api.setActDeckCards(2, ['04049'], { silent: true })
+        api.setScenarioFlag('actThree', 'guarded')
       }
       // 第三幕要把还没入场的遗迹地点放回探索牌库（场景定义里的 setAsideLocations 就是这三处遗迹）。
-      for (const id of state.scenario.setAsideLocations || []) {
-        if (state.locations.some(location => location.id === id)) continue
-        state.explorationDeck.push(id)
-      }
-      state.explorationDeck = mixIntoEntry(state, api, state.explorationDeck)
+      const ruins = (state.scenario.setAsideLocations || []).filter(id => !state.locations.some(location => location.id === id))
+      for (const id of ruins) api.takeFromSetAside(state.scenario.locations[id].originalCode)
+      api.addToExplorationDeck(ruins)
     },
     objectiveCheck(state, act, api) {
       const ichtaca = state.enemies.find(enemy => originalOf(enemy) === '04052')
       if (!ichtaca) {
         if (state.scenarioFlags?.ichtacaSpawned) {
-          state.scenarioFlags.actTwoAdvancedWith = 'defeat'
+          api.setScenarioFlag('actTwoAdvancedWith', 'defeat')
           api.advanceAct()
         }
         return
       }
       if ((ichtaca.clues || 0) >= state.numInvestigators) {
-        state.scenarioFlags.actTwoAdvancedWith = 'clues'
+        api.setScenarioFlag('actTwoAdvancedWith', 'clues')
         api.advanceAct()
       }
     },

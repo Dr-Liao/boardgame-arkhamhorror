@@ -355,6 +355,13 @@ api.commitCards(inv.seat, ['01025'])    // 强制投入（不询问）
 
 一次性的持续效果可以绑定到来源实例，触发时用 `api.consumeEffect(id)` 移除该效果。未触发的效果由统一到期点清理。
 
+`api.addCommittedExtraIcons(icon, { commitment })` 指向检定中的单个物理投入实例，`api.returnCommitmentOnFailure(commitment)`
+把该实例的失败去向登记为手牌，由检定统一收尾。玩家卡的显式 `actionKind` 或 `countsAs` 决定行动种类，借机攻击豁免仍由费用与行动规则处理。
+
+`api.exileDepartingAsset(seat, asset)` 供离场钩子登记放逐，实例状态、移出游戏区与战役放逐同步更新。
+`api.defeatWithMentalTrauma(seat, amount)` 在剧本结算前记下卡牌导致的击败和指定精神创伤。
+`doomPlaced` 窗口在卡牌目标上提供 `scenarioCard`，供只响应遭遇与剧本卡的能力使用。
+
 混乱标记揭示支持批次取消和场外揭示，取消或忽略窗口同时保留执行者与标记所属座位。效果来源调用 `api.triggerChaosRevealEffect` 时可响应 `chaosRevealEffectWouldResolve`。提前揭示仅调整检定流程的揭示时机，仍由原检定结算标记、技能和结果。
 
 `failedTestMargin` 在失败确定后调整差值，独立于检定值与成败判定。依赖失败差值的效果使用结果的 `failedBy`。来源支援资助的重购在报价及购买记录中写入实际减免，按上一场冒险的放逐数量和每个来源的使用次数核算。
@@ -414,7 +421,7 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 | `asset.attachments` | 05279 黛雅娜·艾丝帕伦斯（`playAttachedEvents`）、05230 | 扫 | 同上 | 同上 |
 | `inv.beneath` | 05004 黛安娜、03003 赛菲娜、03012 画中世界、05013 银暮匕首（`beneathPlayAsIfInHand`） | 只给本人 | 本人 `beneath: string[]`，全桌 `beneathCount: number` | 牌桌「下方」行 + 调查员详情「下方卡牌」+ 银暮匕首弹出「从底下打出」 |
 | `inv.hunchDeck` / `inv.hunchRevealed` | 05002 乔·戴蒙德（`investigator.hunchDeck`，规则在 `hunch-deck.js`） | 牌库只给本人；已揭示那张给全桌 | `view.hunch[] = { seat, deck, revealed }`（顺序不外泄） | 牌桌「直觉 N」行 + 揭示那张的「从直觉牌库打出」 |
-| `state.agendaAside` | 04094 一片漆黑、07095/07107/07185、09735/09740、06194/06233 等「放在密谋牌库旁」 | 扫 | `view.agendaAside[]`（公开实例，含卡号/实例 id） | 剧本书下沿的「密谋牌库旁」卡堆 + 公开区域弹窗（`renderCardZoneModal` 的 `agendaAside` 区域）+ 详情 |
+| `state.agendaAside` | 04094 一片漆黑、04299 瓦卢西亚之子、07095/07107/07185、09735/09740、06194/06233 等「放在密谋牌库旁」 | 扫 | `view.agendaAside[]`（公开实例，含卡号/实例 id） | 剧本书下沿的「密谋牌库旁」卡堆 + 公开区域弹窗（`renderCardZoneModal` 的 `agendaAside` 区域）+ 详情 |
 | `inv.discard` / `inv.threat` | `playableFromDiscard`（临时武器/温蒂的护身符）、`playableFromThreat`（05010 悬案） | 公开 | 弃牌堆/威胁区本来就公开 | 弃牌堆入口 / 威胁区小卡 |
 
 其余相关位置：`state.locations[].attachments`、`state.enemies[].attachments`、
@@ -433,11 +440,14 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 - **发现线索上限**：条目声明 `treacheryRule.clueDiscoveryLimit: N`（印刷「每位调查员每轮从单个地点
   最多发现 N 个线索」），引擎 `locations.js` 的 `canDiscoverClueAt` / `discoverClueAt` 共用一份
   `state.scenarioFlags.clueDiscoveryClaims` 记账（键 = 卡号:轮:座位:地点；同一卡号多张副本不叠加）。
-- **旧存档**：2026-11 之前 04094 只写 `scenarioFlags.deepDark` 计数、场上没有实体卡；战役内容层的
-  `needsSaveRepair` / `repairSavedState` 在读档时按计数补出真实旁置实例并清掉旧键。
+- **旧存档**：04094 曾用 `scenarioFlags.deepDark` 计数，04299 曾把卡号存入 `scenarioZones.childrenOfValusia`。
+  战役内容层的 `needsSaveRepair` / `repairSavedState` 在读档时补出真实旁置实例，再清理旧字段。
 - **前端**：卡面定义随 `view.cards` 下发（`observation.js` 把 `state.agendaAside` 的卡号并入
   `visibleCodes`），牌桌挂「密谋牌库旁」卡堆并打开公开区域弹窗；演出快照
   （`presentation-state.js` 的 `FIELDS`）同样带 `agendaAside`，否则演出期间这张卡会消失一瞬。
+
+失落时代的有毒孢子声明 `treacheryScript.onAttachedLocationRoundEnd`。战役共享轮末钩子逐个地点附属分派。
+条目用 `api.attachToLocation` 入场，用 `api.detachEncounterAttachment` 统一摘除并弃置。
 
 食梦者的共用读点：`playableOnlyFromDiscard` 阻止手牌出牌候选与校验，`returnToHandAfterPlay`
 决定事件结算后的去向；`connectsAttachedLocations` 让同卡号地点附件为调查员提供双向连接，
@@ -555,6 +565,16 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 原语登记：直觉牌库在 `tools/tcu-primitive-spec.mjs` 的 `hunchDeck`（checks 覆盖 channel 读点）；
 其余通道是引擎级通用基础设施，登记在本节。`docs/tcu-primitives.md` §3.1 与
 `docs/tcu-investigators.md` §3.1 同步描述。
+
+面朝下放在支援下方的牌（如 07267）保留在引擎的 `capturedCards`。牌桌、卡牌详情和演出快照只使用 `capturedCardCount`，客户端投影不带卡号和原持有人，嵌入卡面也不因这一区域单独加载。
+
+### 7.1.1 探索牌库与剧情卡转移
+
+探索牌库末尾为牌库顶。`api.takeExplorationTop(n)` 取出顶端的牌，返回的顺序与原数组一致。`api.takeExplorationCard(code)` 按卡号或地点 ID 取出一张。`api.addToExplorationDeck(codes, { top: true })` 保留顺序放到顶端，`{ bottom: true }` 放到底端，省略选项则洗入。
+
+`api.moveRelicOfAges({ location, enemyId })` 记录附属敌人及所在地点。`api.addStoryToVictory(code, { sourceId, vengeance })` 按实体标识记录胜利区的牌，卡背与目录正面的复仇值不同时可传入卡背数值。`api.changeChaosBag(token, amount, { permanent: true })` 同时更新本场和战役混乱袋。
+
+`api.moveCard({ code, from: 'discard', to: 'deckTop', ownerSeat })` 取出指定副本，随后可用 `api.shuffleDeck(seat)` 洗牌并处理牌库区域替换。`api.discardEntireHand(seat)` 支付整手弃置费用，有不能离开手牌的卡时整笔费用失败。团队次数沿用 `teamOnceUsed` 和 `teamOnce` 的存档键，地点反应只在玩家选择发动后登记。
 
 ### 7.2 地点特性与「特性连接」原语
 
@@ -674,6 +694,20 @@ state.history = { round: [...], phase: [...], turn: [...] }      // C6：本回�
 `assetRule.playCostUses: { cardType, trait?, scope }` 允许支援上的 `uses` 按 1 比 1 支付符合条件的卡牌打出费用。`cardType` 为 `asset` 或 `event`，`scope` 为 `self` 或 `location`。打出候选、校验和结算都读取 `src/engine/play-payment.js`；最终费用确定后，由每张支援的控制者选择贡献数量，剩余部分照常支付。只有费用可付清时才实际扣除标记，耗尽时走 `onUsesEmptied`。例如 `08072` 用秘密为同地点调查员打出的 `Item` 支援付费。
 
 `api.progressWeakness(seat, {code, nextCode, recordKey, counterKey, addedKey})` 将个人剧情记录、当前牌库底与战役牌组升级一起持久保存。条目 `transferOnControllerDefeat` 在控制者被击败时转交同一支援实例；能力 `noOpportunityAttackFrom` 仅豁免列出的敌人。
+
+## 食梦者补完原语
+
+- 隐私牌可用 `hiddenRule.parity` 限制打出、触发或投入。判定读卡牌的印刷费用、图标总数或英文标题词数。`hiddenRule.discard.even` 使用同一口径生成支付候选。
+- `threatAction.discardAfterTest` 在检定成功和失败时都弃掉威胁区的本次行动来源。
+- 剧本发起检定可用 `recomputeDifficulty` 在投入结束后重算难度。敌人条目的 `enemyRule.extraEvadeChaosTokens` 在本次躲避检定首次揭示时增加混乱标记。
+- `api.discardHandCardsAsCost` 按手牌索引验证整笔费用，再一并取出并派发弃牌窗口。`api.transferAssetControl` 移交同一个支援实例并保留其标记。`api.healAsset` 使用通用伤害与恐惧治愈入口。
+- 由剧本给予的支援可在入场时设置 `removeFromGameOnLeave`，供通用离场结算读取。幕的 `objective.allInvestigatorsAtLocation` 要求每位在场调查员抵达支付地点。
+
+## 印斯茅斯暗潮补完原语
+
+- `actRule.optionalObjective: true` 将函数目标接到零行动费用的 `advanceAct`。系统在合法动作和执行校验时复算目标，满足条件后可继续行动或点选推进。
+- `assetHarmPlaced` 带最初接受分配的座位与本次增量。需要重新分配时沿用该座位的合法目标和原伤害性质，已发生的受伤窗口不再发起。
+- 具名使用标记的标签同时覆盖 `usesType` 主标记与 `useTokens` 多类型标记。此处使用牌桌中英文词典。
 
 ## P7 章节接口（开发中）
 

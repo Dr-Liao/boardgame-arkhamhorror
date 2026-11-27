@@ -30,12 +30,13 @@ import {
 import { contentRegistry, registerContentBundle } from '../content/registered.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import {
-  advanceAct, advanceAgenda, applyMove, decisionSeat, legalMoves, registerCampaignScenarios,
-  scenarioRuntime, startScenario, validateMove,
+  advanceAct, advanceAgenda, applyMove, decisionSeat, drawEncounter, enemyAttack, legalMoves, playCost, registerCampaignScenarios,
+  runBetweenInvestigationPhases, scenarioRuntime, startScenario, validateMove,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { addCardCounter, cardCounterOf } from '../src/engine/card-counters.js'
-import { fixture } from './core-fixture.mjs'
+import { addCardCounter } from '../src/engine/card-counters.js'
+import { ALL_CARDS } from '../src/cards/cards-data.js'
+import { asset, enemy, fixture, move, settle } from './core-fixture.mjs'
 import { CHAOS_BAGS } from '../content/campaigns/theScarletKeys/shared.js'
 import { recordSchema as TSK_RECORD_SCHEMA } from '../content/campaigns/theScarletKeys/records.js'
 import enemyEntry from '../src/cards/encounter-entries/theScarletKeys/riddlesAndRain/09518.js'
@@ -315,8 +316,10 @@ test('09510 伦敦雨街：隐藏值 + 当前幕编号；缺线索时强制补 1
   assert.equal(rbh.locationShroudModifier(state, rLoc(state, START_LOCATION)), 3, '+幕编号（第 3 幕）')
   rLoc(state, START_LOCATION).clues = 0
   const added = rbh.refillRainyLondonStreets(state, api)
-  assert.equal(added, 0, '当前实现按卡号 09510 查地点，而地点实例 id 是 rainyLondonStreets → 强制补线索永不触发（缺口见报告）')
-  assert.equal(rLoc(state, START_LOCATION).clues, 0, '线索未被补充（缺陷复现）')
+  assert.equal(added, 2, '最后一个线索移除后，为两位调查员补足线索')
+  assert.equal(rLoc(state, START_LOCATION).clues, 2)
+  rLoc(state, START_LOCATION).clues = 1
+  assert.equal(rbh.refillRainyLondonStreets(state, api), 0, '仍有线索时不会补充')
   const actions = rbh.actions(state, state.investigators[0])
   assert.ok(actions.some(move => move.rule === 'riddlesResign'), '伦敦雨街撤退行动已接线')
 })
@@ -413,7 +416,7 @@ test('09517 塔楼牢房：检定中花费 1 线索 +2 技能值；非牢房的�
   assert.ok(Array.isArray(rbh.fastActions(state, inv, 'investigation')))
 })
 
-test('09518 戴红手套的男子：隐匿 1/调查员、反击、幕 4 谈判资源（bounty 计数器）', () => {
+test('09518 戴红手套的男子：隐匿 1/调查员、反击、幕 4 谈判成功放置资源', () => {
   assert.equal(registeredEntry('09518').enemyScript.concealed.perInvestigator, 1)
   const state = openRiddles({ seats: 2 })
   const api = scenarioRuntime(state, [])
@@ -425,9 +428,17 @@ test('09518 戴红手套的男子：隐匿 1/调查员、反击、幕 4 谈判�
   assert.equal(exposed.spawned.retaliate, true)
   assert.equal(exposed.spawned.elite, true)
   assert.equal(exposed.spawned.health, 2 * state.numInvestigators)
-  addCardCounter(exposed.spawned, 'bounty', 1)
-  assert.equal(cardCounterOf(exposed.spawned, 'bounty'), 1)
-  assert.equal(rbh.parleyResources(exposed.spawned), 1)
+  const enemyId = exposed.spawned.id
+  state.actIndex = 3
+  state.investigators[0].location = exposed.spawned.location
+  const parley = () => rLegal(state).find(move => move.action === 'entityAbility' && move.entityId === enemyId)
+  state.chaosBag = ['autofail']
+  rPlay(state, parley())
+  assert.equal(rbh.parleyResources(state.enemies.find(enemy => enemy.id === enemyId)), 0)
+  state.chaosBag = ['0']
+  state.investigators[0].willpower = 8
+  rPlay(state, parley())
+  assert.equal(state.enemies.find(enemy => enemy.id === enemyId).resources, 1)
 })
 
 test('09519a 渡鸦之眼稳定面：基础技能值补到 6，检定后翻到动荡面', () => {
@@ -635,45 +646,53 @@ test('09536b 后果：获救 > 被杀 +2/+4 经验，被杀 > 获救 1/2 点精�
   assert.equal(registeredEntry('09536b').flags.compareRescuedAndSlain, true)
 })
 
-test('09537 苋（腐败潜伏）：攻击伤害分配给支援时击败支援并变换附属密钥', () => {
-  const { state } = dSetup(2)
-  const api = engineishApi(); api.state = state
-  const amaranth = dbh.spawnAmaranth(state, api)
-  const inv = state.investigators[0]
-  inv.location = amaranth.location
-  inv.assets.push({ id: 'ally-1', code: '01020', damage: 0, horror: 0 })
-  dbh.enemyAttackStarted(state, amaranth, inv, api)
-  inv.assets[0].damage = 1
-  dbh.enemyAttackResolved(state, amaranth, inv, api)
-  assert.equal(registeredEntry('09537').flags.attackShiftsKeysOnAssetDamage, true, '支援伤害→变换密钥已声明')
-})
+for (const code of ['09537', '09537b']) {
+  test(`${code} 苋：攻击恐惧由支援承受后击败该支援，敌人变换动荡密钥不会翻面`, () => {
+    const state = fixture()
+    const attacker = enemy(state, { code, originalCode: code, horror: 1 })
+    const ally = asset(state, '01018')
+    const { keys } = scenarioRuntime(state, []).mechanics.tsk
+    keys.initialize([{ ...KEY_SPEC, bearer: { type: 'enemy', enemyId: attacker.id } }])
+    if (code === '09537b') keys.shift(KEY_SPEC.id, { force: true, by: 'enemy' })
+    const doAttack = draft => enemyAttack(draft, draft.enemies[0], draft.investigators[0], [], '苋攻击')
+    resolveTransaction(state, 0, { action: 'testAmaranthAttack' }, doAttack)
+    answerChoices(state, doAttack, choice => choice.options.find(option =>
+      option.id === ally.id || option.assetId === ally.id || option.cardCode === ally.code)?.id)
+    assert.ok(state.investigators[0].discard.includes(ally.code))
+    assert.equal(state.investigators[0].assets.length, 0)
+    assert.equal(state.investigators[0].horror, 0)
+    const current = scenarioRuntime(state, []).mechanics.tsk.keys
+    assert.equal(current.face(KEY_SPEC.id), '09544b')
+    assert.equal(state.campaign.tsk.keys.shifts[state.round], code === '09537' ? 1 : 2)
+  })
+}
 
-test('09537b 苋（腐败显露）：攻击时变换每把附属密钥，支援伤害仍被击败', () => {
-  const { state } = dSetup(2)
-  const api = engineishApi(); api.state = state
-  const amaranth = dbh.spawnAmaranth(state, api)
-  dbh.flipAmaranth(state, api)
-  assert.equal(registeredEntry('09537b').flags.amaranthFace, 'corruptionRevealed')
-  assert.equal(registeredEntry('09537b').flags.attackShiftsKeys, true)
-  assert.equal(dbh.amaranthInPlay(state).originalCode, '09537b')
-  assert.equal(dbh.enemyAttackStarted(state, amaranth, state.investigators[0], api), undefined, '攻击启动钩子已接线')
-})
-
-test('09538 拉辛·法瑞：任意钥匙变换后——横置则重整，否则即时攻击', () => {
-  const { state } = dSetup(2)
-  const api = engineishApi(); api.state = state
-  const razin = dbh.spawnDeadHeatEnemy(state, RAZIN_CODE, SITE_IDS[0], api)
-  assert.ok(razin)
-  razin.exhausted = true
-  dbh.razinReactsToKeyShift(state, api)
+test('09538 拉辛·法瑞：玩家变换钥匙后横置则重整，否则即时攻击', () => {
+  const state = fixture()
+  const razin = enemy(state, { code: RAZIN_CODE, originalCode: RAZIN_CODE, exhausted: true, damage: 1 })
+  const { keys } = scenarioRuntime(state, []).mechanics.tsk
+  keys.initialize([{ ...KEY_SPEC, bearer: { type: 'investigator', seat: 0 } }])
+  keys.shift(KEY_SPEC.id, { seat: 0 })
   assert.equal(razin.exhausted, false, '横置时重整')
+  state.round++
+  keys.shift(KEY_SPEC.id, { seat: 0 })
+  assert.equal(state.investigators[0].damage, 1)
 })
 
 test('09539 奴仆：每轮第一张获得涌动；快速躲避失败时获得警戒攻击', () => {
-  const { state } = dSetup(2)
-  assert.equal(dbh.encounterGainsSurge(state, THRALL_CODE), true, '每轮第一张涌动')
-  assert.equal(dbh.encounterGainsSurge(state, THRALL_CODE), false, '同轮第二张不涌动')
-  assert.equal(registeredEntry('09539').flags.alertOnThisEvade, true)
+  const { state: chapter } = dSetup(2)
+  assert.equal(dbh.encounterGainsSurge(chapter, THRALL_CODE), true)
+  assert.equal(dbh.encounterGainsSurge(chapter, THRALL_CODE), false)
+  const state = fixture()
+  state.chaosBag = ['autofail']
+  const thrall = enemy(state, { code: THRALL_CODE, originalCode: THRALL_CODE, engagedSeat: null, damage: 1 })
+  const action = legalMoves(state, 0).find(move => move.action === 'entityAbility' && move.entityId === thrall.id)
+  assert.ok(action, '未与其交战也可发动同地点的快速躲避')
+  const actions = state.investigators[0].actionsLeft
+  move(state, clean(action))
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, actions)
+  assert.equal(state.investigators[0].damage, 1)
 })
 
 test('09540 古代劫掠者：攻击你后你所在地点 1 名平民被杀害', () => {
@@ -686,22 +705,49 @@ test('09540 古代劫掠者：攻击你后你所在地点 1 名平民被杀害',
   assert.ok(dbh.civiliansSlainCount(state) >= 0)
 })
 
-test('09541 哈立德：入场后把其他非精英敌人与平民移到连接地点', () => {
-  const { state } = dSetup(2)
-  const api = engineishApi(); api.state = state
-  const khalid = dbh.spawnDeadHeatEnemy(state, KHALID_CODE, SITE_IDS[0], api)
-  const moved = dbh.khalidEnteredPlay(state, khalid, api)
-  assert.ok(khalid && moved !== undefined)
+test('09541 哈立德：领队选择移动顺序和地点，其他非精英敌人与平民均匀分配', () => {
+  const state = dStateFor(2)
+  state.campaign.leadSeat = 1
+  state.locations = [{ id: 'center', resources: 1, connections: ['left', 'right'] },
+    { id: 'left', name: '左侧', resources: 0 }, { id: 'right', name: '右侧', resources: 0 }]
+  const khalid = { id: 'khalid', code: KHALID_CODE, originalCode: KHALID_CODE, location: 'center' }
+  const elite = { id: 'elite', elite: true, location: 'center' }
+  const enemies = [{ id: 'first', name: '第一位敌人', location: 'center' }, { id: 'second', name: '第二位敌人', location: 'center' }]
+  state.enemies = [khalid, elite, ...enemies]
+  const decisions = []
+  const api = {
+    info: () => {},
+    choose(request) {
+      decisions.push(request)
+      return request.options.at(-1).id
+    },
+    moveEnemy(enemy, target) { enemy.location = target },
+  }
+  assert.equal(dbh.khalidEnteredPlay(state, khalid, api), 3)
+  assert.ok(decisions.length >= 2)
+  assert.ok(decisions.every(decision => decision.seat === 1))
+  assert.equal(elite.location, 'center')
+  assert.equal(state.locations[0].resources, 0)
+  const counts = state.locations.slice(1).map(location => location.resources + enemies.filter(enemy => enemy.location === location.id).length)
+  assert.deepEqual(counts.sort(), [1, 2])
 })
 
-test('09542 饥荒：放在议程旁、打出费用 +1；轮末从场上弃掉', () => {
-  assert.equal(registeredEntry('09542').treacheryRule.discardAtRoundEnd, true)
-  const { state } = dSetup(2)
-  const api = engineishApi(); api.state = state
-  assert.equal(dbh.famineEvent(state, api), true, '饥荒入场事件已接线')
-  const hasIncrease = (state.locations || []).some(location => Number(location.playCostIncrease) >= 1)
-    || (state.scenarioZones?.putIntoPlay || []).includes(FAMINE_CODE)
-    || (state.enemies || []).length === 0
-  assert.ok(hasIncrease, '费用提升效果已写入场上地点或被记录')
-  dbh.roundEnded(state, api)
+test('09542 饥荒：只提高显现调查员的打出费用，轮末弃掉后恢复', () => {
+  const state = fixture('01001', 2)
+  state.scenario = { ...state.scenario, id: deadHeat.scenario.id }
+  const def = ALL_CARDS['01020']
+  const costs = () => state.investigators.map(inv => playCost(state, inv, def))
+  const before = costs()
+  state.encounterDeck = [FAMINE_CODE]
+  const draw = draft => drawEncounter(draft, draft.investigators[0], [])
+  resolveTransaction(state, 0, { action: 'drawFamine' }, draw)
+  answerChoices(state, draw)
+  assert.ok(state.agendaAside.some(card => card.code === FAMINE_CODE))
+  assert.deepEqual(costs(), [before[0] + 1, before[1]])
+  state.encounterDeck = ['dissonantVoices', 'dissonantVoices']
+  const finishRound = draft => runBetweenInvestigationPhases(draft, [])
+  resolveTransaction(state, 0, { action: 'endFamineRound' }, finishRound)
+  answerChoices(state, finishRound)
+  assert.ok(state.encounterDiscard.includes(FAMINE_CODE))
+  assert.deepEqual(costs(), before)
 })

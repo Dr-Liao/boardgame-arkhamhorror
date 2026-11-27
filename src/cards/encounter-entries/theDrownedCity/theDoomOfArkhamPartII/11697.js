@@ -10,7 +10,10 @@ export default {
   scope: 'location',
   implemented: true,
   locationRule: { floodBounds: { max: 1 } },
-  flags: { ruined: true },
-  note: '数据型条目：数值由 definition.location() 读卡表；废墟交换在 behavior.agendaReveal → swapToRuined。',
+  flags: {
+    ruined: true,
+    enemyEntryReaction: { trait: 'Cthulhu', enemyCode: '11701', maxClues: 3, groupLimit: 'perGame', effect: 'damagePerClue' },
+  },
+  note: '克苏鲁进入后，将最多 3 个线索放在本地点，并为每个线索选择在场敌人造成伤害。读点为本章敌人进入地点的反应。',
   abilities: [],
 }

@@ -21,6 +21,8 @@
 //
 // 本章状态只写 state.scenarioFlags / state.scenarioZones / state.campaign.records（纯 JSON）。
 // 所有卡面细节的近似见 artifacts/migration/tdc/p7/workers/scenario-epsilon.md。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
+import { ruinedLocationEnemyEntry } from './location-reactions.js'
 import { mechanicState } from '../../../../../src/engine/mechanic-state.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
@@ -255,7 +257,7 @@ export function resolveCthulhuCard(state, code, api = {}) {
     if (!inv) return 0
     if (typeof api.discardRandom === 'function') return api.discardRandom(inv.seat, count)
     const lost = Math.min(count, (inv.hand || []).length)
-    inv.hand.splice(Math.max(0, inv.hand.length - lost), lost)
+    spliceHand(inv, Math.max(0, inv.hand.length - lost), lost)
     return lost
   }
   // 「弃掉其控制的一张非剧情支援」：优先 api.discardAsset，缺失时回退为资产区移除 + 进弃牌堆。
@@ -412,33 +414,44 @@ export function resolveCthulhuCard(state, code, api = {}) {
     }
     case DEMOLITION_CODE: { // 拆毁
       const rooftop = nearestRooftopFor(state, cthulhuAt, api)
-      if (!rooftop) return 'retained'
+      if (!rooftop) return 'resolved'
       const ruins = (flagsFor(state).demolitionRuins ||= {})
       // 「作为废墟标记」：实体计数器落在最近屋顶实例上（scenarioRuntime 的 api.addCardCounter/cardCounterOf，
       // 'ruin' 已在 CARD_COUNTER_IDS 白名单）。
-      const before = Number(ruins[rooftop.id]) || 0
+      const current = Number(api.cardCounterOf?.(rooftop, 'ruin')) || 0
+      const before = Math.max(Number(ruins[rooftop.id]) || 0, current)
       let counter = 0
       if (typeof api.addCardCounter === 'function') {
-        api.addCardCounter(rooftop, 'ruin', 1, { source: DEMOLITION_CODE })
+        api.addCardCounter(rooftop, 'ruin', before - current + 1, { source: DEMOLITION_CODE })
         counter = Number(api.cardCounterOf?.(rooftop, 'ruin')) || 0
       }
       ruins[rooftop.id] = Math.max(before + 1, counter)
       info(api, `拆毁：在「${rooftop.name}」放置 1 个废墟标记（${ruins[rooftop.id]}）。`)
       if (Number(ruins[rooftop.id]) >= 2) {
-        for (const inv of activeInvestigators(state)) {
-          if (typeof api.defeat === 'function') api.defeat(inv, 'killed')
-          else inv.defeated = true
+        for (const inv of activeInvestigators(state).filter(inv => inv.location === rooftop.id)) {
+          if (api.defeat) api.defeat(inv, 'killed')
+          else { inv.defeated = true; inv.defeatCause = 'killed' }
         }
-        state.enemies = (state.enemies || []).filter(enemy => enemy.location !== rooftop.id)
-        state.locations = (state.locations || []).filter(location => location.id !== rooftop.id)
-        removeLocationFromAll(state, rooftop.id)
+        if (api.removeLocationFromGame) {
+          api.removeLocationFromGame(rooftop.id, { discardPlayerAttachments: true })
+        } else {
+          state.enemies = (state.enemies || []).filter(enemy => enemy.location !== rooftop.id)
+          state.locations = (state.locations || []).filter(location => location.id !== rooftop.id)
+          removeLocationFromAll(state, rooftop.id)
+        }
+        const piles = cthulhuPiles(state)
+        if (piles) (piles.removed ||= []).push(code)
         flagsFor(state).demolitionRemoved = [...(flagsFor(state).demolitionRemoved || []), rooftop.id, DEMOLITION_CODE]
         info(api, `拆毁：屋顶废墟标记达到 2 个，屋顶与「拆毁」离场。`)
+        if (!activeInvestigators(state).length) api.finish?.('noResolution')
         return 'retained'
       }
       // 与克苏鲁弃牌堆一起洗回牌库。
-      discardCthulhuCard(state, code, api)
-      recycleCthulhuDeck(state, api)
+      const piles = cthulhuPiles(state)
+      if (!piles) return 'resolved'
+      const recycled = [code, ...piles.discard.splice(0)]
+      if (api.mechanics?.scenarioDecks?.put) api.mechanics.scenarioDecks.put(CTHULHU_DECK_ID, recycled, { shuffle: true })
+      else piles.deck = shuffleWith(api, [...piles.deck, ...recycled])
       return 'retained'
     }
     case FIFTH_EYE_CODE: { // 第五只眼
@@ -611,7 +624,12 @@ function nearestRooftopFor(state, fromId, api = {}) {
   if (typeof api?.mechanics?.map?.nearest === 'function') {
     const eligible = new Set(rooftops.map(location => location.id))
     const nearest = api.mechanics.map.nearest(fromId, id => eligible.has(id))
-    if (nearest?.length) return rooftops.find(location => location.id === nearest[0]) || rooftops[0]
+    if (nearest?.length) {
+      const options = rooftops.filter(location => nearest.includes(location.id)).map(location => ({ id: location.id, label: location.name }))
+      const id = options.length > 1 ? api.choose?.({ kind: 'location', seat: state.campaign?.leadSeat ?? leadSeat(state),
+        source: DEMOLITION_CODE, prompt: '选择同样最近的一处屋顶', options }) : options[0]?.id
+      return rooftops.find(location => location.id === (id ?? nearest[0])) || rooftops[0]
+    }
   }
   return rooftops[0]
 }
@@ -1377,7 +1395,7 @@ export function enemyFaceFlipped(state, enemy, fromCode, toCode, api = {}) {
   } else if (forced === 'discardRandomHand') {
     if (inv) {
       if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
-      else if ((inv.hand || []).length) inv.hand.pop()
+      else if ((inv.hand || []).length) spliceHand(inv, -1, 1)[0]
     }
     info(api, `${inv?.name || '调查员'} 随机弃掉 1 张手牌（凶恶面容翻至狂怒面）。`)
   } else if (forced === 'placeDoomOnFacet') {
@@ -1421,10 +1439,11 @@ export function enemyEvadedSuccessfully(state, inv, enemy, api = {}) {
   }
   const enragedPair = CTHULHU_FACET_PAIRS.find(([, enraged]) => enraged === code)
   if (enragedPair) {
+    const presentation = { code, sourceEnemyId: enemy.id }
     if (typeof api.scenario?.damageEnemy === 'function') {
-      api.scenario.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功')
+      api.scenario.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功', presentation)
     } else if (typeof api.damageEnemy === 'function') {
-      api.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功')
+      api.damageEnemy(enemy.id, 1, inv?.seat ?? null, '11702-11704 躲避成功', presentation)
     } else {
       enemy.damageTaken = (Number(enemy.damageTaken) || 0) + 1
     }
@@ -1480,7 +1499,7 @@ export function eyesOfYchlecht(state, inv, api = {}) {
     if (typeof direct === 'function') direct(inv.seat, 1)
     else hurt(inv, 'horror', api)
     if (typeof api.discardRandom === 'function') api.discardRandom(inv.seat, 1)
-    else if ((inv.hand || []).length) inv.hand.pop()
+    else if ((inv.hand || []).length) spliceHand(inv, -1, 1)[0]
     info(api, `伊克雷希特之眼：${inv.name} 受到 1 点直接恐惧并随机弃 1 张手牌。`)
   })
   return failed
@@ -1609,6 +1628,10 @@ export const behavior = {
   actions,
   performAction,
   enemyStatModifier,
+  enemySpawned: ruinedLocationEnemyEntry,
+  enemyMoved: (state, enemy, previous, api) => {
+    if (previous !== enemy.location) ruinedLocationEnemyEntry(state, enemy, api)
+  },
   enemyAttackedSuccessfully,
   enemyFaceFlipped,
   enemyEvadedSuccessfully,

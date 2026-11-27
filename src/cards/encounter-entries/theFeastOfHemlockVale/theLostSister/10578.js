@@ -19,6 +19,5 @@ export default {
     cluesPerInvestigator: 1,
     shroud: 3,
     traits: ['Coastal', 'Cave'],
-  },
-  note: '近似：躲避失败的「失去 1 个行动」失败窗口不在本章 behavior 读点里，旗标供 P8 接 skillTestResult。',
+  }
 }

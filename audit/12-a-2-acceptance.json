@@ -3,7 +3,7 @@
   "unit": "12-a-2",
   "profile": {
     "id": "core2026-player-b-2026-11",
-    "scope": "2026 核心盒 12 段玩家卡（12041–12080）40 条目录记录。37 条通过五维验收；12068 Head 槽/12052/12066 目标收窄暂不切换。",
+    "scope": "2026 核心盒 12 段玩家卡（12041–12080）40 条目录记录。40 条全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 40,
-    "verified": 37,
-    "unverified": 3,
+    "verified": 40,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 39
+    "testsPassed": 41
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
-      "sha256": "f30bc2de5b024e99ba3daa284e22f3bfcccec9c666b7241b13299269c1475236"
+      "sha256": "904b86279a4fcf97effbe7c271054c291969042e2f1a47dacf05209fb27be9ca"
     },
     {
       "file": "games/arkhamhorror/tests/starter-batch-3.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/reprint-aliases.test.mjs",
-      "sha256": "047fce342f4ec577a901cf2d978050315dbc2d66b11e3323b71ae9643bfda156"
+      "sha256": "d9a99f4137ca1129569168f42fa8101317144545ef0c3ac7993e24959581f6db"
     }
   ],
   "entries": [
@@ -173,9 +173,13 @@
       "code": "12052",
       "name": "变戏法",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「在你的回合结束时，将你控制的一张[[道具]]支援返回你的手牌」允许选择你控制的任意一张道具支援、且时机为你的回合结束；实现只给「本次用变戏法打出的那一张」加实例级标记，并在轮末（新一轮开始）统一返回，玩家的选择权与时机均与卡面不等价（条目注释已披露该近似，但结果不等价，按失败判）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12052 变戏法：减费打出道具并在本人的回合结束时选择另一张道具返回"
+        }
+      ]
     },
     {
       "code": "12053",
@@ -337,9 +341,13 @@
       "code": "12066",
       "name": "宇宙意志",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面「在你控制的一张玩家卡牌上放置 1 个毁灭标记」——调查员卡本身也是玩家卡，实现只在 `inv.assets` 中枚举目标：控制 0 张支援时事件结算直接空转（费用已付、无毁灭、无线索），控制支援时也无法选择把毁灭放在自己的调查员卡上。目标集合比卡面窄，属印刷子句不等价。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12066 宇宙意志：可在调查员、受控支援或附属玩家卡放毁灭并发现两地的线索"
+        }
+      ]
     },
     {
       "code": "12067",
@@ -357,9 +365,13 @@
       "code": "12068",
       "name": "西勒诺斯面具",
       "type": "asset",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "引擎槽位原语缺 Head 槽：2026 核心盒新增 Mask/Head 槽卡，但 SLOT_CAPACITY 未登记 head，assetReplacementPlans/canEquip 对 12068 一律返回不可放置——属「新卡引入了新槽位而原语未同步」的原语缺口，不是单卡条目问题。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-12-a-shard2.test.mjs",
+          "test": "12-a 12068 萨梯的面具和 12087 软呢帽共用头部槽，面具可选符号结算并保留空充能卡"
+        }
+      ]
     },
     {
       "code": "12069",

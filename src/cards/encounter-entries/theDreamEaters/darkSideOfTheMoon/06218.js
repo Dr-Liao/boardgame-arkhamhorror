@@ -58,7 +58,7 @@ export default {
         const enemies = (state.enemies || []).filter(enemy => enemy.location === location?.id && !enemy.defeated)
         if (!enemies.length) return false
         // 每轮仅限一次（按调查员）：teamOnce 已登记则不再允许。
-        if (!teamOnce(state, `moonForestEvade:${inv.seat}`, 'round')) {
+        if (!teamOnce(state, api, `moonForestEvade:${inv.seat}`, 'round')) {
           api.info?.('本回合/本轮已经用月之森林的 [fast] 躲避过。')
           return true
         }

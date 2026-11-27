@@ -4,9 +4,7 @@
 //       或将它们洗回该牌库。如果你查看了一位调查员的牌库，该调查员可以抽取 1 张卡牌。
 //
 // 一卡一文件：这张卡的行为只在这里维护。
-// 读点：api.lookAt（B5：count/arrange/returnStrategy/targetSeat）。任意顺序放回走 arrange + 放回顶部，
-// 洗回走 returnStrategy:'shuffle'。注意引擎的任意排列枚举当前只支持 ≤4 张（lookAt 实现限制），
-// 6 张时按放回顶部处理 —— 已写 primitive request m2-2-08066.json 请主进程放宽。
+// 查看的牌在选定放回方式前可见，并可逐张制定牌库顶顺序。
 const ALIVE = state => (state.investigators || []).filter(inv => !inv.defeated && !inv.resigned)
 
 export default {
@@ -32,25 +30,24 @@ export default {
             prompt: '选择要查看牌库顶 6 张的牌库。',
             options: zones.map(zone => ({ id: zone.id, label: zone.label })) })
         const zone = zones.find(item => item.id === zoneId) || zones[0]
-        const reorder = api.choice({
-          kind: 'effect', source: '08066', seat: inv.seat,
-          prompt: `查看「${zone.label}」顶 ${Math.min(6, zone.pile.length)} 张后，如何放回？`,
-          options: [{ id: 'top', label: '以任意顺序放回牌库顶' }, { id: 'shuffle', label: '洗回该牌库' }],
-        })
         api.lookAt(inv.seat, {
           zone: zone.kind === 'encounter' ? 'encounterDeck' : 'deck',
           targetSeat: zone.seat ?? null,
-          count: Math.min(6, zone.pile.length),
-          arrange: reorder === 'top',
-          returnStrategy: reorder === 'top' ? 'top' : 'shuffle',
-          prompt: reorder === 'top' ? '选择放回牌库顶的顺序（从上到下）。' : null,
+          count: 6,
+          choose: 0,
           source: '08066',
+          chooseReturn: ({ cards }) => api.choice({
+            kind: 'look', source: '08066', seat: inv.seat,
+            prompt: `如何放回查看的「${zone.label}」牌？`,
+            options: [{ id: 'top', label: '以任意顺序放回牌库顶', cardCodes: cards },
+              { id: 'shuffle', label: '洗回该牌库', cardCodes: cards }],
+          }) === 'shuffle' ? 'shuffle' : 'arrange',
         })
         if (zone.kind !== 'investigator') return
         const viewer = state.investigators[zone.seat]
         if (!viewer || viewer.defeated || viewer.resigned) return
         const draw = api.choice({
-          kind: 'reaction', source: '08066', seat: viewer.seat, canSkip: true,
+          kind: 'effect', source: '08066', seat: viewer.seat, canSkip: true,
           prompt: `${viewer.name} 是否抽取 1 张卡牌？`,
           options: [{ id: 'draw', label: '抽取 1 张卡牌' }, { id: 'skip', label: '不抽' }],
         })

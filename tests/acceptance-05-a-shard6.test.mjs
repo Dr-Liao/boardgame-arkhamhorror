@@ -5,16 +5,15 @@
 // tests/suites.mjs 与 tests/node-suite.mjs。
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { nonPlayerEntryFor } from '../src/cards/encounter-abilities.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { hauntedAbilitiesAt } from '../src/engine/haunted.js'
-import { createGameState, applyMove, legalMoves } from '../src/engine/engine.js'
+import { createGameState, applyMove, getStat, legalMoves } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { chapters } from '../content/campaigns/theCircleUndone/shared.js'
 import * as uad from '../content/campaigns/theCircleUndone/scenarios/unionAndDisillusion/index.js'
 import entry05259 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05259.js'
 import entry05260 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05260.js'
-import entry05268 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05268.js'
-import entry05269 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05269.js'
 import entry05270 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05270.js'
 import entry05271 from '../src/cards/encounter-entries/theCircleUndone/unionAndDisillusion/05271.js'
 
@@ -88,6 +87,7 @@ function makeApi(state, options = {}) {
   const testResults = options.testResults ? [...options.testResults] : []
   const choices = options.choices ? [...options.choices] : []
   const base = {
+    drawEncounter: seat => rec('drawEncounter').push(seat),
     calls,
     info(text) { rec('info').push(String(text)) },
     random() { return 0.5 },
@@ -624,12 +624,12 @@ test('05266 夜鹰：生成在首位调查员所在地点；同地点的调查�
   state.investigators[0].location = 'standingStones'
   assert.equal(uad.behavior.spawnLocation(state, '05266', 'fallback'), 'standingStones')
   state.enemies = [{ id: 'bird-1', code: '05266', originalCode: '05266', location: 'standingStones', exhausted: false }]
-  assert.equal(uad.behavior.statModifier(state, state.investigators[0], 'willpower'), -1)
+  assert.equal(getStat(state, state.investigators[0], 'willpower'), (state.investigators[0].willpower || 0) - 1)
   state.enemies.push({ id: 'bird-2', code: '05266', originalCode: '05266', location: 'standingStones', exhausted: false })
-  assert.equal(uad.behavior.statModifier(state, state.investigators[0], 'combat'), -2)
+  assert.equal(getStat(state, state.investigators[0], 'combat'), (state.investigators[0].combat || 0) - 2)
   state.locations.push({ id: 'other', connections: [], clues: 0, doom: 0, flags: {} })
   state.investigators[0].location = 'other'
-  assert.equal(uad.behavior.statModifier(state, state.investigators[0], 'willpower'), 0)
+  assert.equal(getStat(state, state.investigators[0], 'willpower'), state.investigators[0].willpower || 0)
   assert.ok(isle)
 })
 
@@ -668,10 +668,10 @@ test('05269 灵魂之歌：显现进入任意调查员威胁区；受伤时额�
   state.numInvestigators = 2
   const api = makeApi(state, { choices: ['1'] })
   const handled = uad.behavior.resolveEncounter(state, state.investigators[0], { code: '05269', originalCode: '05269' }, api)
-  assert.equal(handled, true)
+  assert.deepEqual(handled, { placed: true, surgeHandled: true })
   assert.deepEqual(api.calls.threat.at(-1), [1, '05269'])
   assert.deepEqual(state.investigators[1].threat.map(card => card.code), ['05269'])
-  assert.deepEqual(entry05269.harmInterceptor, { trigger: 'damage', extra: 2, discard: true })
+  assert.deepEqual(nonPlayerEntryFor('05269').harmInterceptor, { trigger: 'damage', extra: 2, discard: true })
 })
 
 test('05270 死期临近：显现进入任意调查员威胁区；受恐时额外 2 恐并弃卡', () => {

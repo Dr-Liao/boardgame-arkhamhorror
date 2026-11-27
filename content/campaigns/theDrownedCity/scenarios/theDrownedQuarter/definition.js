@@ -23,6 +23,7 @@
 // narrative-guides worker 的 story-text.js 提供，二者不冲突（本文件只承载模块自用的
 // 提示文本，便于离线测试与指南面板兜底）。
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
+import { encounterPrey } from '../../card-data.js'
 import { bindScenarioIdentities } from '../../../../identities.js'
 import { DROWNED_QUARTER_TOKEN_MEANINGS } from './chaos.js'
 
@@ -83,9 +84,11 @@ function encounterDefinitions(codes) {
     if (card.type === 'enemy') {
       const text = card.text || ''
       const keywords = String(text).split('\n').join(' ')
+      const prey = encounterPrey(card)
       enemies[code] = {
         ...base, surge: /^Surge\./m.test(text), fight: card.fight ?? null, evade: card.evade ?? null,
         health: card.health ?? null, damage: card.damage || 0, horror: card.horror || 0,
+        ...(prey ? { prey } : {}),
         ...(card.healthPerInvestigator ? { healthPerInvestigator: true } : {}),
         ...(Object.hasOwn(card, 'victory') ? { victory: card.victory } : {}),
         ...Object.fromEntries(['Hunter', 'Aloof', 'Massive', 'Retaliate', 'Alert', 'Patrol']

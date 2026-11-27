@@ -1,3 +1,4 @@
+import { replaceHand, spliceHand } from './hand-icons.js'
 import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 // 弱点揭示与结算（resolveWeakness）从 engine.js 拆出的模块（Phase 6 · 6d-14）。
 //
@@ -7,6 +8,8 @@ import { discardPlayerCards, replacePlayerZoneCards } from './player-zones.js'
 //
 // 依赖注入同前几批；abilityApi 是工厂产物，用惰性调用。
 
+import { locationRuleFor } from '../cards/card-rules.js'
+import { tekeliReturn } from './eote-tekeli.js'
 import { popRevelation, pushRevelation } from './resolution-scope.js'
 import { afterThreatEntered } from './threat-entry.js'
 import { canDiscardControlledAsset, discardControlledAsset } from './asset-departure.js'
@@ -53,11 +56,25 @@ export function createWeakness(deps) {
     weaknessUpgradeCode,
   } = deps
 
-function resolveWeakness(state, inv, def, events, texts) {
+function resolveWeakness(state, inv, def, events, texts, options) {
   // 2026-10-25 第五轮修复 05049：弱点显现也属于「正在结算显现效果」——与遭遇诡计共用读点。
   pushRevelation(def.code)
   try {
-    return resolveWeaknessBody(state, inv, def, events, texts)
+    if (!registeredEntry(def.code)?.flags?.tekelili) return resolveWeaknessBody(state, inv, def, events, texts)
+    const context = { seat: inv.seat, location: inv.location, cardCode: def.code }
+    const automaticRepetitions = inv.threat.filter(card => registeredEntry(card.code)?.flags?.tekeliliDoubleResolution).length
+    const repeats = reactionWindow(state, 'tekeliWouldResolve', {
+      ...context, when: 'tekeliWouldResolve', extraResolutions: 0,
+    }, events, { allowNested: true }).extraResolutions || 0
+    for (let index = 0; index < 1 + automaticRepetitions + repeats; index++) {
+      resolveWeaknessBody(state, inv, def, events, texts)
+    }
+    const here = state.locations.find(location => location.id === inv.location)
+    const destination = options?.destination || locationRuleFor(here?.originalCode || here?.code)?.tekeliDestination || 'bottom'
+    const targetSeat = typeof options?.targetSeat === 'function' ? options.targetSeat() : options?.targetSeat
+    if (!options?.deferReturn) tekeliReturn(state, def.code, { destination, seat: targetSeat ?? inv.seat })
+    reactionWindow(state, 'tekeliResolved', { ...context, when: 'tekeliResolved' }, events, { allowNested: true })
+    if (!options?.deferReturn && destination === 'bottom') info(state, events, '🃏 忒咳哩-哩回到专属牌库底。')
   } finally {
     popRevelation()
   }
@@ -142,7 +159,7 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
     // 整副牌张数守恒，本卡只洗回一次，不会复制进牌库。
     const hand = [...(inv.hand || [])]
     const drawCount = hand.length + 1
-    inv.hand = []
+    replaceHand(inv, [])
     if (hand.length) inv.deck = replacePlayerZoneCards(state, inv, shuffle([...inv.deck, ...hand], () => randomValue(state)), 'shuffle')
     inv.shuffleWeaknessAfterResolution = def.code
     info(state, events, `「${cardName(def.code)}」：${inv.name} 把 ${hand.length} 张手牌洗回牌库，连同本卡共重抽 ${drawCount} 张。`)
@@ -212,7 +229,8 @@ function resolveWeaknessBody(state, inv, def, events, texts) {
       }
     } else if (choice === 'hand' && handAllies.length) {
       for (const code of handAllies.slice()) {
-        removeOne(inv.hand, code)
+        const index = inv.hand.indexOf(code)
+        if (index >= 0) spliceHand(inv, index, 1)
         discardPlayerCards(state, inv, code)
         discarded++
       }

@@ -5,7 +5,7 @@
 //
 // 一卡一文件：这张卡的规则只在这里维护，不要写回 encounter-abilities.js。
 //
-// 密谋 04316「垂摆之线」背面：无形之子在场则在其上放 2 毁灭；在胜利区则洗回遭遇牌库。
+// 密谋 04316「垂摆之线」背面：无形之子在场则在恩凯联结点放 2 毁灭；在胜利区则洗回遭遇牌库。
 
 import { originalOf } from '../../_shared.js'
 
@@ -17,16 +17,12 @@ export default {
       const nexus = hooks.byId(hooks.nexus())
       const formless = state.enemies.find(enemy => originalOf(enemy) === hooks.formlessSpawn())
       if (formless && nexus) {
-        nexus.doom = (nexus.doom || 0) + 2
+        api.doomOn(nexus, 2)
         api.info?.('🌑 无形之子在场：恩凯联结点上放置 2 个毁灭标记。')
       }
-      const inVictory = (state.victoryDisplay || []).find(card =>
-        String(card.originalCode || card.code) === hooks.formlessSpawn())
-      if (inVictory) {
-        state.victoryDisplay = state.victoryDisplay.filter(card => card !== inVictory)
-        state.encounterDeck = [...(state.encounterDeck || []), hooks.formlessSpawn()]
-        // 卡面：洗回遭遇牌库，不能只是放在牌库顶。
-        api.shuffleEncounterDeck?.()
+      const code = hooks.formlessSpawn()
+      if (api.takeFromVictory(code)) {
+        api.shuffleIntoEncounterDeck([code])
         api.info?.('🌑 胜利区里的无形之子被洗回遭遇牌库。')
       }
       hooks.addToVictory(agenda, { vengeance: 1 })

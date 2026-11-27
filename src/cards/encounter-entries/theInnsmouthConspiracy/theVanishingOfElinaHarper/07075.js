@@ -1,4 +1,4 @@
-import { ALL_CARDS, putRevealedPrintedLocation } from '../../_shared.js'
+import { hasPrintedVictory, putRevealedPrintedLocation } from '../../_shared.js'
 export default {
   code: '07075', scope: 'location', implemented: true,
   encounterResolve: putRevealedPrintedLocation,
@@ -11,7 +11,7 @@ export default {
       const code = api.scenarioDecks.cards('leads').at(-1)
       if (!code) return
       api.scenarioDecks.peek('leads', inv.seat, 1)
-      if (!Object.hasOwn(ALL_CARDS[code] || {}, 'victory')) api.scenarioDecks.discardTop('leads', 1)
+      if (!hasPrintedVictory(code)) api.scenarioDecks.discardTop('leads', 1)
     },
   }],
 }

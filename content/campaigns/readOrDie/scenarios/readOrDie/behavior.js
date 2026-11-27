@@ -12,6 +12,7 @@
 //   introduction → 章节导入正文。
 //
 // 本章状态只写 state.scenarioFlags / 地点 beneath / state.campaign.records（纯 JSON）。
+import { filterHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
   ACT_CODE, AGENDA_CODE, ARMITAGE_CODE, CHAPTER_ID, DAISY_TITLE, ENCOUNTER_DECK, JAZZ_CODE,
@@ -183,7 +184,7 @@ export function afterDeckSetup(state, events = null, helper = {}) {
     const removedFromDeck = (daisy.deck || []).filter(isTome)
     daisy.deck = (daisy.deck || []).filter(code => !isTome(code))
     const removedFromHand = (daisy.hand || []).filter(isTome)
-    daisy.hand = (daisy.hand || []).filter(code => !isTome(code))
+    filterHand(daisy, code => !isTome(code))
     tomes.push(...removedFromDeck, ...removedFromHand)
     if (removedFromHand.length && typeof api.drawCards === 'function') api.drawCards(daisy.seat, removedFromHand.length)
     setFlag(state, 'readOrDieTomeCount', tomes.length)

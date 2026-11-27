@@ -23,7 +23,7 @@ export default {
       return true
     }
     api.info?.('你的威胁区域里已有「邪恶往昔」：本卡被弃掉并获得涌动。')
-    api.drawEncounter?.(inv.seat)
+    api.drawEncounter?.(inv.seat, { surgeDraw: true })
     return false
   },
 }

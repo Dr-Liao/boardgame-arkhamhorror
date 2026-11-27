@@ -132,7 +132,7 @@ const tokenMeanings = {
       text: '-4。如果你检定失败，选择并揭示你手中的一张奈亚拉托提普。其攻击你，将其混洗入遭遇牌库。',
       delta: -4,
     },
-    elder_thing: { text: '0。黑猫提醒你这一切都是一场梦。', delta: 0 },
+    elderthing: { text: '0。黑猫提醒你这一切都是一场梦。', delta: 0 },
   },
   hard: {
     skull: { text: '-X。X为当前场景编号加上当前密谋编号。', delta: 0 },
@@ -144,7 +144,7 @@ const tokenMeanings = {
       text: '-6。如果你检定失败，选择并揭示你手中的一张奈亚拉托提普。其攻击你，将其混洗入遭遇牌库。',
       delta: -6,
     },
-    elder_thing: { text: '-1。黑猫提醒你这一切都是一场梦。', delta: -1 },
+    elderthing: { text: '-1。黑猫提醒你这一切都是一场梦。', delta: -1 },
   },
 }
 

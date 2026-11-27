@@ -6,24 +6,33 @@
 //   来访名片在场上时，不能（在任何地点）花费线索。
 //   [reaction] 在你成功调查所附属地点且超过难度至少 2 点后：弃掉来访名片。查看任意地点一张
 //   隐匿迷你卡牌的已揭示面（不将其揭露）。
-//
-// 实现口径：
-//   · `treacheryRule.resolveKind` → behavior 的 callingCard（选地点并附属到 location.attachments）；
-//   · `treacheryRule.attachment: true` 标记它住在 location.attachments（behavior 的
-//     `cluesSpendBlocked()` 与附属目标过滤共用这一读点）；
-//   · `treacheryRule.blocksClueSpendingEverywhere` → behavior 的 `cluesSpendBlocked()`：
-//     本章的地点行动、谈判折扣与调查后花费线索全部因它关闭。
-//   · 引擎没有「禁止花费线索」的 capability（capability 表里只有 discoverClue），
-//     玩家卡侧的通用花费线索尚未被拦；已登记原语请求 extend.capabilitySpendClues。
 export default {
   code: '09560',
   scope: 'treachery',
   implemented: true,
-  simplified: true,
   treacheryRule: {
     resolveKind: 'callingCard',
     attachment: true,
+    blocksClueSpending: true,
     blocksClueSpendingEverywhere: true,
   },
-  note: '近似：附属与「不能花费线索」只覆盖本章 content 的花费点（地点行动/谈判折扣）；玩家卡与引擎通用花费线索的拦截需要新 capability，已登记原语请求 extend.capabilitySpendClues。「成功调查超过 2 点后弃掉并查看迷你卡」尚未接调查窗口，同在请求里。',
+  abilities: [{
+    kind: 'reaction', trigger: 'investigateSuccess',
+    label: '调查所附属地点成功且超过至少 2 点：弃掉来访名片，查看一张隐匿迷你卡',
+    criteria: ({ state, inv, source, context }) => context.seat === inv.seat && context.successBy >= 2
+      && state.locations.some(location => location.id === context.location
+        && location.attachments?.some(card => card.id === source.id)),
+    resolve: ({ inv, source, api }) => {
+      if (!api.discardAttachment(source)) return false
+      const cards = api.tsk.concealed.miniCards().filter(card => card.locationId && !card.flipped)
+      if (!cards.length) return true
+      const id = cards.length === 1 ? cards[0].id : api.choose({
+        kind: 'card', source: '09560', seat: inv.seat,
+        prompt: '来访名片：选择任意地点的一张隐匿迷你卡，查看其揭示面。',
+        options: cards.map((card, index) => ({ id: card.id, label: `${card.locationId}：隐匿迷你卡 ${index + 1}` })),
+      })
+      if (cards.some(card => card.id === id)) api.tsk.concealed.markKnown(id, [inv.seat])
+      return true
+    },
+  }],
 }

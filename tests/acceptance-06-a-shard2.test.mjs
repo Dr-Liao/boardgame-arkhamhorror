@@ -4,7 +4,13 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
-import { hiddenRuleFor } from '../src/cards/card-rules.js'
+import { fixture, asset, enemy, move, settle } from './core-fixture.mjs'
+import {
+  applyHarm, damageEnemy, enemyCanBeDefeated, enemyCannotAttack, enemyCannotBeAttacked,
+  enemyFightValue, enemyEvadeValue, legalMoves, performTest, placeHiddenCard, validateMove,
+  enemyHealth, scenarioRuntime,
+} from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import * as beyondChapter from '../content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/index.js'
 import {
@@ -14,6 +20,7 @@ import * as wakingChapter from '../content/campaigns/theDreamEaters/scenarios/wa
 import {
   scenario as wakingDefinition, SET_ASIDE_LOCATIONS,
 } from '../content/campaigns/theDreamEaters/scenarios/wakingNightmare/definition.js'
+import { scenario as godsDwellDefinition } from '../content/campaigns/theDreamEaters/scenarios/whereTheGodsDwell/definition.js'
 import { encounterRules } from '../content/campaigns/theDreamEaters/encounter-rules.js'
 
 import entry06057 from '../src/cards/encounter-entries/theDreamEaters/beyondTheGatesOfSleep/06057.js'
@@ -255,7 +262,14 @@ test('TDE 06066 恐怖医院：桥梁之阶 +8 并结束到结局 4；蜘蛛加�
   assert.equal(entry06066.agendaRule.onReveal(state, { code: '06066' }, api), true)
   assert.equal(state.campaign.records.stepsOfTheBridge, 10)
   assert.deepEqual(find(api.calls, 'finish')[0].args, ['resolution4'])
-  assert.deepEqual(entry06066.agendaRule.spiderAtInfestedBonus, { fight: 1, evade: 1 })
+  const venue = place(state, 'waitingRoom')
+  const spider = { location: venue.id, traits: ['Spider'], fight: 2, evade: 2, code: '06082' }
+  state.agendaIndex = state.agendas.findIndex(item => codeOf(item) === '06066')
+  const before = [enemyFightValue(state, spider, state.investigators[0]), enemyEvadeValue(state, spider, state.investigators[0])]
+  state.infestedLocations.push(venue.id)
+  assert.deepEqual([enemyFightValue(state, spider, state.investigators[0]), enemyEvadeValue(state, spider, state.investigators[0])],
+    before.map(value => value + 1))
+  assert.equal(WN.enemyStatModifier(state, { ...spider, traits: ['Humanoid'] }, 'fight'), 0)
   assert.equal(entry06066.agendaRule.mythosEndInfestationTest, true)
 })
 
@@ -425,10 +439,14 @@ test('TDE 06081 可疑的护工：不能攻击/被攻击/受伤/被击败，交�
   state.investigators[0].location = location.id
   const inv = state.investigators[0]
   state.enemies.push({ id: 'e-orderly', code: '06081', originalCode: '06081', location: location.id, engagedSeat: 0, exhausted: false })
-  assert.deepEqual(entry06081.flags, {
-    cannotAttack: true, cannotBeAttacked: true, cannotBeDamaged: true,
-    cannotBeDefeated: true, blocksInvestigationWhileEngaged: true,
-  })
+  const game = fixture()
+  game.scenario = wakingDefinition
+  const orderly = enemy(game, { code: '06081', originalCode: '06081', damage: 3 })
+  assert.equal(enemyCannotAttack(game, orderly), true)
+  assert.equal(enemyCannotBeAttacked(game, orderly, 0), true)
+  assert.equal(enemyCanBeDefeated(game, orderly), false)
+  damageEnemy(game, orderly, 4, 0, [])
+  assert.equal(orderly.damageTaken, 0)
   assert.match(WN.investigationError(state, inv, location) || '', /不能调查|不能/)
 })
 
@@ -446,27 +464,69 @@ test('TDE 06082 堕落的护工：寄生地点受到伤害时取消 1 点', () =
 })
 
 // ---------------------------------------------------------------- 06087 / 06088 / 06089（隐藏牌投入/打出限制）
-test('TDE 06087 伊吉若斯之理·暴食：隐藏牌费用奇偶限制已声明（引擎读点缺失，报告登记）', () => {
-  const entry = entry06087
-  assert.deepEqual(entry.hiddenRule, { cannotPlayOddCost: true, cannotTriggerOddCost: true, discardEvenCostAction: true })
-  const definition = hiddenRuleFor('06087') || {}
-  assert.deepEqual(Object.fromEntries(Object.keys(entry.hiddenRule).map(key => [key, definition[key]])), entry.hiddenRule, 'hiddenRule 已并入遭遇定义')
-  assert.equal(ALL_CARDS['06087'].type, 'treachery')
-  assert.match(ALL_CARDS['06087'].text, /hidden|Hidden|隐私/i)
+function hiddenLawFixture(code) {
+  const state = fixture()
+  state.scenario = godsDwellDefinition
+  const inv = state.investigators[0]
+  placeHiddenCard(state, inv, state.scenario.treacheries[code], [])
+  return { state, inv }
+}
+
+function discardLaw(state, code, payment) {
+  const action = legalMoves(state).find(item => item.action === 'hiddenAction' && item.cardId === code)
+  assert.ok(action)
+  move(state, action)
+  settle(state, pending => pending.options.find(option => option.cardCode === payment)?.id)
+  const inv = state.investigators[0]
+  assert.equal(inv.hand.includes(code), false)
+  assert.equal(inv.discard.includes(payment), true)
+  assert.equal(state.encounterDiscard.includes(code), true)
+}
+
+function commitOptions(state, skill) {
+  const options = new Set()
+  const execute = current => performTest(current, 0, skill, 1)
+  resolveTransaction(state, 0, { action: 'parity-test' }, execute)
+  for (let i = 0; state.pendingChoice && i < 30; i++) {
+    const pending = state.pendingChoice
+    if (pending.kind === 'commit') for (const option of pending.options) {
+      if (/^\d+$/.test(option.id)) options.add(state.investigators[pending.seat].hand[Number(option.id)])
+    }
+    const picked = pending.options.find(option => ['done', 'skip', 'self'].includes(option.id)) || pending.options[0]
+    resolveTransaction(state, pending.seat, { action: 'choose', choiceId: pending.id, optionId: picked.id }, execute)
+  }
+  return options
+}
+
+test('TDE 06087 隐私牌阻止奇数费用的打出和能力，弃偶数费用的手牌可摆脱', () => {
+  const { state, inv } = hiddenLawFixture('06087')
+  const odd = asset(state, '01020')
+  enemy(state)
+  inv.hand.push('01020', '01017')
+  assert.match(validateMove(state, 0, { action: 'play', cardId: '01020' }), /隐私牌/)
+  assert.match(validateMove(state, 0, { action: 'ability', assetId: odd.id, abilityIndex: 0 }), /隐私牌/)
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01017' }), null)
+  discardLaw(state, '06087', '01017')
+  assert.equal(validateMove(state, 0, { action: 'play', cardId: '01020' }), null)
 })
 
-test('TDE 06088 伊吉若斯之理·争端：投入图标奇偶限制已声明（引擎读点缺失，报告登记）', () => {
-  assert.deepEqual(entry06088.hiddenRule, { cannotCommitOddSkillIcons: true, discardEvenSkillIconsAction: true })
-  assert.deepEqual(Object.fromEntries(Object.keys(entry06088.hiddenRule).map(key => [key, hiddenRuleFor('06088')?.[key]])), entry06088.hiddenRule)
-  assert.equal(ALL_CARDS['06088'].type, 'treachery')
+test('TDE 06088 隐私牌阻止投入奇数图标，弃偶数图标的手牌可摆脱', () => {
+  const { state, inv } = hiddenLawFixture('06088')
+  inv.hand.push('01020', '01017')
+  const available = commitOptions(state, 'combat')
+  assert.ok(available.has('01017'))
+  assert.equal(available.has('01020'), false)
+  discardLaw(state, '06088', '01017')
 })
 
-test('TDE 06089 伊吉若斯之理·喧嚣：标题词数奇偶限制已声明（引擎读点缺失，报告登记）', () => {
-  assert.deepEqual(entry06089.hiddenRule, {
-    cannotPlayOddWordsInTitle: true, cannotCommitOddWordsInTitle: true, discardEvenWordsAction: true,
-  })
-  assert.deepEqual(Object.fromEntries(Object.keys(entry06089.hiddenRule).map(key => [key, hiddenRuleFor('06089')?.[key]])), entry06089.hiddenRule)
-  assert.equal(ALL_CARDS['06089'].type, 'treachery')
+test('TDE 06089 隐私牌阻止打出或投入奇数词标题，弃偶数词的手牌可摆脱', () => {
+  const { state, inv } = hiddenLawFixture('06089')
+  inv.hand.push('01020', '01017')
+  assert.match(validateMove(state, 0, { action: 'play', cardId: '01020' }), /隐私牌/)
+  const available = commitOptions(state, 'combat')
+  assert.ok(available.has('01017'))
+  assert.equal(available.has('01020'), false)
+  discardLaw(state, '06089', '01017')
 })
 
 // ---------------------------------------------------------------- 06091
@@ -590,13 +650,25 @@ test('TDE 06098 黑夜恐怖：检定失败后揭示牌库顶 3 张，抽走弱�
   const api2 = apiBase(state)
   encounterRules.afterTest(state, inv, result, api2)
   assert.deepEqual(state.removedFromGame.sort(), ['01020', '01021'].sort(), '同一 result 只结算一次（幂等）')
-  // 行动：本次检定后弃掉（即使失败）—— 当前实现只在成功时弃置，见报告失败项
-
-  assert.equal(entry06098.threatAction.difficulty, 4, '行动：意志(4)，检定后弃掉（失败也弃置）')
+  const fail = apiBase(state, {
+    testResult: () => ({ success: false }),
+    api: { removeThreat: card => { inv.threat = inv.threat.filter(item => item !== card) } },
+  })
+  encounterRules.performEncounterAction(state, inv, { rule: entry06098.threatAction.rule, cardId: threat.id }, fail)
+  assert.equal(inv.threat.includes(threat), false, '失败也弃置')
 })
 
 // ---------------------------------------------------------------- 06099
-test('TDE 06099 窥看地下世界：受伤/恐惧各 +1；[fast] 弃掉后受 1 伤 1 恐', () => {
+test('TDE 06099 窥看地下世界：同时受到伤害和恐惧时只追加所选的一种；快速弃置仍各受 1 点', () => {
+  const game = fixture()
+  game.investigators[0].threat.push({ id: 'glimpse', code: '06099' })
+  const execute = current => applyHarm(current, current.investigators[0], 1, 1, [], true)
+  resolveTransaction(game, 0, { action: 'mixed-harm' }, execute)
+  assert.equal(game.pendingChoice.kind, 'effect')
+  resolveTransaction(game, 0, {
+    action: 'choose', choiceId: game.pendingChoice.id, optionId: 'horror',
+  }, execute)
+  assert.deepEqual([game.investigators[0].damage, game.investigators[0].horror], [1, 2])
   const state = baseState(wakingDefinition, 2)
   const inv = state.investigators[0]
   const threat = { id: 'threat-glimpse', code: '06099', originalCode: '06099' }
@@ -761,7 +833,31 @@ test('TDE 06108 隐蔽的祖格鼠：被击败时取消超出伤害并把头领�
   assert.deepEqual(result, { cancelExcessDamage: true }, '取消所有超出伤害')
   assert.equal(host.location, 'lobby')
   assert.equal(host.exhausted, true)
-  assert.match(ALL_CARDS['06108'].text, /cancel all excess damage/i)
+  const game = fixture()
+  const here = game.locations.find(location => location.id === game.investigators[0].location)
+  const next = { ...here, id: 'next-zoog-location', name: '相邻地点', connections: [here.id] }
+  here.connections = [next.id]
+  game.locations.push(next)
+  const ready = enemy(game, { code: '06108', originalCode: '06108', health: 2, engagedSeat: null })
+  scenarioRuntime(game, []).swarm.place(ready, 2)
+  const [attacked, remaining] = game.enemies.filter(item => item.hostId === ready.id)
+  assert.ok(attacked && remaining)
+  const attack = current => {
+    const target = current.enemies.find(item => item.id === attacked.id)
+    damageEnemy(current, target, enemyHealth(current, target) + 3, 0, [])
+  }
+  resolveTransaction(game, 0, { action: 'swarm-attack' }, attack)
+  while (game.pendingChoice) {
+    const pending = game.pendingChoice
+    const skip = pending.options.find(option => option.id === 'skip') || pending.options[0]
+    resolveTransaction(game, pending.seat, { action: 'choose', choiceId: pending.id, optionId: skip.id }, attack)
+  }
+  assert.equal(game.enemies.some(item => item.id === attacked.id), false)
+  for (const survivor of game.enemies.filter(item => [ready.id, remaining.id].includes(item.id))) {
+    assert.equal(survivor.location, next.id)
+    assert.equal(survivor.exhausted, true)
+    assert.equal(survivor.damageTaken, 0)
+  }
 })
 
 // ---------------------------------------------------------------- 06109

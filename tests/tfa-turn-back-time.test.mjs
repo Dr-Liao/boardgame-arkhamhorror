@@ -6,6 +6,7 @@ import {
   RUINS_LOCATIONS,
 } from '../content/campaigns/theForgottenAge/scenarios/turnBackTime/definition.js'
 import { implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/turnBackTime/behavior.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import { addLocationShroud } from '../src/engine/location-attachments.js'
 
 const clone = value => structuredClone(value)
@@ -66,6 +67,7 @@ function stateFor(count = 2) {
 }
 
 function runtimeApi(state, overrides = {}) {
+  const runtime = scenarioRuntime(state, [])
   const drawn = []
   const trauma = []
   const ids = { count: 0 }
@@ -91,6 +93,9 @@ function runtimeApi(state, overrides = {}) {
     },
     addExplorationTop: code => { (state.explorationDeck ||= []).push(code) },
     discardExploration: code => { (state.explorationDiscard ||= []).push(code) },
+    takeFromSetAside: runtime.takeFromSetAside,
+    setEnemyDamageTaken: runtime.setEnemyDamageTaken,
+    doomOn: runtime.doomOn,
     shuffleExploration: () => {},
     moveInvestigator: (seat, destination) => { state.investigators[seat].location = destination },
     resign: seat => { state.investigators[seat].resigned = true },
@@ -250,7 +255,6 @@ test('第一幕推进：时间石室洗入探索牌库，本幕进胜利区并�
   state.actIndex = 1
   behavior.actReveal(state, act, api)
   assert.ok(state.explorationDeck.includes('chamberOfTime'))
-  assert.equal(state.scenarioFlags.chamberOfTimeInDeck, true)
   assert.deepEqual(state.scenarioZones.setAsideLocations, [])
   const entry = state.victoryDisplay.find(card => card.id === 'act1')
   assert.equal(entry.vengeance, 2)

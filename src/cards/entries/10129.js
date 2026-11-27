@@ -12,25 +12,19 @@
 //   · 「下个回合期间可以额外行动」= api.grantExtraActionNextTurn（beginInvestigationPhase
 //     在目标的下个回合把 inv.extraActionNextTurn 换成 +1 行动后清除）。
 //
-// approximation（逐条披露，缺读点见 artifacts/migration/fhv/primitive-requests/10129.json）：
-//   「额外两次行动」目前只能用上面那个布尔读点近似为 1 次行动：引擎的
-//   inv.extraActionNextTurn 是布尔值，beginInvestigationPhase 固定 +1，没有计数式
-//   「下回合 +N 行动」原语。测试按近似口径断言（下个回合 3+1 行动）。
 const CODE = '10129'
 
 export default {
   code: CODE,
   name: 'Bide Your Time',
-  simplified: true,
-  note: 'approximation: 「下个回合可以额外进行两次行动」用 api.grantExtraActionNextTurn 近似为额外 1 次行动（引擎该读点是布尔值，beginInvestigationPhase 固定 +1）；计数式「下回合 +N 行动」原语见 primitive-requests/10129.json。',
   abilities: [
     {
       kind: 'played',
       cost: { action: 1 },
-      label: '额外花费 1 行动：你的下个回合获得额外行动',
+      label: '额外花费 1 行动：你的下个回合可以额外进行两次行动',
       resolve: ({ inv, api }) => {
-        api.grantExtraActionNextTurn(inv.seat)
-        api.info(`⏳ ${inv.name} 打出「静候时机」：下个回合可以额外行动。`)
+        api.grantExtraActionNextTurn(inv.seat, 2)
+        api.info(`⏳ ${inv.name} 打出「静候时机」：下个回合可以额外进行两次行动。`)
       },
     },
   ],

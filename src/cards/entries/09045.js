@@ -11,13 +11,18 @@
 //   · 证据 = 卡实例具名计数器 evidence（api.addCardCounter / card.markers.evidence）；
 //   · [action]：api.startTest(intellect 0)，成功值 = value - difficulty，逐点询问是否花 1 证据
 //     发现 1 个线索（api.discoverClue）；
-// approximation：「玩家卡能力把线索放到地点后」没有对应窗口（location.clues 的写入点
-//   addCluesToLocation / spendClueToLocation 都不开窗口），因此反应能力未声明，见 note 与
-//   primitive-requests/09045.json；证据可由其它来源写入同一条计数器读点。
 export default {
   code: '09045',
-  note: 'approximation: 「玩家卡能力把线索放到你所在地点后放等量证据」缺线索放置窗口，反应能力未实现（见 primitive-requests/09045.json）',
   abilities: [
+    {
+      kind: 'reaction',
+      trigger: 'cluesPlaced',
+      limit: { scope: 'perWindow', owner: 'instance' },
+      label: '玩家卡能力将你的线索放到你所在地点后：放置等量证据',
+      criteria: [({ inv, context }) => context.seat === inv.seat && context.location === inv.location
+        && context.amount > 0 && context.source?.kind === 'playerCard'],
+      resolve: ({ source, context, api }) => api.addCardCounter(source, 'evidence', context.amount),
+    },
     {
       kind: 'action',
       label: '检定[智力](0)：成功每超过 1 点，可花 1 证据发现 1 个线索',
@@ -31,7 +36,7 @@ export default {
             if (!result?.success) return
             const margin = Math.max(0, (result.value - result.difficulty) || 0)
             for (let index = 0; index < margin; index++) {
-              if (api.cardCounterOf(source, 'evidence') < 1) break
+              if (api.cardCounterOf(source, 'evidence') < 1 || !api.canDiscoverClueAt(inv.seat, inv.location)) break
               const answer = api.choice({
                 kind: 'effect', source: '09045', seat: inv.seat,
                 prompt: `研究笔记：是否花费 1 证据发现 1 个线索？（剩余机会 ${margin - index}）`,

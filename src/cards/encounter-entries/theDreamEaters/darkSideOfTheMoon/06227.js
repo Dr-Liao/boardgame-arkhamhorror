@@ -13,6 +13,5 @@ export default {
   scope: 'enemy',
   implemented: true,
   enemySpawnRule: { spawnNearestTrait: 'Surface' },
-  enemyStatRule: { huntIgnoresAlarmBelow: 3 },
-  note: '「猎物 - 警报等级最高（≥3）」的并列裁决由引擎 preyRank 读印刷 prey 文本；警报 ≤2 的忽略由 behavior.hunterMove / canEngageEnemy 落实。',
+  enemyStatRule: { huntIgnoresAlarmBelow: 3, preyHighestAlarm: true },
 }

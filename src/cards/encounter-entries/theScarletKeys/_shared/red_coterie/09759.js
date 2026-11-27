@@ -16,18 +16,14 @@ export default {
       api.info?.('「苋」变换了 ' + shifted + ' 把钥匙。')
     },
   }, {
-    kind: 'forced', trigger: ['assetDamageAssigned'],
-    label: '这次攻击伤害分配给支援时：击败那些支援',
-    criteria: [({ context }) => Boolean(context?.damagedAssetIds?.length)],
-    resolve: ({ state, api, context }) => {
-      for (const inv of state.investigators || []) {
-        for (const asset of [...(inv.assets || [])]) {
-          if (!context.damagedAssetIds.includes(asset.id)) continue
-          api.discardAsset?.(inv.seat, asset)
-        }
+    kind: 'forced', trigger: 'assetHarmPlaced',
+    label: '这次攻击将伤害或恐惧分配给支援时：击败那个支援',
+    criteria: ({ source, context }) => context?.attack?.enemyId === source?.id
+      && (context.damage > 0 || context.horror > 0),
+    resolve: ({ api, context }) => {
+      if (api.defeatAsset(context.seat, context.assetId)) {
+        api.info?.('「苋」的攻击击败了接受伤害或恐惧的支援。')
       }
-      api.info?.('「苋」的攻击击败了被分配伤害的支援。')
     },
   }],
-  note: 'approximation: 注：本文件在 2026-11-13 共享 helper 提取后重建，规则细节见 fix-plan P1-16。猎手已接线；攻击后变换钥匙 + 伤害分配给支援时击败它（assetDamageAssigned 窗口）。',
 }

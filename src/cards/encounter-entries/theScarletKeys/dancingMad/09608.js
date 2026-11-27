@@ -51,8 +51,9 @@ export default {
         api.info?.('🎭 惨遭夺舍：空洞原语不可用，改为受到 2 点恐惧。')
         return
       }
-      hollow.hollow({ code: chosen.code || chosen.originalCode, source: code, scope: 'investigator', seat: inv.seat })
       if (typeof api.removeAsset === 'function') api.removeAsset(inv.seat, chosen.id)
+      if (chosen.setAsideByScenario) return
+      hollow.hollow({ code: chosen.code || chosen.originalCode, source: code, scope: 'investigator', seat: inv.seat })
       api.info?.(`🎭 惨遭夺舍：「${chosen.name || chosen.code}」放在一边，位于场外，作为空洞。`)
     }, 0, { code, name: '惨遭夺舍', action: 'revelation' })
     return true

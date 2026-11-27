@@ -48,12 +48,12 @@ function itemMoves(state) {
 // ---------------------------------------------------------------------------
 // 通道表：既有通道顺序不变，新通道只追加
 // ---------------------------------------------------------------------------
-test('通道表：既有 7 个如同手牌通道顺序不变，deckTop/otherHand 追加在末尾', () => {
+test('通道表：既有如同手牌通道顺序不变，公共场外区追加在末尾', () => {
   assert.deepEqual([...LEGACY_PLAY_CHANNELS],
     ['attached', 'hunch', 'threat', 'beneath', 'backpack', 'discard', 'plan'])
-  assert.deepEqual([...PLAY_CHANNEL_ORDER], [...LEGACY_PLAY_CHANNELS, 'deckTop', 'otherHand'])
+  assert.deepEqual([...PLAY_CHANNEL_ORDER], [...LEGACY_PLAY_CHANNELS, 'deckTop', 'otherHand', 'sharedSetAside'])
   assert.deepEqual([...WINDOW_PLAY_CHANNEL_ORDER],
-    ['plan', 'attached', 'beneath', 'hunch', 'discard', 'backpack', 'threat', 'deckTop', 'otherHand'])
+    ['plan', 'attached', 'beneath', 'hunch', 'discard', 'backpack', 'threat', 'deckTop', 'otherHand', 'sharedSetAside'])
 })
 
 test('通道表：没有 EotE 状态时 legalMoves 不出现新通道（既有 8 通道行为零变化）', () => {
@@ -61,7 +61,7 @@ test('通道表：没有 EotE 状态时 legalMoves 不出现新通道（既有 8
   const plan = asset(state, '03264')
   plan.attached = ['01036']
   const moves = legalMoves(state)
-  assert.equal(moves.some(move => move.fromDeckTop || move.fromOtherHand), false)
+  assert.equal(moves.some(move => move.fromDeckTop || move.fromOtherHand || move.fromSharedSetAside), false)
   // 既有唯一通道样例（原定计划）仍照常出现，说明枚举顺序未被新通道打乱。
   const planMove = moves.find(move => move.fromPlanAssetId)
   assert.ok(planMove, '既有原定计划通道候选仍应存在')

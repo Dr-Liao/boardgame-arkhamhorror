@@ -191,7 +191,7 @@ test('TDC 11009 眼之秘仪：成功检定结束封印一枚揭示的数字标�
   assert.equal(sealedCalls[0][2], 'ocula')
 })
 
-test('TDC 11010 虚空一瞥：额外揭示 1 标记；[action] 洗回牌库（当前 HEAD 空转，缺口记录）', () => {
+test('TDC 11010 虚空一瞥：额外揭示 1 标记；消耗 1 行动从威胁区洗回牌库', () => {
   assert.deepEqual(e11010.threatEffect, { extraChaosTokens: 1 })
   const calls = []
   e11010.abilities[1].resolve({ inv: { seat: 0 }, source: { code: '11010' }, api: {
@@ -200,8 +200,6 @@ test('TDC 11010 虚空一瞥：额外揭示 1 标记；[action] 洗回牌库（�
     shuffleDeck: seat => calls.push(['shuffle', seat]),
   } })
   assert.deepEqual(calls, [['move', '11010', 0], ['shuffle', 0]], '条目 resolve 本身正确')
-  // 真实引擎探针：条目 action 描述子没有 cost.action，legalMoves 会枚举该行动但执行不消耗行动、
-  // 弱点仍留在威胁区、也未洗回牌库 → 行动空转（报告判失败）。
   const state = fixture('11014')
   const inv = state.investigators[0]
   inv.deck.push('11010')
@@ -214,8 +212,11 @@ test('TDC 11010 虚空一瞥：额外揭示 1 标记；[action] 洗回牌库（�
   const before = inv.actionsLeft
   move(state, moves[0])
   settle(state)
-  assert.equal(inv.actionsLeft, before, '缺口：行动未消耗行动点（cost.action 缺失）')
-  assert.equal(inv.threat.some(card => card.code === '11010'), true, '缺口：弱点未被移出威胁区')
+  const current = state.investigators[0]
+  assert.equal(current.actionsLeft, before - 1)
+  assert.equal(current.threat.some(card => card.id === threat.id), false)
+  assert.equal(current.deck.filter(code => code === '11010').length, 1)
+  assert.equal(current.discard.includes('11010'), false)
 })
 
 test('TDC 11011 迈克尔·麦克格林：旧印给枪械加 1 弹药；花弹药后得 1 资源', () => {

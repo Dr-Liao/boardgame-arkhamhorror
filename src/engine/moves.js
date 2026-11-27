@@ -1,3 +1,8 @@
+import { enemyIsMassive } from './enemy-keyword-movement.js'
+import { CARD_VIEW_EXPIRED, timedCardViewRule } from './timed-card-view.js'
+import { fightTargetById, storyFightTargets } from './fight-targets.js'
+import { performedActionKinds } from './action-history.js'
+import { hiddenDiscardCandidates, hiddenParityBlocks } from './hidden-rules.js'
 import { availableResources } from './resource-bank.js'
 import { abilityLocationResourceCost, locationActionResourceCost } from './location-action-cost.js'
 import { normalizeCostValues } from './cost.js'
@@ -5,7 +10,7 @@ import { availablePlayResources } from './play-payment.js'
 import { damagePlayDiscount } from './play-attempt.js'
 import { enemyInEngagement, enemyIsBody, enemyIsPart } from './enemy-parts.js'
 import { playTimingCandidates, playTimingSource } from './play-timing.js'
-import { attachedAbilityCards } from './attachment-rules.js'
+import { attachedAbilityCards, attachmentTextBlanked } from './attachment-rules.js'
 import { teamCanActivate } from './team-abilities.js'
 // 合法行动枚举与校验（legalMoves / validateMove）从 engine.js 拆出的第六个模块
 // （Phase 6 · 6d-6）。
@@ -43,6 +48,7 @@ import { gapFastActionMoves, sameScenarioAction } from './gap-actions.js'
 
 export function createMoves(deps) {
   const {
+    canEquip,
     LITA_CHANDLER_CODE,
     META,
     SKILL_NAMES,
@@ -61,6 +67,7 @@ export function createMoves(deps) {
     assetReplacementPlans,
     availableThreatAbilities,
     canAdvanceWithClues,
+    canAdvanceOptionalAct,
     canAffordAbility,
     descriptorUsable,
     canDiscardFromHand,
@@ -288,13 +295,16 @@ export function createMoves(deps) {
   // 地点附属的「解除并放回游戏区域」（04270 骷髅钥匙）。
   for (const [attachmentIndex, attachment] of (loc?.attachments || []).entries()) {
     if (!registeredEntry(attachment.code)?.detachAction) continue
-    if (attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) continue
+    const shared = attachment.hostedPlayerAsset && registeredEntry(attachment.code)?.assetRule?.sharedLocationDetach
+    if (!shared && attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) continue
+    if (shared && !canEquip(inv, cardDef(attachment.code))) continue
     moves.push({ action: 'detachLocationAttachment', locationId: loc.id, attachmentIndex,
       label: `🔓 解除「${cardName(attachment.code)}」并放回游戏区域` })
   }
   for (const { code, rule } of activeHiddenRules(state, inv)) {
     const discard = rule.discard
     if (!discard || availableResources(inv) < (discard.resources || 0)) continue
+    if (discard.even && !hiddenDiscardCandidates(inv, discard, cardDef).length) continue
     if (discard.damageInvestigator) {
       for (const target of aliveInvestigators(state).filter(other => other.location === inv.location)) {
         moves.push({ action: 'hiddenAction', cardId: code, targetSeat: target.seat,
@@ -321,7 +331,7 @@ export function createMoves(deps) {
     }
   }
 
-  const blocked = cannotPlayTypes(inv)
+  const blocked = cannotPlayTypes(inv, state)
   for (const code of unique(inv.hand)) {
     const def = cardDef(code)
     if (playAccess(code).onlyFromDiscard) continue
@@ -342,6 +352,7 @@ export function createMoves(deps) {
         const copyDescriptor = descriptorOfKind(copyCode, 'played')
         if (!copy || copy.type !== 'event' || copy.exceptional
           || (!copyPlayed && !copyDescriptor?.resolve) || playAccess(copyCode).reactionOnly) continue
+        if (hiddenParityBlocks(state, inv, copy, 'play')) continue
         const cost = playCost(state, inv, copy)
         if (availableResources(inv) < cost || (copyPlayed && effectError(state, inv, copyPlayed))) continue
         moves.push({ action: 'play', cardId: code, copyCode,
@@ -495,6 +506,12 @@ export function createMoves(deps) {
 
   // P7 TDC 11699/11700「你位于此地点时可以如同位于连接地点般攻击或躲避该地点的敌人」：
   // 地点条目声明 locationRule.reachConnectingEnemies 时，把直接相连地点的敌人并入目标枚举。
+  for (const asset of storyFightTargets(state)) {
+    if (enemyInReach(state, inv, asset) && scenarioBehavior(state).canFightEnemy?.(state, inv, asset) !== false) {
+      moves.push({ action: 'fight', enemyId: asset.id, locationId: asset.location,
+        label: `⚔️ 攻击「${asset.name}」（战斗 vs ${asset.fight}）` })
+    }
+  }
   const targetEnemies = state.enemies.filter(enemy => enemyInReach(state, inv, enemy))
   for (const enemy of targetEnemies) {
     const canFightHere = !enemyIsBody(enemy) && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy)) && !hiddenFightBlocked(state, inv, enemy)
@@ -522,7 +539,7 @@ export function createMoves(deps) {
     }
     // 2026-10-25 本循环修复 can-engage-enemy-hook：剧本可以声明「该敌人不能被交战」
     // （对应参考实现 CannotBeEngaged，如《恶罪报应》非幽灵地点的异端者）。
-    if (!enemyIsPart(enemy) && !enemy.massive && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
+    if (!enemyIsPart(enemy) && !enemyIsMassive(state, enemy) && enemy.engagedSeat !== seat && !capabilityBlocked(state, inv, 'engage') && !enemyIgnoresInvestigator(state, inv, enemy)
       && !enemyProtectionBlocks(state, inv, enemy, 'engage')
       && enemyEffectAllowed(state, enemy, 'engage', slumberDeps)
       && scenarioBehavior(state).canEngageEnemy?.(state, inv, enemy) !== false) {
@@ -579,7 +596,7 @@ export function createMoves(deps) {
   for (const { asset: a, ownerSeat: abilityOwnerSeat } of abilitySources) {
     const eff = assetEffect(inv, a)
     if (!eff || !eff.abilities) continue
-    if (!lolaCanUseCard(inv, a.code)) continue
+    if (!lolaCanUseCard(inv, a.code) || hiddenParityBlocks(state, inv, cardDef(a.code), 'trigger')) continue
     eff.abilities.forEach((ab, i) => {
       if (!canAffordAbility(state, inv, a, ab)) return
       // 能力层上限：已用完的能力不再出现在合法列表里（与玩家窗口的过滤一致）。
@@ -616,7 +633,7 @@ export function createMoves(deps) {
       // 目标枚举（B1）：描述子声明 target 时，每个合法目标拆成一条独立行动，
       // 牌桌可以先选目标、AI 不用再多问一轮。没有目标且非 optional 就不出现。
       if (ab.descriptor && ab.descriptor.target) {
-        const candidates = enumerateTargets(state, inv, ab.descriptor.target, { source: a }).filter(hostFilter)
+        const candidates = enumerateTargets(state, inv, ab.descriptor.target, { source: a, actionKind: ab.effect?.type || ab.descriptor.countsAs }).filter(hostFilter)
         if (!candidates.length) {
           if (extensionEnemies.length) {
             for (const enemy of extensionEnemies) {
@@ -668,7 +685,7 @@ export function createMoves(deps) {
   }
 
   for (const t of availableThreatAbilities(state, inv)) {
-    const th = getThreatEffect(t)
+    const th = getThreatEffect(t, state)
     if (th && th.discardCost) {
       moves.push({ action: 'discardThreat', threatId: t.id, label: `♻️ 弃掉「${cardName(t.code)}」（花 ${th.discardCost.action} 行动）` })
     }
@@ -680,7 +697,8 @@ export function createMoves(deps) {
     }
   }
 
-  if (canAdvanceWithClues(state)) moves.push({ action: 'advanceAct', scriptCard: 'act', label: '共同支付线索推进场景' })
+  if (canAdvanceOptionalAct(state)) moves.push({ action: 'advanceAct', scriptCard: 'act', label: '推进场景' })
+  else if (canAdvanceWithClues(state)) moves.push({ action: 'advanceAct', scriptCard: 'act', label: '共同支付线索推进场景' })
   for (const location of state.locations || []) {
     if (location.id !== inv.location || !isVeiledLocation(location)) continue
     if (veiledFlipBlockedReason(location)) continue
@@ -710,6 +728,10 @@ export function createMoves(deps) {
   const compatibility = stateCompatibilityError(state, META.resourceVersion)
   if (compatibility) return compatibility
   if (!move || Array.isArray(move) || typeof move.action !== 'string') return '无效行动'
+  if (move.action === CARD_VIEW_EXPIRED) {
+    return timedCardViewRule(state, seat, move.enemyId)?.key === move.ruleKey && typeof move.ruleKey === 'string'
+      ? null : '此卡牌的查看时限已失效'
+  }
   // 调试 move（CONTRACT §3.1）：可在任意时机提交，所以分支放在 actingSeats / pendingChoice
   // 之前，也不经过行动点与行动类型校验；规则全部收敛在 debug.js 的纯函数里。
   if (isDebugMove(move)) {
@@ -738,7 +760,33 @@ export function createMoves(deps) {
   }
   {
     const cost = actionCost(state, inv, move)
+    const baseCost = actionCost(state, inv, move, false)
     const kind = actionKind(state, inv, move)
+    const previousActions = inv.actionHistory?.turn === state.turnSerial ? inv.actionHistory?.entries || [] : []
+    if (baseCost > 0 || move.action === 'endTurn') {
+      const required = previousActions.length ? [] : (inv.threat || []).flatMap(source => {
+        if (source.requiredActionTurn == null || source.requiredActionTurn !== state.turnSerial
+          || attachmentTextBlanked(state, source)) return []
+        const id = registeredEntry(source.originalCode || source.code)?.treacheryRule?.requiredFirstAction
+        const index = id ? entityActionDescriptors(source).findIndex(descriptor => descriptor.id === id) : -1
+        if (index < 0) return []
+        const descriptor = entityActionDescriptors(source)[index]
+        return descriptorUsable(state, inv, source, descriptor, { mode: 'action' }) ? [{ source, index }] : []
+      })
+      if (required.length && !required.some(({ source, index }) => move.action === 'entityAbility'
+        && move.entityId === source.id && move.abilityIndex === index)) return '第一个行动必须执行威胁卡指定的能力'
+    }
+    if (baseCost > 0 && previousActions.length && (inv.threat || []).some(source =>
+      !attachmentTextBlanked(state, source)
+      && registeredEntry(source.originalCode || source.code)?.treacheryRule?.cannotRepeatActionKind)
+      && performedActionKinds(move, kind, registeredEntry).some(value => previousActions.at(-1).includes(value))) {
+      return '不能连续执行同一类型的行动'
+    }
+    const prohibited = inv.prohibitedActions && inv.prohibitedActions.turn === state.turnSerial ? inv.prohibitedActions.kinds : null
+    if (prohibited && baseCost > 0
+        && performedActionKinds(move, kind, registeredEntry).some(value => prohibited.includes(value))) {
+      return '本回合不能执行该类型的行动'
+    }
     const restricted = restrictedKindOfMove(state, inv, move)
     if (kind === 'explore' ? inv.actionsLeft < cost : actionsAvailable(inv, restricted) < cost) {
       return kind === 'explore' ? '行动点不足'
@@ -815,6 +863,7 @@ export function createMoves(deps) {
         const copiedDescriptor = descriptorOfKind(move.copyCode, 'played')
         if (!inv.beneath?.includes(move.copyCode) || !copied || copied.type !== 'event' || copied.exceptional
           || (!copiedPlayed && !copiedDescriptor?.resolve) || playAccess(move.copyCode).reactionOnly) return '彩绘世界没有合法的复制事件'
+        if (hiddenParityBlocks(state, inv, copied, 'play')) return '隐私牌禁止你打出这张卡牌'
         if (!inv.hand.includes(move.cardId)) return '手牌中没有彩绘世界'
         const locationCost = abilityLocationResourceCost(state, inv, copiedDescriptor, copiedPlayed, playLocation)
         if (availableResources(inv) < playCost(state, inv, copied) + locationCost) return '资源不足'
@@ -827,7 +876,7 @@ export function createMoves(deps) {
       if (!channelCandidate && !inv.hand.includes(move.cardId)) return '手牌中没有这张牌'
       if (playAccess(move.cardId).reactionOnly) return '该牌只能在对应的反应窗口打出'
       if (registeredEntry(move.cardId)?.investigator?.cannotPlayAction) return '该牌不能使用打出行动打出'
-      if (cannotPlayTypes(inv).has(def.type)) return '当前禁止打出该类型卡牌'
+      if (cannotPlayTypes(inv, state).has(def.type)) return '当前禁止打出该类型卡牌'
       // 预览 = 校验 = 扣费同源：基础费用 - 如同手牌通道折扣 - 潜在减费（campaign/条目/场上 provider）。
       const channelDiscount = channelCandidate ? playChannels.discountOf(channelCandidate) : 0
       // P6（九循环）：Double 特质的额外行动费用（费用声明在 played 描述子 cost.action）。
@@ -856,7 +905,7 @@ export function createMoves(deps) {
       }
       return effectError(state, inv, playedEffect(move.cardId), playLocation)
     }
-    case 'draw': return drawBlocked(state, inv) ? '「残酷拷问」：你不能进行抽取行动' : null
+    case 'draw': return drawBlocked(state, inv) ? '当前效果禁止你进行抽取行动' : null
     case 'resource': return scenarioBehavior(state).canGainResources?.(state, inv) === false ? '此地点不能获得资源' : null
     case 'freeAction': {
       const skids = investigatorRule(inv.code)
@@ -873,6 +922,7 @@ export function createMoves(deps) {
       const rule = hiddenRule(state, move.cardId)
       const discard = rule?.discard
       if (!discard || !hasHiddenCard(inv, move.cardId)) return '手牌中没有该隐私牌'
+      if (discard.even && !hiddenDiscardCandidates(inv, discard, cardDef).length) return '手牌中没有符合费用条件的卡牌'
       if (availableResources(inv) < (discard.resources || 0)) return '资源不足'
       if (discard.damageInvestigator && !state.investigators.some(other => other.seat === move.targetSeat
         && !other.defeated && !other.resigned && other.location === inv.location)) return '隐私牌没有合法的伤害目标'
@@ -937,7 +987,7 @@ export function createMoves(deps) {
     }
     case 'discardThreat': {
       const t = availableThreatAbilities(state, inv).find(card => card.id === move.threatId)
-      if (!t || !getThreatEffect(t)?.discardCost) return '该威胁没有弃置能力'
+      if (!t || !getThreatEffect(t, state)?.discardCost) return '该威胁没有弃置能力'
       return null
     }
     case 'purgeThreat': {
@@ -947,9 +997,9 @@ export function createMoves(deps) {
     }
     case 'payDebt': {
       const t = inv.threat.find((x) => x.id === move.threatId)
-      if (!t || !getThreatEffect(t)?.debt) return '没有该债务'
+      if (!t || !getThreatEffect(t, state)?.debt) return '没有该债务'
       if (availableResources(inv) <= 0) return '资源不足'
-      const limit = getThreatEffect(t).debtPaymentLimit
+      const limit = getThreatEffect(t, state).debtPaymentLimit
       if ((t.debtPaymentsThisRound || 0) >= (limit ?? 2)) return limit == null ? '本轮已支付两次' : `本轮已支付 ${limit} 次`
       return null
     }
@@ -987,19 +1037,12 @@ export function createMoves(deps) {
       if (!loc || !investigatorConnections(state, inv.location).includes(move.locationId)) return '不能移动到该地点'
       const scenarioMoveError = scenarioBehavior(state).moveError?.(
         state, inv, state.locations.find(l => l.id === move.locationId), move.locationId)
-      // P7 TDC 11623 古代祭坛：进入地点的共同线索费用（validate 与 movement.js 结算同一声明）。
-      const entryCost = registeredEntry(destination?.originalCode || destination?.code)?.locationRule?.entryCost
-      if (entryCost?.kind === 'groupClues') {
-        const needed = entryCost.perInvestigator * state.numInvestigators
-        const total = state.investigators.filter(other => !other.defeated && !other.resigned
-          && other.location === inv.location).reduce((sum, other) => sum + (other.clues || 0), 0)
-        if (total < needed) return `需要同地点调查员共同支付 ${needed} 个线索才能进入`
-      }
       return movementError(state, inv, move.locationId) || investigatorEntryError(state, move.locationId) || scenarioMoveError || null
     }
     case 'entityAbility': {
       const entity = actionEntityById(state, move.entityId)
       if (!entity) return '目标实体不在场上'
+      if (registeredEntry(entity.code)?.assetRule?.enemyAttachmentActions && entity.ownerSeat !== seat) return '只有附属卡的拥有者能发动该能力'
       // 2026-10-25 本循环修复 05245：剧本级谈判限制（与 legalMoves 的同一读点）。
       const descriptors = entityActionDescriptors(entity)
       const descriptor = descriptors[move.abilityIndex]
@@ -1060,7 +1103,7 @@ export function createMoves(deps) {
     }
     case 'fight': {
       if (capabilityBlocked(state, inv, 'fight')) return '当前效果禁止你攻击'
-      const enemy = state.enemies.find((e) => e.id === move.enemyId)
+      const enemy = fightTargetById(state, move.enemyId)
       if (!enemy) return '未找到该敌人'
       if (enemyIsBody(enemy)) return '请选择要攻击的敌人部位'
       if (!enemyEffectAllowed(state, enemy, 'fightAction', slumberDeps)) return '沉睡的目标免疫调查员行动'
@@ -1114,9 +1157,10 @@ export function createMoves(deps) {
           ? (state.investigators[move.ownerSeat] && controlledAbilityCard(state.investigators[move.ownerSeat], move.assetId))
           : null)
       if (!asset) return '未找到该资产'
+      if (hiddenParityBlocks(state, inv, cardDef(asset.code), 'trigger')) return '隐私牌禁止你触发该卡能力'
       if (capabilityBlocked(state, inv, 'triggerAbilities')) return '当前效果禁止你触发能力'
       if (!lolaCanUseCard(inv, asset.code)) return '罗拉不能触发非当前角色阵营卡牌的能力'
-      const eff = assetEffect(inv, asset)
+      const eff = assetEffect(inv, asset, state)
       const ability = eff && eff.abilities && eff.abilities[move.abilityIndex]
       if (!ability || !Number.isInteger(move.abilityIndex)) return '无效能力'
       if (ability.descriptor && limitUsed(state, inv, ability.descriptor, null, state.timingWindow, asset)) {
@@ -1156,11 +1200,14 @@ export function createMoves(deps) {
         const extensionTarget = hostAttackExtensionEnemies(state, inv, asset).some(enemy => enemy.id === move.targetId)
         if (ability.descriptor?.target) {
           // 目标枚举（B1）：只接受 enumerateTargets 的候选，与 legalMoves 用的是同一份枚举。
-          const candidate = resolveTarget(state, inv, ability.descriptor.target, move.targetId, { source: asset })
+          const candidate = resolveTarget(state, inv, ability.descriptor.target, move.targetId,
+            { source: asset, actionKind: ability.effect?.type || ability.descriptor.countsAs })
           if (!candidate && !extensionTarget) return '该目标不是合法的能力目标'
         } else if (ability.descriptor) {
           // 描述子没有声明 target 时，目标由 resolve() 自己询问，这里只要求实体存在。
-          if (!state.enemies.some(enemy => enemy.id === move.targetId)) return '该敌人不是有效目标'
+          const target = ability.effect?.type === 'fight' || ability.descriptor.countsAs === 'fight'
+            ? fightTargetById(state, move.targetId) : state.enemies.find(enemy => enemy.id === move.targetId)
+          if (!target) return '该敌人不是有效目标'
         } else {
           const targets = abilityTargets(state, inv, ability.effect)
           if (!targets.some((e) => e.id === move.targetId) && !extensionTarget) return '该敌人不是有效目标'
@@ -1182,17 +1229,19 @@ export function createMoves(deps) {
       if (enemyIsPart(enemy)) return '请选择敌人主体进行交战'
       if (!enemyEffectAllowed(state, enemy, 'engage', slumberDeps)) return '沉睡的目标免疫调查员行动'
       if (enemy.location !== inv.location) return '该敌人不在你所在的地点'
-      if (enemy.massive) return '庞大敌人已与所在地点所有调查员交战'
+      if (enemyIsMassive(state, enemy)) return '庞大敌人已与所在地点所有调查员交战'
       if (enemy.engagedSeat === seat) return '你已经与该敌人交战'
       if (scenarioBehavior(state).canEngageEnemy?.(state, inv, enemy) === false) return '该敌人不能被交战'
       return null
     }
-    case 'advanceAct': return canAdvanceWithClues(state) ? null : '当前线索或窗口不能推进场景'
+    case 'advanceAct': return canAdvanceOptionalAct(state) || canAdvanceWithClues(state) ? null : '当前线索或窗口不能推进场景'
     case 'detachLocationAttachment': {
       const detachLoc = state.locations.find(item => item.id === move.locationId)
       const attachment = detachLoc?.attachments?.[move.attachmentIndex]
-      if (!attachment || !registeredEntry(attachment.code)?.detachAction) return '这里没有可解除的附属'
-      if (attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) return '这不是你的附属'
+      if (!attachment || inv.location !== detachLoc.id || !registeredEntry(attachment.code)?.detachAction) return '这里没有可解除的附属'
+      const shared = attachment.hostedPlayerAsset && registeredEntry(attachment.code)?.assetRule?.sharedLocationDetach
+      if (shared && !canEquip(inv, cardDef(attachment.code))) return '你的槽位不足'
+      if (!shared && attachment.ownerSeat != null && attachment.ownerSeat !== inv.seat) return '这不是你的附属'
       return null
     }
     case 'flipVeiled': {

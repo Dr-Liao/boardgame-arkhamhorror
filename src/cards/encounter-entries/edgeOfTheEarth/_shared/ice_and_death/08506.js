@@ -4,6 +4,8 @@
 // 读点：地点能力走条目 abilities（非玩家能力来源含已揭示地点）；写入只走 ctx.api。
 //   庇护值属印刷地点数据（章节 definition 从卡表/参考实现抄录；本条目只声明 flags.shelter）。
 
+import { frostPoolRoom } from '../../../_shared.js'
+
 const CODE = '08506'
 
 export default {
@@ -13,8 +15,8 @@ export default {
     kind: 'reaction', trigger: 'investigateSuccess',
     label: '辽阔雪地：加 1 个 [frost] 换取额外 3 个线索（团队每场游戏一次）',
     limit: { scope: 'perGame', owner: 'group' },
-    criteria: ({ state, inv, context }) => context?.location === source?.id
-      && state.investigators?.[inv?.seat ?? state.skillTest?.seat]?.location === context?.location,
+    criteria: ({ state, inv, source, context }) => context?.location === source?.id
+      && context.seat === inv?.seat && frostPoolRoom(state) > 0,
     resolve: ({ state, inv, context, api }) => {
       const locationId = context?.location ?? inv?.location
       const added = api.mechanics.frost.add(1)

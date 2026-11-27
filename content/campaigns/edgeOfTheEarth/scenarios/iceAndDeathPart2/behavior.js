@@ -195,7 +195,7 @@ export function resolveStory(state, code, inv, api = {}) {
   const effect = entryFlags(code)?.storyEffect || null
   const active = inv || state.investigators?.[leadSeat(state)] || state.investigators?.[0]
   const tekeliliCodes = RAW.tekeliliFaces
-  const removeFrost = () => api.removeChaosToken?.('frost')
+  const removeFrost = () => api.mechanics?.frost?.pay(1)
   const toBottom = codes => {
     for (const item of codes) {
       const index = (active?.deck || []).indexOf(item)
@@ -414,7 +414,7 @@ export function afterTest(state, inv, result, api = {}) {
   if (tokens.includes('cultist')) {
     const spec = part2ChaosFailureSpec(state, 'cultist', failedBy)
     if (spec) {
-      const shuffled = tekeliShuffleIn(state, inv.seat, spec.count)
+      const shuffled = api.mechanics?.tekeli?.shuffleIn(inv.seat, spec.count) ?? tekeliShuffleIn(state, inv.seat, spec.count)
       const missing = spec.count - (shuffled ? Number(shuffled.length ?? spec.count) : 0)
       if (missing > 0) inv.horror = (inv.horror || 0) + missing
       applied.push({ token: 'cultist', count: spec.count })

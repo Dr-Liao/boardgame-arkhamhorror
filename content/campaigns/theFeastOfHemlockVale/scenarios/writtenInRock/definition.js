@@ -209,11 +209,11 @@ export const LOCATIONS = Object.freeze(Object.fromEntries([
   }),
   ...RAIL_TABLE.map(([id, code, ports]) => {
     // 轨道隧道印刷有未揭示面（背面「Rail Tunnel」）：入场时未揭示，进入时揭示。
-    // 控制站/轨道出口是单面卡，入场即揭示。
-    const extra = { rail: true, railIcons: [...ports], revealed: id === CONTROL_STATION_ID || id === RAIL_EXIT_ID }
+    // 轨道出口入场即揭示；控制站从未揭示面入场。
+    const extra = { rail: true, railIcons: [...ports], revealed: id === RAIL_EXIT_ID }
     if (id === CONTROL_STATION_ID) Object.assign(extra, {
       // 控制站：shroud 1 / 每调查员 2 条线索；背面是「进入额外费用」。
-      clues: 2, revealed: true, enterCostCluesPerInvestigator: 2,
+      clues: 2, enterCostCluesPerInvestigator: 2,
     })
     if (id === RAIL_EXIT_ID) Object.assign(extra, {
       clues: 0, hintsFixedClues: true, hasVictory: true, victory: 1,

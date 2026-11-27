@@ -10,23 +10,13 @@
 // 读点：
 //   · 敌人型弱点：scope:'enemy'，由 resolveWeakness 的 enemy 分支在本地点生成并交战；
 //     关键词来自条目级 enemyWeakness（card-lookup.js#enemyDef）；
-//   · 额外揭示：testBegins 窗口（tests.js 在揭示标记前开窗）→ api.addExtraChaosChoices，
-//     读点是 state.skillTest.extraChaosChoices（标记揭示段唯一读点）。
-// approximation: 「法术槽位无支援」的**容量**没有读点（槽位容量只在 canEquip/slotUsage 内部），
-//   近似为「基础 1 个法术槽 - 当前占用法术槽的支援数」，额外法术槽（add:slot）不计。
+//   · 额外揭示：testBegins 窗口登记额外揭示，由检定的揭示管线处理，
+//     所有额外标记都参与本次检定。
 const code = '09127'
-
-import { ALL_CARDS } from '../../cards/cards-data.js'
-
-const filledArcaneSlots = inv => (inv.assets || []).filter(asset => {
-  const card = ALL_CARDS[asset.code]
-  return [card?.slot, ...(card?.slots || [])].some(slot => /arcane/i.test(String(slot || '')))
-}).length
 
 export default {
   code,
   scope: 'enemy',
-  note: 'approximation: 空法术槽按「基础 1 槽 - 占用数」近似（缺容量读点，额外法术槽不计）。',
   enemyWeakness: { hunter: true },
   abilities: [
     {
@@ -38,12 +28,12 @@ export default {
         const test = state.skillTest
         if (!test || test.seat !== inv.seat) return false
         if (!['fight', 'evade'].includes(test.actionKind)) return false
-        return Boolean(source) && test.target?.kind === 'enemy' && test.target.id === source.id
+        return Boolean(source) && (test.target?.id ?? test.source?.enemyId) === source.id
       }],
       resolve: ({ inv, api }) => {
-        const empty = Math.max(0, 1 - filledArcaneSlots(inv))
+        const empty = api.emptyAssetSlots(inv.seat, 'arcane')
         if (!empty) return
-        api.addExtraChaosChoices(empty)
+        for (let i = 0; i < empty; i++) api.playerTools.revealAdditionalTestToken()
         api.info(`👻 「恐怖异灵」：${inv.name} 有 ${empty} 个空法术槽，额外揭示 ${empty} 个混乱标记。`)
       },
     },

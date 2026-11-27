@@ -9,16 +9,9 @@
 // 读点（声明即接线）：
 //   · 「附属到[[道具]]支援」= api.attachToAsset（scenario-runtime 的遭遇卡附属写入口，
 //     attachCardTo 会挂到 asset.attachments）；
-//   · 「文本框空白」= 条目 treacheryRule.blankHostExceptForced（card-text.js /
-//     ability-rules.js#descriptorUsable 的既有宿主空白读点）；
+//   · 宿主文本框空白使用 treacheryRule.blankHost；摆脱通过地点相同的附属行动。
 //   · 不能附属时获得涌动 = encounterResolve 返回 { gainSurge: true }（encounter.js#finishDraw）。
 //
-// 近似（明确披露）：
-//   1. 引擎的宿主空白读点只抑制“可选能力”的枚举（blankHostExceptForced 保留强制能力），
-//      而印刷是「除特性外全部空白」；修正/被动数值没有同样的逐宿主空白读点。
-//   2. 「[action] 战斗(3) 摆脱」需要引擎能枚举「附属在玩家支援上的遭遇卡的行动」；当前
-//      moves.js 只从 controlledAbilityCards（assets + threat）枚举行动，挂在 asset.attachments
-//      上的这张卡没有行动入口，因此只声明 flags.escapeAction，未写不可达描述子。
 import { ALL_CARDS } from '../../../_shared.js'
 
 const CODE = '10727'
@@ -33,7 +26,21 @@ export default {
   code: CODE,
   scope: 'treachery',
   implemented: true,
-  treacheryRule: { blankHostExceptForced: true },
+  treacheryRule: {
+    blankHost: true,
+    attachmentAbilities: [{
+      kind: 'action',
+      actionKind: 'activate',
+      label: '真菌感染：检定战斗(3)。成功弃掉本卡，失败受到 1 点伤害',
+      resolve: ({ inv, source, api }) => api.test(inv.seat, 'combat', DIFFICULTY, {
+        source: { type: 'scenario', action: 'activate', code: CODE, label: '真菌感染：检定战斗(3)' },
+        resolve(result) {
+          if (result.success) api.scenario.detachEncounterAttachmentById(source.id)
+          else api.damage(inv.seat, 1)
+        },
+      }),
+    }],
+  },
   flags: {
     traits: ['Hazard', 'Blight'],
     quantity: 2,
@@ -59,8 +66,4 @@ export default {
     api.info?.(`🍄 「真菌感染」附属到「${api.cardName?.(host.code) || host.code}」（其文本框视为空白）。`)
     return true
   },
-  note: 'approximation: 附属/涌动/宿主文本框空白已接线；「文本框空白」的引擎读点只覆盖可选能力枚举'
-    + '（blankHostExceptForced 保留强制能力），修正/被动数值没有逐宿主空白读点；'
-    + '「[action] 战斗(3) 摆脱」在 FHV 引擎没有「玩家支援附属遭遇卡」的行动枚举入口，'
-    + '只落 flags.escapeAction 并在本条披露（不得写不可达描述子）。',
 }

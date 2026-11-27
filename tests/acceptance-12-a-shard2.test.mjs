@@ -14,6 +14,8 @@ import { fixture, asset, enemy, move, settle, legalMoves } from './core-fixture.
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { reactionWindow } from '../src/engine/engine.js'
+import { totalDoom } from '../src/engine/rules-state.js'
+import { viewState } from '../src/integration/observation.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { REPRINT_ALIASES } from '../src/cards/card-identity.js'
 
@@ -54,8 +56,8 @@ const missing = ENTRIES.filter(entry => !registeredEntry(entry.code))
 if (missing.length) registerCardAbilities(missing)
 
 const me = (state, seat = 0) => state.investigators[seat]
-const game = () => {
-  const state = fixture('01001', 1)
+const game = (seats = 1) => {
+  const state = fixture('01001', seats)
   state.abilityLimits = {}
   for (const inv of state.investigators) {
     inv.hand = []; inv.assets = []; inv.threat = []; inv.discard = []
@@ -217,21 +219,28 @@ test('12-a 12051 血洗全城：从遭遇牌库顶 9 张找非精英敌人，抽
 })
 
 // ── 12052 变戏法 ─────────────────────────────────────────────────────────────
-test('12-a 12052 变戏法：从手牌打出道具支援（费用 -2），回合结束标记返回手牌', () => {
-  const s = game()
-  const item = Object.values(ALL_CARDS).find(def => def.type === 'asset'
-    && (def.traits || []).some(trait => String(trait).toLowerCase() === 'item')
-    && Number(def.cost) >= 3 && def.xp === 0 && !def.permanent && def.deckLimit !== 0
-    && !String(def.code).includes('a') && !(def.slots || []).includes('Head'))?.code
-  assert.ok(item, '需要一张费用≥3 的道具支援')
-  me(s).hand.push(item)
+test('12-a 12052 变戏法：减费打出道具并在本人的回合结束时选择另一张道具返回', () => {
+  const s = game(2)
+  const oldItem = asset(s, '01016')
+  asset(s, '03032')
+  me(s).hand.push('01020')
   playEvent(s, '12052')
-  settle(s, byCard(item))
-  const entered = fresh(s, item)
-  assert.ok(entered, '道具支援已入场')
-  const expected = 30 - 1 - Math.max(0, Number(ALL_CARDS[item].cost) - 2)
-  assert.equal(me(s).resources, expected, '费用减 2')
-  assert.ok(entered.returnToHandAtRoundEnd || entered.roundEndReturn, '入场的这张道具带有轮末返回标记')
+  settle(s)
+  assert.ok(fresh(s, '01020'))
+  assert.equal(me(s).resources, 28)
+  assert.equal(me(s).actionsLeft, 20)
+  const saved = JSON.parse(JSON.stringify(s))
+  move(saved, { action: 'endTurn' })
+  settle(saved, choice => {
+    if (choice.source !== '12052') return null
+    assert.deepEqual(choice.options.map(option => option.cardCode).sort(), ['01016', '01020'])
+    return oldItem.id
+  })
+  assert.equal(saved.currentSeat, 1)
+  assert.equal(saved.round, s.round)
+  assert.ok(me(saved).hand.includes('01016'))
+  assert.ok(fresh(saved, '01020'))
+  assert.ok(!saved.effects.some(effect => effect.sourceCode === '12052'))
 })
 
 // ── 12053 / 12057 视线盲区 ───────────────────────────────────────────────────
@@ -335,19 +344,27 @@ test('12-a 12063 灵性直觉：检定期间花 1 资源获得意志/战斗 +1',
 })
 
 // ── 12066 宇宙意志 ───────────────────────────────────────────────────────────
-test('12-a 12066 宇宙意志：在控制的玩家卡上放 1 毁灭，然后发现所在地点与另一个已揭示地点各 1 线索', () => {
-  const s = game()
-  const card0 = asset(s, '01020')
-  const here = s.locations.find(item => item.id === me(s).location)
-  here.clues = 1
-  const other = s.locations.find(item => item.id !== me(s).location && item.revealed !== false)
-  assert.ok(other, '需要另一个已揭示地点')
-  other.clues = 1
-  playEvent(s, '12066')
-  settle(s)
-  assert.equal(fresh(s, '01020').doom, 1, '玩家卡上放置 1 毁灭')
-  assert.equal(me(s).clues, 2, '发现所在地点 1 线索 + 另一个已揭示地点 1 线索')
-  assert.equal(card0.code, '01020')
+test('12-a 12066 宇宙意志：可在调查员、受控支援或附属玩家卡放毁灭并发现两地的线索', () => {
+  for (const mode of ['investigator', 'asset', 'attachment']) {
+    const s = game()
+    const here = s.locations.find(item => item.id === me(s).location)
+    const there = s.locations.find(item => item.id === 'hallway')
+    here.clues = there.clues = 1
+    const card = mode !== 'investigator' ? asset(s, '01020') : null
+    if (mode === 'attachment') card.attachments = [{ id: 'attached-player-card', code: '01031', ownerSeat: 0 }]
+    const target = mode === 'attachment' ? 'attached-player-card' : card?.id
+    playEvent(s, '12066')
+    settle(s, choice => choice.source === '12066' && choice.kind === 'card' ? target : null)
+    const resolved = mode === 'investigator' ? me(s)
+      : mode === 'asset' ? fresh(s, '01020') : fresh(s, '01020').attachments[0]
+    assert.equal(resolved.doom, 1)
+    assert.equal(totalDoom(s), 1)
+    assert.equal(me(s).clues, 2)
+    if (mode === 'investigator') assert.equal(viewState(s, 0).investigators[0].doom, 1)
+    move(s, { action: 'debug', kind: 'advanceAgenda' })
+    settle(s)
+    assert.equal(totalDoom(s), 0)
+  }
 })
 
 // ── 12067 灵魂链接 ───────────────────────────────────────────────────────────
@@ -362,11 +379,28 @@ test('12-a 12067 灵魂链接：作为投入的额外费用受到 1 点恐惧', 
 })
 
 // ── 12068 萨梯的面具 ─────────────────────────────────────────────────────────
-test('12-a 12068 萨梯的面具（缺陷：Head 槽未登记，strict 卡无法打出）', () => {
-  const s = game()
-  me(s).hand.push('12068')
-  assert.throws(() => move(s, { action: 'play', cardId: '12068' }), /没有合法的支援放置方案/,
-    'cards-data slots=["Head"]，引擎 SLOT_CAPACITY 未登记 head → 该 strict 卡不可打出（缺陷，见报告 §6）')
+test('12-a 12068 萨梯的面具和 12087 软呢帽共用头部槽，面具可选符号结算并保留空充能卡', () => {
+  for (const symbol of [true, false]) {
+    const s = game()
+    assert.ok(playAsset(s, '12087'))
+    const mask = playAsset(s, '12068')
+    assert.equal(mask.uses, 3)
+    assert.ok(!fresh(s, '12087'))
+    assert.ok(me(s).discard.includes('12087'))
+    mask.uses = 1
+    s.chaosBag = ['autofail', '0']
+    startTest(s)
+    settle(s, choice => {
+      if (choice.source !== mask.id) return null
+      if (choice.kind === 'reaction') return 'trigger'
+      if (choice.kind === 'token') return choice.options.find(entry => /自动失败/.test(entry.label) === symbol)?.id
+      return null
+    })
+    assert.deepEqual(s.lastTestResult.drawn, [symbol ? 'autofail' : '0'])
+    assert.deepEqual([...s.chaosBag].sort(), ['0', 'autofail'])
+    assert.equal(me(s).horror, symbol ? 1 : 0)
+    assert.equal(fresh(s, '12068').uses, 0)
+  }
 })
 
 // ── 12070 俄洛寇斯的预言 ─────────────────────────────────────────────────────

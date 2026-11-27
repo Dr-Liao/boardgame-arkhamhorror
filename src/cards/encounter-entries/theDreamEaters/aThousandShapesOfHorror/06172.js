@@ -15,6 +15,5 @@ export default {
   actRule: {
     chapterFlow: 'intoTheDepths',
     // 目标不是线索推进：由「无名坟墓」地点的轮末强制推进本幕（见 06182.js）。
-    objectiveRule: 'unnamableObjective',
   },
 }

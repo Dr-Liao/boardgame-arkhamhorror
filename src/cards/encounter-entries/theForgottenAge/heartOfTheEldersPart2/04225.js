@@ -12,9 +12,9 @@ export default {
   locationRule: {
     afterTest({ state, inv, result, api }) {
       if (result.success || result.source?.label !== '调查') return
-      if (api.checkSupplies(inv.seat, 'rope')) return
+      if (api.suppliesAt(inv.location).some(owner => owner.supplies.includes('rope'))) return
       const location = (state.locations || []).find(entry => entry.id === inv.location)
-      if (location) location.doom = (location.doom || 0) + 1
+      if (location) api.doomOn(location, 1)
     },
   },
 }

@@ -107,7 +107,7 @@ export function keyFace(state, id) {
  * 由剧情强制翻面，不受「每轮一次」限制，但仍记录次数）。
  * 返回 { id, from, to, stable }。
  */
-export function shiftKey(state, id, { round = null, force = false } = {}) {
+export function shiftKey(state, id, { round = null, force = false, keepFace = false } = {}) {
   const container = stateOf(state, true)
   const record = keyRecord(state, id)
   const currentRound = Number.isSafeInteger(round) ? round : Number.isSafeInteger(state.round) ? state.round : 0
@@ -115,7 +115,7 @@ export function shiftKey(state, id, { round = null, force = false } = {}) {
     if (record.shiftedRound === currentRound) throw new Error('该密钥本轮已经变换过')
   }
   const from = record.stable ? record.stableFace : record.unstableFace
-  record.stable = !record.stable
+  if (!keepFace) record.stable = !record.stable
   const to = record.stable ? record.stableFace : record.unstableFace
   record.shiftedRound = currentRound
   container.shifts[currentRound] = (container.shifts[currentRound] || 0) + 1

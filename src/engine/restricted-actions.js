@@ -20,12 +20,14 @@
 
 import { registeredEntry } from './ability.js'
 import { assetTextBlankedExceptForced } from './card-text.js'
-export const availableEngageCredit = inv => (inv.assets || []).filter(asset => !assetTextBlankedExceptForced(asset)
-  && registeredEntry(asset.code)?.assetRule?.restrictedAction === 'engage' && !asset.restrictedActionSpent).length
+export const availableAssetActionCredit = (inv, kind) => (inv.assets || []).filter(asset => !assetTextBlankedExceptForced(asset)
+  && registeredEntry(asset.code)?.assetRule?.restrictedAction === kind && !asset.restrictedActionSpent).length
+export const availableEngageCredit = inv => availableAssetActionCredit(inv, 'engage')
 export const RESTRICTED_ACTION_FIELDS = Object.freeze({
   spell: 'spellOnlyActions',
   bounty: 'bountyOnlyActions',
   engage: 'engageOnlyActions',
+  handAssetPlay: 'handAssetPlayOnlyActions',
   // 地球边缘 P5：08016 鲍勃「只能用于代打队友手牌 [[道具]] 支援的额外行动」。
   itemPlay: 'itemPlayOnlyActions',
   // 地球边缘 P5：08014a 陈丽丽的免费战斗/躲避行动。
@@ -67,7 +69,7 @@ export function actionsAvailable(inv, kind = null) {
   const explore = Math.min(inv?.exploreOnlyActions || 0, total)
   // 别的受限额度必须先扣掉：它们是「最后 N 个行动」。
   const others = Math.min(restrictedTotal(inv) - restrictedCount(inv, kind), total)
-  const assetCredits = kind === 'engage' ? availableEngageCredit(inv) : 0
+  const assetCredits = ['engage', 'handAssetPlay'].includes(kind) ? availableAssetActionCredit(inv, kind) : 0
   return Math.max(0, total - explore - others) + assetCredits
 }
 
@@ -76,8 +78,8 @@ export function consumeAction(inv, cost, kind = null) {
   assertRestrictedKind(kind)
   if (!inv) return
   let remaining = Math.max(0, Number(cost) || 0)
-  if (kind === 'engage') for (const asset of inv.assets || []) {
-    if (!remaining || asset.restrictedActionSpent || assetTextBlankedExceptForced(asset) || registeredEntry(asset.code)?.assetRule?.restrictedAction !== 'engage') continue
+  if (['engage', 'handAssetPlay'].includes(kind)) for (const asset of inv.assets || []) {
+    if (!remaining || asset.restrictedActionSpent || assetTextBlankedExceptForced(asset) || registeredEntry(asset.code)?.assetRule?.restrictedAction !== kind) continue
     asset.restrictedActionSpent = true; remaining--
   }
   let fromCredit = 0

@@ -14,26 +14,21 @@ export default {
   code: '04071', scope: 'location',
   locationRule: {
     beforeExplore(state, inv, api) {
-      let failed = false
       api.test(inv.seat, 'agility', 2, result => {
-        if (result.success) return
-        failed = true
+        if (result.success) {
+          api.resumeExplore(inv.seat)
+          return
+        }
         api.damage(inv.seat, 2)
-        api.loseActions(inv.seat, 99)
         api.endTurn(inv.seat)
-      })
-      if (!failed) return true
-      const canyon = state.locations.find(entry => originalOf(entry) === '04070')
-      if (canyon) api.moveInvestigator(inv.seat, canyon.id)
-      else {
-        const index = (state.explorationDeck || []).findIndex(entry => entry === 'riverCanyon')
-        if (index >= 0) {
-          state.explorationDeck.splice(index, 1)
+        const canyon = state.locations.find(entry => originalOf(entry) === '04070')
+        if (canyon) api.moveInvestigator(inv.seat, canyon.id)
+        else if (api.takeExplorationCard('riverCanyon')) {
           api.place('riverCanyon')
-          api.shuffleExploration?.()
+          api.shuffleExploration()
           api.moveInvestigator(inv.seat, 'riverCanyon')
         }
-      }
+      })
       return false
     },
   },

@@ -63,35 +63,32 @@ function healTargets(state, inv) {
 }
 
 function healUpToTwo(state, inv, api) {
-  let healed = 0
-  for (let point = 0; point < 2; point++) {
-    const targets = healTargets(state, inv)
-    if (!targets.length) break
-    const picked = targets.length === 1 ? targets[0].id : api.choice({
-      kind: 'target', source: CODE, seat: inv.seat, canSkip: true,
-      prompt: `所罗门之钥：选择要治愈的目标（第 ${point + 1} 点）。`,
-      options: [{ id: 'skip', label: '不再治疗' },
-        ...targets.map(target => ({ id: target.id, label: target.label }))],
-    })
-    if (picked === 'skip') break
-    const target = targets.find(item => item.id === picked)
-    if (!target) break
-    let kind = target.damage > 0 && target.horror > 0 ? null : target.damage > 0 ? 'damage' : 'horror'
-    if (!kind) {
-      kind = api.choice({
-        kind: 'effect', source: CODE, seat: inv.seat,
-        prompt: `所罗门之钥：治愈「${target.label}」1 点伤害还是 1 点恐惧？`,
-        options: [{ id: 'damage', label: '伤害' }, { id: 'horror', label: '恐惧' }],
-      }) === 'horror' ? 'horror' : 'damage'
-    }
-    if (target.asset) {
-      api.healAsset(target.asset, { [kind]: 1, owner: target.owner })
-    } else if (kind === 'damage') api.healDamage(target.seat, 1)
+  const targets = healTargets(state, inv)
+  if (!targets.length) return
+  const picked = targets.length === 1 ? targets[0].id : api.choice({
+    kind: 'target', source: CODE, seat: inv.seat,
+    prompt: '所罗门之钥：选择要治愈的调查员或盟友。',
+    options: targets.map(target => ({ id: target.id, label: target.label })),
+  })
+  const target = targets.find(candidate => candidate.id === picked)
+  if (!target) return
+  const capacity = Math.min(2, target.damage + target.horror)
+  const amount = capacity === 2 ? Number(api.choice({
+    kind: 'effect', source: CODE, seat: inv.seat,
+    prompt: '所罗门之钥：选择要治愈的总量。',
+    options: [{ id: '2', label: '治愈 2 点' }, { id: '1', label: '治愈 1 点' }],
+  })) : capacity
+  for (let point = 0; point < amount; point += 1) {
+    const kind = target.damage && target.horror ? api.choice({
+      kind: 'effect', source: CODE, seat: inv.seat,
+      prompt: '所罗门之钥：选择治愈伤害或恐惧。',
+      options: [{ id: 'damage', label: '1 点伤害' }, { id: 'horror', label: '1 点恐惧' }],
+    }) : target.damage ? 'damage' : 'horror'
+    if (target.asset) api.healAsset(target.asset, { [kind]: 1, owner: target.owner })
+    else if (kind === 'damage') api.healDamage(target.seat, 1)
     else api.healHorror(target.seat, 1)
-    api.info(`🗝️ 「所罗门之钥」：治愈 ${target.label} 1 点${kind === 'damage' ? '伤害' : '恐惧'}。`)
-    healed += 1
+    target[kind] -= 1
   }
-  if (!healed) api.info('🗝️ 「所罗门之钥」：所在地点没有可治愈的目标。')
 }
 
 export default {
@@ -102,7 +99,7 @@ export default {
       kind: 'free',
       label: '快速：袋中祝福多于诅咒，移除 1 个祝福并横置：治愈 2 点伤害/恐惧',
       cost: { action: false, exhaust: true },
-      criteria: [({ state }) => moreBless(state)],
+      criteria: [({ state, inv }) => moreBless(state) && healTargets(state, inv).length > 0],
       resolve: ({ state, inv, api }) => {
         if (api.chaosTokens.pay(BLESS, 1) !== 1) {
           api.info('「所罗门之钥」：混乱袋中没有可移除的祝福标记。')

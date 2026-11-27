@@ -17,6 +17,16 @@ export function popRevelation() {
   revelation = revelationStack.pop() ?? null
 }
 
+export function grantRevelationSurge(code) {
+  if (!revelation || (revelation.code !== code && revelation.originalCode !== code)) return false
+  revelation.gainSurge = true
+  return true
+}
+
+export function revelationGainedSurge() {
+  return revelation?.gainSurge === true
+}
+
 export function currentRevelation() {
   return revelation?.code ?? null
 }

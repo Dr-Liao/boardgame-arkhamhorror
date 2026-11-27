@@ -17,39 +17,29 @@
 //     （location-effect-scope.js 的唯一作用域通道：调查期间每次地点触发都会问「是否忽略」）。
 //   · 「成功发现额外 1 个线索」= api.investigate(..., { clueBonus: 1 })（runInvestigate 的 gain 公式）。
 //   · 「揭示了符号」= 本次检定的 result.drawn 与 _shared.js 的 CHAOS_SYMBOLS。
-//
-// 近似披露（simplified）：「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），
-// 按「结算后立即返回手牌」近似；keepOnPlay 接管默认弃置。见 primitive-requests/10101.json。
+
+// · 符号的回合末去向由 api.returnPlayedEventAtEndOfTurn 登记。
 import { CHAOS_SYMBOLS } from './_shared.js'
 
 const CODE = '10101'
 
-const isSymbol = token => CHAOS_SYMBOLS.includes(String(token))
+const isSymbol = token => [...CHAOS_SYMBOLS, 'eldersign', 'bless', 'curse', 'frost'].includes(token)
 
 export default {
   code: CODE,
   name: '解读秘符',
-  keepOnPlay: true,
-  simplified: true,
-  note: 'approximation: 「当你回合结束时返回手牌」没有事件卡延迟去向读点（09074 同一缺口），'
-    + '按「结算后立即返回手牌」近似；见 primitive-requests/10101.json。',
   abilities: [
     {
       kind: 'played',
       countsAs: 'investigate',
       label: '调查：加入意志值、可忽略地点效果/关键词、成功额外 1 线索；揭示符号则返回手牌',
-      resolve: ({ inv, api }) => {
+      resolve: ({ inv, api, context }) => {
         const result = api.investigate(inv.seat, {
           addSkill: 'willpower',
           clueBonus: 1,
           mayIgnoreLocationEffects: true,
         })
-        if ((result?.drawn || []).some(isSymbol)) {
-          if (!(inv.hand || []).includes(CODE)) api.putInHand(inv.seat, CODE)
-          api.info('🔎 「解读秘符」：本次调查揭示了符号，返回你的手牌。')
-          return
-        }
-        api.putIntoDiscard(inv.seat, CODE)
+        if ((result?.drawn || []).some(isSymbol)) api.returnPlayedEventAtEndOfTurn(context)
       },
     },
   ],

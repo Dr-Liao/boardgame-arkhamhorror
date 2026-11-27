@@ -3,7 +3,7 @@
   "unit": "08-a-7",
   "profile": {
     "id": "eote-campaign-d-2026-11",
-    "scope": "地球边缘 08 段 eoec 战役卡（08608–08652）45 条目录记录。30 条通过五维验收；15 条声明键无读点/效果未分派暂不切换。",
+    "scope": "地球边缘 08 段 eoec 战役卡（08608–08652）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 45,
-    "verified": 30,
-    "unverified": 15,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 152
+    "testsPassed": 174
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-      "sha256": "b699657b65974ee9bc07c3792d258d6d274db10cba03cc2fcb675f50b17107a0"
+      "sha256": "fb57be5a267cc56ac51c9ea6074b6bffa42b7da3411e2ea8f5432e6843e44cfd"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-toTheForbiddenPeaks.test.mjs",
@@ -33,15 +33,15 @@
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-cityOfTheElderThings.test.mjs",
-      "sha256": "e21fcc06f3fc7f57ea4748b63f22a2f47dfe8796ef8bd74a7668bc919acbac85"
+      "sha256": "5040be3766a072fc17b3d8c424184a57b09bf19036b3acb4b3c3630e071a7a94"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-theHeartOfMadnessPart2.test.mjs",
-      "sha256": "0327e4721b450a29af421ea7045e9478a9b484ec15106b0cd81d389838045f40"
+      "sha256": "5e404cbec6603b52654f65e8d6fa5781ca26f713e4efd11c500aead3ad16bc27"
     },
     {
       "file": "games/arkhamhorror/tests/eote-scenario-shared.test.mjs",
-      "sha256": "dffe598c635f887e2c14c4a73e1d8c4574524342277b592ff1ecffa190f68cea"
+      "sha256": "92c6bf729a67340ce191066ab6b8fe1fd3be2e7cf1f45e3f47bef9f0f501c182"
     },
     {
       "file": "games/arkhamhorror/tests/eote-campaign-flow.test.mjs",
@@ -297,41 +297,61 @@
       "code": "08627",
       "name": "追寻未知(版本一)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actTwoActions healAll（每位调查员治愈 1 伤害/1 恐惧/1 创伤）未实现：behavior 的 actTwo: 分支只花钥匙+日志。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08627 追寻未知 I：实际花两个邪教徒钥匙，治愈伤害、恐惧及选定创伤"
+        }
+      ]
     },
     {
       "code": "08628",
       "name": "追寻未知(版本二)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actTwoActions returnTekeliWeaknesses（查找并洗回忒咳哩-哩弱点）未实现，仅花钥匙+日志。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08628 追寻未知 II：实际花两个石板钥匙，将两位调查员的忒咳哩洗回专属牌堆"
+        }
+      ]
     },
     {
       "code": "08629",
       "name": "追寻未知(版本三)",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "actTwoActions removeElderThingTokens（从混乱袋移除所有 elder_thing 标记）未实现，仅花钥匙+日志；forced 击杀古老者已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08629 追寻未知 III：实际花两个古老者钥匙，移除混乱袋内所有古老者标记"
+        }
+      ]
     },
     {
       "code": "08630",
       "name": "隐秘隧道",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「隐秘隧道上的线索不能被发现或移动」：locationRule.blocksClueDiscovery 全仓无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08630 隐秘隧道：不能发现线索；任选技能检定，付骷髅钥匙得 +5 并多归还一个线索"
+        }
+      ]
     },
     {
       "code": "08631",
       "name": "古代天文馆",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「把花费的『0』钥匙加入混乱袋作为混乱标记」，实现改为 addFrostToken（frost 标记），效果错误。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08631 古代天文馆：实际花两个零值钥匙，混乱袋加入一个 0 并记录"
+        }
+      ]
     },
     {
       "code": "08632",
@@ -341,7 +361,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08632 石桥：可以选敏捷发现线索，并移动到指定的另一座石桥"
         }
       ]
     },
@@ -353,7 +373,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08633 圆柱塔：抽出的忒咳哩走真实显现，同时获得 2 资源及移除 2 寒霜"
         }
       ]
     },
@@ -361,9 +381,13 @@
       "code": "08634",
       "name": "迷宫房间",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "本地钥匙匹配时混乱标记修正翻倍：locationRule.flags.doubleKeyTokenModifier 无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08634 迷宫房间：实际揭示匹配钥匙的混乱标记，负值翻倍"
+        }
+      ]
     },
     {
       "code": "08635",
@@ -373,7 +397,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08635 地图资料室：由玩家选三个不同地点，各揭示并取得一个线索"
         }
       ]
     },
@@ -385,7 +409,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08636 无顶堡垒：有毁灭时仍可选择弃掉一个敌人或诡计，不可选精英敌人"
         }
       ]
     },
@@ -393,9 +417,17 @@
       "code": "08637",
       "name": "破败街道",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "frostForcedDamage（揭示 frost 受 1 伤害）无读点；[reaction]「发现最后线索后发现连接地点线索」被实现为普通 locationRule.actions（时机/费用错误）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08637 古城地点：同次检定揭示两枚寒霜时只承受 1 点 damage"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08637 破败街道：发现最后一个线索之后可反应取得相连地点的一个线索"
+        }
+      ]
     },
     {
       "code": "08638",
@@ -405,7 +437,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08638 巨大尖顶：选择同行另一地点的一枚钥匙，团队次限后行动消失"
         }
       ]
     },
@@ -417,7 +449,7 @@
       "evidence": [
         {
           "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
-          "test": "验收 08632/08633/08635/08636/08638/08639 古城地点行动：条目规则均命中章节 LOCATION_ACTION_HANDLERS 读点"
+          "test": "08639 埋没通路：把一枚线索移动到选中的同列未揭示地点"
         }
       ]
     },
@@ -425,9 +457,17 @@
       "code": "08640",
       "name": "古老者之庙",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "frostForcedHorror（揭示 frost 受 1 恐惧）无读点；换钥匙行动已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08640 古城地点：同次检定揭示两枚寒霜时只承受 1 点 horror"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08640 古老者之庙：只有各一枚同面钥匙的两个地点也能互换原实体，且每场一次"
+        }
+      ]
     },
     {
       "code": "08641",
@@ -445,17 +485,25 @@
       "code": "08642",
       "name": "和蔼的古老者",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "Spawn-Any empty location 写成嵌套 enemyRule.spawn:'anyEmpty'，引擎读扁平 spawnAnyEmpty → 失效；onDefeatDoom（被击败时密谋放 1 毁灭）与 parley 数据均无读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08642 仁慈古老者：实际显现于空地点且带 1 毁灭，真实交涉移出游戏，被击败则密谋加毁灭"
+        }
+      ]
     },
     {
       "code": "08643",
       "name": "复苏的古老者",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "takesKeyOnEngage / readiesOnKeyControlled / placesKeyOnLeave 三条子句键全仓无读点（交战夺钥匙、控制钥匙时重整攻击、离场放钥匙均未实现）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08643 苏醒古老者：交战夺钥匙、同地点取得钥匙时重整攻击、离场把钥匙放回地点"
+        }
+      ]
     },
     {
       "code": "08644",
@@ -485,17 +533,25 @@
       "code": "08646",
       "name": "冻伤",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「可如同 1 点伤害被治愈」healAsOneDamageApproximation 无读点；揭示 frost 时「受 1 伤害或自动失败（每检定一次）」未在章节 afterTest 结算。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08646 古城威胁：寒霜可选承受 1 点 damage 或自动失败，实际治疗可弃置诡计"
+        }
+      ]
     },
     {
       "code": "08647",
       "name": "附身",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「可如同 1 点恐惧被治愈」：threatHorrorSink 写在 flags 下，引擎读条目顶层（05008 写法）→ 不生效；frost 强制同上未结算。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08647 古城威胁：寒霜可选承受 1 点 horror 或自动失败，实际治疗可弃置诡计"
+        }
+      ]
     },
     {
       "code": "08648",
@@ -517,9 +573,13 @@
       "code": "08649",
       "name": "伊夸之门",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "背面「调查员与敌人不能进入、不能拥有附属」需地点背面进入限制原语（primitive-requests/p7-08649.json 未实现）；账本亦 blocked。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08649 伊夸之门：未揭示时调查员与敌人不能进入，地点不能接收附属"
+        }
+      ]
     },
     {
       "code": "08650",
@@ -537,17 +597,33 @@
       "code": "08651",
       "name": "被遗忘的神庙",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「查看同一辐条上所有未揭示地点的已揭示面」行动只写 api.info 日志，无查看/投影读点，信息未交付。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08651 疯狂之心 II：激活封印后仅查看同一辐条的未揭示地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08651 疯狂之心 I：激活封印后仅查看同一辐条的未揭示地点"
+        }
+      ]
     },
     {
       "code": "08652",
       "name": "寇斯图书馆",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「查看同一环形上所有未揭示地点的已揭示面」同 08651，仅日志无查看读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08652 疯狂之心 II：激活封印后仅查看同一环的未揭示地点"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-08-a-shard7.test.mjs",
+          "test": "08652 疯狂之心 I：激活封印后仅查看同一环的未揭示地点"
+        }
+      ]
     }
   ]
 }

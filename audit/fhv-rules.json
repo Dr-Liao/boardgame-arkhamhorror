@@ -25,7 +25,7 @@
     },
     {
       "path": "audit/fhv-node-acceptance.json",
-      "sha256": "68dba64784b7c012f486b1434c34f14b85b9e9d55a61082edfa85e23e7aedfd7"
+      "sha256": "fb3ecdda1ba4c005b58563391d10f5f8e557805878e5cad5647a1c5cae3ba932"
     },
     {
       "path": "audit/fhv-rules-browser.json",

@@ -3,7 +3,7 @@
 //   强制 - 被击败时：将其上的所有毁灭标记移动到其所在地点。
 //   [action]：谈判。检定[willpower]或[intellect](3)。成功：控制其上的 1 个毁灭标记并将其翻至
 //   线索面。然后，如果其上没有毁灭标记，将其弃掉。
-// 读点：谈判行动走 abilities（actionKind:'parley'）；毁灭/线索走 api.scenario.doomOn / api.gainClues；
+// 读点：谈判行动走 abilities（actionKind:'parley'）；毁灭/线索走 api.scenario.doomOn / api.takeControlOfClues；
 //   入场毁灭数据放 enemySpawnRule.doomOnSpawn（enemies.js#spawnEnemy 通用读点）。
 const CODE = '08700'
 
@@ -28,10 +28,10 @@ export default {
       const skill = api.choice({ kind: 'skill', source: CODE, seat: inv.seat, prompt: '选择谈判检定技能。',
         options: [{ id: 'willpower', label: '意志(3)' }, { id: 'intellect', label: '智力(3)' }] })
       if (!['willpower', 'intellect'].includes(skill)) return
-      api.test(inv.seat, skill, 3, { source: { type: 'enemy', code: CODE, ability: true }, resolve: result => {
+      api.test(inv.seat, skill, 3, { actionKind: 'parley', testTarget: { kind: 'enemy', id: source.id }, source: { type: 'enemy', code: CODE, ability: true }, resolve: result => {
         if (!result.success) return
         api.removeDoomFromCard(source, 1)
-        api.gainClues(inv.seat, 1)
+        api.takeControlOfClues(inv.seat, 1, source.location)
         api.info('🔍 「迷失的研究员」：1 个毁灭标记翻为线索。')
         if (!(Number(source.doom) > 0)) api.discardEnemy?.(source)
       } })

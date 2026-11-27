@@ -14,9 +14,9 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
-import { fixture } from './core-fixture.mjs'
+import { fixture, legalMoves, move, settle, validateMove } from './core-fixture.mjs'
 import { resolveTransaction } from '../src/engine/resolution.js'
-import { scenarioRuntime } from '../src/engine/engine.js'
+import { getStat, reactionWindow, scenarioRuntime } from '../src/engine/engine.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import { ALL_CARDS } from '../src/cards/cards-data.js'
 import { readShelter, locationShelter } from '../src/engine/eote-shelter.js'
@@ -49,7 +49,7 @@ for (const group of fs.readdirSync(SHARED_ROOT).sort()) {
   const dir = path.join(SHARED_ROOT, group)
   if (!fs.statSync(dir).isDirectory()) continue
   for (const name of fs.readdirSync(dir).sort()) {
-    if (name.endsWith('.js')) entryFiles.push({ group, code: name.slice(0, -3), file: path.join(dir, name) })
+    if (/^\d{5}[a-z]?\.js$/.test(name)) entryFiles.push({ group, code: name.slice(0, -3), file: path.join(dir, name) })
   }
 }
 const entries = []
@@ -59,9 +59,10 @@ for (const item of entryFiles) {
   assert.equal(module.default.code, item.code, `${item.file} 的 code 与文件名不一致`)
   entries.push(module.default)
 }
-const entryOf = code => entries.find(entry => entry.code === code)
+const entryOf = code => entries.find(entry => entry.code === code) || registeredEntry(code)
+const MEMORIAL_EVENT_CODES = ['08733', '08737']
 
-// 先造一局基础状态：触发引擎默认条目注册；之后补注册 80 张共享条目（与 eote-player-fixture 同一口径）。
+// 先注册玩家条目，再补注册未加载的共享遭遇条目。
 fixture('01001', 1)
 registerCardAbilities(entries.filter(entry => !registeredEntry(entry.code)))
 
@@ -188,7 +189,13 @@ function makePartnerAsset(state, code, seat = 0) {
 test('P7 shared 数据表：16 组 / 80 卡与卡表归属、章节 gather 组合一致', () => {
   assert.equal(shared.SHARED_ENCOUNTER_GROUPS.length, 16)
   assert.equal(shared.SHARED_CARD_CODES.length, 80)
-  assert.equal(entryFiles.length, 80)
+  assert.equal(entryFiles.length, 78)
+  assert.deepEqual(new Set([...entryFiles.map(item => item.code), ...MEMORIAL_EVENT_CODES]),
+    new Set(shared.SHARED_CARD_CODES))
+  for (const code of MEMORIAL_EVENT_CODES) {
+    assert.equal(ALL_CARDS[code].encounterCode, 'memorials_of_the_lost')
+    assert.equal(entryOf(code).scenarioPlayable, true)
+  }
   for (const item of entryFiles) {
     const card = ALL_CARDS[item.code]
     assert.ok(card, `${item.code} 不在卡表`)
@@ -260,49 +267,57 @@ test('P7 shared creaturesInTheIce：实体疯狂攻击后洗入 2 张；冰川�
   const here = state.investigators[0].location
   const enemy = spawnAt(state, '08689', here)
   const deckBefore = state.investigators[0].deck.length
-  runRuntime(state, 0, runtime => { runtime.attack(enemy, state.investigators[0]) })
-  const shuffled = state.investigators[0].deck.length - deckBefore
-  assert.ok(shuffled >= 0)
-  assert.equal(tekeliDeckSize(state), TEKELI_CARD_COUNT - shuffled, '08689：攻击后按 2 张洗入忒咳哩-哩')
+  transaction(state, 0, draft => {
+    const attacker = draft.enemies.find(card => card.id === enemy.id)
+    scenarioRuntime(draft, []).attack(attacker, draft.investigators[0])
+  })
+  assert.equal(state.investigators[0].deck.length, deckBefore + 2)
+  assert.equal(tekeliDeckSize(state), TEKELI_CARD_COUNT - 2, '08689：攻击后洗入 2 张忒咳哩-哩')
 
   const phantom = sharedState(2)
   runRuntime(phantom, 0, runtime => runtime.mechanics.tekeli.initialize(shared.tekeliDeckSpec()))
-  const crowded = addLocation(phantom, 'crowded', { connections: [] })
+  const origin = phantom.investigators[0].location
+  const crowded = addLocation(phantom, 'crowded', { connections: [origin] })
   phantom.investigators[0].location = crowded.id
   phantom.investigators[1].location = crowded.id
-  const phantomEnemy = spawnAt(phantom, '08690', phantom.investigators[0].location === crowded.id ? crowded.id : 'crowded')
-  phantomEnemy.location = 'crowded'
-  const phantomApi = hookApi(phantom)
-  transaction(phantom, 0, () => {
-    entryOf('08690').abilities[0].resolve({
-      state: phantom, inv: phantom.investigators[0], source: phantomEnemy,
-      context: { enemy: phantomEnemy, seat: 0 }, api: phantomApi,
-    })
-  })
-  assert.equal(phantomEnemy.location, crowded.id, '08690：向调查员最多的地点移动')
+  const phantomEnemy = spawnAt(phantom, '08690', origin)
+  transaction(phantom, 0, draft => reactionWindow(draft, 'enemyPhaseEnds', { when: 'enemyPhaseEnds', seat: 0 }, []))
+  assert.equal(phantom.enemies.find(card => card.id === phantomEnemy.id).location, crowded.id)
+  assert.equal(tekeliDeckSize(phantom), TEKELI_CARD_COUNT - 2, '08690：每位调查员洗入 1 张忒咳哩-哩')
 
   const mist = sharedState(1)
   addLocation(mist, 'mist-a', { connections: [] })
   addLocation(mist, 'mist-b', { connections: [] })
   mist.investigators[0].location = 'mist-a'
-  const result = callEncounter(mist, '08691')
-  assert.deepEqual(result, { placed: true })
+  runRuntime(mist, 0, runtime => runtime.drawEncounter(0, { code: '08691', from: 'search' }))
   const attached = mist.locations.flatMap(loc => (loc.attachments || []).filter(card => (card.originalCode || card.code) === '08691'))
   assert.equal(attached.length, 1, '08691：附属到最近且没有同源迷雾的地点')
 })
 
-test('P7 shared deadlyWeather：南极寒风/雪盲危机/极地旋涡按显现条款附属并落数据', () => {
-  for (const [code, expectedLocation] of [['08692', 'nearest'], ['08693', 'here'], ['08694', 'here']]) {
+test('P7 shared deadlyWeather：三张诡计附属并生效，到轮末弃除', () => {
+  for (const code of ['08692', '08693', '08694']) {
     const state = sharedState(1)
-    const here = state.investigators[0].location
+    const inv = state.investigators[0]
+    const here = inv.location
+    inv.hand = ['01088']
+    const base = getStat(state, inv, 'agility')
     addLocation(state, 'weather-far', { connections: [] })
-    const result = callEncounter(state, code)
-    assert.deepEqual(result, { placed: true }, code + ' 应成功附属')
+    runRuntime(state, 0, runtime => runtime.drawEncounter(0, { code, from: 'search' }))
     const hosts = state.locations.filter(loc => (loc.attachments || []).some(card => (card.originalCode || card.code) === code))
-    assert.equal(hosts.length, 1, code + ' 应恰好附属到 1 个地点')
-    if (expectedLocation === 'here') assert.equal(hosts[0].id, here, code + ' 应附属到当前地点')
-    assert.equal(entryOf(code).flags.locationAttachment, true)
-    assert.equal(entryOf(code).flags.discardAtRoundEnd, true)
+    assert.deepEqual(hosts.map(host => host.id), [here], code)
+    if (code === '08692') {
+      assert.equal(legalMoves(state).some(command => command.action === 'draw' || command.action === 'play'), false)
+      assert.match(validateMove(state, 0, { action: 'draw' }), /禁止你进行抽取行动/)
+      assert.match(validateMove(state, 0, { action: 'play', cardId: '01088' }), /禁止你打出卡牌/)
+      runRuntime(state, 0, runtime => runtime.drawCards(0, 1))
+      assert.deepEqual(state.investigators[0].hand, ['01088'])
+    }
+    if (code === '08693') assert.equal(getStat(state, state.investigators[0], 'agility'), base - 1)
+    move(state, { action: 'endTurn' })
+    settle(state)
+    if (code === '08694') assert.equal(state.investigators[0].damage, 1)
+    assert.ok(state.encounterDiscard.includes(code))
+    assert.equal(state.locations.some(loc => loc.attachments?.some(card => (card.originalCode || card.code) === code)), false)
   }
 })
 
@@ -406,29 +421,36 @@ test('P7 shared memorialsOfTheLost：9 件遗物与伙伴划去配对；曲奇�
   assert.equal(shared.MEMORIAL_CODES.length, 9)
   for (const [partnerCode, relicCode] of Object.entries(shared.MEMORIAL_FOR_PARTNER)) {
     assert.equal(memorialFor(state, partnerCode), relicCode)
-    assert.equal(entryOf(relicCode).flags.memorial, true, relicCode + ' 应标记遗物')
+    const entry = entryOf(relicCode)
+    assert.equal(MEMORIAL_EVENT_CODES.includes(relicCode) ? entry.scenarioPlayable : entry.flags.memorial, true)
     assert.equal(partnerState(state, partnerCode).status, 'safe')
   }
   setPartnerStatus(state, '08714', 'eliminated')
   assert.ok(crossedOutMemorials(state).some(item => item.relicCode === '08733'), '戴尔教授被划去 → 戴尔的素描为纪念逝者')
   assert.equal(claimMemorial(state, '08714'), '08733')
 
-  const enemy = spawnAt(state, '08706', state.investigators[0].location, { health: 10 })
-  state.investigators[0].assets.push({ id: 'cookie-gun', code: '08732', originalCode: '08732', name: '曲奇手枪', exhausted: false, uses: 2, usesType: 'ammo' })
-  callAbility(state, '08732', 0, 0, { target: { id: enemy.id, entity: enemy } })
+  const here = state.investigators[0].location
+  runRuntime(state, 0, runtime => runtime.spawn('08711', here))
+  const enemy = state.enemies.find(card => (card.originalCode || card.code) === '08711')
+  state.investigators[0].assets.push({ id: 'cookie-gun', code: '08732', uses: 2, usesType: 'ammo', exhausted: false })
+  const shot = legalMoves(state).find(command => command.action === 'ability'
+    && command.assetId === 'cookie-gun' && command.targetId === enemy.id)
+  assert.ok(shot)
+  move(state, shot)
+  settle(state, pending => pending.source === '08732' ? 'base5' : null)
   assert.equal(state.enemies.find(item => item.id === enemy.id).damageTaken, 2, '08732：攻击造成 +1 伤害（基础 1 + 1）')
+  assert.equal(state.investigators[0].assets.find(card => card.id === 'cookie-gun').uses, 1)
 })
 
 test('P7 shared miasma：瘴气折磨附属到伙伴支援；朦胧瘴气附属到当前地点', () => {
   const state = sharedState(1)
-  const partner = makePartnerAsset(state, '08716', 0)
-  callEncounter(state, '08706')
+  makePartnerAsset(state, '08716', 0)
+  runRuntime(state, 0, runtime => runtime.drawEncounter(0, { code: '08706', from: 'search' }))
   const live = state.investigators[0].assets.find(card => card.code === '08716')
-  assert.ok(live, '伙伴支援仍在场')
+  assert.ok(live.exhausted)
   assert.ok((live.attachments || []).some(card => (card.originalCode || card.code) === '08706'), '08706：附属到伙伴支援')
-  assert.equal(entryOf('08706').flags.attachToPartnerAsset, true)
   const fog = sharedState(1)
-  assert.deepEqual(callEncounter(fog, '08707'), { placed: true })
+  runRuntime(fog, 0, runtime => runtime.drawEncounter(0, { code: '08707', from: 'search' }))
   assert.ok(fog.locations.some(loc => (loc.attachments || []).some(card => (card.originalCode || card.code) === '08707')))
 })
 
@@ -484,12 +506,12 @@ test('P7 shared silenceAndMystery：黑暗极光按揭示的 [frost] 结算恐�
   assert.ok(state.investigators[0].horror >= horrorBefore + 1, '08713：至少结算 1 点 [frost] 恐惧')
   const mirage = sharedState(1)
   const here = mirage.investigators[0].location
+  mirage.locations.find(loc => loc.id === here).clues = 0
   const withClues = addLocation(mirage, 'clue-site', { connections: [here], clues: 2 })
-  mirage.locations.find(loc => loc.id === here).connections.push(withClues.id)
-  assert.deepEqual(callEncounter(mirage, '08712'), { placed: true })
+  runRuntime(mirage, 0, runtime => runtime.drawEncounter(0, { code: '08712', from: 'search' }))
   const mirageHosts = mirage.locations.filter(loc => (loc.clues || 0) > 0
     && (loc.attachments || []).some(card => (card.originalCode || card.code) === '08712'))
-  assert.equal(mirageHosts.length, 1, '08712：附属到最近的有线索地点')
+  assert.deepEqual(mirageHosts.map(location => location.id), [withClues.id], '08712：附属到最近的有线索地点')
 })
 
 test('P7 shared tekelili：16 张物理牌库与弱点结算后回底（副本守恒）', () => {

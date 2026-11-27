@@ -13,7 +13,7 @@ export default {
     const alive = state.investigators.filter(item => !item.defeated && !item.resigned)
     const candidates = state.locations.filter(entry => alive.some(target => target.location === entry.id))
     if (!candidates.length) {
-      state.doom = (state.doom || 0) + 1
+      api.addDoom(1)
       return false
     }
     const picked = candidates.length === 1 ? candidates[0] : (() => {
@@ -25,7 +25,7 @@ export default {
       return candidates.find(entry => String(entry.id) === String(id)) || null
     })()
     if (picked) {
-      picked.doom = (picked.doom || 0) + 1
+      api.doomOn(picked, 1)
       for (const target of alive.filter(entry => entry.location === picked.id)) api.horror(target.seat, 1)
     }
     return false

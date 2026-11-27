@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 // 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点
 // （setModifierRegistry / setModifierHooks），下面的 entityModifierTotal 会恒为 0。
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import * as wilds from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/index.js'
 import { scenario as definition } from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js'
 import { EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES } from '../content/campaigns/theForgottenAge/scenarios/theUntamedWilds/definition.js'
@@ -34,6 +34,7 @@ function setupApi(seed = 1) {
 function stateFor(count = 2) {
   return {
     scenario: clone(definition),
+    log: [],
     acts: clone(definition.acts),
     agendas: clone(definition.agendas),
     actIndex: 0,
@@ -173,6 +174,8 @@ test('索桥要求探索前检定敏捷，失败则取消探索、受伤并结�
       revealed: true, clues: 1 })
     const ended = []
     const api = {
+      takeExplorationCard: scenarioRuntime(state, []).takeExplorationCard,
+      shuffleExploration: () => {},
       test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 0, difficulty, skill }),
       damage: (seat, amount) => { state.investigators[seat].damage += amount },
       loseActions: () => {},
@@ -211,11 +214,13 @@ test('探索丛林：非营地调查员在轮末共同支付 3×人数线索后�
   wilds.behavior.setupLocations(state, [], setupApi(19))
   const spawned = []
   const api = {
+    ...scenarioRuntime(state, []),
     choose: () => 'advance',
     advanceAct: () => {
       const act = state.acts[state.actIndex]
       state.actIndex += 1
       wilds.behavior.actReveal(state, act, {
+        ...scenarioRuntime(state, []),
         spawn: (code, location) => spawned.push({ code, location }),
         shuffleDiscard: () => {},
       })
@@ -236,19 +241,21 @@ test('女猎手：伊塔卡带够线索时进入「搜索遗迹」并加入异�
   const state = placed(stateFor(2))
   wilds.behavior.setupLocations(state, [], setupApi(23))
   state.actIndex = 1
-  state.enemies.push({ id: 'e1', code: '04052', originalCode: '04052', name: '伊塔卡',
+  state.enemies.push({ id: 'e1', code: '04052', originalCode: '04052', name: '伊塔卡', victory: 1,
     location: 'expeditionCamp', clues: 2, fight: 5, evade: 4, health: 4, damageTaken: 0,
     damage: 2, horror: 0, engagedSeat: null })
   state.chaosBag = ['0', 'skull', 'skull', 'elderthing', 'autofail', 'eldersign']
   state.campaign.chaosBag = [...state.chaosBag]
   const advanced = []
   wilds.behavior.checkObjectives(state, {
+    ...scenarioRuntime(state, []),
     advanceAct: () => {
       state.scenarioFlags.actTwoAdvancedWith = 'clues'
       advanced.push(state.actIndex)
       const act = state.acts[state.actIndex]
       state.actIndex += 1
       wilds.behavior.actReveal(state, act, {
+        ...scenarioRuntime(state, []),
         choose: () => '0',
         giveAsset: () => {},
       })
@@ -274,11 +281,13 @@ test('女猎手：击败伊塔卡后进入「守备森严的遗迹」并交出�
   state.campaign.chaosBag = [...state.chaosBag]
   const granted = []
   wilds.behavior.checkObjectives(state, {
+    ...scenarioRuntime(state, []),
     advanceAct: () => {
       state.scenarioFlags.actTwoAdvancedWith = 'defeat'
       const act = state.acts[state.actIndex]
       state.actIndex += 1
       wilds.behavior.actReveal(state, act, {
+        ...scenarioRuntime(state, []),
         choose: () => 0,
         giveAsset: (seat, code) => granted.push({ seat, code }),
       })
@@ -295,6 +304,7 @@ test('密谋推进按卡面：荒野探险洗入伊格的使徒并让未中毒�
   wilds.behavior.setupLocations(state, [], setupApi(31))
   const poisoned = []
   const api = {
+    ...scenarioRuntime(state, []),
     test: (seat, skill, difficulty, resolve) => resolve({ success: false, value: 0, difficulty, skill }),
     poison: seat => { poisoned.push(seat); return true },
     damage: () => {},
@@ -365,6 +375,7 @@ test('04050 地图：1 张放底、其余 2 张按玩家选择顺序放顶', () 
   const answers = ['0', '1']
   const logs = []
   wilds.behavior.performAction(state, inv, { rule: 'mapSupplies' }, {
+    ...scenarioRuntime(state, []),
     checkSupplies: () => true,
     info: text => logs.push(text),
     choose: () => answers.shift(),

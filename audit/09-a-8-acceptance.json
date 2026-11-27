@@ -3,7 +3,7 @@
   "unit": "09-a-8",
   "profile": {
     "id": "tsk-campaign-e-2026-11",
-    "scope": "绯红密钥 09 段 tskc 战役卡（09662–09695）45 条目录记录。39 条通过五维验收；6 条缺读点/结算时机错误暂不切换。",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09662–09695）45 条目录记录。45 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,35 +17,31 @@
   },
   "summary": {
     "total": 45,
-    "verified": 39,
-    "unverified": 6,
+    "verified": 45,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 233
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
-      "sha256": "bd0e5ced735a2dd698eb2128a9349b73e98eda5451b7cf42e0e4b0bbc2ee1e7b"
+      "sha256": "0f42d848dba1ec2f69aeac07e04cb5c1520a46f2e79930483c97e10d95a2deff"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-shadesOfSuffering.test.mjs",
-      "sha256": "f231f390e7be972c84e5e768efea58da9cf9ff4c56d5f5634479cf812fd56ce3"
+      "sha256": "6ce0b024f28230740aef46f3b65940eced2419f620ae801730974b65a1da4fab"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-congressOfTheKeys.test.mjs",
-      "sha256": "479100d083f3a0b6c4345cc26d5e1b605fa6c01b9eaad11717efa212eed921c3"
+      "sha256": "954f09503b4527897315c18be24447f45594c7c9ce2af1fb5c4017de89af27c2"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
-      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+      "sha256": "4619d620fe9cfa9762ac046136e1031986faba8ba06edb9b2e7a18528ed1c65d"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
-      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+      "sha256": "5a81bdb3f14c6c0414ba8fb77e2d1c68ddb606904e659ee84438e3198958a84a"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
@@ -53,7 +49,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
@@ -165,9 +161,13 @@
       "code": "09669",
       "name": "雪兰莪俱乐部",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "印刷「在场调查员维持阶段不获得资源」没有读点：引擎 phases.js:196 的维持供给只读调查员条目 upkeepResources；苦痛之影 behavior 无维持阶段/资源抑制钩子；条目只落 printedShroud/printedClues 元数据。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09669 雪兰莪俱乐部：揭示面跳过重整资源，普通资源行动仍可用"
+        }
+      ]
     },
     {
       "code": "09670",
@@ -481,25 +481,49 @@
       "code": "09682",
       "name": "异界恐惧",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「进入未揭示地点的额外费用（团队 1×人数线索）」时机错误：behavior.locationEntered 只写单一 flags.pendingEntryCost，真正扣款在下一移动的 locationLeft（注释自述），可被下一次进入覆盖/延后到离开。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09682 异界恐惧：背面洗入天启噩兆和原生质重组者，并由全队选两项"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09682 未揭示地点进入费用从出发地队员扣除，已揭示的地点不重复收费"
+        }
+      ]
     },
     {
       "code": "09683",
       "name": "异界的羔羊",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 09682 的入场费用时机问题；背面三选二已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09683 异界的羔羊：背面三选二（伤害恐惧 / 空洞 / 混洗迷你卡）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09683 未揭示地点进入费用从出发地队员扣除，已揭示的地点不重复收费"
+        }
+      ]
     },
     {
       "code": "09684",
       "name": "异界的屠杀",
       "type": "agenda",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 09682 的入场费用时机问题；另背面「已撤退者可立即推进幕 3b」是可选动作，agendaDrivenInsane 自动 finish，未询问玩家（近似未登记）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09684 异界的屠杀：未撤退者发疯，已撤退者可选择推进到幕 3b 或不推进"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09684 未揭示地点进入费用从出发地队员扣除，已揭示的地点不重复收费"
+        }
+      ]
     },
     {
       "code": "09685",
@@ -529,9 +553,17 @@
       "code": "09687",
       "name": "逃出异界",
       "type": "act",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「Forced - 若戴红手套的男子被击败：将他移出游戏」无实现：章节只有 assetEntered，没有 assetLeftPlay/被击败分支（引擎 assets.js:438 有 assetLeftPlay 读点）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09687 逃出异界：域外敌人失去冷漠；全体幸存者撤退推进；背面按同谋胜利区决定结局"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09687 逃出异界：红手套男子被击败后移出游戏"
+        }
+      ]
     },
     {
       "code": "09688",
@@ -549,9 +581,13 @@
       "code": "09689",
       "name": "域外来客之巢",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「此地点每个域外敌人失去冷漠」无读点：+1 fight/evade 已实现（enemyStatModifier），但地点定义无 losesAloof 字段、behavior 只在幕 3 用自动交战近似（披露在 scenarioGaps）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard8.test.mjs",
+          "test": "09689 域外来客之巢：本地域外敌人攻击和躲避各 +1 并失去冷漠，红手套唯一空洞时可入场"
+        }
+      ]
     },
     {
       "code": "09690",

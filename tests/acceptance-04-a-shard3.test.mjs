@@ -5,7 +5,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 // 引擎是唯一装配点：import 它之前不会注册能力条目、注入修正读点。
-import '../src/engine/engine.js'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import { nonPlayerEntryFor } from '../src/cards/encounter-abilities.js'
 import { locationRuleFor } from '../src/cards/card-rules.js'
 import * as part1 from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart1/index.js'
@@ -113,11 +113,22 @@ function p1State(count = 2) {
 }
 
 function p1Api(state, options = {}) {
+  const runtime = scenarioRuntime(state, [])
   const calls = {
     info: [], spawned: [], damage: [], horror: [], tests: [], lostActions: [], endedTurns: [],
     discardedHand: [], discardedAssets: [], paidClues: [], finished: [], poisoned: [], attacks: [],
   }
   const api = {
+    addToExplorationDeck: runtime.addToExplorationDeck,
+    attachToLocation: runtime.attachToLocation,
+    detachEncounterAttachment: runtime.detachEncounterAttachment,
+    isPoisoned: runtime.isPoisoned,
+    takeFromSetAside: runtime.takeFromSetAside,
+    takeEncounterCard: runtime.takeEncounterCard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    doomOn: runtime.doomOn,
+    suppliesAt: runtime.suppliesAt,
+    setScenarioFlag: runtime.setScenarioFlag,
     calls,
     ...supplyApi(state),
     info: text => calls.info.push(text),
@@ -210,11 +221,21 @@ function p2Placed(state, ids = P2_PLACED) {
 }
 
 function p2Api(state, options = {}) {
+  const runtime = scenarioRuntime(state, [])
   const calls = {
     info: [], damage: [], horror: [], draws: [], spawned: [], moved: [], poisoned: [],
     tests: [], finished: [], removed: [],
   }
   const api = {
+    addToExplorationDeck: runtime.addToExplorationDeck,
+    attachToLocation: runtime.attachToLocation,
+    detachEncounterAttachment: runtime.detachEncounterAttachment,
+    isPoisoned: runtime.isPoisoned,
+    takeFromSetAside: runtime.takeFromSetAside,
+    takeEncounterCard: runtime.takeEncounterCard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    doomOn: runtime.doomOn,
+    suppliesAt: runtime.suppliesAt,
     calls,
     ...supplyApi(state),
     info: text => calls.info.push(text),
@@ -296,6 +317,7 @@ function yPutIntoPlay(state, id) {
 }
 
 function yApi(state, options = {}) {
+  const runtime = scenarioRuntime(state, [])
   const calls = {
     spawned: [], drawn: [], finished: [], placed: [], removed: [], moved: [], defeated: [],
     damage: [], horror: [], trauma: [], tests: [], info: [], crossedOff: [], attacked: [], resumed: [],
@@ -305,6 +327,23 @@ function yApi(state, options = {}) {
   const api = {
     calls,
     info: text => calls.info.push(text),
+    setScenarioFlag: runtime.setScenarioFlag,
+    transferAsideToPursuit: runtime.transferAsideToPursuit,
+    addPursuitReminder: runtime.addPursuitReminder,
+    doomOn: runtime.doomOn,
+    enemyFight: enemy => enemy.fight,
+    spawnSetAsideEnemy: (code, location) => runtime.takeFromSetAside(code) ? api.spawn(code, location) : null,
+    spawnPursuingEnemy: (entry, location, engageSeat) => {
+      const enemy = api.spawn(entry.code, location)
+      state.scenarioZones.pursuit.splice(state.scenarioZones.pursuit.indexOf(entry), 1)
+      enemy.damageTaken = entry.damageTaken || 0
+      if (entry.resources) enemy.harbingerResources = entry.resources
+      if (engageSeat != null) {
+        enemy.engagedSeat = engageSeat
+        state.investigators[engageSeat].engaged.push(enemy.id)
+      }
+      return enemy
+    },
     random: options.random || (() => 0.37),
     choose: request => (options.choose ? options.choose(request) : (request.options?.[0]?.id ?? 'skip')),
     hasSupply: (seat, name) => supplies.has(name) || ((state.campaign.supplies || {})[seat] || []).includes(name),
@@ -449,9 +488,8 @@ test('04215 落入陷阱：可从遭遇牌库洗回探索牌库，从探索牌�
   // 从探索牌库抽出：不能选择洗回，必须检定，失败每低于难度 1 点受 1 点伤害。
   const drawn = p1State(1)
   addLocation(drawn, def1, 'mouthOfKnyan')
-  drawn.scenarioFlags.exploreDrawPending = true
   const drawnApi = p1Api(drawn, { choose: () => 'shuffle', test: () => false, value: 1 })
-  part1.behavior.resolveEncounter(drawn, drawn.investigators[0], { code: '04215', originalCode: '04215' }, drawnApi)
+  part1.behavior.resolveEncounter(drawn, drawn.investigators[0], { code: '04215', originalCode: '04215' }, drawnApi, { encounteredFrom: 'exploration' })
   assert.deepEqual(drawnApi.calls.tests, [{ seat: 0, skill: 'agility', difficulty: 3 }])
   assert.equal(drawn.investigators[0].damage, 2, '失败 2 点差额 = 2 点伤害')
 })
@@ -461,6 +499,7 @@ test('04216 有毒孢子：附属地点，轮末中毒者受 2 恐惧、未中�
   const location = addLocation(state, def1, 'pathOfThorns')
   state.investigators[0].threat.push({ id: 'poison-0', code: '04102', originalCode: '04102' })
   for (const inv of state.investigators) inv.location = 'pathOfThorns'
+  state.scenarioZones.setAside = ['04102']
   const api = p1Api(state)
   part1.behavior.resolveEncounter(state, state.investigators[0], { code: '04216', originalCode: '04216' }, api)
   assert.equal(location.attachments.length, 1)
@@ -516,7 +555,6 @@ test('04220 蛇怪：石柱标记放到昆扬之口后把一张蛇怪洗入遭�
   state.actIndex = 1
   addLocation(state, def1, 'mouthOfKnyan')
   for (const inv of state.investigators) { inv.location = 'mouthOfKnyan'; inv.clues = 1 }
-  state.enemies.push({ id: 'b1', code: '04220', originalCode: '04220', location: 'mouthOfKnyan', traits: ['Serpent'] })
   state.encounterDiscard = ['04220']
   const api = p1Api(state)
   part1.behavior.performAction(state, state.investigators[0], { rule: 'solvePillar' }, api)
@@ -630,10 +668,11 @@ test('04225 危险峡谷：调查检定失败且无人带绳索时放 1 毁灭',
   part2.behavior.afterTest(state, inv, result, p2Api(state))
   assert.equal(location.doom, 1)
   // 有人带绳索时不放毁灭。
-  const roped = p2Placed(p2State(1))
+  const roped = p2Placed(p2State(2))
   part2.behavior.setupLocations(roped, [], setupApi(1))
   roped.investigators[0].location = 'perilousGulch'
-  roped.campaign.supplies[0] = ['rope']
+  roped.investigators[1].location = 'perilousGulch'
+  roped.campaign.supplies[1] = ['rope']
   const ropedLocation = roped.locations.find(entry => entry.id === 'perilousGulch')
   part2.behavior.afterTest(roped, roped.investigators[0], result, p2Api(roped))
   assert.equal(ropedLocation.doom || 0, 0)
@@ -742,6 +781,24 @@ test('04283 赤红深渊：背面留下逐次强迫效果，推进后每次放�
   const doomApi = yApi(state)
   yoth.behavior.doomPlaced(state, { agenda: true, amount: 1 }, doomApi)
   assert.deepEqual(doomApi.calls.spawned, [{ code: '04297', location: state.scenarioFlags.depthStartLocation }])
+})
+
+test('04282 撼地之怒：本密谋第三个毁灭仅放出一次追击敌人', () => {
+  const state = yPrepared(11, 2)
+  state.agendaIndex = state.agendas.findIndex(agenda => original(agenda) === '04282')
+  state.scenarioZones.pursuit = [
+    { code: '04297', damageTaken: 1 },
+    { code: '04297', damageTaken: 0 },
+  ]
+  const api = yApi(state)
+  yoth.behavior.doomPlaced(state, { agenda: false, amount: 1 }, api)
+  yoth.behavior.doomPlaced(state, { agenda: true, amount: 2 }, api)
+  assert.equal(api.calls.spawned.length, 0)
+  yoth.behavior.doomPlaced(state, { agenda: true, amount: 1 }, api)
+  assert.equal(api.calls.spawned.length, 1)
+  assert.equal(state.scenarioZones.pursuit.length, 1)
+  yoth.behavior.doomPlaced(state, { agenda: true, amount: 1 }, api)
+  assert.equal(api.calls.spawned.length, 1)
 })
 
 test('04290 幽嘶洞群：入场后按当前深度等级放置线索', () => {
@@ -875,24 +932,30 @@ test('04303 古代遗物：横置检定意志/智识(4)，成功移除 1 个毁�
     enemies: [],
   }
   const calls = { tests: [], removedDoom: 0 }
+  let success = false
   const api = {
     choice: request => request.options[0].id,
     startTest: ({ seat, skill, difficulty, resolve }) => {
       calls.tests.push({ seat, skill, difficulty })
-      resolve({ success: true, value: difficulty + 1 })
+      resolve({ success, value: success ? difficulty + 1 : difficulty - 1 })
     },
     info: () => {},
     cardName: code => code,
     removeDoom: n => { calls.removedDoom += n; state.doom -= n },
     removeDoomFromCard: (card, n) => { card.doom -= n },
   }
-  relicOfAges.abilities[0].resolve({ state, inv: state.investigators[0], api })
+  const attempt = () => relicOfAges.abilities[0].resolve({ state, inv: state.investigators[0], api })
+  attempt()
   assert.deepEqual(calls.tests, [{ seat: 0, skill: 'willpower', difficulty: 4 }])
+  assert.equal(state.doom, 1)
+  assert.equal(relicOfAges.abilities[0].criteria({ state, inv: state.investigators[0] }), true)
+  success = true
+  attempt()
   assert.equal(calls.removedDoom, 1, '选择密谋上的毁灭标记并移除 1 个')
   assert.equal(state.doom, 0)
-  assert.equal(state.scenarioFlags.relicOfAgesDoomSucceeded, true)
+  assert.equal(relicOfAges.abilities[0].criteria({ state, inv: state.investigators[0] }), false)
   // 每场游戏最多成功一次：再次结算不再开检定。
-  relicOfAges.abilities[0].resolve({ state, inv: state.investigators[0], api })
-  assert.equal(calls.tests.length, 1)
+  attempt()
+  assert.equal(calls.tests.length, 2)
   assert.equal(relicOfAges.scenarioPlayable, true, '剧情资产可在战役牌组中打出')
 })

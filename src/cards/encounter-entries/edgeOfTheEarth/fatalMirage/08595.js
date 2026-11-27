@@ -1,16 +1,19 @@
-// 08595 高田弘子
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 伙伴（坚毅）形态：由 battle.choosePartner 交给调查员；技能/费用数值取印刷数据。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08595 高田弘子 · 坚毅伙伴
 export default {
-  code: '08595',
-  scope: 'storyAsset',
-  implemented: true,
-  uses: 9,
-  usesType: 'resources',
-  abilities: [],
-  flags: { partner: true, resolute: true, usesType: 'resources', partnerRules: {"action":"gain1ResourceMoveUpTo3"} },
+  code: '08595', scope: 'storyAsset', implemented: true,
+  flags: { partner: true, resolute: true },
+  uses: 9, usesType: 'resources',
+  abilities: [{
+    kind: 'action', actionKind: 'activate', label: '横置：获得 1 资源，然后将高田弘子的最多 3 资源移入你的资源池',
+    cost: { exhaust: true },
+    resolve: ({ inv, source, api }) => {
+      api.gainResources(inv.seat, 1)
+      const available = Math.min(3, source.uses || 0)
+      if (available <= 0) return
+      const amount = Number(api.choice({ kind: 'number', source: '08595', seat: inv.seat,
+        prompt: '选择从高田弘子移入资源池的数量。',
+        options: Array.from({ length: available + 1 }, (_, n) => ({ id: String(n), label: '移动 ' + n + ' 资源' })) }))
+      if (Number.isSafeInteger(amount) && amount > 0 && amount <= available && api.spendUses(source, amount)) api.gainResources(inv.seat, amount)
+    },
+  }],
 }

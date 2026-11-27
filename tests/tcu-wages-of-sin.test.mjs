@@ -748,7 +748,8 @@ test('复仇女巫被击败：同地点每位调查员受到其伤害与恐惧�
   state.enemies.push(witch)
   behavior.enemyDefeated(state, witch, api)
   assert.equal(api.calls.filter(call => call.name === 'directDamage').length, state.numInvestigators)
-  assert.deepEqual(api.calls.filter(call => call.name === 'directDamage')[0].args, [0, 1])
+  assert.deepEqual(api.calls.filter(call => call.name === 'directDamage')[0].args,
+    [0, 1, { code: witch.code, sourceEnemyId: witch.id }])
   assert.deepEqual(api.calls.filter(call => call.name === 'directHorror')[0].args, [0, 1])
 })
 

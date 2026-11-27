@@ -1,5 +1,9 @@
+import { attachmentTextBlanked } from './attachment-rules.js'
+import { hiddenParityBlocks } from './hidden-rules.js'
+import { storyFightTargets } from './fight-targets.js'
 import { createDiscardCostApi, discardOneHandCardAsCost } from './discard-costs.js'
 import { enemyBody, enemyCombatTargets, enemyIsBody } from './enemy-parts.js'
+import { cardEffectSource } from './effect-provenance.js'
 import { discardPlayerCards } from './player-zones.js'
 import { afterHandDiscard } from './hand-discard-window.js'
 import { isEnemyUnengaged,nearestEnemies } from './enemy-query.js'
@@ -23,6 +27,7 @@ import { entityAbilityInRange, parleyForbidden } from './parley.js'
 import { entityRuleActive } from './modifiers.js'
 import { NON_PLAYER_SCOPES } from './ability.js'
 import { groupClueTotal, payGroupClueCost } from './group-cost.js'
+import { hasWindowListener } from './window-listeners.js'
 import { effectiveFloodLevel, floodLevel } from './flood.js'
 import { actsInPlay } from './parallel-acts.js'
 
@@ -101,7 +106,7 @@ export function createAbilityRules(deps) {
     if (!encounterCostAvailable(state, inv, cost)) return false
     if (cost.resources && availableResources(inv) < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
-    if (cost.clues && engagedWithClueBlocker(state, inv)) return false
+    if (cost.clues && !deps.canSpendClues(state, inv)) return false
     if (cost.groupClues && groupClueTotal(state, inv, other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), descriptor?.groupClueScope) < cost.groupClues) return false
     if((cost.discardHandIcons||cost.discardControlledAsset||cost.discardHandType)?!discardCost(state).available(inv,cost,source):(cost.discardHand&&discardableHandCards(inv,cost.discardHandIcon,cost.discardHandType).length<cost.discardHand))return false
     if (!tokenCostAvailable(state, inv, descriptor?.additionalTokenCost)) return false
@@ -117,21 +122,20 @@ export function createAbilityRules(deps) {
     if (cost.uses && !payUseCost(state, inv.seat, source, cost.uses, registeredEntry, spec => deps.requestChoice(state, spec),
       (provider, count) => afterSuppliesSubstituted(state, inv, source, provider, count, events, deps))) return false
     if (cost.resources) resourceBank.spendFromPool(inv, cost.resources, state)
-    if (cost.clues) {
-      inv.clues -= cost.clues
-      syncClues(state)
-    }
+    if (cost.clues) deps.spendClues(state, inv, cost.clues, events, cardEffectSource(state, source, descriptor, inv, { cardDef }))
     if (cost.groupClues) {
       payGroupClueCost(state, inv, cost.groupClues, spec => deps.requestChoice(state, spec), other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), descriptor?.groupClueScope)
       syncClues(state)
     }
     if(cost.discardHandIcons||cost.discardControlledAsset||cost.discardHandType){if(!discardCost(state).pay(inv,cost,source,events))return false}
     else if (cost.discardHand) discardChosenCards(state, inv, cost.discardHand, events, source?.code, cost.discardHandIcon)
-    if (cost.damage) deps.applyHarm(state, inv, cost.damage, cost.horror || 0, events)
+    const harmPresentation = { code: descriptor?.code || source?.code, assetId: source?.id, sourceSeat: inv.seat }
+    if (cost.damage) deps.applyHarm(state, inv, cost.damage, cost.horror || 0, events, false, null, false, null, harmPresentation)
     else if (cost.horror) applyHorror(state, inv, cost.horror, events)
     if (cost.drawEncounter) for (let i = 0; i < cost.drawEncounter; i++) deps.drawEncounter(state, inv, events)
-    if (cost.damageSelf) applyDamage(state, inv, cost.damageSelf, events, true)
+    if (cost.damageSelf) applyDamage(state, inv, cost.damageSelf, events, true, harmPresentation)
     if (cost.assetDamage && source) {
+      deps.presentCardDamage?.(state, inv, source, cost.assetDamage, events, { ...harmPresentation, audio: 'cardDamage' })
       source.damage = (source.damage || 0) + cost.assetDamage
       const def = cardDef(source.code)
       if (def?.health > 0 && source.damage >= def.health) {
@@ -154,6 +158,12 @@ export function createAbilityRules(deps) {
       exilePlayerCard(state, inv, source.code, events)
     }
     if (cost.uses) afterUsesSpent(state, inv, source, cost.uses, events, deps)
+    if (cost.exhaust && hasWindowListener(state, 'assetExhausted')) {
+      const owner = state.investigators.find(other => other.assets?.includes(source))
+      if (owner) deps.reactionWindow(state, 'assetExhausted', {
+        when: 'assetExhausted', seat: owner.seat, assetId: source.id, assetCode: source.code, location: owner.location,
+      }, events, { allowNested: true })
+    }
     return true
   }
 
@@ -181,6 +191,7 @@ export function createAbilityRules(deps) {
   }
 
   function descriptorUsable(state, inv, source, descriptor, { windowId = null, context = {}, mode = 'window', fromChannel = null, ignoreCosts = false, ignoreActionCost = false } = {}) {
+    if (attachmentTextBlanked(state, source)) return false
     if (descriptor.fromDiscard && (!source?.discardedCard || discardLocked(state, inv) || !inv.discard.includes(source.code))) return false
     if (state.scenario?.mechanics?.noEncounterDeck && (descriptor.requiresEncounterDeck || descriptor.cost?.drawEncounter)) return false
     if (['action', 'free'].includes(descriptor.kind) && descriptor.actionKind && source
@@ -188,7 +199,8 @@ export function createAbilityRules(deps) {
       && !entityAbilityInRange(state, inv, source, descriptor)) return false
     if (source?.investigator != null && investigatorTextBlanked(state, inv)) return false
     if (descriptor.kind === 'free' && state.locations?.includes(source)
-      && (state.agendaAside || []).some(card => registeredEntry(card.originalCode || card.code || card)?.treacheryRule?.blocksLocationFastAbilities)) return false
+      && (state.agendaAside || []).some(card => !attachmentTextBlanked(state, card)
+        && registeredEntry(card.originalCode || card.code || card)?.treacheryRule?.blocksLocationFastAbilities)) return false
     const timing = state.timingWindow
     if (mode === 'free') {
       if (descriptor.kind !== 'free') return false
@@ -208,12 +220,13 @@ export function createAbilityRules(deps) {
       && [...(inv.assets || []), ...(inv.threat || [])].some(card => card !== source
         && registeredEntry(card.code)?.cannotTriggerOtherAssetAbilities === true)) return false
     if (descriptor.kind !== 'forced' && traitTriggerBlocked(state, inv, source)) return false
+    if (descriptor.kind !== 'forced' && hiddenParityBlocks(state, inv, cardDef(source?.code), 'trigger')) return false
     if (descriptor.kind !== 'forced' && assetTextBlankedExceptForced(source)) return false
     // 2026-11-06：04099 毒蛇灾厄 / 02088 等「文本框视为空白」的整类规则也压到描述子上。
     // 旧 DSL 走 stats.assetEffect 已被清空，描述子却是 legalMoves / 反应窗口 / playerWindow 的
     // 唯一枚举来源；漏掉这一句，被空白化的支援仍会出现在窗口里（06013 门之匣 + 04099 实机复现）。
     // 与逐张宿主的 blankHostExceptForced 不同，整张文本框空白没有强制例外。
-    if (assetTextBlanked(source, inv)) return false
+    if (assetTextBlanked(source, inv, state)) return false
     if (descriptor.requiresNoClues) {
       const here = state.locations.find(location => location.id === inv.location)
       if (here && here.clues > 0) return false
@@ -237,9 +250,9 @@ export function createAbilityRules(deps) {
       } else if (!(inv.hand || []).includes(descriptor.code)) return false
       const def = cardDef(descriptor.code)
       if (!def) return false
-      if (cannotPlayTypes(inv).has(def.type)) return false
+      if (cannotPlayTypes(inv, state).has(def.type)) return false
       // 隐私弱点（03084d「你不能打出事件」）：fromHand 描述子与普通出牌同一读点。
-      if (playTypeBlocked(state, inv, def.type) || (!descriptor.noPlayCost && capabilityBlocked(state, inv, 'play'))) return false
+      if (playTypeBlocked(state, inv, def.type) || hiddenParityBlocks(state, inv, def, 'play') || (!descriptor.noPlayCost && capabilityBlocked(state, inv, 'play'))) return false
       if (!descriptor.noPlayCost && availablePlayResources(state, inv, def) < playCost(state, inv, def) - channelDiscount) return false
     } else if (!ignoreCosts && !canAffordAbility(state, inv, source, { cost: descriptorCost(descriptor, ignoreActionCost), descriptor })) return false
     if (descriptor.criteria && !evaluateCriteria(descriptor.criteria, {
@@ -287,6 +300,7 @@ export function createAbilityRules(deps) {
           return !!other && !other.defeated && !other.resigned && !capabilityBlocked(state, other, 'gainResources')
             && scenarioBehavior(state).canGainResources?.(state, other) !== false
         },
+        discardLocked: () => discardLocked(state, inv),
         canDrawCards: (seat = inv.seat) => {
           const other = state.investigators[seat]
           return !!other && !other.storyInvestigator && !other.defeated && !other.resigned
@@ -343,7 +357,10 @@ export function createAbilityRules(deps) {
     }
     for (const enemy of state.enemies || []) for (const source of enemy.attachments || []) {
       const entry = registeredEntry(source.code)
-      if (entry?.assetRule?.sharedEnemyAttachment) out.push({ source, code: source.code, entry, controlled: true })
+      if (entry?.assetRule?.sharedEnemyAttachment
+        || (entry?.assetRule?.teamEnemyAttachmentReaction && inv.location === enemy.location)) {
+        out.push({ source, code: source.code, entry, controlled: true })
+      }
     }
     for (const source of state.agendaAside || []) {
       const entry = registeredEntry(source.code)
@@ -412,7 +429,7 @@ export function createAbilityRules(deps) {
     const out = []
     const seen = new Set()
     const push = (entity, { requireRevealed = false } = {}) => {
-      if (!entity) return
+      if (!entity || attachmentTextBlanked(state, entity)) return
       if (requireRevealed && !entity.revealed) return
       const key = entity.id ?? entity.code
       if (key != null) {
@@ -430,7 +447,13 @@ export function createAbilityRules(deps) {
       // （猎手移动后再次移动、攻击加成）由该附属条目结算。
       for (const attachment of enemy.attachments || []) push(attachment)
     }
-    for (const location of state.locations || []) push(location, { requireRevealed: true })
+    for (const location of state.locations || []) {
+      push(location, { requireRevealed: true })
+      for (const attachment of location.attachments || []) push(attachment)
+    }
+    for (const inv of state.investigators || []) {
+      for (const asset of inv.assets || []) for (const attachment of asset.attachments || []) push(attachment)
+    }
     if(registeredEntry(state.scenario?.originalCode || state.scenario?.code)?.scope==='scenario')push(state.scenario)
     // P7 并行幕：额外的活动幕（深海之城 v.I/II/III）也要作为窗口里的强制/反应来源。
     // 没有 parallelActs 时 actsInPlay 退化为 [当前幕]，与旧的单点读法逐字一致。
@@ -475,6 +498,7 @@ export function createAbilityRules(deps) {
       canSearchPlayableAsset: (inv, options) => deps.canPlayNamedAsset(state, inv, options),
       canPlayAsEffect: (seat, code, options) => deps.abilityApi(state, []).canPlayAsEffect(seat, code, options),
       playHandCardOptions: (seat, options) => deps.abilityApi(state, []).playHandCardOptions(seat, options),
+      cardAbilityOptions: (seat, asset, options) => deps.abilityApi(state, []).cardAbilityOptions(seat, asset, options),
       copyableInvestigatorFronts: seat => deps.copyableInvestigatorFronts(state, seat),
     }
   }
@@ -492,7 +516,7 @@ export function createAbilityRules(deps) {
     if (!encounterCostAvailable(state, inv, cost)) return false
     if (cost.resources && availableResources(inv) < cost.resources) return false
     if (cost.clues && (inv.clues || 0) < cost.clues) return false
-    if (cost.clues && engagedWithClueBlocker(state, inv)) return false
+    if (cost.clues && !deps.canSpendClues(state, inv)) return false
     if((cost.discardHandIcons||cost.discardControlledAsset||cost.discardHandType)?!discardCost(state).available(inv,cost,asset):(cost.discardHand&&discardableHandCards(inv,cost.discardHandIcon,cost.discardHandType).length<cost.discardHand))return false
     if (cost.groupClues && groupClueTotal(state, inv, other => !engagedWithClueBlocker(state, other) && deps.canSpendClues(state, other), ability.descriptor?.groupClueScope) < cost.groupClues) return false
     if (cost.damageSelf && inv.damage + cost.damageSelf >= inv.health) return false
@@ -516,7 +540,8 @@ export function createAbilityRules(deps) {
       if (effect.target === 'here') return state.enemies.filter(e => !enemyIsBody(e) && e.location === inv.location)
       return enemiesEngagedWith(state, inv).flatMap(enemy => enemyCombatTargets(state, enemy))
     }
-    if (effect.type === 'fight') return state.enemies.filter(enemy => !enemyIsBody(enemy) && enemy.location === inv.location
+    if (effect.type === 'fight') return [...state.enemies, ...storyFightTargets(state).filter(asset =>
+      scenarioBehavior(state).canFightEnemy?.(state, inv, asset) !== false)].filter(enemy => !enemyIsBody(enemy) && enemy.location === inv.location
       && (!effect.requireNotEngagedTarget || enemyBody(state, enemy)?.engagedSeat !== inv.seat)
       && !aloofPreventsAttack(state, inv, enemy, effect)
       && (!enemyRuleFlags(enemy.code).damageOnlyFrom || enemyTextBlanked(state, enemy))

@@ -6,6 +6,7 @@
 //   2. 单卡条目（encounter-entries）——逐卡 actRule/agendaRule/locationRule/enemyRule/
 //      treacheryRule 的规则行为（直接 import 单卡文件，不依赖 implementedFor）。
 import test from 'node:test'
+import { scenarioRuntime } from '../src/engine/engine.js'
 import assert from 'node:assert/strict'
 import { zoneApi } from './tcu-zone-api.mjs'
 import { investigatorEntryError, startScenario } from '../src/engine/engine.js'
@@ -110,6 +111,7 @@ const codeOf = card => card?.originalCode || card?.code
 
 function apiStub(state, overrides = {}) {
   const api = {
+    takeEncounterCard: scenarioRuntime(state, []).takeEncounterCard,
     info: () => {}, choose: () => 'skip', random: () => 0.5,
     damage: (seat, amount) => { state.investigators[seat].damage += amount },
     horror: (seat, amount) => { state.investigators[seat].horror += amount },
@@ -1070,7 +1072,7 @@ test('闹鬼 script：屋主的住处找鼠群生成在发霉的走道；凯夏�
   state.encounterDiscard = [SWARM_OF_RATS]
   const spawned = []
   secretName.behavior.hauntedScript(state,
-    { scriptId: 'landlordsQuartersRats', seat: 0 },
+    { scriptId: 'landlordsQuartersRats', seat: 0, locationId: 'landlordsQuarters' },
     apiStub(state, { spawn: (code, location) => spawned.push({ code, location }) }))
   assert.deepEqual(spawned, [{ code: SWARM_OF_RATS, location: 'moldyHalls' }])
 

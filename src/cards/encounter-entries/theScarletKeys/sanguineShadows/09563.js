@@ -22,7 +22,7 @@ export default {
           options: [{ id: 'damage', label: '受到 2 点伤害' }, { id: 'horror', label: '受到 2 点恐惧' }],
         }) || 'damage'
         if (answer === 'horror') api?.harm?.(inv.seat, { horror: 2 })
-        else api?.harm?.(inv.seat, { damage: 2 })
+        else api?.harm?.(inv.seat, { damage: 2 }, { code: enemy.originalCode || enemy.code, sourceEnemyId: enemy.id })
       }
       api?.info?.('🩸 敌军阶段结束：重整的血色监视者让每位调查员受到 2 点伤害或 2 点恐惧。')
       return true

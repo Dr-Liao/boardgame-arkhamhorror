@@ -82,6 +82,7 @@ export default {
   'game.slot.arcane': 'Arcane',
   'game.slot.accessory': 'Accessory',
   'game.slot.body': 'Body',
+  'game.slot.head': 'Head',
   'game.slot.tarot': 'Tarot',
 
   // Action names (action bar / card actions / location actions)
@@ -227,6 +228,7 @@ export default {
   // Card detail modal chrome (renderCardDetailModal)
   'game.detail.aria': 'Card details',
   'game.detail.closeAria': 'Close card details',
+  'game.detail.timedView': 'Looking for more than {seconds} seconds drives your investigator insane.',
   'game.detail.targetAction': 'Act on this target',
   'game.detail.playAttached': 'Play',
 
@@ -237,6 +239,9 @@ export default {
 
   // Pending choices and skill tests (renderPendingChoice)
   'game.choice.pending': 'Pending choice',
+  'game.zone.sharedPlay': 'Shared set-aside cards',
+  'game.zone.playSharedCard': 'Play {name}',
+  'game.choice.cardNameSearch': 'Search for a card name',
   'game.choice.resolving': 'Resolving a card effect',
   'game.choice.waitingTeammate': 'Waiting for a teammate',
   'game.choice.targetAria': '{choice}: choose a target',

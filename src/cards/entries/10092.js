@@ -12,20 +12,20 @@
 //     额外的 0-2 个在 resolve 里用 api.chaosTokens.add('curse', n, { exact: true }) 补足。
 //   · 「攻击。」→ countsAs: 'fight'（actionKind 读点：不引发借机攻击，卡面行动指示门禁也读它）。
 //   · 攻击：api.fight（combat.js#doFight 的同一份管线；assetId/sourceCode/combatBonus 与 09113 同款）。
-//   · 「击败敌人则补满 1 充能或 1 贡品」：onSuccess 里用敌人剩余生命与本次攻击伤害预估是否击败
-//     （doFight 的伤害在 onSuccess 之后才结算），补满走 api.addUses（uses 的唯一加法写点）。
-//
-// 近似披露（simplified）：
-//   1. 是否「击败」用剩余生命 ≤ 本次攻击伤害（1 + damageBonus）预估，不含后续反应窗口追加的伤害；
-//   2. 补满数量固定为 +1，不校验支援的印刷上限（条目层没有「最大 uses」读点；见
-//      artifacts/migration/fhv/primitive-requests/10092.json）。
+// 击败采用攻击结果；只有印刷使用量尚未补满的受控支援才可入选。
+import { ALL_CARDS } from '../../cards/cards-data.js'
+
 const CODE = '10092'
 
 const refillableTypes = new Set(['charge', 'charges', 'offering', 'offerings'])
 
-// 可补满的受控支援（充能或贡品）。数量上限读点缺失，只按 usesType 过滤。
+const printedMaximum = asset => {
+  const uses = /Uses\s*\((\d+) (?:charges?|offerings?)\)/i.exec(ALL_CARDS[asset.code]?.text || '')
+  return Number(uses?.[1] || 0)
+}
 const refillableAssets = inv => (inv.assets || [])
-  .filter(asset => refillableTypes.has(String(asset.usesType || '').toLowerCase()))
+  .filter(asset => refillableTypes.has(String(asset.usesType || '').toLowerCase())
+    && (asset.uses || 0) < printedMaximum(asset))
 
 function replenishChargeOrOffering(inv, api) {
   const candidates = refillableAssets(inv)
@@ -50,9 +50,6 @@ function replenishChargeOrOffering(inv, api) {
 export default {
   code: CODE,
   name: '邪恶祭祀刀',
-  simplified: true,
-  note: 'simplified: 「击败敌人」用剩余生命 ≤ 本次攻击伤害（1+damageBonus）预估，不含后续窗口追加伤害；'
-    + '补满固定 +1，不校验支援印刷上限（条目层无最大 uses 读点，见 primitive-requests/10092.json）。',
   abilities: [
     {
       kind: 'action',
@@ -65,29 +62,20 @@ export default {
         const enemy = target?.entity
         if (!enemy) return
         // 费用已由引擎加入 1 个诅咒；这里补足额外的 0-2 个（每多 1 个本次攻击再 +2 战斗）。
-        const extra = Number(api.choice({
+        const room = Math.min(2, api.chaosTokens.room('curse'))
+        const extra = room ? Number(api.choice({
           kind: 'effect', source: CODE, seat: inv.seat,
-          prompt: '「邪恶祭祀刀」：还要在混乱袋中加入几个诅咒标记（每个本次攻击 +2 战斗）？',
-          options: [
-            { id: '0', label: '不再加入（本次攻击 +2 战斗）' },
-            { id: '1', label: '再加入 1 个（本次攻击 +4 战斗）' },
-            { id: '2', label: '再加入 2 个（本次攻击 +6 战斗）' },
-          ],
-        }))
-        const added = Number.isFinite(extra) ? Math.max(0, Math.min(2, extra)) : 0
-        if (added) api.chaosTokens.add('curse', added, { exact: true })
+          prompt: '「邪恶祭祀刀」：还要在混乱袋中加入几个诅咒标记？',
+          options: Array.from({ length: room + 1 }, (_, index) => ({ id: String(index), label: '再加入 ' + index + ' 个' })),
+        })) : 0
+        const added = extra ? api.chaosTokens.add('curse', extra, { exact: true }) : 0
         const curses = 1 + added
-        api.fight(inv.seat, enemy.id, {
+        const result = api.fight(inv.seat, enemy.id, {
           assetId: source?.id,
           sourceCode: CODE,
           combatBonus: curses * 2,
-          onSuccess: ({ enemy: struck, opts }) => {
-            const remaining = Math.max(0, (Number(struck?.health) || 0) - (Number(struck?.damageTaken) || 0))
-            const damage = 1 + (Number(opts?.damageBonus) || 0)
-            if (remaining > damage) return
-            replenishChargeOrOffering(inv, api)
-          },
         })
+        if (result?.attackResult?.defeated) replenishChargeOrOffering(inv, api)
       },
     },
   ],

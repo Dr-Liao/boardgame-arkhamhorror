@@ -4,8 +4,7 @@
 // 强制 - 轮末：从场上弃掉饥荒。
 //
 // 一张卡一个文件：轮末弃置由引擎读 `treacheryRule.discardAtRoundEnd`（phases.js）；
-// 显现（放在议程旁 + 费用 +1）由 encounterResolve 经 api.resolveScenarioEvent 交给章节
-// behavior.events.deadHeatFamine（费用读点是引擎既有的 location.playCostIncrease）。
+// 显现经章节事件把饥荒放在密谋旁，保留抽牌调查员的座位供费用读取。
 export default {
   code: '09542',
   scope: 'treachery',
@@ -19,5 +18,4 @@ export default {
   encounterResolve(state, inv, card, api) {
     return api.resolveScenarioEvent('deadHeatFamine', { seat: inv.seat }) === true
   },
-  note: '近似：费用 +1 写在所有在场地点的 playCostIncrease（引擎的唯一读点）；因此对全桌生效，而不是只对「你」生效。',
 }

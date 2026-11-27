@@ -6,28 +6,28 @@
     "effectsEntries": 0,
     "effectsTopLevelFields": 0,
     "escapeCards": 0,
-    "descriptorEntries": 1765,
-    "descriptorAbilities": 2484,
+    "descriptorEntries": 1767,
+    "descriptorAbilities": 2567,
     "abilityKinds": 12,
-    "windows": 144,
+    "windows": 165,
     "effectPrimitives": 56,
-    "nonPlayerCards": 445,
-    "behaviorLines": 99400,
+    "nonPlayerCards": 523,
+    "behaviorLines": 99355,
     "declaredScenarios": 3
   },
   "channels": {
-    "descriptor": 1765,
+    "descriptor": 1767,
     "data": 4
   },
   "nonPlayer": {
     "byScope": {
-      "enemy": 150,
-      "location": 117,
-      "treachery": 36,
-      "storyAsset": 110,
-      "act": 11,
+      "enemy": 172,
+      "location": 144,
+      "treachery": 46,
+      "storyAsset": 120,
+      "act": 16,
       "scenario": 8,
-      "agenda": 13
+      "agenda": 17
     },
     "codes": [
       "01181",
@@ -64,7 +64,10 @@
       "06079",
       "06095",
       "06102",
+      "06145",
       "06189",
+      "06191",
+      "06192",
       "06193",
       "06224",
       "06283",
@@ -242,6 +245,7 @@
       "07333",
       "07334",
       "08502",
+      "08503",
       "08504",
       "08505",
       "08506",
@@ -263,9 +267,37 @@
       "08541",
       "08542",
       "08543",
+      "08557",
+      "08560",
+      "08561",
+      "08562",
+      "08563",
+      "08564",
+      "08565",
+      "08569",
+      "08570",
+      "08571",
+      "08573",
+      "08574",
+      "08575",
+      "08576",
+      "08577",
+      "08578",
+      "08579",
+      "08580",
+      "08581",
+      "08582",
+      "08583",
+      "08584",
+      "08587",
+      "08588",
       "08589",
+      "08590",
+      "08591",
       "08592",
       "08593",
+      "08594",
+      "08595",
       "08614",
       "08615",
       "08616",
@@ -273,6 +305,9 @@
       "08618",
       "08619",
       "08620",
+      "08637",
+      "08642",
+      "08643",
       "08649",
       "08650",
       "08651",
@@ -281,24 +316,36 @@
       "08654",
       "08655",
       "08656",
+      "08669",
+      "08672",
+      "08673",
+      "08679",
+      "08680",
       "08687",
       "08689",
       "08690",
+      "08694",
       "08695",
       "08696",
       "08700",
       "08701",
       "08703",
+      "08706",
+      "08707",
       "08710",
       "08711",
+      "08712",
       "08714",
+      "08715",
       "08716",
       "08717",
       "08718",
       "08719",
       "08720",
+      "08721",
       "08722",
       "08730",
+      "08731",
       "08732",
       "08734",
       "08735",
@@ -307,11 +354,24 @@
       "09010",
       "09127",
       "09518",
+      "09537",
+      "09537b",
+      "09538",
+      "09539",
+      "09554",
       "09557b",
+      "09560",
       "09571",
       "09571b",
+      "09580",
+      "09583",
       "09584",
       "09585",
+      "09603",
+      "09618",
+      "09655a",
+      "09687",
+      "09689",
       "09715",
       "09716a",
       "09716b",
@@ -324,6 +384,7 @@
       "09726b",
       "09727a",
       "09727b",
+      "09729",
       "09731",
       "09732",
       "09734",
@@ -355,9 +416,6 @@
       "09762",
       "09763",
       "09764",
-      "09765",
-      "09768a",
-      "09768b",
       "09769a",
       "09769b",
       "09770a",
@@ -365,9 +423,21 @@
       "10011",
       "10014",
       "10063",
+      "10522",
+      "10548",
+      "10642",
+      "10652",
+      "10653",
+      "10654",
+      "10655",
+      "10656",
+      "10657",
+      "10662b",
+      "10670",
       "10681",
       "10683",
       "10686",
+      "10691a",
       "10692",
       "10693",
       "10693b",
@@ -403,10 +473,13 @@
       "10732",
       "10738",
       "10739",
+      "10740",
+      "10743",
       "11502",
       "11503",
       "11515",
       "11550",
+      "11552",
       "11568",
       "11574",
       "11581",
@@ -423,6 +496,11 @@
       "11672b",
       "11687",
       "11688",
+      "11692",
+      "11694",
+      "11695",
+      "11696",
+      "11698",
       "11721",
       "11722",
       "11723",
@@ -476,8 +554,8 @@
       "screechingByakhee",
       "wolfManDrew"
     ],
-    "abilities": 498,
-    "modifiers": 141
+    "abilities": 579,
+    "modifiers": 155
   },
   "declaration": {
     "abilityScopes": [
@@ -611,7 +689,7 @@
       "content/campaigns/theScarletKeys/scenarios/withoutATrace/behavior.js",
       "content/campaigns/warOfTheOuterGods/scenarios/warOfTheOuterGods/behavior.js"
     ],
-    "behaviorLines": 99400,
+    "behaviorLines": 99355,
     "declaredScenarios": 3
   },
   "cards": [
@@ -3292,7 +3370,7 @@
     {
       "code": "05195",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 1
     },
     {
       "code": "05196",
@@ -3787,7 +3865,7 @@
     {
       "code": "06203",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "06204",
@@ -4757,7 +4835,7 @@
     {
       "code": "08049",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08050",
@@ -4952,7 +5030,7 @@
     {
       "code": "08088",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "08089",
@@ -5077,7 +5155,7 @@
     {
       "code": "08113",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "08114",
@@ -5112,32 +5190,32 @@
     {
       "code": "08120",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08121",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08122",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08123",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08124",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "08125",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 0
     },
     {
       "code": "08126",
@@ -5178,6 +5256,16 @@
       "code": "08133",
       "channel": "descriptor",
       "descriptors": 2
+    },
+    {
+      "code": "08733",
+      "channel": "descriptor",
+      "descriptors": 1
+    },
+    {
+      "code": "08737",
+      "channel": "descriptor",
+      "descriptors": 1
     },
     {
       "code": "09001",
@@ -5397,7 +5485,7 @@
     {
       "code": "09045",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09046",
@@ -5557,7 +5645,7 @@
     {
       "code": "09077",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09078",
@@ -5577,7 +5665,7 @@
     {
       "code": "09081",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09082",
@@ -5607,7 +5695,7 @@
     {
       "code": "09087",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09088",
@@ -5622,17 +5710,17 @@
     {
       "code": "09090",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "09091",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 0
     },
     {
       "code": "09092",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09093",
@@ -5667,7 +5755,7 @@
     {
       "code": "09099",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 3
     },
     {
       "code": "09100",
@@ -5737,7 +5825,7 @@
     {
       "code": "09113",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09114",
@@ -5767,7 +5855,7 @@
     {
       "code": "09119",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 7
     },
     {
       "code": "09120",
@@ -5787,7 +5875,7 @@
     {
       "code": "09123",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "09124",
@@ -6057,7 +6145,7 @@
     {
       "code": "10050",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "10051",
@@ -6162,7 +6250,7 @@
     {
       "code": "10072",
       "channel": "descriptor",
-      "descriptors": 2
+      "descriptors": 1
     },
     {
       "code": "10073",
@@ -6177,7 +6265,7 @@
     {
       "code": "10075",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 2
     },
     {
       "code": "10076",
@@ -6227,7 +6315,7 @@
     {
       "code": "10085",
       "channel": "descriptor",
-      "descriptors": 3
+      "descriptors": 1
     },
     {
       "code": "10086",
@@ -6237,7 +6325,7 @@
     {
       "code": "10087",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "10088",
@@ -6247,7 +6335,7 @@
     {
       "code": "10089",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "10090",
@@ -6292,7 +6380,7 @@
     {
       "code": "10098",
       "channel": "descriptor",
-      "descriptors": 4
+      "descriptors": 1
     },
     {
       "code": "10099",
@@ -6347,7 +6435,7 @@
     {
       "code": "10109",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "10110",
@@ -6387,12 +6475,12 @@
     {
       "code": "10117",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "10118",
       "channel": "descriptor",
-      "descriptors": 0
+      "descriptors": 1
     },
     {
       "code": "10119",
@@ -6417,7 +6505,7 @@
     {
       "code": "10123",
       "channel": "descriptor",
-      "descriptors": 1
+      "descriptors": 2
     },
     {
       "code": "10124",

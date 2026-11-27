@@ -12,7 +12,7 @@ import assert from 'node:assert/strict'
 
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { asset, enemy, move, settle, legalMoves } from './core-fixture.mjs'
-import { performTest, scenarioRuntime } from '../src/engine/engine.js'
+import { actionKind, moveCost, performTest, revealLocation, scenarioRuntime } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { effectiveFloodLevel } from '../src/engine/flood.js'
@@ -132,6 +132,79 @@ test('07126 水漫街道：完全淹没地点回合结束受到 1 伤 1 恐并�
   assert.equal(after.horror - horror, 1, '完全淹没：1 点恐惧')
   // 维持阶段会补抽 1 张，所以净变化 = 抽牌 - 随机弃牌。
   assert.equal(hand + 1 - after.hand.length, 1, '随机弃 1 张手牌')
+})
+
+// ---------------------------------------------------------------- 07129–07138 / 07140 / 07141
+
+function barrierParleyBoard(code) {
+  const state = itd(2)
+  const inv = state.investigators[0]
+  const location = state.locations.find(item => (item.originalCode || item.code) === code)
+  const api = createMechanicsApi(state)
+  const neighbor = location.connections.find(id => api.barriers.canPlace(location.id, id))
+  assert.ok(neighbor, `${code} 有可放屏障的连接地点`)
+  for (const { a, b } of api.barriers.edges(location.id)) api.barriers.set(a, b, 0)
+  inv.location = location.id
+  inv.hand = ['01088']
+  location.revealed = true
+  location.clues = 0
+  asset(state, '01020')
+  const parley = () => legalMoves(state).find(command => command.action === 'entityAbility'
+    && command.entityId === location.id && actionKind(state, state.investigators[0], command) === 'parley'
+    && /移除1个屏障/.test(command.label))
+  return { state, api, location, neighbor, parley }
+}
+
+for (const [code, actions, hasTest] of [
+  ['07129', 2, true], ['07130', 1, true], ['07131', 0, false], ['07132', 0, false],
+  ['07133', 1, false], ['07134', 1, false], ['07135', 2, false], ['07136', 1, false],
+  ['07137', 1, true], ['07138', 2, false], ['07140', 1, true], ['07141', 1, false],
+]) {
+  test(`${code} 屏障谈判在真实地点的合法菜单上显示正确行动费用`, () => {
+    const { state, api, location, neighbor, parley } = barrierParleyBoard(code)
+    assert.equal(Boolean(parley()), hasTest, '检定仍可尝试，无检定的能力要求已有屏障')
+    api.barriers.set(location.id, neighbor, 2)
+    const command = parley()
+    assert.ok(command, '有屏障后可选择谈判')
+    assert.equal(moveCost(state, 0, command), actions)
+  })
+}
+
+test('07140 以战力或敏捷谈判：成功只移除所选通道的一个屏障，失败保持原数', () => {
+  for (const [skill, success] of [['combat', true], ['agility', false]]) {
+    const { state, api, location, neighbor, parley } = barrierParleyBoard('07140')
+    const second = location.connections.find(id => id !== neighbor && api.barriers.canPlace(location.id, id))
+    assert.ok(second)
+    api.barriers.set(location.id, neighbor, 2)
+    api.barriers.set(location.id, second, 2)
+    state.chaosBag = [success ? '0' : 'autofail']
+    state.investigators[0][skill] = 5
+    const before = state.investigators[0].actionsLeft
+    move(state, parley())
+    settle(state, pending => pending.kind === 'skill' && pending.source === '07140' ? skill
+      : pending.source === location.id && pending.prompt.includes('清除路障') ? '1' : null)
+    assert.equal(state.lastTestResult.skill, skill)
+    assert.equal(state.lastTestResult.difficulty, 2)
+    assert.equal(state.lastTestResult.success, success)
+    assert.equal(state.investigators[0].actionsLeft, before - 1)
+    assert.equal(api.barriers.count(location.id, neighbor), 2)
+    assert.equal(api.barriers.count(location.id, second), success ? 1 : 2)
+  }
+})
+
+test('07129/07131/07132/07134/07140 公开揭示地点各移动一把未揭示钥匙，重复揭示不再移动', () => {
+  const state = itd()
+  const api = createMechanicsApi(state)
+  const codes = ['07129', '07131', '07132', '07134', '07140']
+  const locations = codes.map(code => state.locations.find(item => (item.originalCode || item.code) === code))
+  const before = api.keys.at('setAside').length
+  for (const location of locations) {
+    assert.equal(location.revealed, false)
+    revealLocation(state, location.id, [], 0)
+    revealLocation(state, location.id, [], 0)
+    assert.deepEqual(api.keys.at(`location:${location.id}`), ['unrevealed'])
+  }
+  assert.equal(api.keys.at('setAside').length, before - codes.length)
 })
 
 // ---------------------------------------------------------------- 07141

@@ -7,12 +7,8 @@
 // 读点：api.autoEvadeEnemy / api.placeDoomOnCard / api.discoverClue / api.defeatEnemy /
 //       api.gainResources；谈判写在 played.countsAs='parley'。
 //
-// approximation（已写 primitive-request/09088.json）：敌方「本轮不能受到伤害」没有
-// 持续实体规则读点（state.effects 只挂玩家修正），本实现只记录到日志，不伪造状态字段。
 export default {
   code: '09088',
-  simplified: true,
-  note: 'approximation: 见 primitive-request/09088.json（敌方「本轮不能受到伤害」缺少持续实体规则读点，未实现）',
   abilities: [
     {
       kind: 'played',
@@ -50,6 +46,7 @@ export default {
         }
         api.autoEvadeEnemy(enemy)
         api.placeDoomOnCard(enemy, 1)
+        api.preventEnemyDamage(enemy, { duration: 'endOfRound' })
         api.discoverClue(inv.seat, 1)
         api.info(`🌀 「诅咒连连」：自动躲避「${enemy.name || enemy.code}」、放置 1 个毁灭并发现 1 个线索。`)
       },

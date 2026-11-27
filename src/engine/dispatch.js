@@ -1,9 +1,10 @@
+import { spliceHand } from './hand-icons.js'
 import { isDraftMode, startInitialDraft, applyDraftMove } from '../deck/draft-mode.js'
 import { applyStartingDeckExperience, campaignDeckLocked, campaignOpeningExperience, campaignSeatingIncludesRequired } from '../campaign/campaign.js'
 import { drawBasicWeaknesses } from '../deck/deckbuilding.js'
 import { alternateBuildFor } from '../deck/alternate-investigator-build.js'
-import { recordRegulatedAction } from './action-history.js'
-import { requestChoice } from './resolution.js'
+import { recordRegulatedAction, performedActionKinds } from './action-history.js'
+import { canInterruptSkillTest, cancelResolution, isPendingChoice, requestChoice } from './resolution.js'
 // 批次 2 支线插入：关间要读取支线战役的清单（记录表合并、关卡归属）。contentRegistry
 // 是 let 绑定、随 registerContentBundle 重新赋值，这里用 import 的 live binding；
 // 与 hub.js 读取内容注册表的方式一致，不构成引擎按战役名分支的例外。
@@ -18,7 +19,7 @@ import { contentRegistry } from '../../content/registered.js'
 //
 // 依赖注入同前；被依赖表引用的 do* 与本模块函数都用函数声明 + 惰性装配。
 
-import { cardPoolContext } from '../deck/card-pool.js'
+import { upgradePoolContext } from './hub.js'
 
 // P8：世界地图启程 / 状况报告（《绯红密钥》）的局外动作。
 // 引擎不 import 内容模块：地图图结构、目的地→流程节点、节点 id 与强制终点都从战役清单读；
@@ -28,7 +29,7 @@ import { applyCampaignEffect } from '../campaign/campaign-effects.js'
 import { FORCED_TIME_THRESHOLD, forcedDestination, mapTime, mergeMapTime, statusReportState, travelTo, useExpeditedTicket, worldMapState } from './tsk-map.js'
 // P8：定制升级卡（Customizable）的关间勾选。勾选校验/经验结算完全复用 tsk-customizable 原语，
 // dispatch 只负责「房主 + 相位 + 牌组归属」的越权校验、经验扣减与日志（与 hubPurchase 同口径）。
-import { customizationChoiceCount, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat, recordCustomizationChoices,
+import { customizationChoiceCount, customizationEffect, customizationOptionFullyChecked, customizationOptions, customizationsOfSeat, recordCustomizationChoices,
   upgradeCustomization, validateCustomizationChoices } from './tsk-customizable.js'
 // 暂存升级草稿时的「有效记录」口径与 campaign.js#upgradeRecord 一致（不在这里重写一遍）。
 import { upgradeRecord } from '../campaign/campaign.js'
@@ -53,6 +54,7 @@ import { discardSpawnedEnemy, spawnHiddenEnemy, takeHiddenEnemyFromHand } from '
 import { recordPerformedAction, recordRoundAction } from './action-history.js'
 import { hasWindowListener } from './window-listeners.js'
 import { preparePlayAttempt } from './play-attempt.js'
+import { CARD_VIEW_EXPIRED } from './timed-card-view.js'
 // ---------------------------------------------------------------------------
 // P8：世界地图启程 / 状况报告（战役级 hub 动作）
 // ---------------------------------------------------------------------------
@@ -136,7 +138,7 @@ function exileExpeditedTicket (state, manifest, events, info) {
       const hand = Array.isArray(inv.hand) ? inv.hand : []
       const handIndex = hand.indexOf(code)
       if (handIndex >= 0) {
-        hand.splice(handIndex, 1)
+        spliceHand(inv, handIndex, 1)
         removedFrom = 'hand'
         break
       }
@@ -248,6 +250,7 @@ export function createDispatch(deps) {
     setCurrentRestrictedKind,
     doAbility,
     doEntityAbility,
+    prepayEntityAbility,
     doBreakDoor,
     doDiscardThreat,
     doDraw,
@@ -343,7 +346,9 @@ function applyMove(state, seat, move, { sharedFreeWindows = true, filterDiscardC
   const startsFilteredChoiceTransaction = filterDiscardChoices && !state.continuation
   let events
   try {
-    events = resolveTransaction(state, seat, move, executeCommand, { sharedFreeWindows, filterDiscardChoices })
+    events = resolveTransaction(state, seat, move, executeCommand, {
+      sharedFreeWindows, filterDiscardChoices, interrupt: move.action === CARD_VIEW_EXPIRED,
+    })
   } finally {
     state.actionLog = actionLog
   }
@@ -407,6 +412,20 @@ function dispatchParleyHooks(state, seat, move, events) {
 }
 
 function executeCommand(state, seat, move, events) {
+  if (move.action === CARD_VIEW_EXPIRED) {
+    try {
+      scenarioBehavior(state).timedEnemyViewExpired(state, seat, scenarioRuntime(state, events))
+      if (!state._resolution?.interrupting || !canInterruptSkillTest(state, seat)) checkOutcome(state, events)
+      if (state.status === 'playing' && state.phase === 'investigation' && seat === state.currentSeat && !state._resolution?.interrupting) {
+        advanceInvestigator(state, seat, events)
+      }
+    } catch (error) {
+      // When interleaved, the containing command handles the scenario boundary exactly once.
+      if (state._resolution?.interrupting) throw error
+      settleScenarioBoundary(state, events, error)
+    }
+    return
+  }
   // 调试 move（CONTRACT §3.1）：在局外分支之前分发，完全绕过行动点 / 借机攻击 /
   // 行动类型；校验已由 applyMove → validateMove 完成。
   if (move.action === 'debug') {
@@ -432,10 +451,22 @@ function executeCommand(state, seat, move, events) {
 }
 
 function executeAction(state, seat, move, events) {
+  if (move.action === 'endTurn' && hasWindowListener(state, 'turnWouldEnd')) {
+    const inv = state.investigators[seat]
+    const context = reactionWindow(state, 'turnWouldEnd', {
+      when: 'turnWouldEnd', seat, location: inv.location, extraActions: 0,
+    }, events, { allowNested: true })
+    if (context.extraActions > 0) {
+      inv.actionsLeft += context.extraActions
+      state.legalMoves = legalMoves(state)
+      return
+    }
+  }
   if (move.action !== 'play') return executePaidAction(state, seat, move, events)
   const previous = state._prePlayAttempt
-  const attempt = preparePlayAttempt(state, state.investigators[seat], move.copyCode || move.cardId, events,
-    { playCost, cardDef, reactionWindow, shuffle, randomValue })
+  const inv = state.investigators[seat]
+  const attempt = preparePlayAttempt(state, inv, move.copyCode || move.cardId, events,
+    { playCost, cardDef, reactionWindow, shuffle, randomValue, baseActionCost: () => actionCost(state, inv, move) })
   if (attempt.cancelled) return
   state._prePlayAttempt = attempt
   try { return executePaidAction(state, seat, move, events) }
@@ -460,6 +491,7 @@ function executePaidAction(state, seat, move, events) {
   const totalCost = actionCost(state, inv, move, false)
   const cost = actionCost(state, inv, move)
   const kind = actionKind(state, inv, move)
+  const actionKinds = totalCost > 0 ? performedActionKinds(move, kind, registeredEntry) : []
   setCurrentActionKind(kind)
   // 第 5 步 P6：法术专用额外行动（玛丽·朗博）——最后一个行动只能花在法术卡/法术能力上。
   // P6（食梦者）：同一读点也覆盖托尼·摩尔根的「只能用于交战/攻击带赏金敌人」的额外行动。
@@ -485,6 +517,8 @@ function executePaidAction(state, seat, move, events) {
             : '行动点不足')
     }
     consumeRestrictedAction(inv, cost, restricted)
+    const additional = move.action === 'play' && state._prePlayAttempt?.extraActionCost
+    if (additional) consumeRestrictedAction(inv, additional)
   }
   inv.exploreOnlyActions = Math.min(inv.exploreOnlyActions || 0, Math.max(0, inv.actionsLeft))
   const inOwnTurn = state.phase === 'investigation' && state.currentSeat === seat && !inv.turnEnded
@@ -503,6 +537,8 @@ function executePaidAction(state, seat, move, events) {
   state._actionPaid = true
   try {
     if (move.action === 'scenarioAction') scenarioBehavior(state).payScenarioActionCost?.(state, inv, move, scenarioRuntime(state, events))
+    const prepaid = move.action === 'entityAbility' ? prepayEntityAbility(state, seat, move, events) : undefined
+    if (prepaid === false) cancelResolution(state, () => {})
     const pending = opportunityAttackEnemies(state, inv, move, kind, totalCost, { consumeExemption: true }).map(enemy => enemy.id)
     while (pending.length) {
       const candidates = pending.map(id => state.enemies.find(e => e.id === id)).filter(e => e && !e.exhausted)
@@ -524,7 +560,7 @@ function executePaidAction(state, seat, move, events) {
     }
     if (!inv.defeated && !inv.resigned && state.status === 'playing') {
       state.lastActionSnapshot = actionSnapshot
-      applyMoveUnchecked(state, seat, move, events)
+      applyMoveUnchecked(state, seat, move, events, prepaid)
       // 「自食其力」（04236）等持续强制：资产入场/换装后立刻检查，而不是等到重整阶段。
       if (!inv.defeated && !inv.resigned) campaignDiscardOnYourOwn(state, inv, events)
       if (state._timeWarped) {
@@ -539,6 +575,10 @@ function executePaidAction(state, seat, move, events) {
             when: 'consecutiveActions', seat, actionKinds: repeatedActionKinds,
             location: inv.location, prompt: `${inv.name} 连续完成了两次同类行动`,
           }, events)
+          if (hasWindowListener(state, 'actionTaken')) reactionWindow(state, 'actionTaken', {
+            when: 'actionTaken', seat, location: inv.location, actionKind: kind, actionKinds,
+            prompt: `${inv.name} 完成了一次行动（${actionKinds.join(' / ')}）`,
+          }, events, { allowNested: true })
           if (hasWindowListener(state, 'performedAction')) reactionWindow(state, 'performedAction', {
             when: 'performedAction', seat, actionKind: kind, location: inv.location,
           }, events, { allowNested: true })
@@ -723,6 +763,7 @@ function executeHubMove(state, seat, move, events) {
       const built = move.action === 'hubSetDeck'
         ? buildDeckFromList(ALL_INVESTIGATORS[inv.code], move.codes,
           { seat, seed, xpBudget, deferBasicWeakness, investigatorBuild: inv.investigatorBuild,
+            cardCopyLimit: code => customizationEffect(state, seat, code, 'deckLimit'),
             playerPool: availablePlayerPool(state), basicWeaknessPool: basicWeaknessPool(state, inv.code) })
         : buildDeck(ALL_INVESTIGATORS[inv.code], {
           seat, seed, xpBudget, deferBasicWeakness, investigatorBuild: inv.investigatorBuild, playerPool: corePlayerPool(state, inv.code),
@@ -784,7 +825,7 @@ function executeHubMove(state, seat, move, events) {
     }
     case 'hubPurchase': {
       const purchase = stagePurchase(campaign, seat, move.added, move.removed, {
-        ...cardPoolContext(state), keepLower: move.keepLower === true, choosePurchaseEffect: spec => requestChoice(state, spec),
+        ...upgradePoolContext(state, seat), keepLower: move.keepLower === true, choosePurchaseEffect: spec => requestChoice(state, spec),
       })
       info(state, events, `${state.investigators[seat].name} 暂存升级（${purchase.cost} XP），等待确认。`)
       break
@@ -846,11 +887,11 @@ function executeHubMove(state, seat, move, events) {
     case 'hubConfirmUpgrades': finishUpgradeDraft(campaign, seat, true); break
     case 'hubCancelUpgrades': finishUpgradeDraft(campaign, seat, false); break
     case 'hubAutoUpgrade': {
-      const advice = recommendUpgrade(campaign.investigators[seat], campaign.records, cardPoolContext(state))
+      const advice = recommendUpgrade(campaign.investigators[seat], campaign.records, upgradePoolContext(state, seat))
       campaign.investigators[seat].upgradeAdvice = advice
       if (advice.added) {
         stagePurchase(campaign, seat, advice.added, advice.removed, {
-          ...cardPoolContext(state), choosePurchaseEffect: spec => requestChoice(state, spec),
+          ...upgradePoolContext(state, seat), choosePurchaseEffect: spec => requestChoice(state, spec),
         })
         finishUpgradeDraft(campaign, seat, true)
       }
@@ -1058,7 +1099,7 @@ function executeHubMove(state, seat, move, events) {
   state.legalMoves = legalMoves(state)
 }
 
-function applyMoveUnchecked(state, seat, move, events) {
+function applyMoveUnchecked(state, seat, move, events, prepaid) {
   const inv = state.investigators[seat]
   if (!inv || inv.defeated || inv.resigned) return events
   // 2026-10-25 第七轮修复 05040：「下一次行动期间生效」的排队效果在行动开始时挂上（endOfAction 到期）。
@@ -1103,8 +1144,9 @@ function applyMoveUnchecked(state, seat, move, events) {
         if (channelTaken.playedFromBeneath) state._playedFromBeneath = { seat, cardCode: m.cardId }
         try {
           doPlay(state, seat, m.cardId, events, false, false, null, null, null, null, channelTaken.playDiscount || 0, null, null,
-            { syntheticHand: true, cancelUnpaidPlay: true })
+            { syntheticHand: true, cancelUnpaidPlay: true, handIndex: channelTaken.handIndex })
         } finally {
+          channelTaken.restore?.()
           if (channelTaken.playedFromBeneath) {
             if (previousBeneath === undefined) delete state._playedFromBeneath
             else state._playedFromBeneath = previousBeneath
@@ -1164,7 +1206,7 @@ function applyMoveUnchecked(state, seat, move, events) {
     case 'sacrificeLita': doSacrificeLita(state, seat, events); break
     case 'breakDoor': doBreakDoor(state, seat, m.skill, events); break
     // 第 2 步 P2.7：地点/敌人/剧情资产上的通用行动（谈判）——与玩家卡能力同一条描述子管线。
-    case 'entityAbility': doEntityAbility(state, seat, m, events); break
+    case 'entityAbility': doEntityAbility(state, seat, m, events, prepaid); break
     case 'ability': doAbility(state, seat, m.assetId, m.abilityIndex, m.targetId, m.optionIndex, events, m.ownerSeat); break
     case 'discardThreat': doDiscardThreat(state, seat, m.threatId, events); break
     case 'purgeThreat': doPurgeThreat(state, seat, m.threatId, events); break
@@ -1221,10 +1263,11 @@ function applyMoveUnchecked(state, seat, move, events) {
           try {
             exposed = abilityApi(state, events).tsk?.concealed?.expose(mini.id, { seat })
           } catch (error) {
+            if (isPendingChoice(error) || error instanceof ScenarioEnded) throw error
             info(state, events, `⚠️ 揭露失败：${error.message}`)
             return
           }
-          if (!exposed) return
+          if (!exposed || exposed.cancelled) return
           info(state, events, m.action === 'evadeConcealed'
             ? `💨 ${inv.name} 成功躲避并揭露了一张隐匿迷你卡。`
             : `⚔️ ${inv.name} 成功攻击并揭露了一张隐匿迷你卡。`)

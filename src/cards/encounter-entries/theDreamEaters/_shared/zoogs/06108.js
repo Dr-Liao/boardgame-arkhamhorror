@@ -10,13 +10,13 @@ export default {
   scope: 'enemy',
   implemented: true,
   enemyScript: {
-    onSwarmDefeated(state, swarmEnemy, host, api) {
+    onSwarmDefeated(state, swarmEnemy, host, api, context) {
       const here = (state.locations || []).find(location => location.id === host.location)
       const candidates = (here?.connections || [])
         .map(id => (state.locations || []).find(location => location.id === id))
         .filter(location => location && (host.elite || !location.barricade))
       if (candidates.length && !host.immobile) {
-        const seat = swarmEnemy.defeatedBy ?? swarmEnemy.engagedSeat ?? state.campaign?.leadSeat ?? 0
+        const seat = context?.sourceSeat ?? swarmEnemy.defeatedBy ?? swarmEnemy.engagedSeat ?? state.campaign?.leadSeat ?? 0
         const answer = candidates.length === 1 ? candidates[0].id : api.choose?.({
           kind: 'location', source: '06108', seat,
           prompt: '隐蔽的祖格鼠被击败：选择头领及其余蜂拥卡移动到的连接地点。',

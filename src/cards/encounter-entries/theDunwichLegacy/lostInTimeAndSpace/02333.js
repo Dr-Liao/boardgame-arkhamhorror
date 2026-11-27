@@ -10,7 +10,7 @@ export default {
   encounterResolve(state, inv, card, api) {
     const count = state.locations.filter(loc =>
       loc.traits?.some(trait => trait.toLowerCase() === 'extradimensional')).length
-    if (!count) { api.drawEncounter(inv.seat); return false }
+    if (!count) { api.drawEncounter(inv.seat, { surgeDraw: true }); return false }
     api.test(inv.seat, 'willpower', Math.min(5, count), result => {
       if (!result.success) api.horror(inv.seat, Math.max(0, Math.min(5, count) - result.value))
     })

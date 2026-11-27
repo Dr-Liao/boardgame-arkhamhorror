@@ -1,11 +1,14 @@
 import test from 'node:test'
+import { createGameState, legalMoves, placeLocation, scenarioRuntime, startScenario, validateMove } from '../src/engine/engine.js'
+import { locationExploreExtraActions } from '../src/engine/location-action-cost.js'
+import { contentRegistry } from '../content/registered.js'
+import { move, settle } from './core-fixture.mjs'
 import assert from 'node:assert/strict'
 import * as part2 from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/index.js'
 import {
   scenario as definition, EXPLORATION_LOCATIONS, EXPLORATION_TREACHERIES,
 } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/definition.js'
 import { CHAOS_CHAPTER_ID, implementedEncounterCodes } from '../content/campaigns/theForgottenAge/scenarios/heartOfTheEldersPart2/behavior.js'
-import { placeLocation } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 
 const clone = value => structuredClone(value)
@@ -96,8 +99,18 @@ function supplyApi(state, extra = {}) {
 
 // 记录所有调用的通用桩；测试按需补 test/drawEncounter 等。
 function recordingApi(state, overrides = {}) {
+  const runtime = scenarioRuntime(state, [])
   const calls = { info: [], damage: [], horror: [], draws: [], spawned: [], moved: [], poisoned: [] }
   const api = {
+    addToExplorationDeck: runtime.addToExplorationDeck,
+    attachToLocation: runtime.attachToLocation,
+    detachEncounterAttachment: runtime.detachEncounterAttachment,
+    isPoisoned: runtime.isPoisoned,
+    takeFromSetAside: runtime.takeFromSetAside,
+    takeEncounterCard: runtime.takeEncounterCard,
+    shuffleIntoEncounterDeck: runtime.shuffleIntoEncounterDeck,
+    doomOn: runtime.doomOn,
+    suppliesAt: runtime.suppliesAt,
     ...supplyApi(state),
     calls,
     info: text => calls.info.push(text),
@@ -343,11 +356,11 @@ test('落入陷阱：要么检定敏捷并按差额受伤，要么洗回探索�
     const state = placed(stateFor(1))
     behavior.setupLocations(state, [], setupApi(29))
     const inv = state.investigators[0]
-    state.scenarioFlags.exploringSeat = exploring ? inv.seat : null
     state.explorationDeck = ['crystalPillars']
     const api = recordingApi(state, {
       choose: request => {
-        assert.equal(request.options.length, exploring ? 1 : 2)
+        assert.equal(exploring, false, '从探索抽出时不提供选项')
+        assert.equal(request.options.length, 2)
         return answer
       },
       test: (seat, skill, difficulty, resolve) => {
@@ -356,14 +369,14 @@ test('落入陷阱：要么检定敏捷并按差额受伤，要么洗回探索�
         resolve({ success: false, value: 1, difficulty, skill })
       },
     })
-    const placedCard = behavior.resolveEncounter(state, inv, { code: '04215' }, api)
+    const placedCard = behavior.resolveEncounter(state, inv, { code: '04215' }, api, { encounteredFrom: exploring ? 'exploration' : 'deck' })
     return { state, placedCard, inv, api }
   }
   const tested = chasm('test', false)
   assert.equal(tested.placedCard, false, '检定分支把卡牌放进遭遇弃牌堆')
   assert.deepEqual(tested.api.calls.damage, [[0, 1], [0, 1]], '低于难度 2 点受 2 点伤害')
   const shuffled = chasm('shuffle', false)
-  assert.equal(shuffled.placedCard, true)
+  assert.deepEqual(shuffled.placedCard, { placed: true })
   assert.ok(shuffled.state.explorationDeck.includes('04215'))
   const forced = chasm('test', true)
   assert.equal(forced.placedCard, false)
@@ -375,7 +388,7 @@ test('有毒孢子：附属地点，轮末让中毒者受恐惧、未中毒者�
   const [first, second] = state.investigators
   first.threat.push({ id: 'p1', code: '04102', permanent: true })
   const api = recordingApi(state)
-  assert.equal(behavior.resolveEncounter(state, first, { code: '04216' }, api), true)
+  assert.deepEqual(behavior.resolveEncounter(state, first, { code: '04216' }, api), { placed: true })
   const location = state.locations.find(entry => entry.id === 'mouthOfKnYan')
   assert.equal(location.attachments.filter(entry => entry.code === '04216').length, 1)
   behavior.roundEnded(state, api)
@@ -426,26 +439,16 @@ test('无路可退：附属地点不能进出，可通过检定战斗或鹤嘴�
   assert.equal(pickaxeLocation.attachments.length, 0)
 })
 
-test('宽阔步道：没有双筒望远镜必须额外花费 1 个行动', () => {
-  const make = supplies => {
-    const state = placed(stateFor(1))
-    behavior.setupLocations(state, [], setupApi(41))
-    const inv = state.investigators[0]
-    inv.location = 'vastPassages'
-    state.campaign.supplies[0] = supplies
-    const api = recordingApi(state)
-    const allowed = behavior.beforeExplore(state, inv, api)
-    return { allowed, inv, state }
-  }
-  const without = make([])
-  assert.equal(without.allowed, true)
-  assert.equal(without.inv.actionsLeft, 2)
-  const withBinoculars = make(['binoculars'])
-  assert.equal(withBinoculars.inv.actionsLeft, 3, '有双筒望远镜不额外收费')
-  const broke = make([])
-  broke.inv.actionsLeft = 0
-  const blocked = behavior.beforeExplore(broke.state, broke.inv, recordingApi(broke.state))
-  assert.equal(blocked, false, '没有额外行动时不能探索')
+test('宽阔步道：仅同一地点调查员携带双筒望远镜可以免除额外行动', () => {
+  const state = placed(stateFor(2))
+  const [inv, teammate] = state.investigators
+  inv.location = 'vastPassages'
+  assert.equal(locationExploreExtraActions(state, inv), 1)
+  state.campaign.supplies[1] = ['binoculars']
+  teammate.location = 'perilousGulch'
+  assert.equal(locationExploreExtraActions(state, inv), 1)
+  teammate.location = inv.location
+  assert.equal(locationExploreExtraActions(state, inv), 0)
 })
 
 test('地点强制效果：危险峡谷、晶体柱群、漆黑洞窟、崇拜礼堂', () => {
@@ -680,21 +683,50 @@ test('同一种子的两次布置与副流程完全一致（JSON 往返）', () 
   assert.deepEqual(restored.scenarioZones, state.scenarioZones)
 })
 
-test('04222 宽阔步道：没有双筒望远镜时行动不足就不给探索（不再白丢 1 行动）', () => {
+test('04222 宽阔步道：没有双筒望远镜时地点额外费用为一个行动', () => {
   const state = placed(stateFor(1))
-  state.campaign.supplies = {}
   const inv = state.investigators[0]
   inv.location = 'vastPassages'
-  const location = state.locations.find(entry => entry.id === 'vastPassages')
-  location.clues = 0
-  inv.actionsLeft = 1
-  assert.equal(behavior.canExplore(state, inv), false, '只剩 1 行动时不能探索')
-  inv.actionsLeft = 2
-  assert.equal(behavior.canExplore(state, inv), true)
-  // 有双筒望远镜时 1 行动也能探索。
-  inv.actionsLeft = 1
-  state.campaign.supplies = { 0: ['binoculars'] }
-  assert.equal(behavior.canExplore(state, inv), true)
+  assert.equal(locationExploreExtraActions(state, inv), 1)
+  state.campaign.supplies[0] = ['binoculars']
+  assert.equal(locationExploreExtraActions(state, inv), 0)
+})
+
+test('04215/04222 真实探索：先校验并支付全部行动，从探索牌库抽出陷阱时不能洗回', () => {
+  const campaignId = 'theForgottenAge'
+  for (const withBinoculars of [false, true]) {
+    const state = createGameState({ campaignId, campaignHub: true, seed: 'tfa-04215-04222' },
+      [{ seat: 0, role: 'human' }, { seat: 1, role: 'human' }])
+    const scenarioIds = contentRegistry.getCampaign(campaignId).scenarioIds
+    startScenario(state, scenarioIds.indexOf('heartOfTheEldersPart2'), [])
+    settle(state)
+    placeLocation(state, 'vastPassages', [])
+    const location = state.locations.find(item => item.id === 'vastPassages')
+    location.revealed = true
+    location.clues = 0
+    const seat = state.currentSeat
+    const investigator = state.investigators[seat]
+    const teammate = state.investigators[1 - seat]
+    investigator.location = teammate.location = location.id
+    state.campaign.supplies = { [teammate.seat]: withBinoculars ? ['binoculars'] : [] }
+    state.explorationDeck = ['04215']
+    state.chaosBag = ['0']
+    investigator.actionsLeft = 1
+    const explore = { action: 'explore' }
+    assert.equal(legalMoves(state, seat).some(item => item.action === 'explore'), withBinoculars)
+    if (!withBinoculars) {
+      assert.match(validateMove(state, seat, explore), /行动点不足/)
+      assert.equal(investigator.actionsLeft, 1)
+      investigator.actionsLeft = 2
+    }
+    move(state, explore)
+    settle(state, pending => {
+      if (pending.source === '04215') assert.equal(pending.options.some(option => option.id === 'shuffle'), false)
+    })
+    assert.equal(state.investigators[seat].actionsLeft, 0)
+    assert.equal(state.encounterDiscard.filter(code => code === '04215').length, 1)
+    assert.deepEqual(state.explorationDeck, [])
+  }
 })
 
 test('04214 降入黑暗：满足条件时先询问是否推进，选「再等等」本轮不再问', () => {

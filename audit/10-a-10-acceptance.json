@@ -3,7 +3,7 @@
   "unit": "10-a-10",
   "profile": {
     "id": "fhv-campaign-f2-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10677–10706b）43 条目录记录。39 条通过五维验收；4 条声明无读点/参考卡结构缺口暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvc 战役卡（10677–10706b）43 条目录记录。43 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,15 +17,15 @@
   },
   "summary": {
     "total": 43,
-    "verified": 39,
-    "unverified": 4,
+    "verified": 43,
+    "unverified": 0,
     "unimplemented": 0,
     "testsPassed": 178
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
-      "sha256": "c62c1c4753524a550e463747197365b456ec8db148b2ce7373f8c9c61532a3f1"
+      "sha256": "70b50c1b1aab65e9468fdaa84f1d85d0554f0e152778824faed18ca455418fc9"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-dawnOfTheFinalDay.test.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-scenario-fateOfTheVale.test.mjs",
-      "sha256": "03bca59b7f85cb0b67e527de78aab8731f7eb8e6ff99d6fc459aa775bd9da195"
+      "sha256": "dfb255b8ae281ada3ea106818023d2e9bb5c1b2b0139226319b7b830d994e860"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
@@ -249,9 +249,17 @@
       "code": "10691a",
       "name": "老磨坊",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "老磨坊 [action][action]：发现 1 线索：条目 flags.actionDiscoverClue{amount:1,actions:2} 无章节 behavior/引擎读点（grep 全 content 与 engine 均为 0；章节 definition 仅有 theOldMill 地点名而无该双行动能力），玩家无法执行该行动。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10691a 老磨坊：花费恰好两个行动，发现地点上唯一的线索"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10691b 山谷地点：印刷面数据 + 章节地点行动读点（actionCodex）"
+        }
+      ]
     },
     {
       "code": "10691b",
@@ -405,7 +413,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
-          "test": "10697b 瑞玟·霍桑：关键词与谈判已接线，但「每轮此地第一张诡计涌动」无引擎/behavior 读点"
+          "test": "10697b 瑞玟·霍桑：每轮仅首张诡计获得涌动"
         }
       ]
     },
@@ -413,9 +421,17 @@
       "code": "10697b",
       "name": "瑞玟·霍桑",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "瑞玟·霍桑「每轮在此地点的调查员抽取的第一张诡计获得涌动」：flags.firstTreacherySurge 无 behavior/引擎读点（全仓 0 命中）；关键词/谈判放一边已接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10697b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10697b 瑞玟·霍桑：每轮仅首张诡计获得涌动"
+        }
+      ]
     },
     {
       "code": "10698",
@@ -513,7 +529,7 @@
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
-          "test": "10701b 伯蒂·马斯格雷夫：关键词/巡逻/法典已接线，但「伤害改派给他」无引擎原语"
+          "test": "10701b 伯蒂·马斯格雷夫：重整时替所在地其他居民敌人承受伤害"
         },
         {
           "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
@@ -525,9 +541,17 @@
       "code": "10701b",
       "name": "伯蒂·马斯格雷夫",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "伯蒂·马斯格雷夫「每当[[居民]]敌人将对你造成伤害/恐惧时，改由伯蒂承担」：flags.damageRedirectToSelf 无引擎原语与 behavior 读点（enemyRule 无 damageRedirect 字段）；关键词/巡逻/被击败读法典已接线。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10701b 伯蒂·马斯格雷夫：重整时替所在地其他居民敌人承受伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10701b 居民敌人：关键词/谈判放一边/特殊强制（引擎 setEnemyAside 与条目能力）"
+        }
+      ]
     },
     {
       "code": "10702",
@@ -557,9 +581,13 @@
       "code": "10704",
       "name": "山谷",
       "type": "scenario",
-      "status": "pending",
-      "dimension": "primitives",
-      "reason": "剧本参考卡没有单卡条目文件（同战役 fateOfTheVale 的 10651/10661 建了 scenario 条目）；标记表与谈判分支只写在内容层 dawnOfTheFinalDay/chaos.js，无 scenarioRule 条目读点，违反一卡一文件/声明即接线，无法逐卡入账。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard10.test.mjs",
+          "test": "10704 山谷：参考卡双面登记，序曲引擎值与两面标记规则相符"
+        }
+      ]
     },
     {
       "code": "10705a",

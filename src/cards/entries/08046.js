@@ -6,13 +6,13 @@
 // 一张卡一个文件：这张卡的行为只在这里维护。
 // 不要往 card-abilities.js 或任何批次文件里追加条目；新增卡用 tools/scaffold-card.mjs <code> --entry。
 //
-// approximation：牌库 −5 由 deckConstruction.sizeBonus 表达（构筑层已读）。「每张非弱点/非署名卡
-// 最多 1 张」是构筑层全局限制，现有 deckConstruction.options 只能按阵营/等级筛选，没有按卡名唯一的
-// 字段（请求 m2-1-08046.json）；本卡先按「无该限制」参与构筑，条款待 P7 战役/构筑层接线。
+// 构筑时按卡名限制非弱点、非署名卡，并减少 5 张牌。
 export default {
   code: '08046',
+  campaignDeck: { startingOnly: true },
   deckConstruction: {
     sizeBonus: -5,
+    singletonByName: true,
   },
   abilities: [],
   modifiers: [],

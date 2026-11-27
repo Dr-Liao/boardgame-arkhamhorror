@@ -1,3 +1,4 @@
+import { hasWindowListener } from './window-listeners.js'
 import { withAgendaAdvanceFrame } from './agenda-advance-frame.js'
 // act-agenda.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
 // 幕与议程的推进：目标判定、花费线索推进、密谋揭示与毁灭累积。
@@ -6,6 +7,7 @@ import { withAgendaAdvanceFrame } from './agenda-advance-frame.js'
 import { grantSpellCredit, syncSpellCredit } from './spell-actions.js'
 import { releaseChaosTokens } from './chaos-bag.js'
 import { checkParallelActObjectives } from './parallel-acts.js'
+import { noteCardOutcomeSound } from './card-outcome-audio.js'
 
 // 毁灭标记减少后，重新检查支援控制者尚未使用的法术行动额度。
 export function setCardDoom(state, card, amount) {
@@ -71,6 +73,10 @@ export function createActAgenda(deps) {
     return card.advanceText || card.backText || printed?.backTextZh || printed?.backText || fallback
   }
 
+  function stageAdvanced(state, events, when, from, to) {
+    if (hasWindowListener(state, when)) deps.reactionWindow(state, when, { when, from, to }, events, { allowNested: true })
+  }
+
   function advanceAct(state, events) {
     if (state.status !== 'playing') return
     const scBefore = state.scenario
@@ -104,6 +110,7 @@ export function createActAgenda(deps) {
       next.breaches = cur.breaches
       cur.breaches = 0
     }
+    stageAdvanced(state, events, 'actAdvanced', cur, next)
     info(state, events, `📜 场景推进：${next.stage}「${next.name}」—— ${next.text}`,
       { kind: 'story', title: '新的场景', code: next.originalCode || next.code, name: next.name, text: next.text })
     if (state.status === 'playing') autoEngageAll(state, events)
@@ -126,6 +133,7 @@ export function createActAgenda(deps) {
       checkOutcome(state, events)
       return true
     }
+    stageAdvanced(state, events, 'actAdvanced', cur, next)
     info(state, events, `📜 场景直接推进：${next.stage}「${next.name}」—— ${next.text}`,
       { kind: 'story', title: '新的场景', code: next.originalCode || next.code, name: next.name, text: next.text })
     if (state.status === 'playing') autoEngageAll(state, events)
@@ -149,7 +157,9 @@ export function createActAgenda(deps) {
     if (obj?.type !== 'clues') return false
     const requiresRoundEnd = scenarioBehavior(state).roundEndActIndex === state.actIndex
     if (requiresRoundEnd !== roundEnd) return false
-    return aliveInvestigators(state).filter(inv => !obj.atLocation || inv.location === obj.atLocation)
+    const active = aliveInvestigators(state)
+    if (obj.allInvestigatorsAtLocation && active.some(inv => inv.location !== obj.atLocation)) return false
+    return active.filter(inv => !obj.atLocation || inv.location === obj.atLocation)
       .reduce((sum, inv) => sum + inv.clues, 0) >= obj.perInvestigator * state.numInvestigators
   }
 
@@ -167,7 +177,7 @@ export function createActAgenda(deps) {
         cluesMissingAtLocation: Math.max(0, required - atLocation),
         locationId: obj.atLocation || null, locationName: obj.atLocation ? locName(state, obj.atLocation) : null,
         timing: roundEnd ? 'roundEnd' : 'actionWindow',
-        readyForPayment: atLocation >= required,
+        readyForPayment: canAdvanceWithClues(state, roundEnd),
         instruction: `需要 ${required} 个线索（每位 ${obj.perInvestigator} × 本局 ${state.numInvestigators} 位调查员，败退不降低需求）；`
           + (obj.atLocation ? `由位于「${locName(state, obj.atLocation)}」的在场调查员共同支付；` : '由在场调查员共同支付；')
           + `全队可支付 ${available}，还需收集 ${Math.max(0, required - available)}，符合地点条件的可支付 ${atLocation}。`
@@ -189,7 +199,19 @@ export function createActAgenda(deps) {
     return { type: obj.type }
   }
 
+  function canAdvanceOptionalAct(state) {
+    const act = state.acts[state.actIndex]
+    if (!act || state.status !== 'playing') return false
+    const rule = registeredEntry(act.originalCode || act.code)?.actRule
+    return rule?.optionalObjective === true && rule.objective(state, act) === true
+  }
+
   function payAndAdvanceAct(state, events) {
+    const act = state.acts[state.actIndex]
+    if (registeredEntry(act?.originalCode || act?.code)?.actRule?.optionalObjective === true) {
+      if (canAdvanceOptionalAct(state)) advanceAct(state, events)
+      return
+    }
     const objective = state.acts[state.actIndex].objective
     groupPayment(state, objective.perInvestigator * state.numInvestigators, objective.atLocation, events)
     advanceAct(state, events)
@@ -204,7 +226,9 @@ export function createActAgenda(deps) {
     if (state.status === 'playing') scenarioBehavior(state).checkObjectives?.(state, scenarioRuntime(state, events))
     const act = state.acts[state.actIndex]
     if (!act || state.status !== 'playing') return
-    const printedObjective = registeredEntry(act.originalCode || act.code)?.actRule?.objective
+    const rule = registeredEntry(act.originalCode || act.code)?.actRule
+    if (rule?.optionalObjective === true) return
+    const printedObjective = rule?.objective
     if (typeof printedObjective === 'function' && typeof scenarioBehavior(state).checkObjectives !== 'function') {
       if (printedObjective(state, act, scenarioRuntime(state, events)) === true) advanceAct(state, events)
       return
@@ -304,6 +328,7 @@ export function createActAgenda(deps) {
       }
     }
     for (const inv of state.investigators || []) {
+      if (inv.doom && !keepSelf(inv)) inv.doom = 0
       for (const card of [...(inv.assets || []), ...(inv.threat || [])]) {
         if (!keepSelf(card)) card.doom = 0
       }
@@ -340,6 +365,7 @@ export function createActAgenda(deps) {
     state.agendaIndex = targetIndex
     locationTraits?.sync(state)
     const next = state.agendas[targetIndex]
+    stageAdvanced(state, events, 'agendaAdvanced', cur, next)
     info(state, events, `🌑 密谋直接推进：${next.stage}「${next.name}」—— ${next.text}`,
       { kind: 'story', title: '新的密谋', code: next.originalCode || next.code, name: next.name, text: next.text })
     if (state.status === 'playing') autoEngageAll(state, events)
@@ -375,7 +401,9 @@ export function createActAgenda(deps) {
         state.investigators[attachment.ownerSeat]?.discard.push(attachment.code)
       }
       if (cur.attachments?.some(attachment => attachment.ownerSeat != null)) cur.attachments = cur.attachments.filter(attachment => attachment.ownerSeat == null)
-      state.agendaIndex++
+      const advanceIndex = scenarioBehavior(state).agendaIndexAfterAdvance?.(state, cur, scenarioRuntime(state, events))
+      if (Number.isInteger(advanceIndex)) state.agendaIndex = advanceIndex
+      else state.agendaIndex++
       // 密谋进出同样会改变 agendaRule.locationTraitLinks 声明的特性连接规则。
       locationTraits?.sync(state)
       const next = state.agendas[state.agendaIndex]
@@ -387,6 +415,7 @@ export function createActAgenda(deps) {
         state.doom = movedDoom
         info(state, events, `🌑 「${cur.name}」上的 ${movedDoom} 个毁灭移动到「${next.name}」。`)
       }
+      stageAdvanced(state, events, 'agendaAdvanced', cur, next)
       info(state, events, `🌑 密谋推进：${next.stage}「${next.name}」—— ${next.text}`,
         { kind: 'story', title: '新的密谋', code: next.originalCode || next.code, name: next.name, text: next.text })
       if (state.status === 'playing') autoEngageAll(state, events)
@@ -490,6 +519,7 @@ export function createActAgenda(deps) {
   function placeDoomOnCard(state, card, amount, events, options = {}) {
     if (!card || !(amount > 0)) return 0
     if (card.enemyLocation) card = state.locations.find(location => location.id === card.id) || card
+    if (scenarioBehavior(state).doomPlacementReplacement?.(state, amount, scenarioRuntime(state, events), { source: 'card', target: card }) === true) return 0
     // 2026-10-25 本循环修复 doom-placement-prevention（05085/05095/05096/05097）：
     // 写入前询问剧本「这张卡能否被放置毁灭」；返回 false 时既不写也不触发 doomPlaced。
     if (scenarioBehavior(state).canPlaceDoomOn?.(state, card) === false) {
@@ -506,7 +536,8 @@ export function createActAgenda(deps) {
       }
       return 0
     }
-    const hadDoom = (card.doom || 0) > 0
+    const beforeDoom = card.doom || 0
+    const hadDoom = beforeDoom > 0
     card.doom = (card.doom || 0) + amount
     // 第 5 步 P6：卡牌上出现毁灭标记可能新增「法术专用额外行动」（玛丽·朗博）。
     // 只在轮到该调查员时结算；没有该规则的调查员在这里是纯读点（investigatorRule 返回空）。
@@ -520,10 +551,15 @@ export function createActAgenda(deps) {
     scenarioBehavior(state).doomPlaced?.(state,
       { target: card, amount, agenda: false }, scenarioRuntime(state, events))
     // 2026-10-25 第六轮修复 05237：刚放置的毁灭可被反应取消（内容调用 api.cancelDoomPlacement）。
+    const definition = cardDef(card.originalCode || card.code)
+    const scenarioCard = Boolean(definition?.encounterCode || definition?.isStoryAsset || card.isStoryAsset
+      || state.locations?.includes(card) || state.agendas?.includes(card) || state.acts?.includes(card)
+      || state.storyAssets?.includes(card))
     reactionWindow(state, 'doomPlaced', {
-      when: 'doomPlaced', seat: state.currentSeat, card, amount, hadDoom,
+      when: 'doomPlaced', seat: state.currentSeat, card, amount, hadDoom, scenarioCard,
       prompt: `「${card.name || cardName(card.code)}」放置了 ${amount} 点毁灭`,
     }, events)
+    if (card.doom > beforeDoom) noteCardOutcomeSound(state, 'doom')
     return amount
   }
 
@@ -536,7 +572,8 @@ export function createActAgenda(deps) {
       state, amount, scenarioRuntime(state, events), { source: 'effect' }) === true) {
       return
     }
-    const hadDoom = state.doom > 0
+    const beforeDoom = state.doom
+    const hadDoom = beforeDoom > 0
     state.doom += amount
     info(state, events, `🌑 密谋上增加 ${amount} 点毁灭（当前 ${state.doom}）。`)
     if (amount > 0) {
@@ -554,6 +591,7 @@ export function createActAgenda(deps) {
         }, events)
       }
     }
+    if (state.doom > beforeDoom) noteCardOutcomeSound(state, 'doom')
     checkAgenda(state, events)
   }
 
@@ -567,14 +605,17 @@ export function createActAgenda(deps) {
     const list = Array.isArray(codes) ? codes : (codes == null ? [] : [codes])
     const instances = []
     for (const code of list) {
-      const definition = state.scenario?.stageCards?.[String(code)]
+      const scenario = state.scenario
+      const stages = type === 'act' ? scenario?.acts : scenario?.agendas
+      const definition = scenario?.stageCards?.[String(code)]
+        || stages?.find(card => String(card.originalCode || card.code) === String(code))
       if (!definition || definition.type !== type) return null
       instances.push(structuredClone(definition))
     }
     return instances
   }
 
-  function replaceStageDeck(state, events, key, index, codes, type, label) {
+  function replaceStageDeck(state, events, key, index, codes, type, label, { silent = false } = {}) {
     if (!Number.isInteger(index) || index < 0) return false
     const current = Array.isArray(state[key]) ? state[key] : (state[key] = [])
     if (index > current.length) return false
@@ -588,17 +629,17 @@ export function createActAgenda(deps) {
         }
       }
     }
-    info(state, events, `📜 ${label}更新：${instances.map(instance => instance.name).join('、') || '（清空该位置及其后的卡牌）'}。`)
+    if (!silent) info(state, events, `📜 ${label}更新：${instances.map(instance => instance.name).join('、') || '（清空该位置及其后的卡牌）'}。`)
     return true
   }
 
-  function setActDeckCards(state, events, index, codes) {
-    return replaceStageDeck(state, events, 'acts', index, codes, 'act', '场景牌库')
+  function setActDeckCards(state, events, index, codes, options) {
+    return replaceStageDeck(state, events, 'acts', index, codes, 'act', '场景牌库', options)
   }
 
   function setAgendaDeckCards(state, events, index, codes) {
     return replaceStageDeck(state, events, 'agendas', index, codes, 'agenda', '密谋牌库')
   }
 
-  return { advanceAct, advanceActDirectly, discardUntilEnemy, canAdvanceWithClues, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, setActDeckCards, setAgendaDeckCards, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
+  return { advanceAct, advanceActDirectly, discardUntilEnemy, canAdvanceWithClues, canAdvanceOptionalAct, actObjectiveContext, payAndAdvanceAct, checkAct, locationRevealCue, spawnStoryAsset, advanceAgenda, advanceAgendaTo, setActDeckCards, setAgendaDeckCards, discardUntilEnemyFromEncounter, investigateTest, discardUntilEnemyTrait, checkAgenda, checkAgendaForcedEnemyDefeated, placeDoomOnCard, addDoom }
 }

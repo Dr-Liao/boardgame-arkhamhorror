@@ -8,6 +8,6 @@ export default {
   implemented: true,
   locationRule: { cannotLeavePlay: true, cannotBeMoved: true },
   flags: { central: true, immovable: true, resign: true, revealErodedFrieze: true },
-  
-  note: "古代圆顶（西征移除）。揭示后抽取剥蚀壁画；不能移动/离场由 locationRule 声明（引擎 swapLocation/removeLocationFromGame 读点）；[action] 撤退未接。",
+
+  note: '古代圆顶（西征移除）。揭示后抽取剥蚀壁画；不能移动或离场；撤退行动走 obsidianResign 与引擎 api.resign。',
 }

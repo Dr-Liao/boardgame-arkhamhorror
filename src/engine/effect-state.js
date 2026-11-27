@@ -29,7 +29,7 @@ import { isSkillModifierAmount, modifierTargetKind } from './modifiers.js'
 const LIMIT_VALUES = new Set(['oncePerTest', 'oncePerPhase', 'oncePerRound', 'oncePerTurn', 'oncePerGame'])
 
 export const EFFECT_DURATIONS = Object.freeze([
-  'endOfAction', 'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfRound', 'whilstAttached', 'untilLeavesPlay', 'startOfNextTurn',
+  'endOfAction', 'endOfTest', 'endOfTurn', 'endOfPhase', 'endOfInvestigation', 'endOfRound', 'whilstAttached', 'untilLeavesPlay', 'startOfNextTurn',
 ])
 
 // 时长链：在 timing 过期时，把「等长或更短」的时长一起清掉。
@@ -46,6 +46,7 @@ export const EFFECT_DURATION_LABELS = Object.freeze({
   endOfTest: '本次检定结束',
   endOfTurn: '本回合结束',
   endOfPhase: '本阶段结束',
+  endOfInvestigation: '调查阶段结束',
   endOfRound: '本轮结束',
   whilstAttached: '附属期间',
   untilLeavesPlay: '直到离场',
@@ -58,7 +59,7 @@ export const EFFECT_DURATION_LABELS = Object.freeze({
 const EFFECT_ABILITIES_KEYS = new Set(['kind', 'trigger', 'label', 'effect', 'criteria', 'cost', 'limit'])
 const EFFECT_ABILITY_KINDS = new Set(['reaction', 'forced'])
 const EFFECT_KEYS = new Set(['duration', 'sourceCode', 'sourceInstanceId', 'controllerSeat', 'label',
-  'modifiers', 'abilities', 'createdAt', 'nextPlayDiscount'])
+  'modifiers', 'abilities', 'createdAt', 'nextPlayDiscount', 'harmBonus'])
 // Phase 2（C1/C2）：布尔修正与授予类修正也可以挂在持续效果上，因此 value 与 target 的超集
 // 一起进入白名单；具体目标是否已知由 modifiers.js 的 normalizeModifier 判定（单一事实源）。
 const MODIFIER_KEYS = new Set(['target', 'amount', 'condition', 'audience', 'value'])
@@ -166,6 +167,9 @@ export function createEffect(state, raw) {
   if (raw.nextPlayDiscount != null && (!Number.isSafeInteger(raw.nextPlayDiscount) || raw.nextPlayDiscount <= 0)) {
     throw new Error(`${origin}: nextPlayDiscount 必须为正整数`)
   }
+  if (raw.harmBonus && (!['heal', 'damage'].includes(raw.harmBonus.kind)
+    || typeof raw.harmBonus.targetId !== 'string' || !Number.isSafeInteger(raw.harmBonus.amount)
+    || raw.harmBonus.amount <= 0 || raw.duration !== 'endOfRound')) throw new Error(`${origin}: 非法伤害或治疗加值`)
   const controllerSeat = raw.controllerSeat ?? state.currentSeat
   if (!Number.isInteger(controllerSeat)) throw new Error(`${origin}: 缺少 controllerSeat`)
   state.effects ||= []
@@ -187,6 +191,7 @@ export function createEffect(state, raw) {
     modifiers: Object.freeze(modifiers),
     abilities,
     ...(raw.nextPlayDiscount ? { nextPlayDiscount: raw.nextPlayDiscount } : {}),
+    ...(raw.harmBonus ? { harmBonus: Object.freeze({ ...raw.harmBonus }) } : {}),
     createdAt: {
       round: state.round ?? 0,
       phase: state.phase ?? null,
@@ -195,6 +200,16 @@ export function createEffect(state, raw) {
   })
   state.effects.push(record)
   return record
+}
+
+export function consumeHarmBonus(state, target, kind) {
+  if (!target || !state.effects?.length) return 0
+  const targetId = state.investigators?.[target.seat] === target ? `seat:${target.seat}` : target.id
+  const matching = state.effects.filter(effect => effect.harmBonus?.kind === kind
+    && effect.harmBonus.targetId === targetId && effect.createdAt?.round === state.round)
+  if (!matching.length) return 0
+  state.effects = state.effects.filter(effect => !matching.includes(effect))
+  return Math.min(3, matching.reduce((sum, effect) => sum + effect.harmBonus.amount, 0))
 }
 
 export function nextPlayDiscount(state, seat) {
@@ -240,12 +255,17 @@ function sourceStillThere(state, effect) {
  * @returns {object[]} 被移除的记录（供日志/测试断言）
  */
 export function expireEffects(state, timing) {
+  if (timing === 'endOfPhase' || timing === 'endOfRound') {
+    for (const inv of state?.investigators || []) if (inv.handIconGrants) delete inv.handIconGrants
+  }
   if (!state?.effects?.length) return []
   const order = DURATION_ORDER[timing]
   const removed = []
   state.effects = state.effects.filter(effect => {
     const bound = DURATION_ORDER[effect.duration] == null
-    const expired = effect.duration === 'startOfNextTurn'
+    const expired = effect.duration === 'endOfInvestigation'
+      ? timing === 'endOfPhase' && state.phase === 'investigation'
+      : effect.duration === 'startOfNextTurn'
       ? timing === 'startOfNextTurn' && effect.controllerSeat === state.currentSeat && effect.createdAt.turnSerial < state.turnSerial
       : bound
       ? !sourceStillThere(state, effect)

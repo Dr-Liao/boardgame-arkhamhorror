@@ -175,7 +175,11 @@ test('P6 10100 缥缈灵体：意志躲避成功后解除交战并化为无形�
   symbol.debugNextTokens = ['skull', '0']
   move(symbol, { action: 'play', cardId: '10100' })
   settle(symbol)
-  assert.equal(symbol.investigators[0].hand.includes('10100'), true, '揭示符号 → 返回手牌')
+  assert.equal(symbol.investigators[0].hand.includes('10100'), false, '技能检定后尚未返回手牌')
+  assert.equal(symbol.investigators[0].discard.includes('10100'), true)
+  move(symbol, { action: 'endTurn' })
+  settle(symbol)
+  assert.equal(symbol.investigators[0].hand.includes('10100'), true, '回合结束后返回手牌')
   assert.equal(symbol.investigators[0].discard.includes('10100'), false)
 
   // 没有交战的敌人时不能打出。
@@ -219,7 +223,11 @@ test('P6 10101 解读秘符：意志加入调查、成功额外 1 线索；揭�
   symbol.debugNextTokens = ['cultist', '0']
   move(symbol, { action: 'play', cardId: '10101' })
   settle(symbol)
-  assert.equal(symbol.investigators[0].hand.includes('10101'), true, '揭示符号 → 返回手牌')
+  assert.equal(symbol.investigators[0].hand.includes('10101'), false, '技能检定后尚未返回手牌')
+  assert.equal(symbol.investigators[0].discard.includes('10101'), true)
+  move(symbol, { action: 'endTurn' })
+  settle(symbol)
+  assert.equal(symbol.investigators[0].hand.includes('10101'), true, '回合结束后返回手牌')
   assert.equal(symbol.investigators[0].discard.includes('10101'), false)
 })
 
@@ -517,10 +525,6 @@ test('P6 M2-9 分片：10 张条目全部注册、code 与文件名一致，近�
     assert.ok(registered, `${entry.code} 未注册`)
     assert.equal(registered.code, entry.code)
     assert.ok(ALL_CARDS[entry.code], `${entry.code} 缺少卡面数据`)
-  }
-  for (const code of ['10099', '10100', '10101', '10103', '10105', '10106', '10107']) {
-    assert.equal(registeredEntry(code).simplified, true, `${code} 应声明 simplified`)
-    assert.ok(registeredEntry(code).note, `${code} 应带 note`)
   }
   // 「躲避。」「攻击。」「调查。」的 played 描述子必须声明行动性质（借机攻击/行动指示门禁）。
   assert.equal(descriptorOfKind('10100', 'played').countsAs, 'evade')

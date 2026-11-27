@@ -11,12 +11,30 @@
 //     （读点：src/engine/enemies.js#enemyAttack 的 reactionWindow('enemyAttacked')；
 //     非玩家实体来源见 ability-rules.js#nonPlayerAbilitySources，context.enemy 是本敌人）。
 //   · 治愈 = api.healEnemy（api-misc.js，写 damageTaken，与 01179 的轮末治愈同口径）。
-//   · 「白日不能移动」：引擎的敌人不能移动读点是实例字段 enemy.immobile，只有章节 behavior
-//     （enemySpawned / enemyMoved 刷新）能按昼夜写入，单卡条目没有写入口，因此只落数据。
+//   · 白日的不能移动持续读取当前位置的昼夜状态。
+import { duringPeriod } from '../../../../../engine/matcher.js'
+
+const isDay = duringPeriod('day')
+const isNight = duringPeriod('night')
+
+function periodOf(state, enemy) {
+  const context = { state, source: enemy }
+  if (isDay(context)) return 'day'
+  if (isNight(context)) return 'night'
+  const records = state.campaign?.records || {}
+  const recordedDate = typeof records.hemlockDate === 'string' ? records.hemlockDate.split(':')[1] : null
+  return String(records.time ?? records.timeOfDay ?? recordedDate ?? '').toLowerCase()
+}
+
 export default {
   code: '10739',
   scope: 'enemy',
   implemented: true,
+  enemyRule: {
+    immobileWhile: (state, enemy) => periodOf(state, enemy) === 'day',
+    keywordWhile: (state, enemy, keyword) => ['hunter', 'alert'].includes(keyword)
+      ? periodOf(state, enemy) === 'night' : undefined,
+  },
   flags: {
     encounterGroup: 'myconids',
     quantity: 1,
@@ -44,7 +62,5 @@ export default {
         : `💉 「${source.name}」攻击后没有伤害可治愈。`)
     },
   }],
-  note: '「攻击后治愈 1 点」用 enemyAttacked 窗口自足实现。「白日不能移动」需要按昼夜刷新实例的 '
-    + 'enemy.immobile，单卡条目没有写入通道（引擎移动读点只认实例字段），故只落 flags.dayCannotMove 数据，'
-    + '留给 P8 章节 enemySpawned / enemyMoved 刷新；「黑夜猎手/警戒」由 encounterDefinitions 静态解析。',
+  note: '攻击结算后治愈 1 点伤害。白日的不能移动在每次移动前检查。',
 }

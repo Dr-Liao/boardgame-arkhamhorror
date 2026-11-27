@@ -56,6 +56,13 @@ export function createEnemyApi(state, events, deps) {
     },
     // Phase 5（5c）：把敌人移出游戏（不经过伤害）与把卡洗回遭遇牌库（「劝服」）。
     removeEnemy: (enemy, { seat = null } = {}) => {
+      if (!state.enemies.includes(enemy)) return enemy
+      if (deps.replaceEnemyLeaveDestination(state, enemy, events)) {
+        deps.discardEnemyCard(state, enemy, events, { destinationReplaced: true, seat })
+        return enemy
+      }
+      deps.returnBondedEnemyAttachments(state, enemy)
+      deps.clearEnemyAssetHost(state, enemy)
       keysOnExit(state, `enemy:${enemy.id}`, enemy.location, seat)
       if (enemy.hostId) { returnSwarmCard(state, enemy); return enemy }
       for (const member of swarmGroup(state, enemy).slice(1)) returnSwarmCard(state, member)
@@ -87,21 +94,33 @@ export function createEnemyApi(state, events, deps) {
       return owner.deck.length
     },
     // Phase 5（5c-23）：「追猎」——遭遇牌库顶 N 张里的敌人候选（只读，顺序按牌库顶在数组末位）。
-    encounterEnemies: (count = 9) => {
+    preventEnemyDamage: (enemy, { duration = 'endOfRound' } = {}) => {
+      if (duration !== 'endOfRound' || !state.enemies.includes(enemy)) return false
+      enemy.preventDamageRound = state.round
+      return true
+    },
+    encounterEnemies: (count = 9, { nonElite = false } = {}) => {
       const deck = state.encounterDeck || []
-      const top = deck.slice(-Math.min(count, deck.length))
-      return top.filter(code => Boolean(enemyDef(code)))
+      const size = Math.min(Math.max(0, Math.trunc(count)), deck.length)
+      return deck.slice(deck.length - size).filter(code => {
+        const definition = enemyDef(code)
+        return definition && (!nonElite || (!definition.elite
+          && !definition.traits?.some(trait => trait.toLowerCase() === 'elite')))
+      })
+    },
+    shuffleEncounterDeck: () => {
+      state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
     },
     // Phase 5（5c-23）：从遭遇牌库取一张敌人放到该座位所在地点、洗回牌库并交战。
-    spawnEncounterEnemy: (seat, code) => {
+    spawnEncounterEnemy: (seat, code, { ignoreSpawn = false } = {}) => {
       const owner = state.investigators[seat]
       if (!owner || !code) return null
       const index = state.encounterDeck.lastIndexOf(code)
       if (index < 0) return null
       state.encounterDeck.splice(index, 1)
       state.encounterDeck = shuffle(state.encounterDeck, () => randomValue(state))
-      const spawned = spawnEnemy(state, code, owner.location, seat)
-      if (spawned) engageEnemy(state, spawned, seat, events)
+      const spawned = spawnEnemy(state, code, owner.location, seat, ignoreSpawn, false, seat, { forceEngage: ignoreSpawn })
+      if (spawned && spawned.location === owner.location && spawned.engagedSeat !== seat) engageEnemy(state, spawned, seat, events)
       return spawned
     },
     searchAndSpawnEnemy: (seat, { nonElite = false, exhausted = false, engage = false, source = null, onSpawn = null } = {}) => {
@@ -150,10 +169,7 @@ export function createEnemyApi(state, events, deps) {
       const owner = state.investigators[seat]
       const location = state.locations.find(item => item.id === owner?.location)
       if (!owner || !location || (owner.clues || 0) < amount) return 0
-      owner.clues -= amount
-      state.clues = (state.clues || 0) - amount
-      location.clues = (location.clues || 0) + amount
-      return amount
+      return deps.placeCluesOnLocation(state, owner, amount, events)
     },
     // Phase 5（5c-30）：「骷髅钥匙」把支援附属到所在地点（可带声明式字段，如 shroudAsOne）。
     attachSelfToLocation: (card, locationId, fields = {}) => {

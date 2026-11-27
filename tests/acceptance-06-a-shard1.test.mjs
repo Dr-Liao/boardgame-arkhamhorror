@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url'
 
 import { fixture, move, settle, enemy as testEnemy } from './core-fixture.mjs'
 import {
-  applyDamage, createGameState, decisionSeat, legalMoves, lookAt, performTest, validateMove,
+  applyDamage, createGameState, decisionSeat, investigatorEntryError, legalMoves, lookAt, performTest, scenarioRuntime, validateMove,
 } from '../src/engine/engine.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
@@ -857,10 +857,10 @@ test(`TDE 06046 ${nameOf('06046')} 火焰洞穴：进入前需清空七十级台
   assert.match(String(entry.locationRule.entryError(state, null, me(state))), /七十级台阶/)
   steps.clues = 0
   assert.equal(entry.locationRule.entryError(state, null, me(state)), undefined, '清空线索后可进入')
-  // 已知缺口（G1）：卡面「必须先发现上层地点全部线索才能进入」写在 locationRule.entryError，
-  // 但引擎 movement/moves 只读 scenarioBehavior.moveError、章节 behavior 也没有分派 entryError。
-  const behaviorSource = readFileSync(path.join(ROOT, 'content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/behavior.js'), 'utf8')
-  assert.equal(behaviorSource.includes('.entryError'), false, '章节 behavior 未分派 locationRule.entryError（缺口）')
+  steps.clues = 1
+  assert.match(investigatorEntryError(state, 'cavernOfFlame', 0), /七十级台阶/)
+  steps.clues = 0
+  assert.equal(investigatorEntryError(state, 'cavernOfFlame', 0), null)
   me(state).location = 'cavernOfFlame'
   entry.locationRule.onMythosEnd(state, locationOf(state, 'cavernOfFlame'), scenarioApi(state))
   assert.equal(me(state).damage, 1, '神话阶段结束受到 1 点伤害')
@@ -888,8 +888,10 @@ test(`TDE 06048 ${nameOf('06048')} 楼梯底部：进入前需清空七百级台
   steps.clues = 1
   assert.match(String(entry.locationRule.entryError(state, null, me(state))), /七百级台阶/)
   steps.clues = 0
-  const behaviorSource = readFileSync(path.join(ROOT, 'content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/behavior.js'), 'utf8')
-  assert.equal(behaviorSource.includes('.entryError'), false, '章节 behavior 未分派 locationRule.entryError（缺口）')
+  steps.clues = 1
+  assert.match(investigatorEntryError(state, 'baseOfTheSteps', 0), /七百级台阶/)
+  steps.clues = 0
+  assert.equal(investigatorEntryError(state, 'baseOfTheSteps', 0), null)
   const inv = me(state)
   inv.hand = ['01088', '01089']
   let tested = 0
@@ -901,20 +903,32 @@ test(`TDE 06048 ${nameOf('06048')} 楼梯底部：进入前需清空七百级台
   }, inv)
   assert.equal(tested, 1, '进入时进行意志检定')
   assert.equal(inv.horror, 2, '失败后为 2 张手牌各选择（此处均受恐惧）')
+
+  const game = fixture()
+  me(game).hand = ['01017', '01020']
+  run(game, current => {
+    const owner = me(current)
+    entry.locationRule.onEnter.effect(current, null, scenarioRuntime(current, []), owner)
+  }, pending => pending.kind === 'commit' && pending.options.some(option => option.id === '0') ? '0' : null)
+  assert.equal(game.lastTestResult.difficulty, 1, '投入一张后按剩余手牌重算难度')
 })
 
 test(`TDE 06049 ${nameOf('06049')} 魔幻小路：隐藏值按未揭示魔幻森林数增加；行动可放 1 线索`, () => {
   const entry = registeredEntry('06049')
-  const behaviorSource = readFileSync(path.join(ROOT, 'content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/behavior.js'), 'utf8')
-  assert.deepEqual(entry.locationRule.shroudPerUnrevealedEnchantedWoods.originalCodes, WOOD_CODES)
-  assert.equal(WOOD_CODES.length, 7)
-  // 已知缺口（G2）：卡面动态帷幕写在 shroudPerUnrevealedEnchantedWoods / entryError，
-  // 但本章 behavior 没有 locationShroudModifier，也没有分派 entryError。
-  assert.equal(behaviorSource.includes('shroudPerUnrevealedEnchantedWoods'), false, '章节 behavior 未读动态帷幕（缺口）')
-  assert.equal(behaviorSource.includes('.entryError'), false, '章节 behavior 未分派 locationRule.entryError（缺口）')
   const state = scenarioState(1)
   setupChapter(state)
-  placeLocations(state, ['baseOfTheSteps', 'theEnchantedPath'])
+  placeLocations(state, ['baseOfTheSteps', 'theEnchantedPath', 'mysticalForest', 'stoneTrapdoor'])
+  const path = locationOf(state, 'theEnchantedPath')
+  const base = locationOf(state, 'baseOfTheSteps')
+  base.clues = 1
+  assert.match(investigatorEntryError(state, path.id, 0), /楼梯底部/)
+  base.clues = 0
+  assert.equal(investigatorEntryError(state, path.id, 0), null)
+  locationOf(state, 'mysticalForest').revealed = false
+  locationOf(state, 'stoneTrapdoor').revealed = true
+  assert.equal(scenarioRuntime(state, []).locationShroud(path.id, 0), path.shroud + 1)
+  locationOf(state, 'stoneTrapdoor').revealed = false
+  assert.equal(scenarioRuntime(state, []).locationShroud(path.id, 0), path.shroud + 2)
   const inv = me(state)
   inv.location = 'theEnchantedPath'
   const moves = []
@@ -964,13 +978,16 @@ test(`TDE 06052 ${nameOf('06052')} 巨石阵：揭示时把放在一边的辛劳
 })
 
 test(`TDE 06053 ${nameOf('06053')} 魔幻森林：调查时隐藏值按手牌数增加`, () => {
-  const entry = registeredEntry('06053')
-  assert.equal(entry.flags.shroudPerHandCardWhileInvestigating, true)
-  // 已知缺口（G3）：条目注释称 behavior.locationShroudModifier 读该 flag，但本章 behavior
-  // 既没有 locationShroudModifier，也没有任何地方读 shroudPerHandCardWhileInvestigating。
-  const behavior = readFileSync(path.join(ROOT, 'content/campaigns/theDreamEaters/scenarios/beyondTheGatesOfSleep/behavior.js'), 'utf8')
-  assert.equal(behavior.includes('shroudPerHandCardWhileInvestigating'), false, '行为层没有读点（缺口）')
-  assert.equal(behavior.includes('locationShroudModifier'), false, '本章没有 locationShroudModifier（缺口）')
+  const state = scenarioState(1)
+  setupChapter(state)
+  placeLocations(state, ['stoneTrapdoor'])
+  const loc = locationOf(state, 'stoneTrapdoor')
+  const api = scenarioRuntime(state, [])
+  me(state).location = loc.id
+  me(state).hand = ['01088', '01089']
+  assert.equal(api.locationShroud(loc.id, 0, { includeLocationState: true }), loc.shroud + 2)
+  me(state).hand = []
+  assert.equal(api.locationShroud(loc.id, 0, { includeLocationState: true }), loc.shroud)
 })
 
 test(`TDE 06054 ${nameOf('06054')} 魔幻森林：进入时受 2 恐惧或失去所有剩余行动`, () => {

@@ -9,17 +9,34 @@
 //   · 「逃逸」（无条件印刷）= enemyRule.elusive，读点 src/engine/enemy-keyword-movement.js
 //     #resolveElusiveAfterAttack（攻击后解除交战 → 移动到连接地点 → 横置；combat.js 与 enemies.js 的
 //     攻击结算共用）。
-//   · 「黑夜猎手」：encounterDefinitions 从英文正文静态解析关键词（card-data.js）；
-//     昼夜差异留给 P8 关键词昼夜读点，条目只记录 nightOnlyKeywords 数据。
-//   · 「神话阶段本地与连接地点 -2 技能」：引擎没有敌人光环式的技能修正读点
-//     （entityModifierTotal 只覆盖 enemyFight/enemyEvade/enemyHealth），本条只声明数据。
+//   · 猎手持续读取敌人所在地的昼夜。神话阶段技能修正适用于本地和连接地点。
 //   · 印刷数值（fight 3 / evade 4 / health 5 / damage 2 / horror 1）由 cards-data 提供，条目只镜像。
+import { duringPeriod } from '../../../../../engine/matcher.js'
+
+const isDay = duringPeriod('day')
+const isNight = duringPeriod('night')
+
+function nightAtEnemy(state, enemy) {
+  const context = { state, source: enemy }
+  if (isNight(context)) return true
+  if (isDay(context)) return false
+  const records = state.campaign?.records || {}
+  const recordedDate = typeof records.hemlockDate === 'string' ? records.hemlockDate.split(':')[1] : null
+  return String(records.time ?? records.timeOfDay ?? recordedDate ?? '').toLowerCase() === 'night'
+}
+
 export default {
   code: '10734',
   scope: 'enemy',
   implemented: true,
   enemyRule: {
     elusive: true,
+    keywordWhile: (state, enemy, keyword) => keyword === 'hunter' ? nightAtEnemy(state, enemy) : undefined,
+    investigatorSkillModifier(state, enemy, inv) {
+      if (state.phase !== 'mythos') return 0
+      const here = state.locations.find(location => location.id === enemy.location)
+      return here && (here.id === inv.location || here.connections?.includes(inv.location)) ? -2 : 0
+    },
   },
   flags: {
     encounterGroup: 'the_forest',
@@ -36,7 +53,4 @@ export default {
     mythosPhaseSkillPenalty: { amount: -2, skills: 'all', scope: 'hereAndConnections', phase: 'mythos' },
   },
   abilities: [],
-  note: '逃逸用 enemyRule.elusive（攻击后逃逸的引擎读点）。「本地与连接地点每位调查员在神话阶段'
-    + '每项技能 -2」没有引擎读点（没有敌人光环式的技能修正），作为印刷数据留待 P8 章节技能修正读点；'
-    + '「黑夜猎手」由 encounterDefinitions 解析，昼夜差异留给 P8 关键词昼夜读点。',
 }

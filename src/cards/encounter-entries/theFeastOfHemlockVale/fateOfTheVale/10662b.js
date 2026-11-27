@@ -9,6 +9,10 @@ export default {
   code: '10662b',
   scope: 'enemy',
   implemented: true,
+  modifiers: [{
+    target: 'enemyHealth',
+    amount: ({ state }) => 2 * state.numInvestigators,
+  }],
   flags: {
     cosmicEmissary: true,
     formation: 'shattered',
@@ -19,5 +23,5 @@ export default {
       fail: 'killed',
     },
   },
-  note: 'approximation: +2/人 生命由卡表基础值与 definition 承接；「被击败 → 全体检定」由 behavior.enemyDefeated 读 flags.defeatTest 结算。',
+  note: '有效生命值由印刷基础值和每位调查员 +2 的修正合成。被击败后的检定由章节结算。',
 }

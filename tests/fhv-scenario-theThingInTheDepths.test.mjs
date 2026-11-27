@@ -490,17 +490,16 @@ test('P7 theThingInTheDepths 幕目标与撤退：幕 1 轮末共同支付线索
   const fastInv = fast.state.investigators[0]
   fastInv.location = targetId
   fastInv.clues = 2
-  const patrolMove = chapter.behavior.actions(fast.state, fastInv)
+  const patrolMove = chapter.behavior.fastActions(fast.state, fastInv)
     .find(item => item.rule === 'depthsChangeHybridPatrol')
   assert.ok(patrolMove, '幕 2 的快速改巡逻行动存在')
   assert.equal(chapter.behavior.performAction(fast.state, fastInv, patrolMove, fast.api), true)
   assert.equal(fast.state.scenarioFlags.depthsHybridPatrol.location, targetId)
   assert.equal(fastInv.clues, 0, '共同支付 1/人 线索')
-  assert.equal(chapter.behavior.actions(fast.state, fastInv)
-    .find(item => item.rule === 'depthsChangeHybridPatrol').reason, '本轮已经改过巡逻地点')
-  chapter.behavior.enemyPhaseAfterHunters(fast.state, fast.api)
-  assert.equal(hybrid.location, targetId, '敌军阶段后按改后的巡逻地点走一步')
-  assert.equal(fast.state.scenarioFlags.depthsHybridPatrol, undefined)
+  const printed = { kind: 'nearestEmpty' }
+  assert.deepEqual(chapter.behavior.patrolTarget(fast.state, hybrid, printed), { kind: 'named', locationId: targetId })
+  fast.state.round++
+  assert.deepEqual(chapter.behavior.patrolTarget(fast.state, hybrid, printed), printed)
   // 毁灭：Day 2 → 1；Day 3 白天 → 2；Day 3 夜晚 → 0
   assert.equal(setup(2, { date: '2:day' }).state.doom, 1)
   assert.equal(setup(2, { date: '3:day' }).state.doom, 2)

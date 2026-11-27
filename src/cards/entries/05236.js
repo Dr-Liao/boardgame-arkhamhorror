@@ -9,13 +9,7 @@
 //
 // 05236 指路鬼魂：+1 智慧；「沉静」（非直接恐惧必须先分给它）；因恐惧被击败时放逐。
 //
-// 第五轮修复（2026-10-25）：
-//   · 「因恐惧被击败时放逐」改由 leavesPlay 钩子按离场时的恐惧值判定：
-//     引擎在恐惧/伤害把支援打到上限后先调用 leaveAsset（assets.js:247-288，
-//     enemies.js:557-573 / scenario-runtime.js:272-281），钩子拿到的 source 仍带 horror，
-//     因此 `source.horror >= 卡面神智(3)` 即「因恐惧被击败」；此时写 removeFromGame + 战役放逐账本
-//     state.exiled / state.exiledBySeat（与引擎 exilePlayerCard 同一记账口径）。
-//   · 不再使用条目级 removeFromGameOnLeave（那会把「被效果弃掉/槽位移除」等任何离场都移出游戏）。
+// 离场钩子读取击败上下文，恐惧达到理智上限才改变本次离场的去向。
 
 export default {
   code: '05236',
@@ -27,14 +21,10 @@ export default {
     {
       kind: 'leavesPlay',
       label: '因恐惧被击败：将其放逐',
-      resolve: ({ state, inv, source, api }) => {
-        const sanity = Number(api.cardSanity?.('05236')) || 3
-        const horror = Number(source?.horror) || 0
-        if (horror < sanity) return
-        // 离场时仍在场上实例里读到的恐惧已达神智上限 → 因恐惧被击败。
-        if (source) source.removedFromGame = true
-        api.removeFromGameCards?.('05236')
-        api.exileCard?.('05236', { seat: inv.seat })
+      resolve: ({ inv, source, api, context }) => {
+        const sanity = Number(api.cardSanity?.(source.code)) || 3
+        if (!context?.defeated || (source.horror || 0) < sanity) return
+        if (!api.exileDepartingAsset(inv.seat, source)) return
         api.info(`${inv.name} 的「指路鬼魂」因恐惧被击败，被放逐（本关结束后从战役牌组移除）。`)
       },
     },

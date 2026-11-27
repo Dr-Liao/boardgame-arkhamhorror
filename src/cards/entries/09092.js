@@ -4,51 +4,49 @@
 //       [fast] 横置艾勒·鲁巴什：选择你游戏区域内一个有毁灭标记的支援。
 //       将其附属到艾勒·鲁巴什，或与一个已经附属的支援交换。（仅限附属 2 个支援）。
 //
-// 读点：+1 技能值 = skill:* 修正（statPipeline 唯一读点），条件读本次检定的来源支援是否附属；
-//       附属 = api.attachOrSwapControlledAsset（与 08089 同一写点）。
-//
-// approximation（已写 primitive-request/09092.json）：
-//   · 「附属支援上的 1 个毁灭不计入密谋阈值」没有 agendaDoom 的排除读点，未实现（不伪造）。
-//   · 引擎的支援宿主同一时刻只支持 1 个 attachedToAsset；「仅限附属 2 个支援」按 1 个近似。
-const attachedSource = (state, inv, source) => {
-  const id = state?.skillTest?.source?.assetId ?? state?._resolvingAssetId ?? null
-  if (!id || !source) return false
-  const asset = (inv.assets || []).find(item => item.id === id)
-  return asset?.attachedToAsset === source.id
-}
+const code = '09092'
+const inPlay = (inv, source) => inv.assets.filter(asset => asset.id !== source.id
+  && asset.attachedToAsset == null && (asset.doom || 0) > 0)
+const attached = (inv, source) => inv.assets.filter(asset => asset.attachedToAsset === source.id)
 
 export default {
-  code: '09092',
-  simplified: true,
-  note: 'approximation: 见 primitive-request/09092.json（「附属支援 1 个毁灭不计入密谋阈值」缺少 agendaDoom 排除读点；宿主仅支持 1 个附属支援）',
+  code,
+  assetRule: { ignoreOneDoomOnAttachment: true },
   abilities: [
     {
       kind: 'free',
-      label: '横置：选择有毁灭标记的支援附属到艾勒（或交换）',
-      cost: { action: false, exhaust: true },
-      resolve: ({ state, inv, source, api }) => {
-        if (!source) return
-        const candidates = (inv.assets || []).filter(asset => asset !== source
-          && asset.attachedToAsset == null && (asset.doom || 0) > 0)
-        if (!candidates.length) {
-          api.info('「艾勒·鲁巴什」：没有可附属的带毁灭支援。')
-          return
-        }
+      label: '横置：附属一个带毁灭的支援，或与已附属的支援交换（最多两个）',
+      cost: { exhaust: true },
+      criteria: [({ inv, source }) => inPlay(inv, source).length > 0],
+      resolve: ({ inv, source, api }) => {
+        const candidates = inPlay(inv, source)
         const picked = candidates.length === 1 ? candidates[0].id : api.choice({
-          kind: 'target', source: '09092', seat: inv.seat,
-          prompt: '选择要附属（或交换）的带毁灭支援。',
-          options: candidates.map(asset => ({ id: asset.id, label: `${api.cardName(asset.code)}（毁灭 ${asset.doom}）` })),
+          kind: 'target', source: code, seat: inv.seat,
+          prompt: '选择一个带毁灭的支援。',
+          options: candidates.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
         })
-        api.attachOrSwapControlledAsset(inv.seat, source.id, picked)
-        api.info('🕯️ 「艾勒·鲁巴什」：附属了一个带毁灭标记的支援。')
-        void state
+        const attachedAssets = attached(inv, source)
+        const options = attachedAssets.length < 2 ? [{ id: 'attach', label: '直接附属' }] : []
+        options.push(...attachedAssets.map(asset => ({ id: asset.id, label: `与「${api.cardName(asset.code)}」交换` })))
+        const option = options.length === 1 ? options[0].id : api.choice({
+          kind: 'effect', source: code, seat: inv.seat, prompt: '选择直接附属或交换。', options,
+        })
+        api.attachOrSwapControlledAsset(inv.seat, source.id, picked, {
+          maximum: 2, ...(option === 'attach' ? {} : { replaceId: option }),
+        })
       },
     },
+    {
+      kind: 'forced',
+      trigger: 'testBegins',
+      limit: { scope: 'perTest', owner: 'instance' },
+      silent: true,
+      label: '结算附属支援的技能检定时，本次检定 +1 技能值',
+      criteria: [({ state, inv, source }) => state.skillTest?.seat === inv.seat
+        && attached(inv, source).some(asset => asset.id
+          === (state.skillTest.assetSourceId ?? state.skillTest.source?.assetId ?? state._resolvingAssetId))],
+      resolve: ({ api }) => api.addPendingTestBonus(1),
+    },
   ],
-  modifiers: [
-    { target: 'skill:willpower', amount: 1, condition: { when: ({ state, inv, source }) => attachedSource(state, inv, source) } },
-    { target: 'skill:intellect', amount: 1, condition: { when: ({ state, inv, source }) => attachedSource(state, inv, source) } },
-    { target: 'skill:combat', amount: 1, condition: { when: ({ state, inv, source }) => attachedSource(state, inv, source) } },
-    { target: 'skill:agility', amount: 1, condition: { when: ({ state, inv, source }) => attachedSource(state, inv, source) } },
-  ],
+  modifiers: [],
 }

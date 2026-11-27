@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../src/cards/cards-data.js'
 import { encounterResolveCampaignsFor, encounterResolveFor, enemyScriptFor, enemyStatRuleFor, entryFlags, locationRuleFor, treacheryRuleFor, resolveDeclarativeTreacheryTest, treacheryTestFor } from '../../../src/cards/card-rules.js'
 
@@ -262,7 +263,7 @@ export const encounterRules = {
       else if (choice === 'hand') {
         for (const code of discardable) {
           const index = inv.hand.indexOf(code)
-          if (index >= 0) (inv.discard ||= []).push(inv.hand.splice(index, 1)[0])
+          if (index >= 0) (inv.discard ||= []).push(spliceHand(inv, index, 1)[0])
         }
       }
       inv.threat.splice(inv.threat.indexOf(threat), 1)

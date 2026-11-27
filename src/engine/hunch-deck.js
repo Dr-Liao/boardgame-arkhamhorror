@@ -1,3 +1,4 @@
+import { spliceHand } from './hand-icons.js'
 import { afterThreatEntered } from './threat-entry.js'
 // 直觉牌库（调查员专属第二牌库）—— 第 5 步 M1 调查员批次（P6）。
 //
@@ -166,7 +167,7 @@ export function createHunchDeck(deps) {
     const code = inv.hunchRevealed
     inv.hunchRevealed = null
     const index = (inv.hand || []).indexOf(code)
-    if (index >= 0) inv.hand.splice(index, 1)
+    if (index >= 0) spliceHand(inv, index, 1)
     // 05010「悬案」：本应洗入直觉牌库时改为进入威胁区域（条目级 avoidHunchShuffle）。
     if (registeredEntry(code)?.avoidHunchShuffle) {
       inv.threat ||= []

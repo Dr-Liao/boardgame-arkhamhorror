@@ -1,4 +1,5 @@
 import { putInHand } from './hand-entry.js'
+import { enemyOnlyPreyAllows } from './enemy-entry.js'
 import { replacePlayerZoneCards, splicePlayerDiscard } from './player-zones.js'
 import { storyAssetEnemyOverride } from './story-asset-rules.js'
 // card-ops.js · Phase 6 从 engine.js 拆出（依赖注入同前几批）。
@@ -56,6 +57,7 @@ export function createCardOps(deps) {
     fewestCardsInHand: (state, inv) => (inv.hand || []).length,
     // P7 TDC 11671 星之眷族血魔：「猎物 - 剩余生命值最高」。
     mostRemainingHealth: (state, inv) => -remainingHealth(inv),
+    artifactController: (state, inv) => inv.assets.some(asset => cardDef(asset.code)?.traits?.includes('Artifact')) ? 0 : 1,
     // 「猎物 - 距离昆扬之口最近」：按地点连接数计算最短距离。
     nearestMouth: (state, inv) => {
       const mouth = (state.locations || []).find(location =>
@@ -92,6 +94,10 @@ export function createCardOps(deps) {
   }
 
   function preyTarget(state, enemy, candidates) {
+    candidates = candidates.filter(seat => enemyOnlyPreyAllows(state, enemy, state.investigators[seat], enemyTextBlanked))
+    const trait = registeredEntry(enemy.originalCode || enemy.code)?.enemyRule?.preyOnlyAtLocationTrait
+    if (trait && !enemyTextBlanked(state, enemy)) candidates = candidates.filter(seat => state.locations
+      .find(location => location.id === state.investigators[seat]?.location)?.traits?.some(value => value.toLowerCase() === trait))
     if (!candidates.length) return null
     // P7 TDC 11688：「每名[[星之眷族]]敌人失去印刷的猎物提示，并获得『猎物 - 你』」：
     // 受控剧情资产（11688 黏土恐怖）声明 prey:'controller' 时，猎物固定为其控制者。
@@ -289,6 +295,7 @@ export function createCardOps(deps) {
     const matches = searched.filter(code => {
       const def = cardDef(code)
       if (!def) return false
+      if (effect.names && !effect.names.includes(def.name)) return false
       if (effect.typeFilter && def.type !== effect.typeFilter) return false
       const wantedTraits = effect.traits || (effect.trait ? [effect.trait] : [])
       if (wantedTraits.length) {

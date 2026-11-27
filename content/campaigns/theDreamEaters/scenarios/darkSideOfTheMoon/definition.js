@@ -123,15 +123,15 @@ export const scenario = {
   tokenMeanings: {
     standard: {
       skull: { text: TOKENS.easyStandard.skull, delta: -1 },
-      cultist: { text: TOKENS.easyStandard.cultist, delta: 0 },
+      cultist: { text: TOKENS.easyStandard.cultist, delta: 0, drawAnother: true },
       tablet: { text: TOKENS.easyStandard.tablet, delta: -1 },
-      elder_thing: { text: TOKENS.easyStandard.elderThing, delta: 1 },
+      elderthing: { text: TOKENS.easyStandard.elderThing, delta: 1 },
     },
     hard: {
       skull: { text: TOKENS.hardExpert.skull, delta: -2 },
-      cultist: { text: TOKENS.hardExpert.cultist, delta: 0 },
+      cultist: { text: TOKENS.hardExpert.cultist, delta: 0, drawAnother: true },
       tablet: { text: TOKENS.hardExpert.tablet, delta: -2 },
-      elder_thing: { text: TOKENS.hardExpert.elderThing, delta: 0 },
+      elderthing: { text: TOKENS.hardExpert.elderThing, delta: 0 },
     },
   },
 }

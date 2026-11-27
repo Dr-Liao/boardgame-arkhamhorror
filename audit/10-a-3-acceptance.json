@@ -3,7 +3,7 @@
   "unit": "10-a-3",
   "profile": {
     "id": "fhv-player-c-2026-11",
-    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10069–10103）35 条目录记录。15 条通过五维验收；20 条近似/缺口暂不切换。",
+    "scope": "铁杉谷盛宴 10 段 fhvp 玩家卡（10069–10103）35 条目录记录。35 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,23 +17,27 @@
   },
   "summary": {
     "total": 35,
-    "verified": 15,
-    "unverified": 20,
+    "verified": 35,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 279
+    "testsPassed": 288
   },
   "testFiles": [
+    {
+      "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+      "sha256": "a323660a17615ac4734bfac6aae97c83b4b32df85719e56e92b29fff2b867894"
+    },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-1.test.mjs",
       "sha256": "0133ea21562f6da12f3881db64e5453fa4b13b36d5f0bda45c706ac8ff24aa6e"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-2.test.mjs",
-      "sha256": "4f3dd2780e3c00cae1c549d711d11a89ec2740df43e8f1826e58b643081b1ea4"
+      "sha256": "d4390558f2bea5d47e8029b2fa82a723ed504ccce56044e68d24f46f8467b3e2"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-3.test.mjs",
-      "sha256": "087e3c842cdbec4acafec77595994bf7855cfdd9a880ce35ae7b55d0666be046"
+      "sha256": "6e90c1501abee25fab0fc12e06f731497154fa32f9b5abf3ff4a1b65eaba8e44"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-4.test.mjs",
@@ -45,31 +49,31 @@
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
-      "sha256": "f24cc9ffb9570160ed5d46758ea2ae4f93933b06862dc11096ee689b72715229"
+      "sha256": "b3770acc4326921f2827c424761c8e18365a60782a529f8ec133c4dbbca98528"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
-      "sha256": "bf1d854922604bb474b2ed8abd35b67a93ad1ee22fd229e609283ae4ace98884"
+      "sha256": "26700e770974ffbf800e61f01c2c929439f64af3d2ad3faddae5b312f775febc"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
-      "sha256": "4b0bcbb5cdcc074b09956b8168feae189061bad71ee43bd450500cd9ae8886ca"
+      "sha256": "dcb8b5ca64213467774b259a52753517f1e0f86e6897aa2e05fe5981b1c5fb84"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
-      "sha256": "730e1a91984e081d8bcd42f0e86144270f66f4ece326575016d5102f195e6d6d"
+      "sha256": "cd6ec4f8a9482a3a01004876074729c602fe7674f23bf9c7c85bd65a9f32200d"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-10.test.mjs",
-      "sha256": "267e84e4201af115822f08a61de0fa7171a07bf5cae859dd6addf2b3cb085e07"
+      "sha256": "4d2aa3269e2dca786a0f99b348902ff4eb48e3d32a97b11a3c71b3259820ddf8"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-11.test.mjs",
-      "sha256": "033cd720e63298017c47fdb287740848865002dbf3f2ce69e2263a98e2f55829"
+      "sha256": "907b3d5d661263a86857872f32d93a5d7ccc6499b06b19d0b3b9e27fa7a919b9"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-player-m2-12.test.mjs",
-      "sha256": "589e3b22ec381e53429b3c209c85fba2aac55f19d4e21ba4cc5c8c145819aee2"
+      "sha256": "2a8b8540f1123ab5e5d31ce57defd223c285890fb16271087e5444fc21a038b4"
     },
     {
       "file": "games/arkhamhorror/tests/fhv-rules.test.mjs",
@@ -129,9 +133,13 @@
       "code": "10070",
       "name": "诈降",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「用该武器以[敏捷]攻击」走通用 api.fight(assetId, skill:agility, noSpend)，不激活武器自身的攻击能力：不花费弹药/充能、不复刻武器能力写死的伤害/技能修正；缺「以替代技能激活支援能力」入口（primitive-request/10070.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+          "test": "P6 10070 诈降：谈判打出手牌[[武器]]（费用 -1），并以[敏捷]用该武器攻击所选敌人"
+        }
+      ]
     },
     {
       "code": "10071",
@@ -149,9 +157,13 @@
       "code": "10072",
       "name": "“我肯定还！”",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「移动资源」用 loseResources+gainResources 两步合成（失去资源的替代/防止会生效）；而引擎已有 transferResources 原语（api-misc.js:507）未被采用 → 披露过时且行为与原语不等价。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+          "test": "P6 10072 “我肯定还！”：快速借走同地点调查员全部资源，弃卡后轮末自动归还"
+        }
+      ]
     },
     {
       "code": "10073",
@@ -181,9 +193,13 @@
       "code": "10075",
       "name": "福倚祸伏",
       "type": "skill",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "诅咒揭示后才投入的卡没有 ST.3 图标读点；用 endOfTest 效果 + context.testBonus 事后补 3 个万能图标的价值（印刷的 1 万能由 commit 计入）；时点/可用窗口偏差（primitive-request/10075.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-6.test.mjs",
+          "test": "P6 10075 福倚祸伏：揭示[诅咒]标记时从手牌投入，并获得 3 个[万能]图标的价值"
+        }
+      ]
     },
     {
       "code": "10076",
@@ -225,9 +241,17 @@
       "code": "10079",
       "name": "摄魂抓魄",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "附属牌存 host.attachments（引擎无「正面朝下压在支援下」独立区域，界面可见且被当作能力来源）；第二模式用 topDeckCodes+moveCard 代替 searchTop（缺同名/卡号筛选参数），未开查找窗口。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10079 摄魂抓魄：交战反应也可查找牌库顶 9 张的同名卡牌并抽取"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10079 摄魂抓魄：开局自身查找并附属 3 张不同[[技巧]]卡牌，交战时抽回 1 张"
+        }
+      ]
     },
     {
       "code": "10080",
@@ -257,9 +281,17 @@
       "code": "10082",
       "name": "假证",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「疑点」（印刷为卡上资源）暂存在卡实例 uses 上（counter.card 只白名单 bounty/evidence/hollow，无「支援上放资源」能力面 API）；难度计算与放置/读取都走 api.addUses（primitive-request/10082.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10082 假证：检定失败时假证返回手牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10082 假证：谈判检定难度 = 疑点数，成功发现线索，未超出 2 点则放置疑点"
+        }
+      ]
     },
     {
       "code": "10083",
@@ -289,49 +321,77 @@
       "code": "10085",
       "name": "卡纳玛戈斯之杖",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[[腐烂]]三条被动力挂在杖的 ROT_RULES；「不能攻击」只覆盖杖控制者被攻击窗口；「离场放一边」只结算被击败路径；绑定集合已有副本时取副本会洗一次牌库；且 level-0 的 10089/10090 规则在 ROT_RULES 中只有名字（10089 的轮末伤害/10090 的不动未接）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10085 卡纳玛戈斯之杖：横置选任意地点非精英敌人，揭示 5 枚标记；有[诅咒]则随机附属一张[[腐烂]]"
+        }
+      ]
     },
     {
       "code": "10086",
       "name": "深渊腐烂",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「所附属敌人不能攻击」由 10085 ROT_RULES 代算（玩家卡附敌不是窗口来源，无实例级 cannot:attack 写入口）；「离场放一边」只覆盖被击败路径；杖离场后被动失效。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10086 深渊腐烂：经杖附属后，所附属的敌人不能攻击"
+        }
+      ]
     },
     {
       "code": "10087",
       "name": "琥珀腐烂",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「附敌被击败获得资源（印刷生命值，≤5）」由 10085 代算，「离场放一边」只覆盖被击败路径；数值取 min(5, enemy.health)。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10087 琥珀腐烂：附属敌人被击败时按印刷生命值获得资源（最多 5），并放到一边"
+        }
+      ]
     },
     {
       "code": "10088",
       "name": "流脓腐烂",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「-1 攻击/-1 躲避」由 10085 在附属时写 api.addEnemyStatModifier（持久修正，不随附属移除撤销）；「离场放一边」只在被击败路径结算。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-7.test.mjs",
+          "test": "P6 10088 流脓腐烂：附属敌人得到 -1 攻击值和 -1 躲避值"
+        }
+      ]
     },
     {
       "code": "10089",
       "name": "猩红腐烂",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「轮末 1 点伤害」挂在持杖者（10098/10085）上；10085 的 ROT_RULES 未含该字段（仅 10098 有）；「离场放一边」只覆盖被击败路径；披露称「本分片只接到 10098，level 0 需主进程补」——当前 HEAD 10085 仍未补。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10089 and 10098 return the bonded Rot when an attached enemy is removed without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10089 猩红腐烂：被法杖附属后，每轮结束对所附属敌人造成 1 点伤害"
+        }
+      ]
     },
     {
       "code": "10090",
       "name": "霉绿腐烂",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「所附属敌人不能移动」尚未接线（引擎移动拦截只有 enemy.immobile，enemy.attachments 不是实体规则来源）；「离场放一边」仅被击败路径（primitive-request/10090.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10090 霉绿腐烂：被法杖附属到敌人；被击败时放到一边（场外绑定集合）"
+        }
+      ]
     },
     {
       "code": "10091",
@@ -353,25 +413,57 @@
       "code": "10092",
       "name": "邪恶祭祀刀",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「击败敌人」用剩余生命 ≤ 本次攻击伤害（1+damageBonus）预估，不含后续窗口追加伤害；补满固定 +1 且不校验支援印刷上限（无最大 uses 读点）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10092 邪恶祭祀刀：加入 1-3 个诅咒（每个 +2 战斗），击败敌人后补满 1 充能"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10092 邪恶祭祀刀：未击败敌人时不补满（负面路径）"
+        }
+      ]
     },
     {
       "code": "10093",
       "name": "洪荒赞歌",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「其余卡牌以任意顺序放回遭遇牌库顶」按原顺序放回（未提供任意排序选择）；其余（额外行动费、逐张加诅咒换放底、顶/底搬运）已实现。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10093 returns the remaining five encounter cards in the selected order"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10093 洪荒赞歌：全部放回牌库顶时牌库顺序不变（负面路径）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10093 洪荒赞歌：额外花 1 行动；揭示遭遇牌库顶 5 张，加诅咒放牌库底，其余放回牌库顶"
+        }
+      ]
     },
     {
       "code": "10094",
       "name": "精华汲取",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「移动伤害到敌人」用 api.scenario.healDamage（原始扣减）+ api.damageEnemy 两步合成，非原子转移：敌人免疫/来源限制会让第二步无效而第一步已扣（primitive-request/10094.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10094 leaves the source damage in place when the enemy cannot take it"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10094 精华汲取：精英敌人最多移动 1 点伤害（负面路径）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10094 精华汲取：谈判检定意志(X=敌人攻击值)，成功把 2 点伤害（非精英）移到敌人"
+        }
+      ]
     },
     {
       "code": "10095",
@@ -393,9 +485,21 @@
       "code": "10096",
       "name": "催眠作用",
       "type": "skill",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「本次检定期间可忽略所有关键词与地点效果」无读点（location-effect-scope 只服务 investigate 的 mayIgnoreLocationEffects，ignore:* 是常驻修正）；当前只有「投入提供意志/万能图标」一条真实行为（primitive-request/10096.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10096 can suppress a location’s failed-investigation effect"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10096 suppresses Retaliate only for the test to which it was committed"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10096 催眠作用：投入技能检定提供意志和万能图标"
+        }
+      ]
     },
     {
       "code": "10097",
@@ -413,33 +517,65 @@
       "code": "10098",
       "name": "卡纳玛戈斯之杖",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "[[腐烂]]被动/强制与 10089 轮末伤害挂在「杖」条目上（玩家卡附敌不是窗口来源）；杖离场后效果失效；「离场放到一边」只覆盖被击败路径；从场外绑定集合取副本会洗一次牌库。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10089 and 10098 return the bonded Rot when an attached enemy is removed without defeat"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-8.test.mjs",
+          "test": "P6 10098 卡纳玛戈斯之杖：每揭示 1 个诅咒就查找并附魔一张[[腐烂]]事件；无诅咒不附属"
+        }
+      ]
     },
     {
       "code": "10099",
       "name": "呼唤彼端",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "①「补满所有充能/秘密」只认条目级印刷上限（registeredEntry(code).uses），未迁移支援读不到上限时只提示不补满；②打出条件只要求控制带使用（充能/秘密）的支援，没有「未满或有可结算能力」判定（primitive-request/10099.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10099 cannot be played onto a full asset whose ability cannot resolve"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+          "test": "P6 10099 呼唤彼端：额外加入 3 个诅咒，补满所选充能支援并可免行动费结算其能力"
+        }
+      ]
     },
     {
       "code": "10100",
       "name": "缥缈灵体",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「回合结束时返回手牌」按「结算后立即返回手牌」近似；但当前 HEAD 已有 api.returnPlayedEventAtEndOfTurn（api-misc.js:226，10102 已使用）→ 披露过时且行为仍偏差（primitive-request/10100.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10100 returns exactly one played copy at the end of the turn"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+          "test": "P6 10100 缥缈灵体：意志躲避成功后解除交战并化为无形；揭示符号则返回手牌"
+        }
+      ]
     },
     {
       "code": "10101",
       "name": "解读秘符",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同 10100：应立即返回改为结算后立即返回；引擎已有 returnPlayedEventAtEndOfTurn 未被采用 → 披露过时且行为仍偏差。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10101 returns exactly one played copy at the end of the turn"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+          "test": "P6 10101 解读秘符：意志加入调查、成功额外 1 线索；揭示符号则返回手牌"
+        }
+      ]
     },
     {
       "code": "10102",
@@ -457,9 +593,17 @@
       "code": "10103",
       "name": "超凡织造",
       "type": "event",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「结算这些事件时技能值 +2」用「下一次技能检定 +N」（inv.testBonus）近似，没有只作用于所结算事件的作用域读点；事件不发起检定时 +2 会留到下一次检定（primitive-request/10103.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-10-a-shard3.test.mjs",
+          "test": "FHV 10103 leaves no skill bonus after playing a spell that performs no test"
+        },
+        {
+          "file": "games/arkhamhorror/tests/fhv-player-m2-9.test.mjs",
+          "test": "P6 10103 超凡织造：Double 额外花 1 行动；依次打出两张[[法术]]事件（各减 1 费、结算时 +2）"
+        }
+      ]
     }
   ]
 }

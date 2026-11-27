@@ -15,23 +15,23 @@ export default {
       kind: 'played',
       label: '在你控制的一张玩家卡上放置 1 毁灭，然后在你所在地点与另一个已揭示地点各发现 1 个线索',
       resolve: ({ state, inv, api }) => {
-        const controlled = (inv.assets || [])
-        if (!controlled.length) {
-          api.info('你没有可放置毁灭标记的玩家卡牌。')
-          return
-        }
-        const targetId = controlled.length === 1 ? controlled[0].id : api.choice({
-          kind: 'target', source: CODE, seat: inv.seat,
+        const controlled = api.controlledPlayerCards(inv.seat)
+        if (!controlled.length) return
+        const key = card => card === inv ? `investigator:${inv.seat}` : card.id
+        const targetId = controlled.length === 1 ? key(controlled[0]) : api.choice({
+          kind: 'card', source: CODE, seat: inv.seat,
           prompt: '选择要放置 1 个毁灭标记的玩家卡牌。',
-          options: controlled.map(asset => ({ id: asset.id, label: api.cardName(asset.code) })),
+          options: controlled.map(card => ({ id: key(card), label: api.cardName(card.code), cardCode: card.code })),
         })
-        const target = controlled.find(asset => asset.id === targetId) || controlled[0]
+        const target = controlled.find(card => key(card) === targetId)
         if (!target) return
-        api.placeDoomOnCard(target, 1)
+        const previousDoom = target.doom || 0
+        if (api.placeDoomOnCard(target, 1) <= previousDoom) return
         api.info(`🌌「宇宙意志」：在「${api.cardName(target.code)}」上放置 1 个毁灭标记。`)
         const here = state.locations.find(location => location.id === inv.location)
         if (here) api.discoverClue(inv.seat, 1)
-        const others = state.locations.filter(location => location.id !== inv.location && location.revealed !== false)
+        const others = state.locations.filter(location => location.id !== inv.location && location.revealed
+          && location.clues > 0 && api.scenario.canDiscoverClueAt(inv.seat, location.id))
         if (!others.length) return
         const locationId = others.length === 1 ? others[0].id : api.choice({
           kind: 'location', source: CODE, seat: inv.seat,

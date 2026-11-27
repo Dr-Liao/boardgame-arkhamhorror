@@ -1,3 +1,4 @@
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import { changeChaosBag } from '../../../../../src/engine/chaos-bag.js'
 import { registeredEntry } from '../../../../../src/engine/ability.js'
 import { awardStoryCard } from '../../../../../src/campaign/campaign-effects.js'
@@ -114,9 +115,6 @@ export const behavior = {
       inv.resources = Math.max(0, inv.resources - rule.investigateFailLosesResources)
     }
   },
-  statModifier(state, inv, skill) {
-    return encounterRules.statModifier(state, inv, skill)
-  },
   enemyDefeated(state, enemy, api) {
     const inv = state.investigators[enemy.defeatedBy]
     const morgan = inv?.assets.find(asset => assetRuleFor(originalOf(asset))?.morgan && !asset.exhausted)
@@ -189,7 +187,7 @@ export const behavior = {
       const chosen = chooseCandidate(api, { kind: 'card', source: '02071', seat: inv.seat, prompt: '选择要弃掉以换取线索的盟友支援。' }, allies, {
         key: item => String(item.index), cardCode: item => item.code, label: item => ALL_CARDS[item.code]?.nameZh || item.code,
       })
-      inv.discard.push(inv.hand.splice(chosen.index, 1)[0]); state.scenarioFlags.loungeUsed = true; api.gainClues(inv.seat, 2)
+      inv.discard.push(spliceHand(inv, chosen.index, 1)[0]); state.scenarioFlags.loungeUsed = true; api.gainClues(inv.seat, 2)
     } else if (move.rule === 'buyDrink') {
       inv.resources -= 2; state.scenarioFlags.barUsed = true; api.gainClues(inv.seat, 2)
       state.scenarioFlags.hadDrink ||= []; state.scenarioFlags.hadDrink.push(inv.seat)

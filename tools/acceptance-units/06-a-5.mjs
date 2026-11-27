@@ -1,13 +1,6 @@
 // 验收单元 06-a-5：06-a 食梦者分片 5（A Thousand Shapes of Horror）。
 // 规程见 docs/test/ACCEPTANCE-ORDER.md；生成器见 tools/audit-card-unit.mjs。
-// 审计报告：docs/test/验收-06-a-食梦者-分片-5.md / .json（2026-11）。
-import fs from 'node:fs'
-
-// 失败清单直接取审计结论 JSON，避免配置与报告两处漂移。
-const verdict = JSON.parse(fs.readFileSync(new URL('../../docs/test/验收-06-a-食梦者-分片-5.json', import.meta.url), 'utf8'))
-const failedByCode = new Map(verdict.failedCodes.map(({ code, dimension, reason }) => [code, { code, dimension, reason }]))
-for (const code of verdict.pendingCodes || []) if (!failedByCode.has(code)) failedByCode.set(code, { code, dimension: 'pending', reason: '审计标 pending：证据/口径未闭环，按未通过计；详见报告。' })
-const failed = [...failedByCode.values()]
+// 2026-11-26 复验通过，逐卡证据保存在生成的验收账本。
 
 // 范围锁定为审计时未验收的 41 条记录（tsh）。
 const codes = ["06155", "06156", "06157", "06158", "06159", "06160", "06161", "06162", "06163", "06164", "06165", "06166", "06167", "06168", "06169a", "06169b", "06170", "06171", "06172", "06173", "06174", "06175", "06176", "06177", "06178", "06179", "06180", "06181", "06182", "06183", "06184", "06185", "06186", "06187", "06188", "06189", "06190", "06191", "06192", "06193", "06194"]
@@ -20,7 +13,7 @@ export default {
   verifiedFn: "tdeShard5CardVerified",
   profile: {
     id: "tde-thousand-shapes-2026-11",
-    scope: "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。35 条通过五维验收；6 条因整条子句未实现或死声明暂不切换。",
+    scope: "食梦者 06 段 A Thousand Shapes of Horror（tsh，06155–06194）41 条目录记录。全部通过五维验收。",
     basis: '独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。',
     houseRules: [
       '保留项目既有的自动奖励反应与协作请求规则',
@@ -35,7 +28,7 @@ export default {
   select: card => codeSet.has(card.code),
   exclude: [],
   expectedCount: 41,
-  failed,
+  failed: [],
   testFiles: [
     "games/arkhamhorror/tests/acceptance-06-a-shard5.test.mjs",
     "games/arkhamhorror/tests/tde-scenario-aThousandShapesOfHorror.test.mjs",

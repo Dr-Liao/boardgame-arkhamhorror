@@ -7,7 +7,7 @@
 //
 // 大木偶剧场（03211）：揭示时受到 2 点恐惧，或洗回全部非弱点手牌并重抽。
 
-import { isWeaknessCode, shuffleDeckWith } from '../../_shared.js'
+import { isWeaknessCode, shuffleDeckWith, spliceHand } from '../../_shared.js'
 
 export default {
   code: '03211', scope: 'location',
@@ -29,7 +29,7 @@ export default {
         // 统一走共享条目的 shuffleDeckWith（引擎 RNG，可重放）。
         // 弱点包含 `weakness` 与 `basicweakness` 两种 subtype，用共享判据。
         const cards = inv.hand.filter(code => !isWeaknessCode(code))
-        for (const code of cards) inv.hand.splice(inv.hand.indexOf(code), 1)
+        for (const code of cards) spliceHand(inv, inv.hand.indexOf(code), 1)
         inv.deck.push(...cards)
         shuffleDeckWith(state, inv, api)
         api.drawCards(inv.seat, cards.length)

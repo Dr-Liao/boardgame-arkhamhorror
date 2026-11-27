@@ -13,17 +13,16 @@
 //     记账——不新造卡实例字段；形态切换时追加新效果，读取最后一条；
 //   · 五个形态的具象能力分别走 api.fight / api.investigate / api.evade / api.startTest /
 //     api.playCardFromHandFree 与 api.cardsInPlayTreacheries + api.discardCardInPlay。
-// approximation: ①「当前形态」用持续效果记账（缺实例级形态字段）；②定位变换的位移在躲避检定之后结算
-//   （印刷为之前或之后均可）；③「注能配置」的 +2 只加在本次具象检定的技能值上。
+// 当前形态按实体 ID 保存，形态变更时替换之前的记录。
 import { customizationOptionFullyChecked } from '../../engine/tsk-customizable.js'
 import { ALL_CARDS } from '../../cards/cards-data.js'
 
 const code = '09119'
 const FORM_LABEL = 'shotcaster:form:'
 const FORMS = [
-  { name: 'Railshooter', label: '轨道射击' },
-  { name: 'Telescanner', label: '电信扫描' },
-  { name: 'Translocator', label: '定位变换' },
+  { name: 'Railshooter', label: '轨道射击', action: 'fight' },
+  { name: 'Telescanner', label: '电信扫描', action: 'investigate' },
+  { name: 'Translocator', label: '定位变换', action: 'evade' },
   { name: 'Realitycollapser', label: '现实崩解' },
   { name: 'Matterweaver', label: '物质操控' },
 ]
@@ -40,6 +39,9 @@ const currentForm = (state, source) => {
   return last ? String(last.label).slice(FORM_LABEL.length) : null
 }
 const setForm = (inv, source, api, form) => {
+  for (const effect of api.effects()) {
+    if (effect.sourceInstanceId === source.id && effect.label?.startsWith(FORM_LABEL)) api.consumeEffect(effect.id)
+  }
   api.addEffect({
     duration: 'untilLeavesPlay', sourceCode: code, sourceInstanceId: source?.id,
     controllerSeat: inv.seat, label: `${FORM_LABEL}${form}`, modifiers: [],
@@ -68,7 +70,7 @@ const manifest = ({ state, inv, source, api }) => {
       options: candidates.map(enemy => ({ id: enemy.id, label: enemy.name })),
     })
     const skill = chooseSkill(inv, api)
-    api.fight(inv.seat, enemyId, { assetId: source?.id, sourceCode: code, skill, combatBonus: bonus, damageBonus: 1 })
+    api.fight(inv.seat, enemyId, { assetId: source?.id, sourceCode: code, skill, combatBonus: bonus, damageBonus: 1, noSpend: true })
     return
   }
   if (form === 'Telescanner') {
@@ -88,37 +90,62 @@ const manifest = ({ state, inv, source, api }) => {
     return
   }
   if (form === 'Translocator') {
-    const here = state.locations.find(location => location.id === inv.location)
-    const connections = here?.connections || []
-    const engaged = (state.enemies || []).filter(enemy => !enemy.defeated && enemy.engagedSeat === inv.seat)
-    if (engaged.length) {
-      const enemyId = engaged.length === 1 ? engaged[0].id : api.choice({
+    const canEvade = () => state.enemies.filter(enemy => !enemy.defeated && enemy.engagedSeat === inv.seat)
+    const evade = () => {
+      const enemies = canEvade()
+      if (!enemies.length) return
+      const enemyId = enemies.length === 1 ? enemies[0].id : api.choice({
         kind: 'target', source: code, seat: inv.seat, prompt: '定位变换：选择要躲避的敌人。',
-        options: engaged.map(enemy => ({ id: enemy.id, label: enemy.name })),
+        options: enemies.map(enemy => ({ id: enemy.id, label: enemy.name })),
       })
-      api.evade(inv.seat, { enemyId, assetId: source?.id, sourceCode: code, skill: chooseSkill(inv, api), bonus })
+      api.evade(inv.seat, { enemyId, assetId: source.id, sourceCode: code, skill: chooseSkill(inv, api), bonus })
     }
-    const options = [{ id: 'skip', label: '不移动任何人' }]
-    for (const locationId of connections) {
-      options.push({ id: `self:${locationId}`, label: `将你移动到「${api.locName(locationId)}」` })
-      for (const enemy of (state.enemies || []).filter(item => !item.defeated && item.elite !== true && item.location === inv.location)) {
-        options.push({ id: `enemyOut:${enemy.id}:${locationId}`, label: `将「${enemy.name}」移动到「${api.locName(locationId)}」` })
+    const chooseMove = ({ before = false } = {}) => {
+      const here = inv.location
+      const connections = state.locations.find(location => location.id === here)?.connections || []
+      const enemies = state.enemies.filter(enemy => !enemy.defeated && !enemy.elite)
+      const investigators = state.investigators.filter(owner => !owner.defeated && !owner.resigned)
+      const movement = [{ id: 'skip', label: before ? '先尝试躲避' : '不移动' }]
+      const engaged = canEvade()
+      const addInvestigator = (owner, destination) => {
+        if (!api.canMoveTo(owner.seat, destination)) return
+        movement.push({
+          id: `investigator:${owner.seat}:${destination}`,
+          label: `将「${owner.name}」移动到「${api.locationName(destination)}」`,
+          apply: () => api.moveInvestigator(owner.seat, destination),
+        })
       }
-      for (const enemy of (state.enemies || []).filter(item => !item.defeated && item.elite !== true && item.location === locationId)) {
-        options.push({ id: `enemyIn:${enemy.id}`, label: `将「${enemy.name}」从「${api.locName(locationId)}」移动到此处` })
+      const addEnemy = (enemy, destination) => movement.push({
+        id: `enemy:${enemy.id}:${destination}`,
+        label: `将「${enemy.name}」移动到「${api.locationName(destination)}」`,
+        apply: () => api.moveEnemy(enemy, destination),
+      })
+      for (const destination of connections) {
+        if (!before || engaged.length) {
+          for (const owner of investigators) {
+            if (owner.location === destination) addInvestigator(owner, here)
+            else if (owner.location === here) addInvestigator(owner, destination)
+          }
+          for (const enemy of enemies.filter(item => item.location === here)) {
+            if (!before || engaged.some(item => item.id !== enemy.id)) addEnemy(enemy, destination)
+          }
+        }
+        for (const enemy of enemies.filter(item => item.location === destination)) addEnemy(enemy, here)
       }
-      for (const owner of state.investigators.filter(item => !item.defeated && !item.resigned && item.seat !== inv.seat && item.location === locationId)) {
-        options.push({ id: `investigatorIn:${owner.seat}`, label: `将 ${owner.name} 从「${api.locName(locationId)}」移动到此处` })
-      }
+      if (movement.length < 2) return false
+      const picked = api.choice({
+        kind: 'effect', source: code, seat: inv.seat, canSkip: true,
+        prompt: before ? '定位变换：躲避前移动一名调查员或非精英敌人？' : '定位变换：躲避后移动一名调查员或非精英敌人？',
+        options: movement.map(({ id, label }) => ({ id, label })),
+      })
+      const selected = movement.find(item => item.id === picked)
+      if (!selected?.apply) return false
+      selected.apply()
+      return true
     }
-    if (options.length === 1) return
-    const answer = api.choice({ kind: 'effect', source: code, seat: inv.seat, prompt: '定位变换：是否移动一名调查员或非精英敌人？', options })
-    if (!answer || answer === 'skip') return
-    const [kind, first, second] = String(answer).split(':')
-    if (kind === 'self') api.moveInvestigator(inv.seat, first)
-    else if (kind === 'enemyOut') api.moveEnemy(first, second)
-    else if (kind === 'enemyIn') api.moveEnemy(first, inv.location)
-    else if (kind === 'investigatorIn') api.moveInvestigator(Number(first), inv.location)
+    const moved = chooseMove({ before: true })
+    evade()
+    if (!moved) chooseMove()
     return
   }
   if (form === 'Realitycollapser') {
@@ -145,7 +172,8 @@ const manifest = ({ state, inv, source, api }) => {
     return
   }
   if (form === 'Matterweaver') {
-    const handAssets = [...new Set((inv.hand || []).filter(cardCode => ALL_CARDS[cardCode]?.type === 'asset'))]
+    const handAssets = [...new Set(inv.hand)].filter(cardCode => ALL_CARDS[cardCode]?.type === 'asset'
+      && api.canPlayAsEffect(inv.seat, cardCode, { free: true }))
     if (!handAssets.length) { api.info('「超自然发射器」：手牌里没有支援。'); return }
     const chosen = handAssets.length === 1 ? handAssets[0] : api.choice({
       kind: 'card', source: code, seat: inv.seat, prompt: '物质操控：选择手牌中的一张支援。',
@@ -157,7 +185,7 @@ const manifest = ({ state, inv, source, api }) => {
       seat: inv.seat, skill: chooseSkill(inv, api), difficulty, skillBonus: bonus,
       resolve: result => {
         if (!result?.success) return
-        if (api.playCardFromHandFree(inv.seat, chosen)) {
+        if (api.playAsEffect(inv.seat, chosen, { free: true })) {
           api.info(`🌀 「超自然发射器」：${inv.name} 无需费用打出「${api.cardName(chosen)}」。`)
         }
       },
@@ -170,7 +198,6 @@ export default {
   uses: 4,
   usesType: 'aether',
   discardWhenEmpty: true,
-  note: 'approximation: 当前形态用 untilLeavesPlay 持续效果记账（缺实例级形态字段）；定位变换的位移在躲避检定后结算；注能配置只加在具象检定的技能值上。',
   customizationOptions: [
     { name: 'Railshooter', checks: 2, text: 'Hyperphysical Shotcaster has this form: "Manifest - Fight. Fight with any skill. This attack deals +1 damage."' },
     { name: 'Telescanner', checks: 2, text: 'Hyperphysical Shotcaster has this form: "Manifest - Investigate. Investigate with any skill. If you succeed, discover a clue at any revealed location instead of your location."' },
@@ -190,18 +217,20 @@ export default {
         api.info('🔮 「超自然发射器」：以太连接使其带有额外 2 以太。')
       },
     },
-    {
+    ...FORMS.map(form => ({
       kind: 'action',
-      label: '花费 1 以太：结算当前形态的具象能力',
+      label: `花费 1 以太：具象（${form.label}）`,
       cost: { action: true, uses: 1 },
-      criteria: [({ state, source }) => Boolean(currentForm(state, source))],
+      ...(form.action ? { countsAs: form.action } : {}),
+      criteria: [({ state, source }) => currentForm(state, source) === form.name],
       resolve: manifest,
-    },
+    })),
     {
-      kind: 'action',
-      label: '[fast] 横置：改变形态（已解锁的形态）',
+      kind: 'free',
+      label: '横置：改变形态（已解锁的形态）',
       cost: { action: false, exhaust: true },
-      criteria: [({ state, inv }) => FORMS.some((_, index) => hasOption(state, inv, index))],
+      criteria: [({ state, inv, source }) => FORMS.some((form, index) => form.name !== currentForm(state, source)
+        && hasOption(state, inv, index))],
       resolve: ({ state, inv, source, api }) => {
         const unlocked = FORMS.map((_, index) => index).filter(index => hasOption(state, inv, index))
         const current = currentForm(state, source)

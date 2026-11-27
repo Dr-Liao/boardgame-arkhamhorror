@@ -3,8 +3,8 @@
   "unit": "11-a-3",
   "profile": {
     "id": "tdc-player-c-2026-11",
-    "scope": "沉没之城 11 段 tdcp 玩家卡（11088–11129）42 条目录记录。40 条通过五维验收；2 条近似/缺口暂不切换。",
-    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
+    "scope": "沉没之城 11 段 tdcp 玩家卡（11088–11129）42 条目录记录。42 条全部通过五维验收。",
+    "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。复验原报告未通过项并记录实际规则与状态变化。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
       "结构卡以印刷正反面、确定性布置、区域守恒及对应章节行为共同验收",
@@ -17,15 +17,19 @@
   },
   "summary": {
     "total": 42,
-    "verified": 40,
-    "unverified": 2,
+    "verified": 42,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 175
+    "testsPassed": 178
   },
   "testFiles": [
     {
+      "file": "games/arkhamhorror/tests/acceptance-11-a-shard3.test.mjs",
+      "sha256": "ba68782e63333e868e3fa338e7ca2d28e4a098b675b858ea39c3cf831f3e508e"
+    },
+    {
       "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
-      "sha256": "c91d87a07b11731203bc3fc16236a3781b4a59e957de300deae6ede9e66084d1"
+      "sha256": "5f204028a5c4b6a6d1c62db48eaee410ad985c38b2270370078d265b24d2250e"
     },
     {
       "file": "games/arkhamhorror/tests/tdc-player-guardian.test.mjs",
@@ -389,9 +393,17 @@
       "code": "11115",
       "name": "风暴御主",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「本次攻击揭示的每个符号各造成 1 点伤害（至多 3 点）」被实现为「先选一名敌人，再把 min(3, 符号数) 点伤害一次打给它」：印刷允许每个符号独立选择本地点敌人（可分摊到多个敌人），实现只能单一目标 → 少了合法的分摊目标选择。入口 `src/cards/entries/11115.js` 的 resolve 只调用一次 api.damageEnemy。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard3.test.mjs",
+          "test": "11115 两个符号累加为对同一选择目标的 2 点伤害；可以跳过且保持重整"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tdc-player-survivor.test.mjs",
+          "test": "11115 将意志加入攻击值，只在揭示符号时可横置伤害另一目标"
+        }
+      ]
     },
     {
       "code": "11116",
@@ -505,9 +517,13 @@
       "code": "11125",
       "name": "彼生记忆",
       "type": "skill",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "卡面末句「At the end of the game, return that card to your collection」未实现：`chooseCollectionPlay` 只负责从收藏检索并免费打出（api 见 src/engine/engine.js:1502），全仓无「收藏卡在游戏结束归还」的战役账目/读点（grep collection 仅 engine.js/api-test.js 两处），战役层不会记录被带出的收藏卡，因此结局阶段无法归还。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
+          "test": "11125 免费打出收藏卡，结局按实体归还，保留牌库和弃牌堆的同卡号自有副本"
+        }
+      ]
     },
     {
       "code": "11126",
@@ -536,6 +552,10 @@
       "status": "verified",
       "evidence": [
         {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard3.test.mjs",
+          "test": "11127 病态好奇：成功调查后回合结束不受伤；未成功调查则受 1 伤害并洗回牌库"
+        },
+        {
           "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
           "test": "11127 识别本轮成功的 investigate 检定并保留威胁区卡牌"
         }
@@ -550,6 +570,10 @@
         {
           "file": "games/arkhamhorror/tests/tdc-player.test.mjs",
           "test": "11128 识别本轮成功的 evade 检定并保留威胁区卡牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-11-a-shard3.test.mjs",
+          "test": "11128 骚灵为祸：成功躲避后回合结束不受伤；未成功躲避则受 1 伤害并洗回牌库"
         }
       ]
     },

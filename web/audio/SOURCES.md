@@ -67,3 +67,10 @@ actual durations and original/output SHA-256 checksums. Creature attacks, heavy
 roars, spectral voices, fear, swarms and flight use short mono 44.1 kHz Vorbis
 clips with fades and conservative gain. The license records are
 `LICENSE-Ogrebane-monster.txt` and the existing `LICENSE-Kenney-scifi.txt`.
+
+## Card draws, revelations and outcomes
+
+The mono PCM clips in `card-cues/` are original procedural audio made for this
+Mod. Their recipes are in `tools/synthesize-card-audio.mjs` and use no third-party
+recordings. The existing `card-slide.ogg` and `encounter-reveal.ogg` remain the
+common draw sound and the compatibility fallback.

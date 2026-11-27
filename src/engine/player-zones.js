@@ -36,6 +36,10 @@ export function replacePlayerZoneCards(state, inv, codes, reason) {
   })
 }
 
+export function canDiscardEntireHand(inv) {
+  return Boolean(inv?.hand?.length) && !inv.hiddenCards?.length && !inv.hand.some(code => cannotLeaveHand(code))
+}
+
 export function discardPlayerCards(state, inv, ...codes) {
   if (!inv) return 0
   // 2026-11-13 P1-16（09766）：不能离开手牌的牌即使被前置逻辑移出，也放回手牌而不进弃牌堆。

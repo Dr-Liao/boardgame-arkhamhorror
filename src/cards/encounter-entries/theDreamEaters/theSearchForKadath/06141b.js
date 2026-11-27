@@ -5,7 +5,6 @@
 export default {
   code: '06141b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
     resolve(state, api) {
       api.takeFromSetAside?.('06142')
       api.place?.('templeOfUnattainableDesires')

@@ -27,6 +27,7 @@
 // 写入引擎既有读点 `state.skillTest.autoSuccess`（tests.js 在成功判定前读取，与
 // api-test.js#setTestAutoSuccess 同一字段）；若 api.setTestAutoSuccess 存在则优先走 api。
 // 所有近似都在文件末 scenarioApproximations 与 index.js 中逐条披露。
+import { filterHand } from '../../../../../src/engine/hand-icons.js'
 import { ALL_CARDS } from '../../../../../src/cards/cards-data.js'
 import {
   ACT_CODE, ACT_CODEX_THRESHOLD, AGENDA_CODE, CODEX_BY_LOCATION, CODEX_IDS, CODEX_NUMBERS,
@@ -221,7 +222,7 @@ function playFreeFromHand(state, seat, allowedTraits, api = {}) {
   }, '0')
   const code = candidates[Number(picked)] || candidates[0]
   if (safeCall(api, 'playCardFromHandFree', seat, code)) return code
-  inv.hand = inv.hand.filter(item => item !== code)
+  filterHand(inv, item => item !== code)
   inv.assets ||= []
   inv.assets.push({
     id: `dawnSecond-free-${code}-${inv.assets.length + 1}`, code, originalCode: code,
@@ -259,7 +260,7 @@ function removeFromDeckPermanently(state, seat, code, api = {}) {
   }
   const inv = state?.investigators?.[seat]
   if (inv) {
-    inv.hand = (inv.hand || []).filter(item => item !== code)
+    filterHand(inv, item => item !== code)
     inv.deck = (inv.deck || []).filter(item => item !== code)
     inv.discard = (inv.discard || []).filter(item => item !== code)
   }

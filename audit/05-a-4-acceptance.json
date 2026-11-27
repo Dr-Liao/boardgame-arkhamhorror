@@ -3,7 +3,7 @@
   "unit": "05-a-4",
   "profile": {
     "id": "tcu-wages-of-sin-2026-11",
-    "scope": "万象无终 05 段 The Wages of Sin（wos，05151–05185）57 条目录记录。57 条全部通过五维验收。",
+    "scope": "万象无终 05 段 The Wages of Sin（wos，05151–05185）57 条目录记录。全部通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -45,7 +45,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tcu-completion.test.mjs",
-      "sha256": "11ad9d1eda4646b4b9682dd09d185c15f248ed8bb65f0e0ab30a4afef27c434d"
+      "sha256": "8e8bb4ef1786c8024005900000d60ee151b0a5854149e1faa206193f4a212dc3"
     }
   ],
   "entries": [

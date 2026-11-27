@@ -10,7 +10,6 @@ export default {
   code: '06353',
   scope: 'treachery',
   implemented: true,
-  treacheryRule: { threatArea: true },
   modifiers: [{ target: 'skill:agility', amount: -1 }],
   // weaverOfTheCosmos.behavior 用 scenarioFlags.moveCounts 计数并在 moveError 返回封锁。
   flags: { maxMovesPerRound: 1 },

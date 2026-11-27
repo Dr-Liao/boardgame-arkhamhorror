@@ -209,28 +209,42 @@ test('07280 目标：全员在宏伟入口且“解锁了洞穴的入口”才�
   assert.equal(rule.objective(s, s.acts[0], scenarioRuntime(s, [])), false, '有人不在宏伟入口时不推进')
 })
 
-test('07280 [fast]：花费蓝/红/白/黄钥匙弃掉你所在地点的[[屏障]]（07299）', () => {
-  const s = chapterFixture('theLairOfDagon', 2)
-  s.enemies = []
-  for (const inv of s.investigators) inv.engaged = []
-  const grand = locationByCode(s, '07283')
-  s.investigators[0].location = grand.id
-  scenarioRuntime(s, []).attachToLocation(grand.id, { code: '07299', originalCode: '07299' })
-  const actId = s.acts[s.actIndex].id
-  const actAbilityMove = () => legalMoves(s).find(command => command.action === 'entityAbility'
-    && command.entityId === actId && command.abilityIndex === 0)
-  assert.equal(actAbilityMove(), undefined, '没有蓝/红/白/黄钥匙时能力不可用')
-  createMechanicsApi(s).keys.transfer('blue', 'setAside', 'investigator:0', { reveal: true })
-  const command = actAbilityMove()
-  assert.ok(command, '持有蓝色钥匙后能力出现在合法列表')
-  move(s, command)
-  settle(s)
-  const locationNow = locationByCode(s, '07283')
-  assert.equal((locationNow.attachments || []).some(card => codeOf(card) === '07299'), false, '屏障被弃掉')
-  assert.equal(s.encounterDiscard.filter(code => code === '07299').length, 1)
-  assert.equal(keysAt(s, 'reference').includes('blue'), true, '钥匙进入场景参考区')
-  assert.equal(actAbilityMove(), undefined, '没有屏障后能力不再出现')
-})
+for (const [code, color] of [['07280', 'blue'], ['07281', 'red'], ['07282', 'yellow']]) {
+  test(code + ' [fast]：支付钥匙弃掉本地所有[[屏障]]，保留其他附属卡', () => {
+    const s = chapterFixture('theLairOfDagon', 2)
+    s.actIndex = s.acts.findIndex(act => codeOf(act) === code)
+    s.enemies = []
+    for (const inv of s.investigators) inv.engaged = []
+    const grand = locationByCode(s, '07283')
+    const elsewhere = s.locations.find(location => location.id !== grand.id)
+    s.investigators[0].location = grand.id
+    const api = scenarioRuntime(s, [])
+    api.attachToLocation(grand.id, { code: '07299', originalCode: '07299' })
+    api.attachToLocation(grand.id, { code: '07299', originalCode: '07299' })
+    api.attachToLocation(grand.id, { code: '04145', originalCode: '04145' })
+    api.attachToLocation(elsewhere.id, { code: '07299', originalCode: '07299' })
+    const actId = s.acts[s.actIndex].id
+    const actAbilityMove = () => legalMoves(s).find(command => command.action === 'entityAbility'
+      && command.entityId === actId && command.abilityIndex === 0)
+    const transferKey = key => createMechanicsApi(s).keys.transfer(
+      key, s.scenarioFlags.mechanics.keys[key].holder, 'investigator:0', { reveal: true })
+    assert.equal(transferKey('green'), true)
+    assert.equal(actAbilityMove(), undefined, '绿色钥匙不能支付此能力')
+    assert.equal(transferKey(color), true)
+    const command = actAbilityMove()
+    assert.ok(command, '持有允许的钥匙后能力出现在合法列表')
+    const actions = s.investigators[0].actionsLeft
+    move(s, command)
+    settle(s)
+    assert.deepEqual(locationByCode(s, '07283').attachments.map(codeOf), ['04145'])
+    assert.deepEqual(s.locations.find(location => location.id === elsewhere.id).attachments.map(codeOf), ['07299'])
+    assert.equal(s.encounterDiscard.filter(item => item === '07299').length, 2)
+    assert.equal(keysAt(s, 'reference').includes(color), true, '钥匙进入场景参考区')
+    assert.deepEqual(keysAt(s, 'investigator:0'), ['green'])
+    assert.equal(s.investigators[0].actionsLeft, actions, '快速能力不消耗行动')
+    assert.equal(actAbilityMove(), undefined, '清空屏障后能力不再出现')
+  })
+}
 
 test('07280 背面：移出嫌犯/旧地点、潮水通道全部入场、全场涨水、朔望与星潮合相洗回遭遇牌库', () => {
   const s = chapterFixture('theLairOfDagon', 2)

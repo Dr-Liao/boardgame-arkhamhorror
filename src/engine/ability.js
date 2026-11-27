@@ -49,7 +49,8 @@ import { normalizeLimit } from './limits.js'
 import { NUMERIC_COST_KEYS, validateCostValue } from './cost.js'
 // P2-4：重印别名数据（015xx → 01xx，事实源 cards-data）。注册期按这份映射生成「只改 code」的别名条目。
 import { ALL_CARDS } from '../cards/cards-data.js'
-import { reprintAliasesFor } from '../cards/card-identity.js'
+import { collectionLoanPrintedCode } from './collection-loans.js'
+import { reprintAliasesFor, reprintEntry } from '../cards/entries/_reprint-aliases.js'
 import { registerDeckCardRule } from '../../web/deck-rules.js'
 import { customizationOptions as registeredCustomizationOptions, registerCustomizationChoices, registerCustomizationEffects, registerCustomizationOptions } from './tsk-customizable.js'
 import { validateTokenCost } from './token-cost.js'
@@ -94,7 +95,7 @@ const COST_KEYS = new Set(['action', 'exhaust', 'uses', 'resources', 'clues', 'd
   // Phase 5（5b-6）：旧式反应的「花 1 线索但放回地点」费用（02302 马莱森博士）。
   // 读点在 triggerReaction 的付费段：clues 照扣，returnClue 为真时把线索放回所在地点。
   'returnClue', 'damage', 'doomOnSource', 'drawEncounter', 'groupClues'])
-const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost',
+const DESCRIPTOR_KEYS = new Set(['kind', 'allowTeamActivation', 'id', 'label', 'text', 'trigger', 'criteria', 'target', 'cost', 'prepay',
   'limit', 'fromHand', 'fromDiscard', 'noPlayCost', 'duringOwnSkillTest', 'oncePerTest', 'oncePerPhase', 'requiresNoClues',
   'maximumInvestigatorDamage', 'requiresEncounterDeck',
   // Phase 5（5c-37）：支援能力上的计数器上限（「时间借取」最多 3 声滴答）；读点在 canAffordAbility。
@@ -121,7 +122,7 @@ const DESCRIPTOR_KEYS = new Set(['kind', 'id', 'label', 'text', 'trigger', 'crit
   // reactionWindow 用 ability.js#quickEventView 把 played+fast 与 reaction+fromHand+quickEvent
   // 归一成同一份候选视图：唯一候选出口（反应窗口的旧手牌下标 id/卡名 label/⚡ 日志/去向旗标）
   // 与唯一执行器（assets.js#playReactionCard）。这样两种写法不再各走一条窗口/弃牌口径。
-  'quickEvent',
+  'quickEvent', 'windowCostIncrease', 'useBeforePlayCost',
   // 强制/反应描述子默认会写一行「✨ 使用「X」…」；印在敌人卡上的强制效果通常没有这行，
   // 用 silent 保持迁移前后的日志逐字一致（读点在 openAbilityWindow -> executeDescriptor）。
   'silent'])
@@ -187,13 +188,13 @@ const ENTRY_KEYS = new Set(['code', 'name', 'kind', 'scope', 'text', 'abilities'
   'onUsesEmptied',
   'cannotAffectOtherInvestigators',
   'trackActionHistory', 'trackDefeatedEnemyHealth', 'trackDefeatedEnemyPrintedHealth', 'sharedSlotGroup', 'ignoreSkillSubstitution',
-  'trackRoundActionHistory', 'campaignDeck',
+  'trackRoundActionHistory', 'trackFailedTestsThisTurn', 'handCommitIconReduction', 'campaignDeck',
   'zoneReplacement',
   'deckConstruction',
   'attachedAssetsIgnoreSlots',
-  'bondedShufflePlayCost', 'discardPlayCost',
+  'bondedShufflePlayCost', 'discardPlayCost', 'optionalPlayActionDiscount',
   // 敌人脚本钩子（函数，不进入关卡定义，避免 structuredClone 失败）。
-  'enemyScript',
+  'enemyScript', 'treacheryScript',
   // 隐藏卡/威胁区卡的数据型规则（第 7 批从 content/.../card-data.js 的表搬来）。
   'hiddenRule',
   'threatEffect', 'encounterLookRule',
@@ -522,6 +523,7 @@ export function normalizeDescriptor(raw, { code, index }) {
   const limit = normalizeLimit(
     raw.limit ?? (raw.oncePerTest ? 'oncePerTest' : raw.oncePerPhase ? 'oncePerPhase' : null), origin)
   if (raw.resolve != null && typeof raw.resolve !== 'function') throw new Error(`${origin}: resolve 必须是函数`)
+  if (raw.prepay != null && (kind !== 'action' || typeof raw.prepay !== 'function')) throw new Error(`${origin}: prepay 仅用于行动费用`)
   if (kind === 'reaction' || kind === 'forced') {
     // Phase 5（5b-6）：从旧式 reactions 搬来的反应是**纯数据**（effect 数据体 + 旧式条件/费用），
     // 由引擎的旧式反应流程结算；新写的反应/强制能力仍要求 resolve()。
@@ -577,9 +579,12 @@ export function normalizeDescriptor(raw, { code, index }) {
     additionalTokenCost: raw.additionalTokenCost ? Object.freeze({ ...raw.additionalTokenCost }) : null,
     limit,
     fromHand: raw.fromHand === true || raw.quickEvent === true,
+    ...(raw.allowTeamActivation === true ? { allowTeamActivation: true } : {}),
     ...(raw.fromDiscard === true ? { fromDiscard: true } : {}),
     // P2-4：快速事件统一通道标记（reaction+fromHand 写法；读点 reactionWindow / playReactionCard）。
     quickEvent: raw.quickEvent === true,
+    ...(typeof raw.windowCostIncrease === 'function' ? { windowCostIncrease: raw.windowCostIncrease } : {}),
+    ...(raw.useBeforePlayCost === true ? { useBeforePlayCost: true } : {}),
     noPlayCost: raw.noPlayCost === true,
     // Phase 2：事件卡的"快速"/"不引发借机攻击"是卡面关键字，跟着描述子走。
     fast: raw.fast === true,
@@ -620,6 +625,7 @@ export function normalizeDescriptor(raw, { code, index }) {
     source: raw.source || null,
     simplified: raw.simplified === true,
     note: raw.note || null,
+    ...(raw.prepay ? { prepay: raw.prepay } : {}),
     resolve: raw.resolve || null,
   })
 }
@@ -706,8 +712,15 @@ export function registerCardAbilities(entries) {
     }
     const discardPlayCost = entry.discardPlayCost
     if (discardPlayCost != null && (typeof discardPlayCost !== 'object' || Array.isArray(discardPlayCost)
-      || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones', 'upTo'].includes(key))
-      || (discardPlayCost.upTo == null && (typeof discardPlayCost.trait !== 'string' || !discardPlayCost.trait.trim()
+      || Object.keys(discardPlayCost).some(key => !['trait', 'slot', 'zones', 'upTo', 'count', 'anyControlled', 'allowReturn'].includes(key))
+      || (discardPlayCost.count != null && (!Number.isSafeInteger(discardPlayCost.count) || discardPlayCost.count < 1
+        || discardPlayCost.upTo != null || discardPlayCost.trait != null || discardPlayCost.slot != null
+        || discardPlayCost.zones?.length !== 1 || discardPlayCost.zones[0] !== 'hand'))
+      || (discardPlayCost.anyControlled === true && (discardPlayCost.count != null || discardPlayCost.upTo != null
+        || discardPlayCost.trait != null || discardPlayCost.slot != null
+        || discardPlayCost.zones?.length !== 1 || discardPlayCost.zones[0] !== 'play'))
+      || (discardPlayCost.allowReturn != null && (!discardPlayCost.anyControlled || typeof discardPlayCost.allowReturn !== 'function'))
+      || (!discardPlayCost.anyControlled && discardPlayCost.count == null && discardPlayCost.upTo == null && (typeof discardPlayCost.trait !== 'string' || !discardPlayCost.trait.trim()
         || !['hand', 'arcane', 'body', 'accessory', 'ally', 'tarot'].includes(discardPlayCost.slot)))
       || (discardPlayCost.upTo != null && (!Number.isSafeInteger(discardPlayCost.upTo) || discardPlayCost.upTo < 1
         || discardPlayCost.trait != null || discardPlayCost.slot != null
@@ -727,15 +740,17 @@ export function registerCardAbilities(entries) {
     for (const key of ['skipUpkeepReady', 'discardWithoutSealedTokens', 'sharedLocationAbility', 'costReductionAtLocation', 'playUnderAnyAtLocation', 'trackTestTarget']) {
       if (entry.assetRule?.[key] != null && typeof entry.assetRule[key] !== 'boolean') throw new TypeError(`${origin}: assetRule.${key} 必须为布尔值`)
     }
-    for (const [key, allowed] of Object.entries({ harmCapacity: ['unlimited'], restrictedAction: ['engage'], hostExtraSlot: ['arcane'], sharedUses: ['secrets'] })) {
+    for (const [key, allowed] of Object.entries({ harmCapacity: ['unlimited'], restrictedAction: ['engage', 'handAssetPlay'], hostExtraSlot: ['arcane'], sharedUses: ['secrets'] })) {
       if (entry.assetRule?.[key] != null && !allowed.includes(entry.assetRule[key])) throw new TypeError(`${origin}: 非法 assetRule.${key}`)
     }
     const playCostUses = entry.assetRule?.playCostUses
     if (playCostUses != null && (typeof playCostUses !== 'object' || Array.isArray(playCostUses)
-      || Object.keys(playCostUses).some(key => !['cardType', 'trait', 'scope', 'usesFrom'].includes(key))
+      || Object.keys(playCostUses).some(key => !['cardType', 'trait', 'traitsAny', 'scope', 'usesFrom'].includes(key))
       || (playCostUses.cardType != null && !['asset', 'event'].includes(playCostUses.cardType))
-      || (!playCostUses.cardType && !playCostUses.trait) || !['self', 'location'].includes(playCostUses.scope)
+      || (!playCostUses.cardType && !playCostUses.trait && !playCostUses.traitsAny) || !['self', 'location'].includes(playCostUses.scope)
       || (playCostUses.trait != null && (typeof playCostUses.trait !== 'string' || !playCostUses.trait.trim()))
+      || (playCostUses.traitsAny != null && (!Array.isArray(playCostUses.traitsAny) || !playCostUses.traitsAny.length
+        || playCostUses.traitsAny.some(trait => typeof trait !== 'string' || !trait.trim())))
       || (playCostUses.usesFrom != null && (playCostUses.usesFrom !== 'controlled' || playCostUses.scope !== 'self'))
       || !entry.usesType)) throw new TypeError(`${origin}: 非法 assetRule.playCostUses`)
     if (entry.assetRule?.hostTrait != null && (typeof entry.assetRule.hostTrait !== 'string' || !entry.assetRule.hostTrait)) throw new TypeError(`${origin}: 非法附属特性`)
@@ -832,6 +847,10 @@ export function registerCardAbilities(entries) {
     }
     if(entry.actRule?.keyClaimBlockedTraits!=null&&(!Array.isArray(entry.actRule.keyClaimBlockedTraits)||entry.actRule.keyClaimBlockedTraits.some(trait=>typeof trait!=='string'||!trait)))throw new TypeError('Invalid key claim trait restriction')
     if (entry.actRule?.objective != null && !['function', 'object'].includes(typeof entry.actRule.objective)) throw new TypeError('Invalid printed act objective')
+    if (entry.actRule?.optionalObjective != null && (typeof entry.actRule.optionalObjective !== 'boolean'
+      || (entry.actRule.optionalObjective && typeof entry.actRule.objective !== 'function'))) {
+      throw new TypeError('Invalid optional act objective')
+    }
     // 步行额外行动费用（07164/07165/07166 的「在[[海洋]]地点间移动」，07199–07201 的「任何移动」）：
     // 读点是 turn-flow.js 的 movementActionSurcharge（基础移动行动加费，载具上不付）。
     for (const rule of [entry.actRule?.movementActionSurcharge, entry.agendaRule?.movementActionSurcharge]) {
@@ -869,7 +888,7 @@ export function registerCardAbilities(entries) {
       }
     }
     // P7 TDC 11744：条目级生成落点声明；读点 enemies.js#spawnEnemy。
-    if (entry.enemyRule?.spawnLocation != null) {
+    if (entry.enemyRule?.spawnLocation != null && typeof entry.enemyRule.spawnLocation !== 'function') {
       const rule = entry.enemyRule.spawnLocation
       if (!rule || typeof rule !== 'object' || Array.isArray(rule)
         || !['nearestEmpty', 'nearestEmptyConnecting', 'nearestEmptyTrait'].includes(rule.kind)
@@ -878,6 +897,8 @@ export function registerCardAbilities(entries) {
         throw new TypeError(`${origin}: enemyRule.spawnLocation 声明无效`)
       }
     }
+    if (entry.enemyRule?.onlyPrey != null && typeof entry.enemyRule.onlyPrey !== 'function') throw new TypeError('无效专属猎物声明')
+    if (entry.enemyRule?.protectsTowerWhileReady != null && typeof entry.enemyRule.protectsTowerWhileReady !== 'boolean') throw new TypeError('无效迷雾高塔保护声明')
     if (entry.enemyRule?.elusive != null && typeof entry.enemyRule.elusive !== 'boolean') throw new TypeError('无效逃逸声明')
     if (entry.enemyRule?.relentless != null && typeof entry.enemyRule.relentless !== 'boolean') throw new TypeError('无效无情声明')
     // P7 TDC 11702–11704（克苏鲁部位非[[狂怒]]面）：「不能受到伤害、被击败或横置」。
@@ -984,7 +1005,7 @@ export function registerCardAbilities(entries) {
     // 「本次攻击造成 +N 伤害」（07213）：读点在 enemies.js#enemyAttack。
     if (entry.enemyRule?.attackDamageBonus != null) {
       const bonus = entry.enemyRule.attackDamageBonus
-      if (typeof bonus !== 'object' || Array.isArray(bonus) || !Number.isFinite(Number(bonus.amount)) || Number(bonus.amount) < 1) {
+      if (typeof bonus !== 'function' && (typeof bonus !== 'object' || Array.isArray(bonus) || !Number.isFinite(Number(bonus.amount)) || Number(bonus.amount) < 1)) {
         throw new TypeError('Invalid attack damage bonus')
       }
       if (bonus.unlessTargetInVehicle != null && typeof bonus.unlessTargetInVehicle !== 'boolean') {
@@ -1063,13 +1084,15 @@ export function registerCardAbilities(entries) {
       const cost = entry.locationRule.entryCost
       if (!cost || typeof cost !== 'object' || Array.isArray(cost)
         || cost.kind !== 'groupClues'
+        || (cost.scope != null && !['here', 'connected'].includes(cost.scope))
+        || (cost.onlyUnrevealed != null && typeof cost.onlyUnrevealed !== 'boolean')
         || !Number.isSafeInteger(cost.perInvestigator) || cost.perInvestigator < 1) {
         throw new TypeError('Invalid locationRule.entryCost')
       }
     }
     // P7 TDC 11648–11652：「不能被移动或离场」的地点声明；读点 scenario-runtime 的
     // swapLocation / removeLocationFromGame 统一入口。
-    for (const key of ['cannotLeavePlay', 'cannotBeMoved']) {
+    for (const key of ['cannotLeavePlay', 'cannotBeMoved', 'cannotBeDefeated']) {
       if (entry.locationRule?.[key] != null && typeof entry.locationRule[key] !== 'boolean') {
         throw new TypeError(`Invalid location ${key} rule`)
       }
@@ -1118,7 +1141,7 @@ export function registerCardAbilities(entries) {
     // 读点：enemy-entry.js#enemyCanEnterLocation（进入/猎人/生成校验）与
     // enemies.js#spawnEnemy（生成落点按 enemySpawnRedirect 改换）。
     if (entry.locationRule?.enemiesCannotEnter != null
-      && typeof entry.locationRule.enemiesCannotEnter !== 'boolean') {
+      && !['boolean', 'function'].includes(typeof entry.locationRule.enemiesCannotEnter)) {
       throw new TypeError('Invalid enemies-cannot-enter rule')
     }
     // P7 TDC 11641/11642：「非弱点敌人可进出开阔天空」；读点 enemy-entry.js#enemyCanEnterLocation。
@@ -1402,6 +1425,7 @@ export function registerCardAbilities(entries) {
       surgeIfNoClues: entry.surgeIfNoClues === true,
       enemyRule: entry.enemyRule ? Object.freeze({ ...entry.enemyRule }) : null,
       enemyScript: entry.enemyScript ? Object.freeze({ ...entry.enemyScript }) : null,
+      treacheryScript: entry.treacheryScript ? Object.freeze({ ...entry.treacheryScript }) : null,
       onUsesEmptied: entry.onUsesEmptied || null,
       cannotAffectOtherInvestigators: entry.cannotAffectOtherInvestigators === true,
       trackActionHistory: entry.trackActionHistory === true,
@@ -1409,6 +1433,9 @@ export function registerCardAbilities(entries) {
       trackDefeatedEnemyPrintedHealth: entry.trackDefeatedEnemyPrintedHealth === true,
       sharedSlotGroup: entry.sharedSlotGroup || null,
       ...(entry.trackRoundActionHistory === true ? { trackRoundActionHistory: true } : {}),
+      ...(entry.trackFailedTestsThisTurn === true ? { trackFailedTestsThisTurn: true } : {}),
+      ...(Number.isSafeInteger(entry.handCommitIconReduction) && entry.handCommitIconReduction > 0
+        ? { handCommitIconReduction: entry.handCommitIconReduction } : {}),
       ...(entry.campaignDeck ? { campaignDeck: Object.freeze({ ...entry.campaignDeck,
         ...(exileRepurchaseDiscount ? { exileRepurchaseDiscount: Object.freeze({ ...exileRepurchaseDiscount }) } : {}),
       }) } : {}),
@@ -1427,6 +1454,8 @@ export function registerCardAbilities(entries) {
       }) : null,
       additionalTokenCost: entry.additionalTokenCost ? Object.freeze({ ...entry.additionalTokenCost }) : null,
       playCostModifier: entry.playCostModifier || null,
+      ...(Number.isSafeInteger(entry.optionalPlayActionDiscount) && entry.optionalPlayActionDiscount > 0
+        ? { optionalPlayActionDiscount: entry.optionalPlayActionDiscount } : {}),
       playTimingProvider: entry.playTimingProvider || null,
       flags: entry.flags ? Object.freeze({ ...entry.flags }) : null,
       hiddenRule: entry.hiddenRule ? Object.freeze({
@@ -1587,7 +1616,7 @@ export function registerCardAbilities(entries) {
       if (ALL_CARDS[alias]?.duplicateOfCode !== entry.code) {
         throw new Error(`重印别名 ${entry.code} → ${alias}：cards-data 的 duplicateOfCode 不匹配`)
       }
-      aliasEntries.push({ ...entry, code: alias, reprintOf: entry.code })
+      aliasEntries.push(reprintEntry(entry, alias))
     }
   }
   return list.length + (aliasEntries.length ? registerCardAbilities(aliasEntries) : 0)
@@ -1599,7 +1628,7 @@ export function cannotLeaveHand(code) {
 }
 
 export function registeredEntry(code) {
-  return REGISTRY.get(code) || null
+  return REGISTRY.get(collectionLoanPrintedCode(code) || code) || null
 }
 
 export function registeredCodes() {

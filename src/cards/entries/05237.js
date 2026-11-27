@@ -24,7 +24,7 @@ export default {
       exileAfterPlay: true,
       criteria: [({ state, context }) => {
         if (state.investigators.some(owner => owner.gameFlags?.fortuneOrFate)) return false
-        if (context?.card) return Number(context.card.doom || 0) > 0
+        if (context?.card) return context.scenarioCard === true && Number(context.card.doom || 0) > 0
         return Boolean(context?.agenda)
       }],
       label: '取消刚放到该卡牌/密谋上的 1 点毁灭并放逐自身',

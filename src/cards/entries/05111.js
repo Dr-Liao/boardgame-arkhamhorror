@@ -11,31 +11,14 @@
 // played 的 resolve 只读该选择结算发现数量/目标范围，不再在 resolve 内付费。
 // range 升级只列出「距离 0..2 内仍有线索」的合法地点（含自身地点）；无目标时不提供。
 
+import { connectedLocationsWithin } from './_shared.js'
+
 const DESTINATION_UPGRADE_COST = 2
 
-function locationsWithin(state, originId, maxSteps) {
-  const byId = new Map(state.locations.map(location => [location.id, location]))
-  const seen = new Set([originId])
-  let frontier = [originId]
-  const found = []
-  for (let step = 0; step < maxSteps; step++) {
-    const next = []
-    for (const id of frontier) {
-      for (const connected of byId.get(id)?.connections || []) {
-        if (seen.has(connected) || !byId.has(connected)) continue
-        seen.add(connected)
-        found.push(connected)
-        next.push(connected)
-      }
-    }
-    frontier = next
-  }
-  return found
-}
-
 function rangeTargetsFor(state, inv) {
-  return [inv.location, ...locationsWithin(state, inv.location, 2)]
-    .filter(id => (state.locations.find(location => location.id === id)?.clues || 0) > 0)
+  const nearby = connectedLocationsWithin(state.locations, inv.location, 2)
+  const here = state.locations.find(location => location.id === inv.location)
+  return [here, ...nearby].filter(location => (location?.clues || 0) > 0).map(location => location.id)
 }
 
 function canAffordUpgrade(inv, context) {

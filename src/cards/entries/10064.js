@@ -43,7 +43,7 @@ export default {
         api.info(`📁 ${inv.name} 用敲诈文件要挟「${api.cardName(enemy.code)}」：检定[意志](${difficulty})。`)
         api.test(inv.seat, 'willpower', difficulty, {
           actionKind: 'parley',
-          source: { code: CODE, label: '谈判', name: api.cardName(CODE) },
+          source: { code: CODE, label: '谈判', name: api.cardName(CODE), enemyId: enemy.id },
           resolve: result => {
             if (!result.success) {
               api.info(`📁 敲诈文件：「${api.cardName(enemy.code)}」不吃这一套。`)

@@ -829,8 +829,8 @@ test('11751 持久构造体：击败时把胜利区每名其他持久构造体�
   const { api } = runAbility('11751', 0, state, { enemy: construct, seat: 0 }, { source: construct })
   assert.equal(callsOf(api, 'scenario.takeFromVictory').length, 2)
   assert.equal(callsOf(api, 'scenario.spawn').length, 2)
-  assert.equal(callsOf(api, 'scenario.exhaustEnemy').length, 2)
-  for (const call of callsOf(api, 'scenario.spawn')) assert.deepEqual(call.args, ['11751', 'locA'])
+  assert.equal(abilityOf('11751').trigger.includes('enemyDefeated'), true)
+  for (const call of callsOf(api, 'scenario.spawn')) assert.deepEqual(call.args, ['11751', 'locA', { exhausted: true }])
 })
 
 test('11752 地狱机械：进威胁区；智识/敏捷(4)成功弃卡', () => {

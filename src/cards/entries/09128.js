@@ -11,8 +11,6 @@
 //     没有 Revelation 的事件弱点抽到后不能进弃牌堆或触发未实现分支；
 //   · 打出以弃掉：playableWeakness（弱点可打出的唯一许可）+ played 描述子；
 //   · 打出条件：playCondition 读手牌（唯一手牌且就是本卡）与资源恰好 1。
-// approximation: 「在手牌中时投入卡图标 -1」没有读点——commitIconBonus 只对**控制中的支援**生效，
-//   手牌来源的全局图标削减需要新原语；本卡只实现可打出的部分，见 primitive-request 09128.json。
 const code = '09128'
 
 export default {
@@ -20,7 +18,7 @@ export default {
   playableWeakness: true,
   weaknessStaysInHand: true,
   weaknessHandNote: '留在手中；仅当它是你唯一的手牌且恰好 1 资源时才能打出。',
-  note: 'approximation: 「在手牌中使投入卡图标 -1」缺手牌来源的全局投入图标削减读点，未实现（primitive-request 09128.json）；打出条件与弃掉已实现。',
+  handCommitIconReduction: 1,
   playCondition: [
     {
       when: ({ inv }) => (inv.hand || []).length === 1 && inv.hand[0] === code && (inv.resources || 0) === 1,

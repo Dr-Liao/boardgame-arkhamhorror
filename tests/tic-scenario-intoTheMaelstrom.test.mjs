@@ -12,7 +12,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { chapterFixture } from './tic-chapter-fixture.mjs'
 import { legalMoves, move, settle } from './core-fixture.mjs'
-import { advanceAct, checkAct, reactionWindow, revealLocation, scenarioRuntime } from '../src/engine/engine.js'
+import { checkAct, reactionWindow, revealLocation, scenarioRuntime } from '../src/engine/engine.js'
 import { createMechanicsApi } from '../src/engine/api-mechanics.js'
 import { registeredEntry } from '../src/engine/ability.js'
 import { actsInPlay, parallelActs } from '../src/engine/parallel-acts.js'
@@ -59,10 +59,16 @@ const giveGatewayKeys = (s, colors = REQUIRED_KEYS) => {
     assert.equal(api.keys.transfer(color, key.holder, 'investigator:0', { reveal: true }), true, `转移 ${color} 钥匙`)
   }
 }
-// 把 4 把钥匙交给调查员 0 并正常推进到幕 2（07316 成为当前幕、Act 2 地图与两古神入场）。
+function chooseAdvanceAct(state) {
+  const command = legalMoves(state).find(item => item.action === 'advanceAct')
+  assert.ok(command, '满足目标后应有推进选项')
+  move(state, command)
+  settle(state)
+}
+// 把 4 把钥匙交给调查员 0，再选择推进到幕 2。
 function advanceToAct2(state) {
   giveGatewayKeys(state)
-  transaction(state, draft => advanceAct(draft, []))
+  chooseAdvanceAct(state)
   assert.equal(state.actIndex, 1, '推进到幕 2')
   assert.equal(codeOf(state.acts[state.actIndex]), '07316')
   return state
@@ -116,7 +122,7 @@ test('intoTheMaelstrom 幕/议程：07315 目标（全员门扉+四色钥匙）�
   assert.equal(objective(s, s.acts[s.actIndex]), false, '未集齐钥匙时目标不成立')
   giveGatewayKeys(s)
   assert.equal(objective(s, s.acts[s.actIndex]), true, '全员门扉 + 蓝红黄绿钥匙成立')
-  transaction(s, draft => advanceAct(draft, []))
+  chooseAdvanceAct(s)
   assert.equal(s.actIndex, 1, '推进到幕 2（07316）')
   assert.equal(codeOf(s.acts[s.actIndex]), '07316')
   // 2 人图示：4 圣堂 + 5 普通地点 + 两座巢穴；圣堂入场完全淹没。

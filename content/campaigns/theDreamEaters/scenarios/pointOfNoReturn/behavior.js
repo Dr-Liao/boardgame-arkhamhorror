@@ -104,15 +104,18 @@ function removeGroupsFromGame(state, api, groupIds) {
   api.info?.(`移出游戏：${groupIds.join(', ')} 遭遇组。`)
 }
 
-function giveStoryAssetToLead(state, api, code) {
+function giveStoryAsset(state, api, code, { removeFromGameOnLeave = false } = {}) {
   const candidates = activeInvestigators(state)
   if (!candidates.length) return null
   const lead = Number(state.campaign?.leadSeat ?? candidates[0].seat)
-  const seat = candidates.some(inv => inv.seat === lead) ? lead : candidates[0].seat
+  const choice = candidates.length === 1 ? candidates[0].seat : api.choose?.({
+    kind: 'investigator', source: code, seat: lead, prompt: '选择控制剧情支援的调查员。',
+    options: candidates.map(inv => ({ id: String(inv.seat), label: inv.name })),
+  })
+  const seat = candidates.find(inv => String(inv.seat) === String(choice))?.seat ?? candidates[0].seat
   api.takeFromSetAside?.(code)
-  const asset = api.giveAsset?.(seat, code) || null
+  const asset = api.giveAsset?.(seat, code, { removeFromGameOnLeave }) || null
   flagsFor(state).pickmanSeat = seat
-  flagsFor(state).pickmanRemovedOnLeave = true
   api.info?.(`剧情支援「理查德·厄普顿·皮克曼」由座位 ${seat} 的调查员控制。`)
   return asset
 }
@@ -486,7 +489,8 @@ const behavior = {
     if (!act) return
     const rule = act.advanceRule
     if (rule === 'enteringTheUnderworldV1' || rule === 'enteringTheUnderworldV2') {
-      if (rule === 'enteringTheUnderworldV2') giveStoryAssetToLead(state, api, CODES.richardUptonPickman)
+      const { giveStoryAsset: code, removeStoryAssetOnLeave } = entryFlags(codeOf(act)) || {}
+      if (code) giveStoryAsset(state, api, code, { removeFromGameOnLeave: removeStoryAssetOnLeave === code })
       placeSetAsideLocations(state, api, 'Vale')
       removeGroupsFromGame(state, api, act.removeFromGameGroups || [])
       shuffleGroupsIntoDeck(state, api, act.shuffleIntoDeckGroups || [])

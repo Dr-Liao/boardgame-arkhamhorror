@@ -1,4 +1,4 @@
-// 10-a-7（FHV · fhvc 10572–10605）补证/缺陷复现测试。
+// 10-a-7（FHV · fhvc 10572–10605）逐卡验收。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
@@ -6,6 +6,9 @@ import fs from 'node:fs'
 import { behavior as lostSister } from '../content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/behavior.js'
 import * as lostSisterDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/theLostSister/definition.js'
 import { behavior as depthsBehavior } from '../content/campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/behavior.js'
+import { createGameState, newPlayerAssetInstance, relocateInvestigator, scenarioRuntime, validateMove } from '../src/engine/engine.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { assetTextBlanked } from '../src/engine/card-text.js'
 import * as depthsDef from '../content/campaigns/theFeastOfHemlockVale/scenarios/theThingInTheDepths/definition.js'
 import * as twisted from '../content/campaigns/theFeastOfHemlockVale/scenarios/theTwistedHollow/definition.js'
 import akwan from '../src/cards/encounter-entries/theFeastOfHemlockVale/theLostSister/10575.js'
@@ -98,27 +101,322 @@ test('验收 10593a/10593b/10594a/10594b/10595a/10595b/10596a/10596b/10597a/1059
   assert.ok(depthsDef && typeof depthsDef === 'object', '10588 深沼之物 definition 可导入')
 })
 
-test('验收 10575/10577/10578/10580/10581/10583b/10585/10586/10587/10592/10600 缺陷复现：旗标无读点/近似不等价', () => {
-  const root = 'content/campaigns/theFeastOfHemlockVale'
-  const texts = walk(root).map(f => fs.readFileSync(f, 'utf8')).join('\n')
-  // 地点失败窗口只用旗标，P8 未接线。
-  for (const flag of ['attackFailedDamage', 'evadeFailedLoseAction', 'investigateFailedHorror']) {
-    assert.equal(texts.includes(flag), false, `${flag} 无行为读点（仅条目旗标）`)
+function fixture(invLocation, locations, extra = {}) {
+  return {
+    investigators: [{ seat: 0, name: '调查员', location: invLocation, assets: [], actionsLeft: 3,
+      damage: 0, horror: 0, clues: 0 }],
+    locations, enemies: [], round: 1, phase: 'investigation', status: 'playing',
+    currentSeat: 0, numInvestigators: 1, scenarioFlags: {}, scenarioZones: {},
+    campaign: { leadSeat: 0, records: { day: 1 } }, acts: [], agendas: [], encounterDiscard: [],
+    ...extra,
   }
-  // 10578 用不存在的 token API（runtime 只有 revealToken）。
-  const runtime = fs.readFileSync('src/engine/scenario-runtime.js', 'utf8')
-  assert.equal(/revealChaosToken\s*:/.test(runtime), false, '10578 依赖的 revealChaosToken 运行时不存在')
-  assert.ok(texts.includes('revealChaosToken') || texts.includes('drawChaosToken'), '10578 仍调用不存在 token API')
-  // 10586 昼夜判定依赖 isDarkLocationHere（运行时无该方法 → 恒为白日）。
-  assert.equal(/isDarkLocationHere\s*:/.test(runtime), false, '10586 依赖的 isDarkLocationHere 运行时不存在')
-  assert.match(fs.readFileSync(findEntry('10586'), 'utf8'), /isDarkLocationHere/, '10586 仍以 isDarkLocationHere 判昼夜')
-  // 10587 无 encounterResolve（显现目标/弃卡留给 P8）。
-  assert.equal(findEntry('10587') && fs.readFileSync(findEntry('10587'), 'utf8').includes('encounterResolve'), false, '10587 无显现结算入口')
-  // 10575/10581/10592/10600 条目 note 披露未实现子句。
-  assert.match(fs.readFileSync(findEntry('10575'), 'utf8'), /重排|P8|原顺序/, '10575 谈判重排未实现')
-  assert.match(fs.readFileSync(findEntry('10581'), 'utf8'), /\[fast\]|近似/, '10581 fast 时机近似')
-  assert.match(fs.readFileSync(findEntry('10592'), 'utf8'), /近似/, '10592 改巡逻近似')
-  assert.match(fs.readFileSync(findEntry('10600'), 'utf8'), /未接线/, '10600 攻击后治愈未接线')
-  assert.match(fs.readFileSync(findEntry('10583b'), 'utf8'), /P8|旗标/, '10583b 自伤窗口未接线')
-  assert.match(fs.readFileSync(findEntry('10585'), 'utf8'), /未在 behavior 复写|旗标/, '10585 附属道具规则未接线')
+}
+
+const at = (id, fields = {}) => ({ ...structuredClone(lostSisterDef.LOCATIONS[id]), id, revealed: true, ...fields })
+const testResult = (actionKind, success, target = null, source = null) => ({
+  result: { success, passed: success }, context: { test: { actionKind, target, source } },
+})
+
+test('10575 阿克望谈判可重新排列岩穴牌堆前三张', () => {
+  const original = ['hiddenCove', 'weedChokedBeach', 'undergroundPools', 'rockyShoreline']
+  const state = fixture('akwan', [at('akwan')], { scenarioZones: { cavernsDeck: original.slice() } })
+  const inv = state.investigators[0]
+  const move = lostSister.actions(state, inv).find(entry => entry.rule === 'lostSisterAkwanParley')
+  assert.ok(move)
+  const choices = []
+  const api = { choose: spec => {
+    const choice = spec.options.at(-1)
+    choices.push(choice.id)
+    return choice.id
+  } }
+  assert.equal(lostSister.performAction(state, inv, move, api), true)
+  assert.deepEqual(state.scenarioZones.cavernsDeck, [original[2], original[1], original[0], original[3]])
+  assert.ok(choices.length >= 2)
+})
+
+for (const [code, id, action, field] of [
+  ['10577', 'hiddenCove', 'fight', 'damage'],
+  ['10578', 'weedChokedBeach', 'evade', 'actionsLeft'],
+  ['10580', 'undergroundPools', 'investigate', 'horror'],
+]) {
+  test(code + ' 只在相应的地点检定失败后受到卡面惩罚', () => {
+    const state = fixture(id, [at(id)])
+    const inv = state.investigators[0]
+    const api = {
+      damage: (seat, amount) => { state.investigators[seat].damage += amount },
+      horror: (seat, amount) => { state.investigators[seat].horror += amount },
+      loseActions: (seat, amount) => { state.investigators[seat].actionsLeft -= amount },
+    }
+    const original = inv[field]
+    const target = { kind: 'location', id }
+    const passed = testResult(action, true, target)
+    lostSister.afterTest(state, inv, passed.result, api, passed.context)
+    assert.equal(inv[field], original)
+    const failed = testResult(action, false, target)
+    lostSister.afterTest(state, inv, failed.result, api, failed.context)
+    assert.equal(inv[field], original + (field === 'actionsLeft' ? -1 : 1))
+  })
+}
+
+test('10578 乱藻海滩离开前揭示混乱标记，命中符号且无道具时取消移动', () => {
+  const beach = at('weedChokedBeach')
+  const destination = at('rockyShoreline')
+  const state = fixture(beach.id, [beach, destination])
+  const inv = state.investigators[0]
+  assert.equal(lostSister.beforeMove(state, inv, destination, { revealToken: () => 'skull' }), false)
+  assert.equal(lostSister.beforeMove(state, inv, destination, { revealToken: () => '+1' }), true)
+})
+
+test('10581 露天洞穴快速异能消耗 0 行动，按重整敌人数设定难度并去掉黑暗', () => {
+  const cave = at('openCave1', { traits: ['Dark', 'Cave'] })
+  const state = fixture(cave.id, [cave], { enemies: [
+    { id: 'ready', location: cave.id, exhausted: false }, { id: 'exhausted', location: cave.id, exhausted: true },
+  ] })
+  const inv = state.investigators[0]
+  const rule = move => move.rule.startsWith('lostSisterOpenCaveLight:')
+  assert.equal(lostSister.fastActions(state, { ...inv, seat: 1 }, 'investigation.afterAction').length, 0)
+  state.phase = 'enemy'
+  assert.equal(lostSister.fastActions(state, inv, 'enemy.afterHunters').length, 0)
+  state.phase = 'investigation'
+  const moves = lostSister.fastActions(state, inv, 'investigation.afterAction')
+  const move = moves.find(rule)
+  assert.ok(move)
+  assert.equal(move.actions, 0)
+  assert.equal(lostSister.actions(state, inv).some(rule), false)
+  const trials = []
+  const api = { test(seat, skill, difficulty, done) {
+    trials.push([seat, skill, difficulty])
+    const result = { success: true }
+    done(result)
+    return result
+  } }
+  assert.equal(lostSister.performAction(state, inv, move, api), true)
+  assert.deepEqual(trials, [[0, 'agility', 3]])
+  assert.equal(lostSister.isDarkLocation(state, cave), false)
+  assert.equal(lostSister.fastActions(state, inv, 'investigation.afterAction').some(m => rule(m) && !m.reason), false)
+  lostSister.roundEnded(state, api)
+  state.round++
+  lostSister.phaseBegan(state, 'mythos', api)
+  assert.equal(lostSister.isDarkLocation(state, cave), false, '经过轮末和下轮神话阶段仍保持熄暗')
+  lostSister.phaseBegan(state, 'investigation', api)
+  assert.equal(lostSister.isDarkLocation(state, cave), true)
+})
+
+test('10583b 黑夜鲎类混种被实际近战攻击命中后伤害攻击者，包括致命打击', () => {
+  for (const [weaponCode, attackLethal, expected] of [
+    ['01006', false, 0], ['01020', false, 1], ['01020', true, 1],
+  ]) {
+    const state = createGameState({ seed: '10583b-' + weaponCode, playerInvestigator: '10001' }, [{ seat: 0 }])
+    state.pendingChoice = null
+    state.continuation = null
+    state.scenario = lostSisterDef.scenario
+    const inv = state.investigators[0]
+    const cave = at('undergroundPools', { traits: ['Cave', 'Dark'] })
+    inv.location = cave.id
+    inv.hand = []
+    const weapon = newPlayerAssetInstance(state, inv, weaponCode)
+    inv.assets = [weapon]
+    const enemy = { id: 'hybrid', code: '10583b', name: '鲎类混种', location: cave.id, traits: [],
+      damageTaken: 0, fight: 0, health: attackLethal ? 1 : 20, engagedSeat: null,
+      exhausted: true, victory: 0, attachments: [] }
+    state.locations = [cave]
+    state.enemies = [enemy]
+    state.debugNextTokens = ['+1']
+    const attack = (current, seat, move, events) =>
+      scenarioRuntime(current, events).fight(seat, enemy.id, { assetId: weapon.id, baseValue: 10, damageBonus: 8 })
+    resolveTransaction(state, inv.seat, { action: '10583b-test-attack' }, attack)
+    for (let attempt = 0; attempt < 8 && state.pendingChoice; attempt++) {
+      const choice = state.pendingChoice
+      const answer = choice.options.find(option => ['done', 'skip', 'continue'].includes(option.id))
+      assert.ok(answer, choice.prompt)
+      resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: answer.id }, attack)
+    }
+    assert.equal(state.pendingChoice, null)
+    assert.equal(state.investigators[0].damage - inv.damage, expected)
+    assert.equal(state.enemies.length, attackLethal ? 0 : 1)
+  }
+})
+
+test('10585 岩穴青苔附属可选道具，空白宿主文本并随控制者移动', () => {
+  const state = createGameState({ seed: '10585', playerInvestigator: '10001' }, [{ seat: 0 }, { seat: 1 }])
+  state.pendingChoice = null
+  state.continuation = null
+  state.scenario = lostSisterDef.scenario
+  state.locations = [
+    at('undergroundPools', { connections: ['hiddenCove'] }),
+    at('hiddenCove', { connections: ['undergroundPools'] }),
+  ]
+  state.investigators[0].location = 'undergroundPools'
+  state.investigators[0].assets = ['01020', '01006', '01021'].map(code =>
+    newPlayerAssetInstance(state, state.investigators[0], code))
+  const [firstItem, secondItem, ally] = state.investigators[0].assets
+  const enemy = { id: 'moss', code: '10585', name: '岩穴青苔', location: 'undergroundPools',
+    aloof: true, hunter: true, fight: 2, health: 3, engagedSeat: null, exhausted: false,
+    traits: ['Flora', 'Mutated'], attachments: [], damageTaken: 0 }
+  state.enemies = [enemy]
+  const attach = (current, seat, move, events) => lostSister.afterTest(
+    current, current.investigators[seat], { success: true }, scenarioRuntime(current, events),
+    { test: { actionKind: 'investigate' } })
+  resolveTransaction(state, 0, { action: '10585-test-attach' }, attach)
+  const choice = state.pendingChoice
+  assert.ok(choice)
+  assert.ok(choice.options.some(option => option.id === firstItem.id))
+  const host = choice.options.find(option => option.id === secondItem.id)
+  assert.ok(host)
+  assert.equal(choice.options.some(option => option.id === ally.id), false)
+  resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: host.id }, attach)
+  const inv = state.investigators[0]
+  const attached = state.enemies[0]
+  const asset = inv.assets.find(item => item.id === secondItem.id)
+  assert.equal(attached.attachedToAssetId, asset.id)
+  assert.equal(assetTextBlanked(asset, inv), true)
+  assert.equal(assetTextBlanked(inv.assets.find(item => item.id === firstItem.id), inv), false)
+  assert.equal(validateMove(state, 0, { action: 'fight', enemyId: attached.id }), null)
+  assert.ok(validateMove(state, 0, { action: 'evade', enemyId: attached.id }))
+  assert.ok(validateMove(state, 0, { action: 'engage', enemyId: attached.id }))
+  attached.exhausted = true
+  state.enemies.push({ ...enemy, id: 'another-moss', exhausted: false, attachedToAssetId: null })
+  resolveTransaction(state, 0, { action: '10585-test-attach' }, attach)
+  const nextChoice = state.pendingChoice
+  assert.ok(nextChoice.options.some(option => option.id === asset.id))
+  resolveTransaction(state, 0, { action: 'choose', choiceId: nextChoice.id, optionId: asset.id }, attach)
+  const [mover, newOwner] = state.investigators
+  const sharedAsset = mover.assets.find(item => item.id === asset.id)
+  const attachedEnemies = state.enemies.filter(item => item.attachedToAssetId === sharedAsset.id)
+  assert.equal(attachedEnemies.length, 2)
+  relocateInvestigator(state, mover.seat, 'hiddenCove', [])
+  assert.ok(attachedEnemies.every(item => item.location === mover.location))
+  newOwner.location = 'undergroundPools'
+  assert.equal(scenarioRuntime(state, []).transferAssetControl(sharedAsset, newOwner.seat), true)
+  assert.ok(attachedEnemies.every(item => item.location === newOwner.location))
+  scenarioRuntime(state, []).discardEnemy(attachedEnemies[1])
+  assert.equal(assetTextBlanked(sharedAsset, newOwner), true)
+  assert.equal(scenarioRuntime(state, []).discardAsset(newOwner.seat, sharedAsset.id), '01006')
+  assert.equal(state.enemies.some(item => item.attachedToAssetId === sharedAsset.id), false)
+})
+
+test('10586 重属自然按所在地黑暗程度使用不同检定与失败伤害', () => {
+  for (const dark of [false, true]) {
+    const location = at('hiddenCove', { traits: dark ? ['Dark'] : [] })
+    const state = fixture(location.id, [location])
+    const inv = state.investigators[0]
+    const tests = []
+    const api = {
+      resolveScenarioEvent: (event, payload) => lostSister.events[event](state, payload, api),
+      test: (seat, skill, difficulty) => {
+        tests.push([seat, skill, difficulty])
+        return { success: false }
+      },
+      damage: (seat, amount) => { state.investigators[seat].damage += amount },
+      horror: (seat, amount) => { state.investigators[seat].horror += amount },
+    }
+    assert.equal(reclaimed.encounterResolve(state, inv, {}, api), true)
+    assert.deepEqual(tests, [[0, dark ? 'willpower' : 'combat', 3]])
+    assert.deepEqual([inv.damage, inv.horror], dark ? [0, 2] : [2, 0])
+  }
+})
+
+test('10587 荧光增生附属到最近的黑暗地点，敏捷检定成功丢弃并恢复黑暗', () => {
+  const village = at('akwan', { connections: ['near'], traits: [] })
+  const near = at('near', { connections: ['akwan', 'far'], traits: ['Dark'], attachments: [] })
+  const far = at('far', { connections: ['near'], traits: ['Dark'], attachments: [] })
+  const state = fixture(village.id, [village, near, far])
+  const inv = state.investigators[0]
+  const api = {
+    resolveScenarioEvent: (event, payload) => lostSister.events[event](state, payload, api),
+    attachEncounterToLocation(code, locationId, extra) {
+      const location = state.locations.find(candidate => candidate.id === locationId)
+      const attachment = { id: 'growth', code, location: locationId, ...extra }
+      location.attachments.push(attachment)
+      return attachment
+    },
+    discardAttachment(source) {
+      near.attachments = near.attachments.filter(item => item !== source)
+      state.encounterDiscard.push(source.code)
+      return true
+    },
+    test(seat, skill, difficulty, end) {
+      assert.deepEqual([seat, skill, difficulty], [0, 'agility', 3])
+      const result = { success: true }
+      end?.(result)
+      return result
+    },
+  }
+  assert.equal(luminous.encounterResolve(state, inv, {}, api), true)
+  assert.deepEqual(near.attachments.map(card => card.code), ['10587'])
+  assert.equal(far.attachments.length, 0)
+  assert.equal(lostSister.isDarkLocation(state, near), false)
+  const enemy = { id: 'enemy', location: near.id }
+  assert.equal(lostSister.enemyStatModifier(state, enemy, 'fight'), 1)
+  assert.equal(lostSister.enemyStatModifier(state, enemy, 'evade'), 0)
+  assert.equal(lostSister.enemyAttackModifier(state, enemy).damage, 1)
+  inv.location = near.id
+  const move = lostSister.actions(state, inv).find(candidate => candidate.rule.startsWith('lostSisterDiscardGrowth:'))
+  assert.ok(move)
+  lostSister.performAction(state, inv, move, api)
+  assert.deepEqual(state.encounterDiscard, ['10587'])
+  assert.equal(lostSister.isDarkLocation(state, near), true)
+})
+
+test('10592 深沼之物快速改巡逻支付同地点的团队线索，本轮巡逻改走新地点', () => {
+  const state = createGameState({ seed: '10592', playerInvestigator: '10001' }, [{ seat: 0 }, { seat: 1 }])
+  state.pendingChoice = null
+  state.continuation = null
+  state.scenario = depthsDef.scenario
+  state.acts = [{ code: '10592' }]
+  state.actIndex = 0
+  state.locations = [
+    at('origin', { connections: ['new', 'old'] }),
+    at('new', { name: '新目标', connections: ['origin'] }),
+    at('old', { connections: ['origin'] }),
+  ]
+  const [inv, partner] = state.investigators
+  inv.location = partner.location = 'new'
+  inv.clues = 0
+  partner.clues = 2
+  const hybrid = { code: depthsDef.CHELYDRAN_HYBRID_CODE, id: 'hybrid', name: '鳄龟混种', location: 'origin',
+    traits: [], attachments: [], exhausted: false, engagedSeat: null }
+  state.enemies = [hybrid]
+  const isPatrol = move => move.rule === 'depthsChangeHybridPatrol'
+  const move = depthsBehavior.fastActions(state, inv, 'investigation.afterAction').find(isPatrol)
+  assert.ok(move && !move.reason)
+  assert.equal(move.actions, 0)
+  assert.equal(depthsBehavior.actions(state, inv).some(isPatrol), false)
+  const change = (current, seat, selected, events) =>
+    depthsBehavior.performAction(current, current.investigators[seat], selected, scenarioRuntime(current, events))
+  resolveTransaction(state, inv.seat, move, change)
+  for (let attempt = 0; attempt < 3 && state.pendingChoice; attempt++) {
+    const choice = state.pendingChoice
+    const answer = choice.options.find(option => option.id === String(partner.seat))
+    assert.ok(answer)
+    resolveTransaction(state, choice.seat, { action: 'choose', choiceId: choice.id, optionId: answer.id }, change)
+  }
+  assert.equal(state.pendingChoice, null)
+  assert.equal(state.investigators[1].clues, 0)
+  for (const investigator of state.investigators) investigator.location = 'old'
+  assert.equal(scenarioRuntime(state, []).runEnemyPatrol(state.enemies[0]), true)
+  assert.equal(state.enemies[0].location, 'new')
+})
+
+test('10600 深沼之物在沼地完成攻击后治愈 2 点伤害，其他地形无效果', () => {
+  const state = createGameState({ seed: '10600', playerInvestigator: '10001' }, [{ seat: 0 }])
+  state.scenario = depthsDef.scenario
+  state.pendingChoice = null
+  state.continuation = null
+  state.locations = [at('bog', { traits: ['Bog'] }), at('shore', { traits: [] })]
+  const enemy = { id: 'depths', code: '10600', location: 'bog', name: '深沼之物',
+    damageTaken: 3, damage: 1, horror: 0, attachments: [] }
+  state.enemies = [enemy]
+  const inv = state.investigators[0]
+  inv.location = 'bog'
+  inv.assets = []
+  inv.hand = []
+  const api = scenarioRuntime(state, [])
+  api.attack(enemy, inv)
+  assert.equal(enemy.damageTaken, 1)
+  assert.equal(inv.damage, 1)
+  enemy.location = inv.location = 'shore'
+  api.attack(enemy, inv)
+  assert.equal(enemy.damageTaken, 1)
+  assert.equal(inv.damage, 2)
 })

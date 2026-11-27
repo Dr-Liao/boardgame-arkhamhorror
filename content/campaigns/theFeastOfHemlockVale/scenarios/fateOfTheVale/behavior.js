@@ -5,29 +5,8 @@
 //       Act|Agenda|Location|Enemy|Treachery|Story/Cards/TheFeastOfHemlockVale/FateOfTheVale/*.hs +
 //       frontend/src/locales/en/theFeastOfHemlockVale/fateOfTheVale.json。
 //
-// 引擎读点（全部走既有钩子，不改引擎）：
-//   preScenarioSetup → 章节准备（幕/议程牌库、放一边、镜巢洗牌、破碎自我换卡、开场分支）
-//   setupLocations / locationPlaced / setupEnemies / afterDeckSetup → 镜巢环、宇宙密使阵形、深渊牌库
-//   actions / performAction → 查找深渊、v.II 居民谈判、v.III 引线与火势、v.IV 撤退、幕推进
-//   turnEnded / afterTest / roundEnded → 镜巢回合末强制效果、本轮成功记录
-//   locationEntered → 进入深渊时深渊有牌即阵亡
-//   enemyDefeated / enemyAttackResolved / enemyDamageAllowed / enemyCannotAttack / enemyStatModifier
-//   actReveal / agendaReveal / checkObjectives → 幕/议程背面、幕间四选项与幕 3a 四个版本
-//   resolveChaosToken / applyTokenEffect / testAutoFail → 10651 混乱标记与破碎密使的标记反应
-//   resolution → 结局 1–5 / 无结局与剧本日志写入
-//
-// 近似（approximation，逐条在函数注释里标明）：
-//   1. 遭遇牌库不被「深渊牌库」取代：引擎没有「遭遇牌库替换」钩子，因此神话阶段仍从
-//      state.encounterDeck 抽取；深渊牌库（state.scenarioFlags.mechanics.scenarioDecks.abyss）
-//      承载调查员牌库顶 5 张 + 各调查员「真正的」调查员卡，供本章的「揭示深渊」类效果使用。
-//   2. 深渊抽牌按「底部=数组头部」的既有 scenarioDecks 约定（deck 尾部是顶）。
-//   3. 神话阶段「从深渊底翻到有遭遇卡背的卡」的改写没有引擎窗口；本章提供
-//      drawEncounterFromAbyss（行为 / events / 测试可调），交给主进程接窗口后再替换神话抽牌。
-//   4. 四个镜巢的卡面不同，洗牌是隐藏信息：nestAssignment 用 api.randomValue 打乱位置→卡号，
-//      setupLocations 之前把 state.scenario.locations 的 code 换掉；无随机源时保持印刷顺序。
-//   5. The Vale 地点印刷连线不在卡表里，用「印刷顺序围成一环」的近似；洞穴地点同理。
-//   6. Relationship Level ≥4 的居民「选择控制」与居民卡叠在「战役记录」里的关系等级读数
-//      走 api.residents / campaign.records 的既有字段；缺记录时按未达 4 级处理。
+// 议程从深渊底（数组头）查找遭遇牌。镜巢用场景随机源编排，居民关系取自战役记录。
+import { spliceHand } from '../../../../../src/engine/hand-icons.js'
 import {
   applyInvestigatorForm, hasInvestigatorForm, restoreInvestigatorForm,
 } from '../../../../../src/engine/investigator-form.js'
@@ -258,6 +237,16 @@ export function gazeRule(state) {
   }
 }
 
+function timedEnemyView(state, enemy) {
+  const rule = gazeRule(state)
+  return rule.active && isEmissary(enemy) ? { key: 'cosmicEmissaryGaze', durationMs: rule.seconds * 1000 } : null
+}
+
+function timedEnemyViewExpired(state, seat, api) {
+  const inv = state.investigators[seat]
+  if (api.driveInsane(seat)) api.publicInfo(`${inv.name} 凝视宇宙密使超过 15 秒，陷入疯狂。`)
+}
+
 export const ABYSS_CARD_KINDS = Object.freeze(['encounter', 'location', 'resident', 'investigator', 'player', 'story'])
 
 /** 深渊里的卡按「抽到时怎么结算」分类（The Abyss 故事卡正面印刷文本）。 */
@@ -345,34 +334,44 @@ export function removeFromAbyss(state, codes) {
  * 从深渊底翻牌直到出现「有遭遇卡背的卡」，抽走它；其余揭示牌放回深渊顶。
  * 返回抽到的卡号（没有遭遇卡时返回 null）。
  */
+function routeOldMemory(state, seat, code, api) {
+  const spec = entryFlags(OLD_MEMORY_CODE)
+  if (!spec.oldMemory || !api.choose || !api.payGroupClues) return seat
+  const active = activeInvestigators(state)
+  const memory = (state.storyAssets || []).find(asset => codeOf(asset) === OLD_MEMORY_CODE
+    && active.some(inv => inv.seat === asset.controllerSeat))
+  if (!memory) return seat
+  const cost = Number(spec.groupClueCost?.perInvestigator) * investigatorCount(state)
+  const clues = active.filter(inv => api.canSpendClues?.(inv.seat) !== false)
+    .reduce((total, inv) => total + (inv.clues || 0), 0)
+  if (!(cost > 0) || clues < cost) return seat
+  const options = [{ id: 'skip', label: '继续原本的抽取' }, { id: 'remove', label: '取消显现并将该牌移出游戏' },
+    ...active.map(inv => ({ id: String(inv.seat), label: `让 ${inv.name} 抽取该牌` }))]
+  const selected = api.choose({ kind: 'reaction', source: memory.id, seat: memory.controllerSeat, canSkip: true,
+    prompt: `是否共同花费 ${cost} 个线索并移出旧时记忆？`, options })
+  if (selected === 'skip' || !options.some(option => option.id === selected)) return seat
+  api.payGroupClues(cost)
+  api.removeStoryAsset?.(memory.id)
+  api.removeFromGameCards?.(OLD_MEMORY_CODE)
+  if (selected === 'remove') {
+    api.removeFromGameCards?.(code)
+    return null
+  }
+  return Number(selected)
+}
+
 export function drawEncounterFromAbyss(state, seat, api = {}) {
-  if (!abyssMythosActive(state)) {
-    info(api, '当前议程没有「在深渊里抽遭遇卡」的强制效果。')
-    return null
+  if (!abyssMythosActive(state)) return null
+  const pile = abyssPile(state)
+  const index = pile?.deck.findIndex(code => classifyAbyssCard(code) === 'encounter') ?? -1
+  if (index < 0) return null
+  const [code] = pile.deck.splice(index, 1)
+  pile.deck.push(...pile.deck.splice(0, index).reverse())
+  const recipient = routeOldMemory(state, seat, code, api)
+  if (recipient != null) {
+    if (typeof api.drawCard === 'function') api.drawCard(recipient, code, { scenarioDeckId: ABYSS_DECK_ID })
+    else api.drawEncounter?.(recipient, { code })
   }
-  if (typeof api.scenarioDecks?.drawBottomMatching === 'function') {
-    try {
-      const code = api.scenarioDecks.drawBottomMatching(ABYSS_DECK_ID, seat,
-        candidate => classifyAbyssCard(candidate) === 'encounter')
-      if (code) {
-        info(api, `从深渊底抽到遭遇卡 ${code}。`)
-        return code
-      }
-      return null
-    } catch { /* 退回本地实现 */ }
-  }
-  const cards = abyssCards(state)
-  const index = cards.findIndex(code => classifyAbyssCard(code) === 'encounter')
-  if (index < 0) {
-    if (cards.length) info(api, '深渊里没有遭遇卡背的卡。')
-    return null
-  }
-  const [code] = cards.splice(index, 1)
-  const revealed = cards.splice(0, index)
-  const pile = ensureAbyssPile(state)
-  pile.deck = [...revealed, ...cards]
-  if (typeof api.drawCard === 'function') api.drawCard(seat, code, { scenarioDeckId: ABYSS_DECK_ID })
-  else info(api, `从深渊底抽取遭遇卡 ${code}（交给引擎遭遇管线）。`)
   return code
 }
 
@@ -382,14 +381,15 @@ export function drawFromAbyss(state, seat, api = {}) {
   if (!cards.length) { info(api, '深渊里没有牌。'); return null }
   const code = cards[0]
   const kind = classifyAbyssCard(code)
-  if (kind === 'encounter') return { code: drawEncounterFromAbyss(state, seat, api) }
-  removeFromAbyss(state, [code])
+  abyssPile(state).deck.shift()
   resolveAbyssCard(state, seat, code, kind, api)
   return { code, kind }
 }
 
 /** The Abyss 卡面的抽牌结算：地点 / 居民 / 真正的调查员 / 玩家卡。 */
 export function resolveAbyssCard(state, seat, code, kind = classifyAbyssCard(code), api = {}) {
+  seat = routeOldMemory(state, seat, code, api)
+  if (seat == null) return null
   const inv = state.investigators?.[seat]
   const rule = entryFlags(STORY_CARD_CODE).revealRules?.[kind] || null
   if (rule) info(api, `深渊揭示 ${code}：按「${rule}」结算。`)
@@ -1047,41 +1047,77 @@ export function performAction(state, inv, move, api = {}) {
 /** 「弃 1 张手牌；谈判 [意志] 或 [智识](3)：成功则带走你地点底下的居民。」 */
 export function residentParley(state, inv, api = {}) {
   if (!inv) return false
-  const hand = inv.hand || []
-  if (!hand.length) { info(api, '手牌为空，无法谈判。'); return false }
-  const location = (state.locations || []).find(item => item.id === inv.location)
-  const beneath = (location?.beneath || []).filter(code => RESIDENT_ASSET_CODES.includes(code) || code === FRENZIED_REVELER_CODE)
-  if (!beneath.length) { info(api, '你所在地点底下没有居民卡。'); return false }
-  const discarded = hand.pop()
-  ;(inv.discard ||= []).push(discarded)
+  const rule = act3Flags(state).parley || ACT3_RULES.v2Parley
+  const location = state.locations.find(item => item.id === inv.location)
+  const residents = (location?.beneath || []).filter(code => RESIDENT_ASSET_CODES.includes(code)
+    || RESIDENT_ENEMY_CODES.includes(code) || ALL_CARDS[code]?.traits?.includes('Resident'))
+  if (!residents.length) return false
+  const cards = (inv.hand || []).map((code, index) => ({ id: String(index), index, code, label: ALL_CARDS[code]?.name || code }))
+    .filter(({ code }) => !registeredEntry(code)?.cannotLeaveHand)
+  if (!cards.length) return false
+  const id = api.choose?.({ kind: 'discard', seat: inv.seat, source: '10658', prompt: '选择谈判费用所弃的手牌', options: cards }) ?? cards[0].id
+  const selected = cards.find(card => card.id === id)
+  if (!selected) return false
+  if (api.discardHandCardsAsCost) {
+    if (!api.discardHandCardsAsCost(inv.seat, [selected])) return false
+  } else {
+    inv.discard.push(...spliceHand(inv, selected.index, 1))
+  }
+  const skills = rule.skills || ['willpower', 'intellect']
+  const skill = api.choose?.({ kind: 'skill', seat: inv.seat, source: '10658', prompt: '选择谈判检定技能',
+    options: skills.map(value => ({ id: value, label: value })) }) ?? skills[0]
   const finish = result => {
-    if (!result?.success) { info(api, `谈判失败（${result?.value ?? 0}/3）。`); return false }
-    const [card] = beneath.splice(0, 1)
-    location.beneath = beneath
-    const enemyCode = RESIDENT_ENEMY_BY_ASSET[card] || card
-    if (RESIDENT_ENEMY_CODES.includes(card)) {
-      const enemy = spawnFateEnemy(state, card, location.id, api, { ignoreSpawn: true, exhausted: true })
-      info(api, `谈判成功：「${enemy?.name || card}」横置入场。`)
-    } else {
-      takeResident(state, inv.seat, card, api)
+    if (!result?.success) return false
+    for (const card of residents) {
+      location.beneath.splice(location.beneath.indexOf(card), 1)
+      const code = RESIDENT_ENEMY_BY_ASSET[card] || card
+      const cost = (rule.clueCostPerInvestigator || 1) * investigatorCount(state)
+      const exhausted = inv.clues >= cost && api.canSpendClues?.(inv.seat) !== false
+        && api.choose?.({ kind: 'payment', seat: inv.seat, source: '10658', prompt: '支付线索让居民横置入场？',
+          options: [{ id: 'skip', label: '不支付' }, { id: 'pay', label: `支付 ${cost} 个线索` }] }) === 'pay'
+      if (exhausted) {
+        if (api.spendClues) api.spendClues(inv.seat, cost)
+        else inv.clues -= cost
+      }
+      spawnFateEnemy(state, code, location.id, api, { ignoreSpawn: true, exhausted })
     }
     return true
   }
-  if (typeof api.test === 'function') {
-    return api.test(inv.seat, 'willpower', 3, finish) ?? false
-  }
-  return finish({ success: true, difficulty: 3, value: 3 })
+  return typeof api.test === 'function' ? api.test(inv.seat, skill, rule.difficulty || 3, finish) ?? false
+    : finish({ success: true })
 }
 
-/** v.III：「花费 X/人 线索：在你的地点放 X 个资源作为引线」（近似：每次 1/人 线索 → 1 引线）。 */
+/** 在一次行动内支付 X/人 线索，然后可支付一种额外费用。 */
 export function placeKindling(state, inv, api = {}) {
-  const kindling = act3Flags(state).kindling || ACT3_RULES.v3Kindling
-  const required = kindling.cluesPerKindling === 'perInvestigator' ? investigatorCount(state) : 1
-  if (groupClues(state) < required) { info(api, '线索不足，无法放置引线。'); return false }
-  for (const other of activeInvestigators(state)) { other.clues = Math.max(0, (other.clues || 0) - required) }
-  const total = setKindlingAt(state, inv.location, kindlingAt(state, inv.location) + 1)
-  info(api, `在「${inv.location}」放置 1 个引线（当前 ${total}）。`)
-  return true
+  const rule = act3Flags(state).kindling || ACT3_RULES.v3Kindling
+  const unit = investigatorCount(state)
+  const maximum = api.canSpendClues?.(inv.seat) === false ? 0 : Math.floor((inv.clues || 0) / unit)
+  const xOptions = Array.from({ length: maximum + 1 }, (_, x) => ({ id: String(x), label: `支付 ${x * unit} 个线索，放置 ${x} 个引线` }))
+  const x = Number(api.choose?.({ kind: 'payment', seat: inv.seat, source: '10659',
+    prompt: '选择引线数量 X', options: xOptions }) ?? (maximum > 0 ? 1 : 0))
+  if (!Number.isInteger(x) || x < 0 || x > maximum) return false
+  if (x) {
+    if (api.spendClues) api.spendClues(inv.seat, x * unit)
+    else inv.clues -= x * unit
+  }
+  const resourceCost = rule.extraKindlingResources ?? 5
+  const items = (inv.assets || []).filter(asset => ALL_CARDS[asset.code]?.traits?.includes('Item')
+    && api.canDiscardAsset?.(inv.seat, asset.id) !== false)
+  const options = [{ id: 'done', label: '完成' }]
+  if ((api.availableResources?.(inv.seat) ?? inv.resources) >= resourceCost) {
+    options.push({ id: 'resources', label: `花费 ${resourceCost} 个资源，多放 1 个引线` })
+  }
+  options.push(...items.map(item => ({ id: item.id, label: `弃掉 ${ALL_CARDS[item.code]?.name || item.code}，多放 1 个引线` })))
+  const bonusChoice = options.length > 1 ? api.choose?.({ kind: 'payment', seat: inv.seat, source: '10659',
+    prompt: '要支付额外费用来放置 1 个引线吗？', options }) : 'done'
+  let bonus = 0
+  if (bonusChoice === 'resources' && options.some(option => option.id === 'resources')) {
+    if (api.spendResources) api.spendResources(inv.seat, resourceCost)
+    else inv.resources -= resourceCost
+    bonus = 1
+  } else if (items.some(item => item.id === bonusChoice) && api.discardAsset?.(inv.seat, bonusChoice)) bonus = 1
+  if (x + bonus) setKindlingAt(state, inv.location, kindlingAt(state, inv.location) + x + bonus)
+  return x + bonus > 0
 }
 
 /** v.III：「引线 ≥ 隐藏值：移除全部引线，抽取 1 张放一边的『着火了！』（团队每地点一次）」。 */
@@ -1210,7 +1246,7 @@ export function discardRandomFromHand(state, inv, count, api = {}) {
   const hand = inv?.hand || []
   if (!hand.length) return []
   if (typeof api.discardRandom === 'function') return api.discardRandom(inv.seat, count)
-  const dropped = hand.splice(0, Math.min(count, hand.length))
+  const dropped = spliceHand(inv, 0, Math.min(count, hand.length))
   ;(inv.discard ||= []).push(...dropped)
   return dropped
 }
@@ -1268,10 +1304,24 @@ export function statModifier(state, inv, skill) {
   return hand - (Number(inv[skill]) || 0)
 }
 
-/** 破碎自我的旧印：+2（「你可以抽取 1 张卡牌」没有结局钩子，披露为近似）。 */
-export function elderSign(state, inv) {
+export function commitIconMultiplier(state, owner) {
+  const multiplier = shatteredFlags().commitIconMultiplier
+  if (isShattered(state, owner) && state.skillTest?.seat === owner.seat && !state.skillTest.fateShatteredDoubled && multiplier > 1) {
+    return { multiplier, once: 'fateShatteredDoubled', source: '10661' }
+  }
+  return null
+}
+
+export function elderSign(state, inv, api = {}) {
   if (!isShattered(state, inv)) return null
-  return { delta: Number(shatteredFlags().elderSignDelta ?? 2) || 2 }
+  const flags = shatteredFlags()
+  const count = flags.elderSignDraw ?? 1
+  if (count && api.choose?.({ kind: 'reaction', seat: inv.seat, source: '10661', canSkip: true,
+    prompt: '破碎自我：是否抽取 1 张牌？',
+    options: [{ id: 'skip', label: '跳过' }, { id: 'draw', label: '抽取 1 张牌' }] }) === 'draw') {
+    api.drawCards?.(inv.seat, count)
+  }
+  return { delta: Number(flags.elderSignDelta ?? 2) || 2 }
 }
 
 // ---------------------------------------------------------------------------
@@ -1446,8 +1496,11 @@ function resolutionOf(key, state, api, { allowChoice = false } = {}) {
 /** 引擎真实入口：phases.js#agendaReveal（结算议程背面）。 */
 export function agendaReveal(state, agenda, api = {}) {
   const code = codeOf(agenda)
-  if (code === AGENDA_CODES[0]) return agenda1Back(state, api)
-  if (code === AGENDA_CODES[1]) return agenda2Back(state, api)
+  const spec = entryFlags(code).backTest
+  if (spec) {
+    agendaSkillTest(state, api, { ...spec, agendaNumber: AGENDA_CODES.indexOf(code) + 1 })
+    return true
+  }
   if (code === AGENDA_CODES[2]) {
     for (const inv of activeInvestigators(state)) {
       if (typeof api.kill === 'function') api.kill(inv.seat)
@@ -1461,54 +1514,41 @@ export function agendaReveal(state, agenda, api = {}) {
   return false
 }
 
-function agendaSkillTest(state, api, { skills, label, kind, difficulty = 4 }) {
+function agendaSkillTest(state, api, { skills, penalty, difficulty, agendaNumber }) {
+  const kind = penalty.startsWith('damage') ? 'damage' : 'horror'
+  const harm = { id: 'harm', label: kind === 'damage' ? '受到 1 点伤害' : '受到 1 点恐惧' }
   let failed = 0
   for (const inv of activeInvestigators(state)) {
+    if (inv.defeated || inv.resigned) continue
     const resolve = result => {
       const by = Math.max(0, (Number(result?.difficulty) || difficulty) - (Number(result?.value) || 0))
       if (result?.success || !by) return
       for (let index = 0; index < by; index += 1) {
-        if (kind === 'deck') {
-          const top = (inv.deck || []).shift()
-          if (top) putOnAbyss(state, [top])
-        } else if (kind === 'damage') {
-          if (typeof api.damage === 'function') api.damage(inv.seat, 1)
-          else inv.damage = (Number(inv.damage) || 0) + 1
-        } else {
-          if (typeof api.horror === 'function') api.horror(inv.seat, 1)
-          else inv.horror = (Number(inv.horror) || 0) + 1
-        }
+        if (inv.defeated || inv.resigned) break
+        const top = inv.deck?.at(-1)
+        const choice = top && api.choose?.({ kind: 'payment', seat: inv.seat,
+          prompt: `结算第 ${index + 1}/${by} 点失败差值`,
+          options: [harm, { id: 'abyss', label: '把牌库顶牌洗入深渊' }],
+        })
+        if (inv.defeated || inv.resigned) break
+        if (choice === 'abyss') {
+          const card = api.takeDeckCard(inv.seat, top)
+          if (card) {
+            const pile = ensureAbyssPile(state)
+            pile.deck = shuffleWith([...pile.deck, card], api, state)
+          }
+        } else if (typeof api[kind] === 'function') api[kind](inv.seat, 1)
+        else inv[kind] = (Number(inv[kind]) || 0) + 1
+        failed++
       }
-      failed += by
     }
-    if (typeof api.test === 'function') api.test(inv.seat, skills, difficulty, resolve)
-    else resolve({ success: true, difficulty, value: difficulty })
+    const skill = api.choose?.({ kind: 'skill', seat: inv.seat, prompt: '选择议程的检定技能',
+      options: skills.map(id => ({ id, label: { willpower: '意志', intellect: '智识', combat: '战斗', agility: '敏捷' }[id] })),
+    }) ?? skills[0]
+    if (inv.defeated || inv.resigned) continue
+    if (typeof api.test === 'function') api.test(inv.seat, skill, difficulty, resolve)
   }
-  info(api, `${label}：${failed} 点失败已结算。`)
-}
-
-/** 议程 1 背面「Dissolving Mind」：意志/智识(4)，每失败 1 点 → 1 恐惧或把牌库顶洗入深渊。 */
-function agenda1Back(state, api = {}) {
-  const spec = entryFlags(AGENDA_CODES[0]).backTest || {}
-  agendaSkillTest(state, api, {
-    skills: (spec.skills || ['willpower', 'intellect'])[0],
-    label: `议程 1 背面（${(spec.skills || ['willpower']).join('/')} ${spec.difficulty || 4}）`,
-    kind: String(spec.penalty || '').startsWith('damage') ? 'damage' : 'horror',
-    difficulty: Number(spec.difficulty) || 4,
-  })
-  return true
-}
-
-/** 议程 2 背面「Dissolving Self」：战斗/敏捷(4)，每失败 1 点 → 1 伤害或把牌库顶洗入深渊。 */
-function agenda2Back(state, api = {}) {
-  const spec = entryFlags(AGENDA_CODES[1]).backTest || {}
-  agendaSkillTest(state, api, {
-    skills: (spec.skills || ['combat', 'agility'])[0],
-    label: `议程 2 背面（${(spec.skills || ['combat']).join('/')} ${spec.difficulty || 4}）`,
-    kind: String(spec.penalty || '').startsWith('horror') ? 'horror' : 'damage',
-    difficulty: Number(spec.difficulty) || 4,
-  })
-  return true
+  info(api, `议程 ${agendaNumber} 背面：${failed} 点失败已结算。`)
 }
 
 /** 引擎真实入口：act-agenda.js#checkObjectives（幕 1 的「真正的调查员卡」等被动目标）。 */
@@ -1873,6 +1913,7 @@ export const behavior = {
   locationEntered,
   handSizePenalty,
   statModifier,
+  commitIconMultiplier,
   elderSign,
   enemyDamageAllowed,
   canOpportunityAttack(_state, enemy) {
@@ -1926,6 +1967,8 @@ export const behavior = {
   abyssLocationInPlay,
   abyssMythosActive,
   gazeRule,
+  timedEnemyView,
+  timedEnemyViewExpired,
   revealFromAbyssReaction,
   applyNestCodes,
   isShattered,

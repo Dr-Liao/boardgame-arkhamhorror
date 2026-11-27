@@ -7,8 +7,6 @@
 //     （api.test → 投入窗口 → 揭示 → 成功结算），断言混乱袋/伤害的真实变化；
 //   · 事务提交的是克隆状态：所有断言都在事务结束后按 id/code 重新取实体，选择器用 memo 缓存
 //     （同一 choiceId 只决策一次，事务重放时逐字一致）；
-//   · 仍有近似披露的卡（10035/10036 的绑定卡交换、10035 的「对所选敌人」限定）断言近似后的真实行为，
-//     缺读点登记在 artifacts/migration/fhv/primitive-requests/<code>.json。
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
@@ -318,7 +316,7 @@ test('P6 10034 蒙福之刃：战斗 +2、成功 +1 伤害，揭示的祝福返�
   assert.equal(preloaded.enemies.find(item => item.id === foe2.id).damageTaken, 2)
 })
 
-test('P6 10035 瓦卢西亚之瞳：谈判放置充能并给同地点调查员本轮 +1 技能值；快速交换到幽嘶之刃', () => {
+test('P6 10035 瓦卢西亚之瞳：谈判放置充能并按指定敌人与行动修正本轮检定；快速交换到幽嘶之刃', () => {
   const s = game()
   const inv = s.investigators[0]
   const foe = enemy(s, { fight: 2, evade: 2, health: 30 })
@@ -331,19 +329,19 @@ test('P6 10035 瓦卢西亚之瞳：谈判放置充能并给同地点调查员�
   const effect = (s.effects || []).find(record => record.sourceCode === '10035')
   assert.ok(effect, '写入本轮持续效果')
   assert.equal(effect.duration, 'endOfRound')
-  assert.equal(getStat(s, s.investigators[0], 'combat'), baseCombat + 1, '同地点调查员 +1 技能值')
+  assert.equal(effect.modifiers[0].condition.testEnemyId, foe.id, '修正只指向所选敌人')
+  assert.equal(getStat(s, s.investigators[0], 'combat'), baseCombat, '检定外没有普通技能值加成')
   assert.ok(s.investigators[0].assets.some(item => item.id === eyesId))
 
-  // [fast] 交换（近似：检索绑定卡入场 + 原卡返回手牌，充能随之移动）。
+  // [fast] 交换：从绑定区检索，充能随之移动。
   const swap = game()
   const valusia = asset(swap, '10035', { uses: 2 })
-  const valusiaId = valusia.id
   runAbility(swap, '10035', { index: 1, source: valusia })
   const blade = byCode(swap, '10036')
   assert.ok(blade, '幽嘶之刃放置入场')
   assert.equal(blade.uses, 2, '所有充能从瓦卢西亚之瞳移动过来')
-  assert.equal(swap.investigators[0].hand.includes('10035'), true, '近似：被换下的卡返回手牌')
-  assert.equal(swap.investigators[0].assets.some(item => item.id === valusiaId), false, '瓦卢西亚之瞳离开场上')
+  assert.equal(Object.values(swap.bondedSets).some(set => set.cards.includes('10035')), true, '被换下的卡返回绑定区')
+  assert.equal(swap.investigators[0].assets.some(item => item.code === '10035'), false, '瓦卢西亚之瞳离开场上')
 })
 
 test('P6 10036 幽嘶之刃：花费 1-3 充能攻击，每点 +2 技能值 / +1 伤害，可用意志代替战斗', () => {
@@ -366,15 +364,15 @@ test('P6 10036 幽嘶之刃：花费 1-3 充能攻击，每点 +2 技能值 / +1
   assert.equal(s.lastTestResult.success, true)
   assert.equal(s.enemies.find(item => item.id === foeId).damageTaken, 4, '基础 1 点 + 每点充能 1 点伤害')
 
-  // [fast] 交换：幽嘶之刃返回手牌、弃掉所有充能。
+  // [fast] 交换：幽嘶之刃返回绑定区，弃掉所有充能。
   const swap = game()
-  const yoth = asset(swap, '10036', { uses: 2 })
-  const yothId = yoth.id
-  swap.investigators[0].hand.push('10035')
+  const eyes = asset(swap, '10035', { uses: 2 })
+  runAbility(swap, '10035', { index: 1, source: eyes })
+  const yoth = byCode(swap, '10036')
   runAbility(swap, '10036', { index: 1, source: yoth })
   assert.ok(byCode(swap, '10035'), '瓦卢西亚之瞳放置入场')
-  assert.equal(swap.investigators[0].hand.includes('10036'), true, '幽嘶之刃返回手牌')
-  assert.equal(swap.investigators[0].assets.some(item => item.id === yothId), false, '幽嘶之刃离开场上')
+  assert.equal(Object.values(swap.bondedSets).some(set => set.cards.includes('10036')), true, '幽嘶之刃返回绑定区')
+  assert.equal(swap.investigators[0].assets.some(item => item.code === '10036'), false, '幽嘶之刃离开场上')
 })
 
 test('P6 10037 旋风连击：Double 额外花费 1 行动，用近战支援连续攻击并结束回合', () => {

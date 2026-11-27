@@ -19,6 +19,10 @@ export function performedActionKinds(move, kind, registeredEntry) {
 }
 
 export function recordPerformedAction(state, inv, move, kind, registeredEntry) {
+  if (state.scenario?.id === 'theLongestNight'
+    || inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.firstActionNoAoO === 'any')) {
+    inv.lastPaidActionRound = state.round
+  }
   if (['draw', 'resource'].includes(kind)) recordRoundAction(state, inv, 'actions', kind, registeredEntry)
   if (!state.investigators.some(owner => tracksHistory(state, owner, 'trackActionHistory', registeredEntry))) return []
   if (inv.actionHistory?.turn !== state.turnSerial) inv.actionHistory = { turn: state.turnSerial, entries: [] }
@@ -29,6 +33,8 @@ export function recordPerformedAction(state, inv, move, kind, registeredEntry) {
 }
 
 export function firstActionExemptsOpportunityAttack(state, inv, kind, registeredEntry) {
+  if (inv.lastPaidActionRound !== state.round && inv.assets.some(asset =>
+    registeredEntry(asset.code)?.assetRule?.firstActionNoAoO === 'any' && !assetTextBlanked(asset, inv, state))) return true
   if (!inv.assets.some(asset => registeredEntry(asset.code)?.assetRule?.firstActionNoAoO === kind
     && !assetTextBlanked(asset, inv) && !assetTextBlankedExceptForced(asset))) return false
   return inv.actionHistory?.turn !== state.turnSerial || !inv.actionHistory.entries.some(types => types.includes(kind))

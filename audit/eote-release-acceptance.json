@@ -3,7 +3,7 @@
   "campaignId": "edgeOfTheEarth",
   "milestone": "P8",
   "generatedBy": "node tools/audit-eote-release.mjs --write",
-  "status": "failed",
+  "status": "passed",
   "evidence": {
     "command": "node tools/run-eote-release-browser.mjs",
     "browserLedger": "audit/eote-release-browser.json",
@@ -107,9 +107,7 @@
     "disconnectDesktop": true,
     "disconnectMobile": true
   },
-  "missing": [
-    "allCards"
-  ],
+  "missing": [],
   "browser": {
     "ledger": "audit/eote-release-browser.json",
     "status": "passed",
@@ -177,28 +175,28 @@
   "allCards": {
     "path": "audit/eote-all-card-acceptance.json",
     "hasLedger": true,
-    "sha256": "b862f0d41c541ca12ff48834e44c84b021d1ab2f78bb50d9884238ee6fb7609f",
+    "sha256": "d910b85a9be4ef720fc4e55eb236212a5de46a7827157d036aeb72622bc9a0cd",
     "generatedBy": "tools/audit-eote-all-cards.mjs",
-    "status": "pending",
+    "status": "verified",
     "summary": {
       "total": 403,
-      "verified": 232,
-      "missing": 118,
-      "blocked": 23,
-      "simplified": 28,
+      "verified": 350,
+      "missing": 0,
+      "blocked": 0,
+      "simplified": 51,
       "campaign": 266,
       "investigators": 22,
       "player": 115
     },
     "checks": {
       "ledger": true,
-      "gateComplete": false,
-      "missing": false,
-      "blocked": false,
+      "gateComplete": true,
+      "missing": true,
+      "blocked": true,
       "total": true,
       "partitions": true
     },
-    "pass": false
+    "pass": true
   },
   "cardImages": {
     "path": "audit/eote-scope.json",
@@ -647,7 +645,7 @@
   "featureChecks": {
     "campaign": true,
     "chapters": true,
-    "allCards": false,
+    "allCards": true,
     "browserBanner": true,
     "browserChecks": true,
     "screenshots": true,
@@ -657,14 +655,14 @@
     "runtimePaths": true
   },
   "equivalence": {
-    "certified": false,
+    "certified": true,
     "basis": "行为等价认证以全卡账本逐卡可追溯证据为准；simplified 仅表示已披露近似，不宣称规则等价。",
     "allCards": {
       "total": 403,
-      "verified": 232,
-      "missing": 118,
-      "blocked": 23,
-      "simplified": 28,
+      "verified": 350,
+      "missing": 0,
+      "blocked": 0,
+      "simplified": 51,
       "campaign": 266,
       "investigators": 22,
       "player": 115
@@ -681,6 +679,6 @@
     }
   },
   "gate": {
-    "pass": false
+    "pass": true
   }
 }

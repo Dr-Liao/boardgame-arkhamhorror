@@ -3,12 +3,15 @@
 //   [action]：撤退。你撤退了……（如果你控制着 1 个或更多封印，你保留它们的控制权）。
 //   背面：一堵翻滚的瘴气之墙挡住了古老的大门，调查员和敌人不能进入伊夸之门。伊夸之门不能拥有附属。
 // 读点：放置封印走 campaign.seals.place（唯一写入口，要求已激活+控制者本人）；撤退走 api.resign；
-//   背面「不能进入/不能拥有附属」需要引擎的地点背面进入限制读点（primitive-requests/p7-08649.json）。
+//   背面限制通过 locationRule.unrevealedRestrictions 读取。
 const CODE = '08649'
 
 export default {
   code: CODE, scope: 'location', implemented: true,
   flags: { gate: true, claimedSealsKeptOnResign: true },
+  locationRule: {
+    unrevealedRestrictions: { investigatorsCannotEnter: true, enemiesCannotEnter: true, cannotAttach: true },
+  },
   abilities: [{
     kind: 'action', actionKind: 'activate', label: '将你控制的一个激活的封印放到伊夸之门上',
     resolve: ({ state, inv, source, api }) => {
@@ -28,6 +31,5 @@ export default {
     kind: 'action', actionKind: 'resign', label: '撤退：离开伊夸之门（保留你控制的封印）',
     resolve: ({ inv, api }) => api.resign(inv.seat),
   }],
-  note: '背面「调查员与敌人不能进入、不能拥有附属」需要引擎的地点背面进入限制读点（primitive-requests/p7-08649.json）。',
 }
 

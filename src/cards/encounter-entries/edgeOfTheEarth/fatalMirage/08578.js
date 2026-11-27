@@ -1,14 +1,10 @@
-// 08578 饱经战乱的国家之记忆
-// 归属：关卡专用 · edgeOfTheEarth/fatalMirage（P7 致命幻景）。
-// 数值由 definition 的 encounterDefinitions 取印刷数据；背面结算见 behavior.flipStoryFace。
-//
-// 一张卡一个文件：这张卡的行为只在这里维护（规则读点见 flags / *Rule；引擎无卡号分支）。
-
-
+// 08578 饱经战乱的国家之记忆：被击败时，翻开并结算记忆剧情。
 export default {
-  code: '08578',
-  scope: 'enemy',
-  implemented: true,
-  enemyRule: { flipOnDefeat: true },
-  flags: { eidolon: true, elite: true, memoryEnemy: true, ...{"retaliate":true,"preyPartner":"08592","reactionAfterAttackDamage1":true,"flipOnDefeat":true} },
+  code: '08578', scope: 'enemy', implemented: true,
+  enemyRule: { flipOnDefeat: true, preyPartner: '08592' },
+  abilities: [{
+    kind: 'reaction', trigger: 'enemyAttacked', label: '它攻击你后：对它造成 1 伤害',
+    criteria: ({ context, inv, source }) => context.seat === inv.seat && context.enemy === source,
+    resolve: ({ inv, source, api }) => api.damageEnemy(source, 1, inv.seat),
+  }],
 }

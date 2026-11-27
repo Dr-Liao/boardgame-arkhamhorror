@@ -10,15 +10,6 @@
 export default {
   code: '04222', scope: 'location',
   locationRule: {
-    beforeExplore(state, inv, api) {
-      if (api.checkSupplies(inv.seat, 'binoculars')) return true
-      if ((inv.actionsLeft || 0) < 1) {
-        api.info?.('宽阔步道：本地点没有人带双筒望远镜，需要额外 1 个行动，你的行动不足。')
-        return false
-      }
-      inv.actionsLeft -= 1
-      api.info?.('宽阔步道：本地点没有人带双筒望远镜，额外花费 1 个行动。')
-      return true
-    },
+    supplyActionCost: { actions: ['explore'], extraActions: 1, unlessSupply: 'binoculars' },
   },
 }

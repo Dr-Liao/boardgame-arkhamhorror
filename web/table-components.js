@@ -26,6 +26,7 @@ const paths = {
   arcane: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM12 5l6 11H6ZM6 8h12l-6 11ZM12 9v6M9 12h6',
   accessory: 'M4 3c0 10 16 10 16 0M8 3c0 5 8 5 8 0M12 11v3M12 14l4 4-4 4-4-4Z',
   body: 'M8 3 2 6l2 8 3-2v10h10V12l3 2 2-8-6-3-4 3ZM8 3l4 8 4-8M12 11v11',
+  head: 'M3 17h18M6 17c0-2 1-3 1-6a5 5 0 0 1 10 0c0 3 1 4 1 6m-8 4h4',
   tarot: 'M5 2h14v20H5ZM12 6l2 4 3 2-3 2-2 4-2-4-3-2 3-2ZM8 5h1M15 19h1',
   supply: 'M5 8h14v13H5ZM3 5h18v3H3ZM12 8v13M8 5C2 0 12 0 12 5c0-5 10-5 4 0',
   eye: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12Zm15 0a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z',
@@ -127,6 +128,7 @@ export const NAMED_COUNTER_DISPLAY = Object.freeze({
   hollow: Object.freeze({ icon: 'lock', labelKey: 'table.marker.beneath' }),
   // P7 TDC 11709 拆毁：最近 [[Rooftop]] 地点上的废墟标记。
   ruin: Object.freeze({ icon: 'star', labelKey: 'table.marker.ruin' }),
+  leyline: Object.freeze({ icon: 'resource', labelKey: 'table.marker.leyline' }),
 })
 export const USE_TOKEN_DISPLAY = Object.freeze({
   secret: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
@@ -134,6 +136,8 @@ export const USE_TOKEN_DISPLAY = Object.freeze({
   secrets: Object.freeze({ icon: 'arcane', labelKey: 'table.marker.secret' }),
   charge: Object.freeze({ icon: 'star', labelKey: 'table.marker.charge' }),
   brilliance: Object.freeze({ icon: 'eye', labelKey: 'table.marker.brilliance' }),
+  suspicion: Object.freeze({ icon: 'eye', labelKey: 'table.marker.suspicion' }),
+  corruption: Object.freeze({ icon: 'resource', labelKey: 'table.marker.corruption' }),
   // 十循环《沉没之城》任务卡「信仰之行」的征兆计数（11754a/b）。
   signs: Object.freeze({ icon: 'star', labelKey: 'table.marker.signs' }),
   // 任务卡把「伤害/恐惧」也作为具名使用标记（11755a/11759a），与生命/理智面分开显示。
@@ -218,13 +222,15 @@ export function cardMarkerData(card, { enemy = false, attachmentCount } = {}) {
     doom: ['doom', t('table.marker.doom')], damage: ['health', t('table.marker.damage')],
   }[card.counterType]
   const attached = attachmentCount ?? card.attachmentCount ?? cardAttachmentReferences(card).length
+  const uses = USE_TOKEN_DISPLAY[card.usesType]
   return [
     ['doom', 'doom', t('table.marker.doom'), card.doom],
     ['damage', 'health', t('table.marker.damage'), enemy ? card.damageTaken : card.damage],
     ['horror', 'sanity', t('table.marker.horror'), enemy ? 0 : card.horror],
     ['clues', 'clue', t('table.marker.clue'), card.clues],
     ['resources', 'resource', t('table.marker.resource'), card.resources],
-    ['uses', 'supply', t('table.marker.uses'), card.uses],
+    ['uses', uses?.icon || 'supply', t(uses?.labelKey || 'table.marker.uses'), card.uses],
+    ['captured', 'book', t('table.marker.capturedCards'), card.capturedCardCount],
     ['counters', counterType?.[0] || 'star', counterType?.[1] || t('table.marker.counter'), card.counters],
     ...cardCounterMarkerData(card),
     ['attached', 'book', t('table.marker.attached'), attached],

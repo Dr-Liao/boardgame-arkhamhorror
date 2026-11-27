@@ -16,23 +16,18 @@
 //     + api.scenario.putOnEncounterDeck([code], { bottom: true })。
 //   · 其余放回牌库顶：api.scenario.putOnEncounterDeck(rest)（默认放顶，pop 读顶）。
 //
-// 近似披露（simplified）：「将其余卡牌以任意顺序放回遭遇牌库顶」按原顺序放回（不提供任意排序界面）；
-// 见 artifacts/migration/fhv/primitive-requests/10093.json。
 const CODE = '10093'
 const REVEAL_COUNT = 5
 
 export default {
   code: CODE,
   name: '洪荒赞歌',
-  simplified: true,
-  note: 'simplified: 「其余卡牌以任意顺序放回牌库顶」按原顺序放回（未提供任意排序选择）；'
-    + '其余（额外行动费、逐张加诅咒换放底、牌库顶/底搬运）都走既有原语。',
   abilities: [
     {
       kind: 'played',
       cost: { action: 1 },
       label: '额外花 1 行动：揭示遭遇牌库顶 5 张，可逐张加 1 诅咒把它放到牌库底，其余放回牌库顶',
-      resolve: ({ state, inv, api }) => {
+      resolve: ({ inv, api }) => {
         const deck = api.scenario.encounterDeckCards()
         const revealed = deck.slice(-REVEAL_COUNT).reverse() // 从牌库顶到底
         if (!revealed.length) {
@@ -60,8 +55,17 @@ export default {
           }
           toTop.push(code)
         }
-        // 「任意顺序放回牌库顶」：这里按原顺序放回（toTop 是顶→底，push 顺序反过来才是同一顺序）。
-        if (toTop.length) api.scenario.putOnEncounterDeck([...toTop].reverse())
+        const ordered = []
+        while (toTop.length > 1) {
+          const index = Number(api.choice({
+            kind: 'card', source: CODE, seat: inv.seat,
+            prompt: '「洪荒赞歌」：选择接下来从牌库顶抽到的卡牌。',
+            options: toTop.map((code, index) => ({ id: String(index), cardCode: code, label: api.cardName(code) })),
+          }))
+          ordered.push(toTop.splice(index, 1)[0])
+        }
+        ordered.push(...toTop)
+        if (ordered.length) api.scenario.putOnEncounterDeck(ordered.reverse())
         api.info(`📜 「洪荒赞歌」：加入 ${cursed} 个诅咒标记，${toTop.length} 张牌放回遭遇牌库顶。`)
       },
     },

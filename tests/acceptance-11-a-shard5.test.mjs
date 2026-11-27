@@ -3,7 +3,10 @@
 // 失败卡未实现点由 artifacts/acceptance/11-a-5/probe-defects.mjs 复现并写入报告。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import '../src/engine/engine.js'
+import { cardDef, scenarioRuntime, turnBeginningWindow } from '../src/engine/engine.js'
+import { assetHarmCapacity } from '../src/engine/asset-defeat.js'
+import { resolveTransaction } from '../src/engine/resolution.js'
+import { fixture, asset, enemy, legalMoves, move, settle } from './core-fixture.mjs'
 import { registerCardAbilities, registeredEntry } from '../src/engine/ability.js'
 import * as dqDef from '../content/campaigns/theDrownedCity/scenarios/theDrownedQuarter/definition.js'
 import * as dqB from '../content/campaigns/theDrownedCity/scenarios/theDrownedQuarter/behavior.js'
@@ -88,12 +91,28 @@ test('11-a-5 11549b 水下寄生虫（故事面）：翻面移动或记录符文
   assert.equal(typeof registeredEntry('11549b'), 'object')
   assert.equal(typeof dqB.behavior.enemyDefeated, 'function')
 })
-test('11-a-5 11550 黑曜石遗物：[action] 智力(8)（投入图标翻倍）成功翻面结算', () => {
-  const entry = registeredEntry('11550')
-  assert.equal(entry.controlledAsset, true)
-  assert.deepEqual(flags('11550').test, { skill: 'intellect', difficulty: 8 })
-  assert.ok(entry.abilities.some(item => item.kind === 'action'))
-  assert.equal(typeof dqB.behavior.commitIconMultiplier, 'function')
+function inScenario(id, token = '0') {
+  const state = fixture('01001')
+  state.scenario = { ...state.scenario, id }
+  state.chaosBag = [token]
+  return state
+}
+
+test('11-a-5 11550 黑曜石遗物：智力(8) 成功后同一实体以故事面加入胜利区', () => {
+  const state = inScenario('theDrownedQuarter', '+20')
+  const relic = asset(state, '11550')
+  const action = legalMoves(state, 0).find(option => option.assetId === relic.id && option.action === 'ability')
+  assert.ok(action)
+  move(state, action)
+  assert.equal(state.skillTest.skill, 'intellect')
+  assert.equal(state.skillTest.difficulty, 8)
+  assert.equal(dqB.behavior.commitIconMultiplier(state), 2)
+  const result = move(state, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'done' })
+  assert.ok(result.some(event => event.presentation?.kind === 'story'
+    && event.presentation.code === '11550' && event.presentation.face === 'back'))
+  assert.ok(state.victoryDisplay.some(entry => entry.id === relic.id && entry.code === '11550b' && entry.victory === 1))
+  assert.deepEqual(state.campaign.records.discoveredGlyphs, ['Y'])
+  assert.equal(state.removedFromGame?.includes('11550') ?? false, false)
 })
 test('11-a-5 11550b 黑曜石遗物（故事面）：记录符文 Y「知识」并加入胜利区', () => {
   assert.equal(typeof registeredEntry('11550b'), 'object')
@@ -103,12 +122,21 @@ test('11-a-5 11551 水母：冷漠、巡逻未/部分淹没地点；敌军阶段
   assert.deepEqual(rule('11551').patrolTarget, { kind: 'flood', below: 2 })
   assert.equal(typeof dqB.behavior.phaseBegan, 'function')
 })
-test('11-a-5 11552 屏障节点：不可击败/离场、回合开始治愈 1 伤、符文 q/x/g/k/s 各 +2 生命', () => {
-  const entry = registeredEntry('11552')
-  assert.equal(entry.cannotLeavePlay, true)
-  assert.deepEqual(flags('11552').glyphLine, ['q', 'x', 'g', 'k', 's'])
-  assert.equal(flags('11552').glyphHealthBonus, 2)
-  assert.equal(typeof dqB.behavior.turnBegins, 'function')
+test('11-a-5 11552 屏障节点：五符文加 2 生命，回合开始可选治疗 1 伤害', () => {
+  const state = inScenario('theDrownedQuarter')
+  const barrier = asset(state, '11552', { damage: 2 })
+  const capacity = () => assetHarmCapacity(cardDef('11552'), 'damage', state, barrier)
+  state.campaign.records.discoveredGlyphs = ['Q', 'X', 'G', 'K']
+  assert.equal(capacity(), 1)
+  state.campaign.records.discoveredGlyphs.push('S')
+  assert.equal(capacity(), 3)
+  const run = (draft, events) => turnBeginningWindow(draft, events)
+  resolveTransaction(state, 0, { action: 'test-turn-begins' }, run)
+  const choice = state.pendingChoice
+  assert.ok(choice.options.some(option => option.id === 'skip'))
+  const heal = choice.options.find(option => option.id.startsWith('desc:11552#'))
+  resolveTransaction(state, 0, { action: 'choose', choiceId: choice.id, optionId: heal.id }, run)
+  assert.equal(state.investigators[0].assets.find(item => item.id === barrier.id)?.damage, 1)
 })
 // 养育场
 test('11-a-5 11553 养育场：骷髅=敌/支援上毁灭一半（上限 4），cultist 见异教徒再揭示', () => {
@@ -174,8 +202,45 @@ test('11-a-5 11564 腐化秘库[Q]：[action][action] 发现符文 Q「手」', 
   assert.equal(typeof ENTRIES['11564'].encounterResolve, 'function')
   assert.equal(typeof apiB.translateGlyph, 'function')
 })
-test('11-a-5 11567 迷失营地：[action] 抽取营地底下最上方卡牌', () => {
-  assert.equal(typeof ENTRIES['11567'].encounterResolve, 'function')
+function useApiaryLocation(state, id, code, connections = []) {
+  const inv = state.investigators[0]
+  const location = state.locations.find(item => item.id === inv.location)
+  Object.assign(location, { id, code, originalCode: code, revealed: true, connections })
+  inv.location = id
+  return location
+}
+
+test('11-a-5 11567 迷失营地：支付一行动抽取营地下方顶牌并生成敌人', () => {
+  const state = inScenario('theApiary')
+  const campsite = useApiaryLocation(state, 'lostCampsite', '11567')
+  const deckBefore = [...state.encounterDeck]
+  state.scenarioZones.apiaryLostCampsite = ['11724', '11723']
+  const campsiteAction = () => legalMoves(state, 0).find(option => option.rule === 'apiaryDrawCampsite')
+  campsite.revealed = false
+  assert.equal(campsiteAction(), undefined)
+  campsite.revealed = true
+  const actionsBefore = state.investigators[0].actionsLeft
+  move(state, campsiteAction())
+  settle(state)
+  assert.equal(state.investigators[0].actionsLeft, actionsBefore - 1)
+  assert.deepEqual(state.scenarioZones.apiaryLostCampsite, ['11724'])
+  assert.deepEqual(state.encounterDeck, deckBefore)
+  assert.ok(state.enemies.some(item => (item.originalCode || item.code) === '11723' && item.location === campsite.id))
+  assert.deepEqual(apiB.cultistCardsUnderAct(state), [])
+
+  state.locations = [state.locations.find(item => item.id === campsite.id),
+    { id: 'empty-site', name: '无人地点', revealed: true, connections: [] }]
+  move(state, campsiteAction())
+  settle(state)
+  assert.deepEqual(state.scenarioZones.apiaryLostCampsite, [])
+  assert.equal(campsiteAction(), undefined)
+  assert.ok(state.enemies.some(item => (item.originalCode || item.code) === '11724' && item.location === 'empty-site'))
+  state.locations = state.locations.filter(item => item.id === campsite.id)
+  state.enemies = state.enemies.filter(item => item.location === campsite.id)
+  state.scenarioZones.apiaryLostCampsite.push('11724')
+  move(state, campsiteAction())
+  settle(state)
+  assert.ok(state.enemies.some(item => (item.originalCode || item.code) === '11724' && item.location === campsite.id))
 })
 test('11-a-5 11568 玛莉亚·里维拉：异教徒伤害改放到她身上，毁灭转嫁，被击败入胜利区', () => {
   const entry = registeredEntry('11568')
@@ -197,9 +262,28 @@ test('11-a-5 11571 酸性体腔：从本地点移动到养育场入口额外受 
   assert.deepEqual(entry.locationRule.movementExtraCost.toOriginalCodes, ['11559'])
   assert.equal(entry.locationRule.movementExtraCost.cost.kind, 'damage')
 })
-test('11-a-5 11572 中央腔室：与下方地点相连；回合末敏捷(1) 失败移动或主母攻击', () => {
-  assert.equal(typeof ENTRIES['11572'].encounterResolve, 'function')
-  assert.equal(typeof apiB.centralFacing, 'function')
+test('11-a-5 11572 中央腔室：回合末敏捷(1)，失败选择相连地点或受真实主母攻击', () => {
+  for (const outcome of ['success', 'move', 'attack']) {
+    const state = inScenario('theApiary', outcome === 'success' ? '+20' : '-20')
+    useApiaryLocation(state, 'centralChamber', '11572', ['acidicCoelom'])
+    state.locations.push({ id: 'acidicCoelom', name: '酸性体腔', revealed: true, connections: ['centralChamber'] })
+    if (outcome === 'attack') {
+      enemy(state, { code: '11573', originalCode: '11573', damage: 1, horror: 0, location: 'acidicCoelom', engagedSeat: null })
+    }
+    const run = (draft, events) => apiB.behavior.turnEnded(draft, draft.investigators[0], scenarioRuntime(draft, events))
+    resolveTransaction(state, 0, { action: 'test-apiary-turn-end' }, run)
+    assert.equal(state.skillTest.skill, 'agility')
+    assert.equal(state.skillTest.difficulty, 1)
+    const commit = state.pendingChoice
+    resolveTransaction(state, 0, { action: 'choose', choiceId: commit.id, optionId: 'done' }, run)
+    if (outcome === 'attack') {
+      assert.deepEqual(state.pendingChoice.options.map(option => option.id), ['move', 'attack'])
+      resolveTransaction(state, 0, { action: 'choose', choiceId: state.pendingChoice.id, optionId: 'attack' }, run)
+    }
+    assert.equal(state.pendingChoice, null)
+    assert.equal(state.investigators[0].location, outcome === 'move' ? 'acidicCoelom' : 'centralChamber')
+    assert.equal(state.investigators[0].damage, outcome === 'attack' ? 1 : 0)
+  }
 })
 test('11-a-5 11573 主母：庞大/无情，另一偷渡者被击败时伤害移到主母', () => {
   assert.equal(typeof apiB.relocateStowawayDamageToMother, 'function')

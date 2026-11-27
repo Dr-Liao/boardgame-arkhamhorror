@@ -123,13 +123,17 @@ export function spendKey(state, seat, color, destination = 'reference') {
   return transferKey(state, color, `investigator:${seat}`, destination)
 }
 export function keysOnExit(state, target, location, responsibleSeat = null) {
-  const entries = Object.entries(mechanicState(state)?.keys || {}).filter(([, key]) => !isValueKey(key) && key.holder === target)
-  if (!entries.length) return 0
+  const sourceEntries = Object.entries(mechanicState(state)?.keys || {}).filter(([, key]) => key.holder === target)
+  const entries = sourceEntries.filter(([, key]) => !isValueKey(key))
+  const numeric = typeof target === 'string' && target.startsWith('enemy:')
+    ? sourceEntries.filter(([, key]) => isValueKey(key)) : []
+  if (!entries.length && !numeric.length) return 0
   locationAt(state, location)
   const inv = responsibleSeat == null ? null : investigatorAt(state, responsibleSeat)
   const to = inv && !inv.defeated && !inv.resigned ? `investigator:${responsibleSeat}` : `location:${location}`
   for (const [color] of entries) transferKey(state, color, target, to, { reveal: !!inv })
-  return entries.length
+  for (const [, key] of numeric) key.holder = `location:${location}`
+  return entries.length + numeric.length
 }
 export function giveKeys(state, from, to, colors) {
   const owner = investigatorAt(state, from), recipient = investigatorAt(state, to)
@@ -239,6 +243,25 @@ export function spendValueKeys(state, target, spec = {}) {
     chosen.push(id)
   }
   for (const id of chosen) data[id].holder = destination
+  return true
+}
+
+export function moveValueKey(state, id, from, to) {
+  const source = valueKeyHolder(state, from)
+  const destination = valueKeyHolder(state, to)
+  const key = mechanicState(state)?.keys?.[valueKeyId(id)]
+  if (!isValueKey(key) || key.holder !== source) return false
+  key.holder = destination
+  return true
+}
+
+export function swapValueKeys(state, left, right) {
+  const first = valueKeysAt(state, left)
+  const second = valueKeysAt(state, right)
+  if (left === right || !first.length || !second.length) return false
+  const keys = mechanicState(state).keys
+  for (const { id } of first) keys[id].holder = right
+  for (const { id } of second) keys[id].holder = left
   return true
 }
 

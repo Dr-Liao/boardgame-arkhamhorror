@@ -9,8 +9,6 @@
 export default {
   code: '06143b', scope: 'storyAsset', implemented: true,
   assetRule: {
-    story: true,
-    signs: 2,
     resolve(state, api, ctx = {}) {
       const locationId = ctx.location?.id || 'cityWhichAppearsOnNoMap'
       const signs = api.markers?.add?.('reference', 2) ?? 0

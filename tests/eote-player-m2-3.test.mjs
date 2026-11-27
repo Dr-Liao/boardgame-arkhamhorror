@@ -1,14 +1,13 @@
 // P6 M2-3 分片（08079–08108）Node 验收：条目直接 import + registerCardAbilities（不依赖索引）。
 //
-// 覆盖 23 张已实现/部分实现卡的真实行为；08079/08082/08087/08089/08104/08106 缺引擎读点，
-// 已写 primitive-requests 并在此文件外跟踪（blocked，不计入断言）。
+// 覆盖此范围的玩家卡及相关引擎读点。
 //
 // 2026-11-08 P0-9 修复：08083/08091/08102/08105/08107 的断言改为真实引擎路径
 // （真实 play/leaveAsset 窗口/performTest/applyMove），不再用 fire() 直执行描述子 + 伪造
 // state.skillTest.actionKind 绕过窗口。
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { fixture, asset, enemy, play, settle, move } from './core-fixture.mjs'
+import { fixture, asset, enemy, play, settle, move, legalMoves } from './core-fixture.mjs'
 import { registeredEntry, registerCardAbilities } from '../src/engine/ability.js'
 import { resolveTransaction } from '../src/engine/resolution.js'
 import { executeDescriptor, getStat, leaveAsset, performTest, playerWindow } from '../src/engine/engine.js'
@@ -218,18 +217,30 @@ test('P6 08086 迈克尔·李：属性 +1，调查成功放证据（最多 3）'
   assert.equal(inv(s).assets.find(card => card.code === '08086').uses, 3)
 })
 
-test('P6 08088 老旧的霰弹枪：事件后使用值 2；成功按超过难度造成 1~3 伤害', () => {
-  const s = fixture('01001')
-  asset(s, '08088')
-  assert.equal(inv(s).assets.find(card => card.code === '08088').uses, 0)
-  fire(s, '08088', descriptors('08088', 'reaction')[0], {
-    source: inv(s).assets.find(card => card.code === '08088'), context: { cardCode: '01088' },
-  })
-  assert.equal(inv(s).assets.find(card => card.code === '08088').uses, 2)
-  enemy(s, { fight: 0, evade: 0, health: 10, engagedSeat: 0 })
-  s.chaosBag = ['0']
-  fire(s, '08088', descriptors('08088', 'action')[0])
-  assert.equal(s.enemies[0].damageTaken, 3, '超过难度很多时伤害封顶 3')
+test('P6 08088 老旧的霰弹枪：只在事件期间入场带 2 弹药，成功伤害至多 3', () => {
+  const normal = fixture('01001')
+  normal.investigators[0].hand = ['08088', '01088']
+  move(normal, { action: 'play', cardId: '08088' })
+  settle(normal)
+  assert.equal(inv(normal).assets.find(card => card.code === '08088').uses, 0)
+  move(normal, { action: 'play', cardId: '01088' })
+  settle(normal)
+  assert.equal(inv(normal).assets.find(card => card.code === '08088').uses, 0)
+
+  const duringEvent = fixture('01001')
+  duringEvent.investigators[0].hand = ['08088', '03029']
+  move(duringEvent, { action: 'play', cardId: '03029' })
+  settle(duringEvent)
+  const shotgun = inv(duringEvent).assets.find(card => card.code === '08088')
+  assert.ok(shotgun)
+  assert.equal(shotgun.uses, 2)
+  const foe = enemy(duringEvent, { fight: 0, health: 10 })
+  const shot = legalMoves(duringEvent).find(command => command.action === 'ability' && command.assetId === shotgun.id)
+  assert.ok(shot)
+  move(duringEvent, shot)
+  settle(duringEvent)
+  assert.equal(duringEvent.enemies.find(card => card.id === foe.id).damageTaken, 3)
+  assert.equal(inv(duringEvent).assets.find(card => card.id === shotgun.id).uses, 1)
 })
 
 test('P6 08090 克图格亚的烙印：按充能造成伤害并消耗充能', () => {
@@ -497,12 +508,33 @@ test('P6 08108 虚影易位：与 2 连接内的已揭示地点非精英敌人�
   assert.equal(s.enemies[0].location, start)
 })
 
-test('P6 08079 血债血偿：敌人攻击造成伤害/恐惧后按数量抽牌', () => {
+test('P6 08079 血债血偿：同一回合中的两次敌人攻击分别允许打出一次', () => {
   const s = fixture('01001')
-  fire(s, '08079', descriptors('08079', 'played')[0], {
-    context: { seat: 0, damage: 2, horror: 1, attack: { enemyId: 'e1' } },
+  inv(s).hand = ['08079', '08079']
+  enemy(s, { damage: 1, horror: 1, health: 20 })
+  for (let index = 0; index < 2; index++) {
+    const handBefore = inv(s).hand.length
+    move(s, { action: 'resource' })
+    settle(s, pending => optionIdByLabel(pending, /血债血偿/))
+    assert.equal(inv(s).discard.filter(code => code === '08079').length, index + 1)
+    assert.equal(inv(s).hand.length, handBefore + 1, '花一张事件卡，抽两张')
+  }
+  assert.equal(inv(s).damage, 2)
+  assert.equal(inv(s).horror, 2)
+
+  const allocated = fixture('01001')
+  inv(allocated).hand = ['08079']
+  const ally = asset(allocated, '01021')
+  enemy(allocated, { damage: 1, horror: 1, health: 20 })
+  move(allocated, { action: 'resource' })
+  settle(allocated, pending => {
+    if (pending.kind === 'assign-damage') return ally.id
+    assert.equal(optionIdByLabel(pending, /血债血偿/), undefined)
+    return null
   })
-  assert.equal(inv(s).hand.length, 3)
+  assert.equal(inv(allocated).assets.find(card => card.id === ally.id).damage, 1)
+  assert.equal(inv(allocated).horror, 1)
+  assert.deepEqual(inv(allocated).hand, ['08079'])
 })
 
 test('P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后附属且不能重整', () => {
@@ -519,26 +551,49 @@ test('P6 08082 抵挡：非精英敌人生成时攻击并自动躲避，随后�
   assert.equal(registeredEntry('08082').restrainsReady, true, '附属敌人不能重整（phases.js 读点）')
 })
 
-test('P6 08087 狙击：添加「符号标记视为 0」的延迟效果', () => {
+test('P6 08087 狙击：打出不触发借机攻击，只修改下一次枪械攻击的符号标记', () => {
   const s = fixture('01001')
-  fire(s, '08087', descriptors('08087', 'played')[0])
-  const effect = s.effects.find(item => item.sourceCode === '08087')
-  assert.ok(effect, '应记录延迟效果')
-  assert.equal(effect.duration, 'endOfTurn')
-  assert.ok(effect.abilities[0].trigger.includes('tokenEffectWouldResolve'))
-  assert.equal(effect.abilities[0].effect.type, 'cancelSymbolToken')
+  const gun = asset(s, '01016', { uses: 3 })
+  const foe = enemy(s, { damage: 1, horror: 1, fight: 2, health: 20 })
+  inv(s).hand = ['08087']
+  s.chaosBag = ['autofail']
+  move(s, { action: 'play', cardId: '08087' })
+  settle(s)
+  assert.equal(inv(s).damage, 0)
+  assert.equal(inv(s).horror, 0)
+
+  move(s, { action: 'fight', enemyId: foe.id })
+  settle(s)
+  assert.equal(s.enemies[0].damageTaken, 0)
+  for (let index = 0; index < 2; index++) {
+    const attack = legalMoves(s).find(command => command.action === 'ability'
+      && command.assetId === gun.id && command.targetId === foe.id)
+    assert.ok(attack)
+    move(s, attack)
+    settle(s)
+    assert.equal(s.enemies[0].damageTaken, 2)
+    assert.equal(s.lastTestResult.success, index === 0)
+  }
 })
 
-test('P6 08089 快拔枪套：把枪械附属到枪套并免费执行其攻击行动', () => {
+test('P6 08089 快拔枪套：只能附属单手枪械，附属枪械攻击仍消耗弹药', () => {
   const s = fixture('01001')
   const holster = asset(s, '08089')
   const shotgun = asset(s, '01029', { uses: 2 })
-  fire(s, '08089', descriptors('08089', 'free')[0], { source: holster })
-  assert.equal(inv(s).assets.find(card => card.id === shotgun.id).attachedToAsset, holster.id)
-  const foe = enemy(s, { fight: 0, evade: 0, health: 20, engagedSeat: 0 })
-  s.chaosBag = ['0']
-  fire(s, '08089', descriptors('08089', 'free')[1], { source: inv(s).assets.find(card => card.code === '08089') })
-  assert.equal(s.enemies[0].damageTaken, 5)
+  const holsterAction = () => legalMoves(s).find(command => command.action === 'ability' && command.assetId === holster.id)
+  assert.equal(holsterAction(), undefined)
+  const gun = asset(s, '01016', { uses: 2 })
+  move(s, holsterAction())
+  settle(s)
+  assert.equal(inv(s).assets.find(card => card.id === gun.id).attachedToAsset, holster.id)
+  assert.equal(inv(s).assets.find(card => card.id === shotgun.id).attachedToAsset, undefined)
+  const foe = enemy(s, { fight: 0, health: 20 })
+  const before = inv(s).actionsLeft
+  move(s, holsterAction())
+  settle(s)
+  assert.equal(s.enemies.find(card => card.id === foe.id).damageTaken, 2)
+  assert.equal(inv(s).assets.find(card => card.id === gun.id).uses, 1)
+  assert.equal(inv(s).actionsLeft, before)
 })
 
 test('P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口把符号标记改为咒印', () => {
@@ -580,16 +635,28 @@ test('P6 08091 恩科西·马巴蒂：真实 performTest 的 tokenReveal 窗口�
   assert.equal(replaced.exhausted, true, '横置支付费用')
 })
 
-test('P6 08104/08106 威廉·韦伯教授：调查成功横置花秘密，取回道具或连接地点发现线索', () => {
-  for (const code of ['08104', '08106']) {
+test('P6 08104/08106 威廉·韦伯教授：取回道具，按等级替代本地调查线索', () => {
+  for (const [code, remote] of [['08104', false], ['08106', false], ['08106', true]]) {
     const s = fixture('01001')
-    const professor = asset(s, code)
+    asset(s, code)
+    const hereId = inv(s).location
+    const remoteId = link(s, hereId, 'webb-remote')
+    s.locations.find(location => location.id === hereId).clues = 2
+    s.locations.find(location => location.id === remoteId).clues = 2
     inv(s).discard.push('01016')
-    fire(s, code, descriptors(code, 'reaction')[0], { source: professor, context: { seat: 0, successBy: 2 } },
-      c => (c.options.some(o => o.id === 'item') ? 'item' : null))
-    assert.equal(inv(s).hand.filter(card => card === '01016').length, 1, `${code} 应取回道具`)
+    inv(s).intellect = 8
+    move(s, { action: 'investigate' })
+    settle(s, pending => {
+      if (pending.kind === 'reaction') return optionIdByLabel(pending, /威廉·韦伯|取回道具/)
+      if (pending.source === code) return code === '08104' ? 'item' : remote ? remoteId : 'skip'
+      return null
+    })
+    assert.equal(inv(s).hand.includes('01016'), true, code)
     assert.equal(inv(s).assets.find(card => card.code === code).uses, 2)
     assert.equal(inv(s).assets.find(card => card.code === code).exhausted, true)
+    assert.equal(inv(s).clues, code === '08104' ? 0 : 1)
+    assert.equal(s.locations.find(location => location.id === hereId).clues, code === '08106' && !remote ? 1 : 2)
+    assert.equal(s.locations.find(location => location.id === remoteId).clues, remote ? 1 : 2)
   }
 })
 
@@ -604,17 +671,23 @@ test('P6 08086 迈克尔·李：发起攻击时横置花证据，成功后追加
   assert.equal(inv(s).assets.find(card => card.code === '08086').uses, 0)
 })
 
-test('P6 08097 袖珍望远镜：横置查看相连未揭示地点的揭示面', () => {
+test('P6 08097 袖珍望远镜：横置私下查看相连未揭示地点的揭示面', () => {
   const s = fixture('01001')
-  asset(s, '08097')
+  const telescope = asset(s, '08097')
   const hidden = link(s, inv(s).location, 'm23-hidden')
   const location = s.locations.find(item => item.id === hidden)
-  location.revealed = false
-  location.name = '隐藏礁石'
-  fire(s, '08097', descriptors('08097', 'free')[0])
-  assert.ok(s.log.some(entry => String(entry?.text || entry).includes('隐藏礁石')), '查看结果应展示给玩家')
-  assert.equal(inv(s).assets.find(card => card.code === '08097').exhausted, true)
-  assert.equal(s.locations.find(item => item.id === hidden).revealed, false, '查看不等于揭示')
+  Object.assign(location, { code: '01112', revealed: false, unrevealedActualName: '隐藏礁石' })
+  const look = legalMoves(s).find(command => command.action === 'ability' && command.assetId === telescope.id)
+  assert.ok(look)
+  move(s, look)
+  assert.equal(s.pendingChoice.kind, 'look')
+  assert.equal(s.pendingChoice.seat, 0)
+  assert.match(s.pendingChoice.prompt, /隐藏礁石/)
+  assert.equal(s.pendingChoice.options[0].cardCode, '01112')
+  settle(s)
+  assert.equal(inv(s).assets.find(card => card.id === telescope.id).exhausted, true)
+  assert.equal(s.locations.find(item => item.id === hidden).revealed, false)
+  assert.equal(s.log.some(entry => String(entry?.text || entry).includes('隐藏礁石')), false)
 })
 
 test('P6 08107 破冰锥（3 级）：真实调查检定窗口弃掉自身换取额外 1 个线索', () => {

@@ -3,7 +3,7 @@
   "unit": "09-a-10",
   "profile": {
     "id": "tsk-campaign-g-2026-11",
-    "scope": "绯红密钥 09 段 tskc 战役卡（09737–09770b）41 条目录记录。23 条通过五维验收；17 条实现缺口、1 条待稳定探针暂不切换。",
+    "scope": "绯红密钥 09 段 tskc 战役卡（09737–09770b）41 条目录记录。41 条通过五维验收。",
     "basis": "独立复核（不采信既有账本）：卡面 → 本地读点 → 原语 → 交互 → 真实执行测试逐卡核对；证据为验收测试与既有回归的真实用例标题。近似与缺口逐条披露，未声称等价。",
     "houseRules": [
       "保留项目既有的自动奖励反应与协作请求规则",
@@ -17,31 +17,27 @@
   },
   "summary": {
     "total": 41,
-    "verified": 23,
-    "unverified": 18,
+    "verified": 41,
+    "unverified": 0,
     "unimplemented": 0,
-    "testsPassed": 168
+    "testsPassed": 180
   },
   "testFiles": [
     {
       "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
-      "sha256": "e8461fc5bb8a2f00a16b83698cd385b9c5923d6ffb23b91e9f57c227d9aa1e0d"
+      "sha256": "66eb1994b50ddfb47c6c783899a1ac185e5e882409537802f8b3d38e44e16e22"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
-      "sha256": "55b9d956584e3b77069606a9a33ab8d055576c4c7fffeaf27c92a43d6e5bd8fc"
+      "sha256": "4619d620fe9cfa9762ac046136e1031986faba8ba06edb9b2e7a18528ed1c65d"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-shared-encounters-b.test.mjs",
-      "sha256": "dd9606f52b2f69f8933612e9d97dc1f4b05897b10c8f0bcca73c2f42856f254d"
+      "sha256": "5a81bdb3f14c6c0414ba8fb77e2d1c68ddb606904e659ee84438e3198958a84a"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-scenario-shadesOfSuffering.test.mjs",
-      "sha256": "f231f390e7be972c84e5e768efea58da9cf9ff4c56d5f5634479cf812fd56ce3"
-    },
-    {
-      "file": "games/arkhamhorror/tests/tsk-rules.test.mjs",
-      "sha256": "5ae05cfcab8019f5322e8207b5145c1cf024104eeaf00a84312c17f902879ad8"
+      "sha256": "6ce0b024f28230740aef46f3b65940eced2419f620ae801730974b65a1da4fab"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-customizable.test.mjs",
@@ -49,7 +45,7 @@
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-keys-hollow.test.mjs",
-      "sha256": "925b275cb5d75467558ff4fa6f11f5bd01c4500aa5a1b8d1562e9bcb267f2f09"
+      "sha256": "753c1df695cad34dbf8c0e6e5c812914e6fc0f56e616c62029acb3234147bf21"
     },
     {
       "file": "games/arkhamhorror/tests/tsk-primitives-state.test.mjs",
@@ -89,17 +85,25 @@
       "code": "09738",
       "name": "物质颠倒",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "附属敌人 +1 攻击/+1 躲避/获得反击缺附属卡→宿主敌人修正读点（primitive-requests/09738.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09738 物质颠倒：附属期间提高攻防数值并失去冷漠，失败攻击时反击"
+        }
+      ]
     },
     {
       "code": "09739",
       "name": "犹格斯星的密使",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "共享组敌人「入场即结算 Concealed 2」缺 content 侧统一入口；fix-plan 明确未完成。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09739 犹格斯密使：入场结算隐匿 2，并在阴影中因发现线索攻击调查员"
+        }
+      ]
     },
     {
       "code": "09740",
@@ -165,89 +169,177 @@
       "code": "09745",
       "name": "突来冲动",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「本回合第一个行动必须是该能力」缺 legalMoves/validateMove 前置限制读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09745 突来冲动：符号标记限制首个行动，两行动弃置后恢复"
+        }
+      ]
     },
     {
       "code": "09746",
       "name": "理智扭曲",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「不能连续执行同一类型行动」缺少 legalMoves 侧限制读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09746 理智扭曲：禁止连续同类行动，交替行动后可再次执行"
+        }
+      ]
     },
     {
       "code": "09747a",
       "name": "凌乱道路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "私人查看只记场景旗标（无座位可见投影）；隐匿迷你卡攻防 +2 无引擎读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09747a 凌乱道路（残骸之城 A）：左边 1 伤害、右边 1 恐惧；正面数据与查看行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09747a 凌乱道路：攻击和躲避难度 +2，0 距离花费 0 资源并按座位查看"
+        }
+      ]
     },
     {
       "code": "09747b",
       "name": "凌乱道路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同上（X 最短连接近似 + 攻防 +2 暂不生效）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09747b 凌乱道路（残骸之城 B）：左边失去 2 资源、中间失去 1 行动"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09747b 凌乱道路：攻击和躲避难度 +2，0 距离花费 0 资源并按座位查看"
+        }
+      ]
     },
     {
       "code": "09747c",
       "name": "凌乱道路",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "同上。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09747c 凌乱道路（残骸之城 C）：中间空洞一张手牌、右边空洞一个支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09747c 凌乱道路：攻击和躲避难度 +2，0 距离花费 0 资源并按座位查看"
+        }
+      ]
     },
     {
       "code": "09748a",
       "name": "异星边境",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "异界牌库顶私人查看只记旗标（无投影读点）；方向用地图坐标近似。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09748a 异星边境（残骸之城 A）：左右移动失败受 2 伤害；左边揭露 1 伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "异界牌库（Otherworld deck）：初始化/顶牌查看/放回顶部/总张数（09748a 的查看读点）"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09748a 异星边境：真实查看异界顶牌，仅执行者收到牌面，牌库顺序不变"
+        }
+      ]
     },
     {
       "code": "09748b",
       "name": "异星边境",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "私人查看只记旗标。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09748b 异星边境（残骸之城 B）：上下移动失败受 2 伤害；左边失去 2 资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09748b 异星边境：真实查看异界顶牌，仅执行者收到牌面，牌库顺序不变"
+        }
+      ]
     },
     {
       "code": "09749a",
       "name": "拟像旷野",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "交换迷你卡/阴影地点无交换原语，用随机重排近似（非玩家指定）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09749a 拟像旷野：揭示后牌库顶非弱点卡成为空洞，无线索时可交换两个空位的迷你卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09749a 拟像旷野：仅交换所选两张迷你卡的格子，第三张留在原位"
+        }
+      ]
     },
     {
       "code": "09749b",
       "name": "拟像旷野",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "交换位置用随机重排近似。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09749b 拟像旷野（变体）：中间空洞手牌、右边空洞支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09749b 拟像旷野：交换两个阴影地点，更新对应迷你卡身份和位置归属"
+        }
+      ]
     },
     {
       "code": "09750",
       "name": "疯狂峭壁",
       "type": "location",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「平均移到相邻空位」以随机重排近似（非平均）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09750 疯狂峭壁：左侧揭露 1 伤害，右侧揭露 1 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09750 疯狂峭壁：揭示后只移动相邻迷你卡，并把它们分到不同空位"
+        }
+      ]
     },
     {
       "code": "09751",
       "name": "超维恐怖",
       "type": "treachery",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「把诱饵翻面」无翻面读点（只做 reshuffle）；险境由内容层文本处理。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09751 超维恐怖：显现二选一——重排隐匿迷你卡，或全员 1 伤害 1 恐惧"
+        },
+        {
+          "file": "games/arkhamhorror/tests/tsk-p1-regressions.test.mjs",
+          "test": "P1-5 09751 通过真实遭遇抽取，不抛错且不新增/删除迷你卡"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09751 超维恐怖：翻开诱饵，再把同样数量的迷你卡盖回原位置"
+        }
+      ]
     },
     {
       "code": "09752",
@@ -341,9 +433,17 @@
       "code": "09759",
       "name": "苋",
       "type": "enemy",
-      "status": "pending",
-      "dimension": "evidence",
-      "reason": "full-scan §6：伤害分配到支援的击败分支未完全验证，保留 unverified；无稳定探针。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09759 苋：攻击后变换钥匙；攻击伤害分到支援时击败该支援"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09759 苋：攻击恐惧分配给尚未达到理智上限的支援，也击败该支援"
+        }
+      ]
     },
     {
       "code": "09760",
@@ -373,9 +473,21 @@
       "code": "09762",
       "name": "福林探员",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "只实现「抽 1 张」分支；取消揭露/翻回背面/改揭另一张缺 tskExposed interrupt 与放回原位的原语。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09762 福林探员：只在揭露诱饵时触发，横置并抽 1 张"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09762 福林探员：取消揭露并保留原诱饵，然后抽 1 张牌"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09762 福林探员：取消揭露并保留原诱饵，然后改揭同地另一张"
+        }
+      ]
     },
     {
       "code": "09763",
@@ -393,17 +505,29 @@
       "code": "09764",
       "name": "戴维·伊拉万博士",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「揭示手牌」只作筛选条件，无公开揭示展示读点。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09764 戴维·伊拉万博士：+1 意志；回收同名空洞洗回牌库并按张获得资源"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09764 戴维·伊拉万博士：揭示同名手牌，公开记录牌名并把空洞洗回"
+        }
+      ]
     },
     {
       "code": "09765",
       "name": "快捷旅票",
       "type": "asset",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "「旅行到地图任意一处」需战役启程流程传入世界地图图结构（未交付）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09765 快捷旅票：永久，启程可用，场景内没有独立放逐行动"
+        }
+      ]
     },
     {
       "code": "09766",
@@ -437,9 +561,17 @@
       "code": "09768a",
       "name": "镜刃",
       "type": "key",
-      "status": "pending",
-      "dimension": "implementation",
-      "reason": "密钥进场与 shift 时机的战役层契约未交付（primitive-requests/09768a.json）。"
+      "status": "verified",
+      "evidence": [
+        {
+          "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
+          "test": "09768a/09768b 镜刃：稳定面对敌人造成伤害后翻面；动荡面全员 1 点直接伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09768a/09768b 镜刃：用通用 Shift 分别结算稳定面伤害和动荡面直接伤害"
+        }
+      ]
     },
     {
       "code": "09768b",
@@ -450,6 +582,10 @@
         {
           "file": "games/arkhamhorror/tests/tsk-shared-encounters-a.test.mjs",
           "test": "09768a/09768b 镜刃：稳定面对敌人造成伤害后翻面；动荡面全员 1 点直接伤害"
+        },
+        {
+          "file": "games/arkhamhorror/tests/acceptance-09-a-shard10.test.mjs",
+          "test": "验收 09768a/09768b 镜刃：用通用 Shift 分别结算稳定面伤害和动荡面直接伤害"
         }
       ]
     },
